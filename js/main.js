@@ -1,20 +1,20 @@
-import createAnalyser from './createAnalyser.js';
-import createBiquadFilter from './createBiquadFilter.js';
-import createConvolver from './createConvolver.js';
-import createDynamicsCompressor from './createDynamicsCompressor.js';
-import createGain from './createGain.js';
-import createOscillator from './createOscillator.js';
-import createDelay from './createDelay.js';
-import createAudioBufferSource from './createAudioBufferSource.js';
-import createLiveInput from './createLiveInput.js';
+import createAnalyser from "./effects/createAnalyser.js";
+import createBiquadFilter from './effects/createBiquadFilter.js';
+import createConvolver from './effects/createConvolver.js';
+import createDynamicsCompressor from './effects/createDynamicsCompressor.js';
+import createGain from './effects/createGain.js';
+import createOscillator from './effects/createOscillator.js';
+import createDelay from './effects/createDelay.js';
+import createAudioBufferSource from './effects/createAudioBufferSource.js';
+import createLiveInput from './effects/createLiveInput.js';
 
 
-export let audioContext = null;
-export let lastBufferLoaded = null;
+export let audioContext;
+export let lastBufferLoaded;
 export let soundBuffer = new Array();
 export let irBuffer = new Array();
-export let sounds = ["glass-hit.ogg", "drums.ogg", "noise.ogg", "voice.ogg", "bass.ogg", "guitar.ogg", "stringbass.wav"]
-export let impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "concert_voices.ogg"]
+export const sounds = ["glass-hit.ogg", "drums.ogg", "noise.ogg", "voice.ogg", "bass.ogg", "guitar.ogg", "stringbass.wav"]
+export const impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "concert_voices.ogg"]
 
 
 // Set up the page as a drop site for audio files. When an audio file is
@@ -45,27 +45,19 @@ function initDragDropOfAudioFiles() {
     };
 }
 
-// soundBuffer[i].play to play sound
 // adding sounds to the audioContext
-function loadSoundsIntoBuffer(audioContext, soundArray, soundBuffer) {
-    soundArray.forEach((sound, index) => {
+function loadSoundsIntoBuffer(audioContext, soundArray, outputArray) {
+    soundArray.forEach((sound) => {
         let soundRequest = new XMLHttpRequest();
         soundRequest.open("GET", `./sounds/${sound}`, true);
         soundRequest.responseType = "arraybuffer";
         soundRequest.onload = function () {
             audioContext.decodeAudioData(soundRequest.response, function (buffer) {
-                soundBuffer[index] = buffer;
+                outputArray.push(buffer);
             });
         }
         soundRequest.send();
     })
-}
-
-function setClickHandler(id, handler) {
-    let el = document.getElementById(id);
-    if (el) {
-        el.addEventListener("mousedown", handler, true);
-    }
 }
 
 // Initialization function for the page.
@@ -81,20 +73,68 @@ function init() {
     loadSoundsIntoBuffer(audioContext, sounds, soundBuffer);
     loadSoundsIntoBuffer(audioContext, impulseResponses, irBuffer);
 
-
     // create the one-and-only destination node for the context
-    let dest = document.getElementById("output");
-    dest.audioNode = audioContext.destination;
+    let destination = document.getElementById("output");
+    destination.audioNode = audioContext.destination;
 
-    setClickHandler("cabs", createAudioBufferSource);
-    setClickHandler("cosc", createOscillator);
-    setClickHandler("cliv", createLiveInput);
-    setClickHandler("cbqf", createBiquadFilter);
-    setClickHandler("cdel", createDelay);
-    setClickHandler("cdyc", createDynamicsCompressor);
-    setClickHandler("cgai", createGain);
-    setClickHandler("ccon", createConvolver);
-    setClickHandler("cana", createAnalyser);
+    // set all the initial variables
+    const initAnalyserSmoothingTimeConstant = "0.25"
+    const initAnalyserMaxDecibles = "0"
+    const initAnalyserType = "sine wave"
+
+    const initAudioBufferSourceLoop = "false"
+    const initAudioBufferSourceBufferIndex = "0";
+
+    const initBiquadFrequency = 440.0;
+    const initBiquadQ = 1.0;
+    const initBiquadGain = 1.0;
+    const initBiquadType = "lowshelf"
+
+    const initConvolerBufferIndex = 0;
+    const initConvolerNormalizer = "false";
+
+    const initialDelayDelay = 0.2
+
+    const initCompressorThreshold = -24.0;
+    const initCompressorKnee = 20.0;
+    const initCompressorRatio = 12.0;
+    const initCompressorAttack = 0.003;
+    const initCompressorRelease = 0.25;
+
+    const initialGainGain = 1.0;
+
+    const initOscillatorFrequency = 440;
+    const initOscillatorDetune = 0;
+
+
+    document.getElementById("cana").onmousedown = function (event) {
+        createAnalyser(event, initAnalyserSmoothingTimeConstant, initAnalyserMaxDecibles, initAnalyserType);
+    }
+    document.getElementById("cabs").onmousedown = function (event) {
+        createAudioBufferSource(event, initAudioBufferSourceLoop, initAudioBufferSourceBufferIndex);
+    }
+    document.getElementById("cbqf").onmousedown = function (event) {
+        createBiquadFilter(event, initBiquadFrequency, initBiquadQ, initBiquadGain, initBiquadType);
+    }
+    document.getElementById("ccon").onmousedown = function (event) {
+        createConvolver(event, initConvolerBufferIndex, initConvolerNormalizer);
+    }
+    document.getElementById("cdel").onmousedown = function (event) {
+        createDelay(event, initialDelayDelay);
+    }
+    document.getElementById("cdyc").onmousedown = function (event) {
+        createDynamicsCompressor(event, initCompressorThreshold, initCompressorKnee, initCompressorRatio, initCompressorAttack, initCompressorRelease);
+    }
+    document.getElementById("cgai").onmousedown = function (event) {
+        createGain(event, initialGainGain);
+    }
+    document.getElementById("cliv").onmousedown = function (event) {
+        createLiveInput(event);
+    }
+    document.getElementById("cosc").onmousedown = function (event) {
+        createOscillator(event, initOscillatorFrequency, initOscillatorDetune);
+    }
+
 
 }
 

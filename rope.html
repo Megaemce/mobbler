@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0; user-scalable=0;" /> -->
+    <title>elastic rope</title>
+</head>
+
+<body>
+    <!-- <p style="position: relative;"> <img id="jack" draggable="true" style="transform:rotate(90deg)" /></p> -->
+    <canvas id="canvas" style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:-1;"></canvas>
+
+    <script>
+        let particles = [];
+        let lines = [];
+        let calcGravity = false
+
+        class Point {
+            constructor(x, y, mass) {
+                this.x = x || 0;
+                this.y = y || 0;
+                this.mass = mass || 1.0;
+                this.massInv = 1.0 / this.mass;
+                this.fixed = false;
+            }
+        }
+
+        class Line {
+            constructor(p1, p2, restLength, strength) {
+                this.p1 = p1;
+                this.p2 = p2;
+                this.restLength = restLength || 10;
+                this.strength = strength || 1.0;
+            }
+
+            update() {
+                // Compute desired force
+                let dx = this.p2.x - this.p1.x,
+                    dy = this.p2.y - this.p1.y,
+                    dd = Math.sqrt(dx * dx + dy * dy) + 0.1,
+                    tf = (dd - this.restLength) / (dd * (this.p1.massInv + this.p2.massInv)) * this
+                    .strength,
+                    f;
+
+                // Apply forces
+                if (!this.p1.fixed && calcGravity) {
+                    f = tf * this.p1.massInv;
+                    this.p1.x += dx * f;
+                    this.p1.y += dy * f + Math.log(this.p1.mass * this.p1.y) / Math.log(Math.floor(this.p1.y));
+                }
+
+                if (!this.p2.fixed && calcGravity) {
+                    f = -tf * this.p2.massInv;
+                    this.p2.x += dx * f;
+                    this.p2.y += dy * f + Math.log(this.p2.mass * this.p2.y) / Math.log(Math.floor(this.p2.y));
+                }
+            };
+
+        }
+
+        let canvas = document.getElementById('canvas'),
+            ctx = canvas.getContext('2d'),
+            width = canvas.width = window.innerWidth,
+            height = canvas.height = window.innerHeight,
+            startX = 50,
+            startY = 50;
+
+        function init() {
+
+            let mouse,
+                start,
+                count = 12;
+            let sqrtX = startX,
+                sqrtY = startY;
+
+            for (let i = 0; i < count; ++i) {
+                particles.push(new Point(sqrtX, sqrtY, 10));
+                sqrtX = sqrtX + 0.5;
+                sqrtY = Math.pow(sqrtX - startX, 2) + startY;
+                if (i > 0) lines.push(new Line(particles[i - 1], particles[i], -Math.log(sqrtX), 0.9));
+            }
+            console.log(particles)
+
+            // first point
+            start = particles[0];
+            start.fixed = true;
+            start.x = startX;
+            start.y = startY;
+
+            // Last point = mouse
+            mouse = particles[count - 1];
+            mouse.fixed = true;
+
+            canvas.onclick = () => {
+                calcGravity = true;
+                canvas.style = "cursor: url('./img/jack_cleared.svg'), auto;"
+                canvas.onmousemove = function (event) {
+                    mouse.x = event.offsetX + 2;
+                    mouse.y = event.offsetY + 4.5;
+                    particles[count - 2].x = event.offsetX - 3;
+                    particles[count - 2].y = event.offsetY + 4.5;
+                    particles[count - 2].fixed = true;
+
+                };
+
+            }
+
+
+
+        };
+
+        function draw() {
+
+            lines.forEach((line) => {
+                line.update()
+            })
+
+            ctx.clearRect(0, 0, width, height);
+
+            lines.forEach((line) => {
+                ctx.beginPath();
+                ctx.moveTo(line.p1.x, line.p1.y);
+                ctx.lineTo(line.p2.x, line.p2.y);
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            })
+            window.requestAnimationFrame(draw);
+        };
+
+        init()
+        window.requestAnimationFrame(draw);
+
+
+        // let img = document.getElementById("jack")
+        // img.src = "./img/jack.svg"
+        // img.width = 30;
+        // img.height = 6;
+        // img.style.position = "absolute";
+        // img.style.left = `${particles[9].x-img.width/2-1}px`;
+        // img.style.top = `${particles[9].y-img.height/2}px`;
+    </script>
+
+</body>
+
+</html>
