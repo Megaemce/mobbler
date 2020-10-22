@@ -8,6 +8,11 @@
  *	- Links
  *	-------------------------------------------------------------------------*/
 
+
+:root {
+    --sliderWidth: 135px;
+}
+
 div.link {
     position: fixed;
     font-style: italic;
@@ -86,6 +91,15 @@ body {
     padding-right: 106px;
     position: relative;
     z-index: 1;
+}
+
+#svgCanvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
 }
 
 /* Header */
@@ -364,47 +378,36 @@ body {
     border-radius: 5px;
     background: #fff;
     overflow: hidden;
-    margin: 0 0.25em 0 0.25em;
+    margin: 0 5px;
     box-sizing: border-box;
-    padding: 10px 10px 10px 10px;
+    padding: 5px;
     position: relative;
     cursor: auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
-.module .content .slider .slider-info .value-unit {
-    display: flex;
-    min-width: 59px;
-    justify-content: center;
-}
-
-.module .analyserCanvas {
-    margin: 10px;
-}
-
-.module.has-footer .content {
-    border-radius: 5px 5px 0 0;
-}
-
-/* Module footer */
-.module footer {
-    background-color: #fff;
-    background-image: -webkit-linear-gradient(top, rgb(255, 255, 255), rgb(219, 219, 219));
-    background-image: linear-gradient(top, rgb(255, 255, 255), rgb(219, 219, 219));
-    border-radius: 0 0 5px 5px;
-    overflow: hidden;
+.module .content .options {
     padding: 0em .4em .1em;
     display: flex;
     min-height: 30px;
-    flex-direction: row-reverse;
-    border-top: 1px solid #dbdbdb;
+    width: 100%;
+    flex-direction: row;
     align-items: center;
-    min-width: 200px;
 }
 
-.module footer select {
+
+.module .content .controllers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    padding-top: .25em;
+}
+
+.module .content select {
     background: url('../img/ico-arrow.png') 95% 50% no-repeat;
     border: none;
     box-sizing: border-box;
@@ -420,22 +423,74 @@ body {
 }
 
 
-.module footer .looper,
+.module .content .looper,
 .normalizer {
     border-left: 1px solid #dbdbdb;
-    /* float: right; */
     font-size: .625em;
-    padding: .4em 0 .4em .6em;
+    padding: 4px;
     text-transform: uppercase;
-    width: 25%;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
-.looper label,
-.normalizer label {
+.module .content .looper label,
+.module .content .normalizer label {
     cursor: pointer;
     width: 100%;
+    align-self: center;
+}
+
+.module .content .switch {
+    background-image: url('../img/switch_off.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 40px;
+    height: 80px;
+}
+
+.module .content .switch-on {
+    background-image: url('../img/switch_on.svg');
+}
+
+.module .content .slider .slider-info .value-unit {
     display: flex;
-    justify-content: flex-end;
+    min-width: 59px;
+    justify-content: center;
+}
+
+.module .analyserCanvas {
+    margin: 10px;
+}
+
+
+
+/* Module footer */
+.module footer {
+    border-radius: 0 0 5px 5px;
+    overflow: hidden;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: row;
+    min-width: 120px;
+    cursor: auto;
+}
+
+.module footer .audio-parameter {
+    background-image: url('../img/circle.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 100%;
+    height: 20px;
+    filter: grayscale(100%);
+    cursor: crosshair;
+}
+
+.module footer .audio-parameter.disabled {
+    opacity: 50%;
+    pointer-events: none;
 }
 
 /* Control group */
@@ -466,7 +521,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
+    min-width: 62px;
 }
 
 .slider-info {
@@ -486,10 +541,6 @@ body {
     text-transform: uppercase;
     /* width: 49%; */
     display: block;
-}
-
-.slider.disabled {
-    display: none;
 }
 
 .slider-info .value {
@@ -565,15 +616,18 @@ input[type="range"] {
     -webkit-appearance: none;
     background-color: #303030;
     height: 2px;
-    display: block;
-    margin-top: 5px;
-    margin-bottom: 15px;
     outline: none;
-    width: 135px;
+    width: var(--sliderWidth);
     position: absolute;
-    transform: rotate(270deg) translate(50%, 50%);
-    right: -54px;
-    bottom: -10px;
+    right: -1px;
+    /* minus range height to position to center */
+    transform: rotate(270deg) translate(50%, calc(var(--sliderWidth) / 2));
+    bottom: 0;
+}
+
+input[type="range"].disabled {
+    pointer-events: none;
+    opacity: 50%;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -591,7 +645,6 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .input-wrapper {
-    width: 22px;
     height: 135px;
     position: relative;
 }

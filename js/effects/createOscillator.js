@@ -2,33 +2,35 @@ import createModule from '../structure/createModule.js';
 import createModuleSlider from '../structure/createModuleSlider.js';
 import {
     audioContext
-} from '../main.js';
+}
+from '../main.js'
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
 
-    let play = document.createElement("img");
+    let playButton = document.createElement("div");
     let module = createModule("oscillator", false, true, false, false, oscTypes);
-    let select = document.getElementById(`${module.id}-footer-select`)
+    let select = document.getElementById(`${module.id}-content-options-select`)
     let diode = document.getElementById(`${module.id}-head-diode`)
-    let moduleContent = document.getElementById(`${module.id}-content`)
+    let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
 
     createModuleSlider(module, "frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true);
     createModuleSlider(module, "detune", initalDetune, -1200, 1200, 1, "cents", false);
 
-    play.src = "img/switch_off.svg";
-    play.alt = "play";
-    play.onclick = function () {
-        let frequency = document.getElementById(`${module.id}-content-frequency-info-value`).textContent;
-        let detune = document.getElementById(`${module.id}-content-detune-input`).value;
-        let type = oscTypes[document.getElementById(`${module.id}-footer-select`).selectedIndex];
+    playButton.classList.add("switch");
+    playButton.alt = "play";
+    playButton.onclick = function () {
+        let frequency = document.getElementById(`${module.id}-content-controllers-frequency-info-value`).textContent;
+        let detune = document.getElementById(`${module.id}-content-controllers-detune-input`).value;
+        let type = oscTypes[document.getElementById(`${module.id}-content-options-select`).selectedIndex];
         let playButton = this;
 
         if (playButton.isPlaying) {
             //stop
             diode.className = "diode";
             playButton.isPlaying = false;
-            playButton.src = "img/switch_off.svg";
+            playButton.classList.remove("switch-on");
+
             // if there is a sound installed
             if (module.audioNode) {
                 if (module.outcomingCables) {
@@ -42,7 +44,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
         } else {
             diode.className = "diode diode-on";
             playButton.isPlaying = true;
-            playButton.src = "img/switch_on.svg";
+            playButton.classList.add("switch-on");
 
             module.audioNode = audioContext.createOscillator();
             module.audioNode.frequency.value = frequency;
@@ -65,7 +67,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     };
 
 
-    moduleContent.appendChild(play);
+    moduleControllers.appendChild(playButton);
 
     event.preventDefault();
 }

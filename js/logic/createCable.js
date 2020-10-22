@@ -1,15 +1,12 @@
 import whileMovingCable from "./whileMovingCable.js";
 import stopMovingCable from "./stopMovingCable.js";
-import Cable from "../classes/classCable.js";
-
-export let whileMovingCableHandler;
-export let stopMovingCableHandler;
+import Cable from "../classes/classCable.js"; 
 
 export function createCable(event, sourceModule) {
     if (!sourceModule) console.log("missing module!");
 
     let clickedNode = event.target;
-    let destinationModule;
+    let returnedPairValue;
 
     // Get the position of the originating connector with respect to the page.
     let x = window.scrollX + 12;
@@ -26,8 +23,6 @@ export function createCable(event, sourceModule) {
     sourceModule.cursorStartX = x;
     sourceModule.cursorStartY = y;
 
-    sourceModule.classList.add("canConnect");
-
     // Create a connector visual line
     let svgns = "http://www.w3.org/2000/svg";
 
@@ -43,18 +38,22 @@ export function createCable(event, sourceModule) {
     sourceModule.activeCable.drawOnCanvas();
 
     // Capture mousemove and mouseup events on the page.
-    whileMovingCableHandler = function (event) {
-        destinationModule = whileMovingCable(event, sourceModule);
+    // capturing the 
+    let whileMovingCableHandler = function (event) {
+        returnedPairValue = whileMovingCable(event, sourceModule);
     };
 
-    stopMovingCableHandler = function () {
-        stopMovingCable(sourceModule, destinationModule);
+    let stopMovingCableHandler = function () {
+        // Stop capturing mousemove and mouseup events.
+        document.removeEventListener("mousemove", whileMovingCableHandler, true);
+        document.removeEventListener("mouseup", stopMovingCableHandler, true);
+        stopMovingCable(sourceModule, returnedPairValue);
     }
 
     // don't set listener as long as we have not started from real input
     sourceModule && document.addEventListener("mousemove", whileMovingCableHandler, true);
-    // don't set listener as long as we are not over real output
     document.addEventListener("mouseup", stopMovingCableHandler, true);
+
     event.preventDefault();
     event.stopPropagation();
 }

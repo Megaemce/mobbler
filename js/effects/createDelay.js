@@ -2,14 +2,16 @@ import createModule from '../structure/createModule.js';
 import createModuleSlider from '../structure/createModuleSlider.js';
 import {
     audioContext
-} from '../main.js';
+}
+from '../main.js'
 
-export default function createDelay(event, initialDelay) {
+export default function createDelay(event, initialDelay, maxDelay) {
     let module = createModule("delay", true, true, false, false, null);
 
-    module.audioNode = audioContext.createDelay();
+    module.audioNode = audioContext.createDelay(maxDelay);
+    module.audioNode.delayTime.value = initialDelay;
 
-    createModuleSlider(module, "delay time", initialDelay, 0.0, 1.0, 0.01, "sec", false);
+    createModuleSlider(module, "delayTime", initialDelay, 0.0, maxDelay, 0.01, "sec", false);
 
     event.preventDefault();
 }

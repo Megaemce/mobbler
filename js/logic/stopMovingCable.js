@@ -1,17 +1,16 @@
-import {
-    whileMovingCableHandler,
-    stopMovingCableHandler
-} from "./createCable.js";
 import Cable from "../classes/classCable.js";
 import connectModules from "./connectModules.js";
+import connectParameter from "./connectParameter.js";
 
-
-export default function stopMovingCable(sourceModule, destinationModule) {
+export default function stopMovingCable(sourceModule, returnedPairValue) {
+    let destinationModule
+    let modInputOrParamInputID
     let canvas = document.getElementById("svgCanvas");
 
-    // Stop capturing mousemove and mouseup events.
-    document.removeEventListener("mousemove", whileMovingCableHandler, true);
-    document.removeEventListener("mouseup", stopMovingCableHandler, true);
+    if (returnedPairValue) {
+        destinationModule = returnedPairValue[0];
+        modInputOrParamInputID = returnedPairValue[1];
+    }
 
     canvas.classList.remove("jackCursor");
 
@@ -41,7 +40,11 @@ export default function stopMovingCable(sourceModule, destinationModule) {
     destinationModule.incomingCables.push(cablePointer);
 
     // can connect! 
-    connectModules(sourceModule, destinationModule);
+    if (modInputOrParamInputID === "input"){
+        connectModules(sourceModule, destinationModule);
+    } else if (!modInputOrParamInputID) {
+        connectParameter(sourceModule, destinationModule, modInputOrParamInputID)
+    }
 
     // remove the pointer as shape is already on screen
     sourceModule.activeCable = null;

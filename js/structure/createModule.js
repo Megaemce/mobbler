@@ -12,6 +12,8 @@ let tempx = 50,
 export default function createModule(name, hasInput, hasOutput, hasLooper, hasNormalizer, arrayForSelect) {
     let module = document.createElement("div");
     let content = document.createElement("div");
+    let options = document.createElement("div");
+    let controllers = document.createElement("div");
     let head = document.createElement("div");
     let title = document.createElement("span");
     let close = document.createElement("a");
@@ -57,8 +59,77 @@ export default function createModule(name, hasInput, hasOutput, hasLooper, hasNo
     head.appendChild(title);
     head.appendChild(close);
 
+    options.className = "options"
+    options.id = `module-${id}-content-options`
+
+    if (hasLooper || hasNormalizer || arrayForSelect) {
+        if (arrayForSelect) {
+            let select = document.createElement("select");
+
+            select.className = "ab-source";
+            select.id = `module-${id}-content-options-select`
+
+            arrayForSelect.forEach((object) => {
+                let option = document.createElement("option");
+                option.appendChild(document.createTextNode(object));
+                select.appendChild(option)
+            })
+
+            options.appendChild(select);
+        }
+        if (hasLooper || hasNormalizer) {
+            let check = document.createElement("input");
+            let label = document.createElement("label");
+            let looper = document.createElement("div");
+
+            check.type = "checkbox";
+            check.id = `module-${id}-content-options-checkbox`;
+
+            if (hasLooper) {
+                check.onchange = function () {
+                    module.loop = this.checked;
+                };
+
+                label.htmlFor = `module-${id}-content-options-looper`;
+                label.appendChild(document.createTextNode("Loop"));
+
+                looper.className = "looper";
+                looper.id = `module-${id}-content-options-looper`;
+                looper.appendChild(check);
+                looper.appendChild(label);
+
+
+                module.classList.add("has-looper");
+                options.appendChild(looper);
+            }
+
+            if (hasNormalizer) {
+                check.onchange = function () {
+                    module.audioNode.normalize = this.checked;
+                };
+
+                label.htmlFor = `module-${id}-content-options-looper`;
+                label.appendChild(document.createTextNode("Norm"));
+
+                looper.className = "normalizer";
+                looper.id = `module-${id}-content-options-normalizer`;
+                looper.appendChild(check);
+                looper.appendChild(label);
+
+                module.classList.add("has-normalizer");
+                options.appendChild(looper);
+            }
+        };
+        content.appendChild(options)
+    }
+
+    controllers.className = "controllers"
+    controllers.id = `module-${id}-content-controllers`
+
     content.className = "content";
     content.id = `module-${id}-content`;
+
+    content.appendChild(controllers);
 
     nodes.className = "nodes"
     nodes.id = `module-${id}-nodes`
@@ -83,68 +154,10 @@ export default function createModule(name, hasInput, hasOutput, hasLooper, hasNo
         module.outputs = output;
     }
 
-    if (hasLooper || hasNormalizer || arrayForSelect) {
-        footer = document.createElement("footer");
-        footer.className = "footer";
-        footer.id = `module-${id}-footer`;
-        module.classList.add("has-footer")
-
-        if (hasLooper || hasNormalizer) {
-            let check = document.createElement("input");
-            let label = document.createElement("label");
-            let looper = document.createElement("div");
-
-            check.type = "checkbox";
-            check.id = `module-${id}-footer-checkbox`;
-
-            if (hasLooper) {
-                check.onchange = function () {
-                    module.loop = this.checked;
-                };
-
-                label.appendChild(check);
-                label.appendChild(document.createTextNode(" Loop"));
-
-                looper.className = "looper";
-                looper.id = `module-${id}-footer-looper`;
-                looper.appendChild(label);
-
-                module.classList.add("has-looper");
-                footer.appendChild(looper);
-            }
-
-            if (hasNormalizer) {
-                check.onchange = function () {
-                    module.audioNode.normalize = this.checked;
-                };
-
-                label.appendChild(check);
-                label.appendChild(document.createTextNode("  Norm"));
-
-                looper.className = "normalizer";
-                looper.id = `module-${id}-footer-normalizer`;
-                looper.appendChild(label);
-
-                module.classList.add("has-normalizer");
-                footer.appendChild(looper);
-            }
-        };
-
-        if (arrayForSelect) {
-            let select = document.createElement("select");
-
-            select.className = "ab-source";
-            select.id = `${module.id}-footer-select`
-
-            arrayForSelect.forEach((object) => {
-                let option = document.createElement("option");
-                option.appendChild(document.createTextNode(object));
-                select.appendChild(option)
-            })
-
-            footer.appendChild(select);
-        }
-    }
+    footer = document.createElement("footer");
+    footer.className = "footer";
+    footer.id = `module-${id}-footer`;
+    module.classList.add("has-footer")
 
     module.setAttribute("audioNodeType", name);
     module.appendChild(head);

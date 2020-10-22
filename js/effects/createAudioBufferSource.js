@@ -1,15 +1,25 @@
 import createModule from '../structure/createModule.js';
 import {
-    soundBuffer,
-    sounds,
     audioContext
-} from '../main.js';
-
+}
+from '../main.js'
 
 function addOpenFileButtonTo(element) {
+    let input = document.createElement("input");
+    let button = document.createElement("button");
     let option = document.createElement("option");
-    option.innerHTML = "<button id='button'>Open file...</button><input id='file-input' type='file' name='name' style='display: none;' />"
-    option.id = "button"
+
+    input.style = "display: none;";
+    input.type = "file";
+    input.id = "file-input";
+
+    button.innerText = "Open file..."
+    button.id = "button"
+
+    option.id = "file button"
+    option.appendChild(button);
+    option.appendChild(input);
+
     element.appendChild(option);
 }
 
@@ -26,7 +36,7 @@ function openFileHandler(fileButton, module) {
             audioContext.decodeAudioData(fileAsArrayBuffer).then(function (decodedData) {
                 // store it as an module buffer
                 module.buffer = decodedData;
-                soundBuffer.push(decodedData);
+                audioContext.nameSoundBuffer[fileLoaded.name] = decodedData;
             })
         };
         reader.onerror = () => {
@@ -43,25 +53,24 @@ function openFileHandler(fileButton, module) {
 
 function stopSound(module, playButton) {
     playButton.isPlaying = false;
-    playButton.src = "img/switch_off.svg";
+    playButton.classList.remove("switch-on");
 
     if (module.stopTimer) {
         window.clearTimeout(module.stopTimer);
         module.stopTimer = 0;
     }
-
-
 }
 
 function playSelectedSound(module, playButton) {
-    let loop = document.getElementById(`${module.id}-footer-checkbox`).checked
-    let selectedBuffer = document.getElementById(`${module.id}-footer-select`).selectedIndex
+    let loop = document.getElementById(`${module.id}-content-options-checkbox`).checked
+    console.log()
+    let selectedBufferName = document.getElementById(`${module.id}-content-options-select`).value
 
     if (playButton.isPlaying)
         stopSound(module, playButton);
     else {
         playButton.isPlaying = true;
-        playButton.src = "img/switch_on.svg";
+        playButton.classList.add("switch-on");
 
         // if there's already a note playing, cut it off.
         if (module.audioNode) {
@@ -73,7 +82,7 @@ function playSelectedSound(module, playButton) {
         // create a new BufferSource, set it to the buffer and connect it.
         module.audioNode = audioContext.createBufferSource();
         module.loop = loop;
-        module.buffer = soundBuffer[selectedBuffer];
+        module.buffer = audioContext.nameSoundBuffer[selectedBufferName];
 
         // play sound on all connected output
         if (module.outcomingCables) {
@@ -88,41 +97,41 @@ function playSelectedSound(module, playButton) {
     }
 }
 
-export default function createAudioBufferSource(event, initalLoop, initalBufferIndex) {
-    let module = createModule("audio buffer source", false, true, true, false, sounds);
-    let play = document.createElement("img");
-    let moduleContent = document.getElementById(`${module.id}-content`)
-    let select = document.getElementById(`${module.id}-footer-select`)
+export default function createAudioBufferSource(event, initalLoop, initalBufferName) {
+    let soundNames =  Object.keys(audioContext.nameSoundBuffer);
+    let module = createModule("audio buffer source", false, true, true, false, soundNames);
+    let playButton = document.createElement("div");
+    let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
+    let select = document.getElementById(`${module.id}-content-options-select`)
 
-    play.src = "img/switch_off.svg";
-    play.style.width = "40px";
-    play.alt = "play";
-    play.onclick = (event) => {
-        playSelectedSound(module, event.target)
+    playButton.classList.add("switch");
+    playButton.onclick = function() {
+        playSelectedSound(module, this)
     };
 
-    moduleContent.appendChild(play);
+    moduleControllers.appendChild(playButton);
 
     addOpenFileButtonTo(select);
 
     // when select changes
-    select.onchange = function (event) {
+    select.onchange = function () {
         // select get changed later when the file is open thus onchange 
         // get executed once more - we want to ignore this callout
-        if (event.target.type == "file")
+        if (this.type == "file")
             return
 
-        let clickedOption = event.target[this.selectedIndex]
+        let clickedOption = this[this.selectedIndex]
 
-        if (clickedOption.id == 'button') {
-            openFileHandler(event.target[this.selectedIndex], module);
+        if (clickedOption.id == 'file button') {
+            openFileHandler(this[this.selectedIndex], module);
         } else {
-            module.buffer = soundBuffer[this.selectedIndex];
+            module.buffer = audioContext.nameSoundBuffer[this.value];
         }
     };
 
     module.loop = initalLoop;
-    module.buffer = soundBuffer[initalBufferIndex];
+    module.buffer = audioContext.nameSoundBuffer[initalBufferName];
+    console.log(audioContext.nameSoundBuffer)
 
     event.preventDefault();
 }

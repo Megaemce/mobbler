@@ -1,21 +1,20 @@
 import createModule from '../structure/createModule.js';
 import {
-    audioContext,
-    impulseResponses,
-    irBuffer
+    audioContext
 }
 from '../main.js'
 
-export default function createConvolver(event, initalBufferIndex, initalNormalizer) {
-    let module = createModule("convolver", true, true, false, true, impulseResponses);
-    let select = document.getElementById(`${module.id}-footer-select`)
+export default function createConvolver(event, initalBufferName, initalNormalizer) {
+    let irNames =  Object.keys(audioContext.nameIRBuffer);
+    let module = createModule("convolver", true, true, false, true, irNames);
+    let select = document.getElementById(`${module.id}-content-options-select`)
 
     module.audioNode = audioContext.createConvolver();
-    module.audioNode.buffer = irBuffer[initalBufferIndex];
+    module.audioNode.buffer = audioContext.nameIRBuffer[initalBufferName];
     module.audioNode.normalize = initalNormalizer;
 
     select.onchange = function () {
-        module.audioNode.buffer = irBuffer[this.selectedIndex];
+        module.audioNode.buffer = audioContext.nameIRBuffer[this.value];
     }
 
     event.preventDefault();

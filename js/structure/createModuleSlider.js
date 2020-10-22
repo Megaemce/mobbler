@@ -20,14 +20,16 @@ export default function createModuleSlider(module, property, initialValue, min, 
     let valueUnit = document.createElement("div");
     let slider = document.createElement("input");
     let sliderWraper = document.createElement("div");
-    let moduleContent = document.getElementById(`${module.id}-content`)
+    let audioParam = document.createElement("div");
+    let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
+    let footer = document.getElementById(`${module.id}-footer`)
 
     label.className = "label";
-    label.id = `${module.id}-content-${property}-info-property`
+    label.id = `${module.id}-content-controllers-${property}-info-property`
     label.appendChild(document.createTextNode(property));
 
     value.className = "value";
-    value.id = `${module.id}-content-${property}-info-value`
+    value.id = `${module.id}-content-controllers-${property}-info-value`
     // there is a bug with range between 0-0.9: (0,0.5) = 0, [0.5,1) = 1 
     // thus showing "real" range value before user interaction
     if (initialValue >= 0 && initialValue < 0.5)
@@ -38,7 +40,7 @@ export default function createModuleSlider(module, property, initialValue, min, 
     value.appendChild(document.createTextNode(initialValue));
 
     unit.className = "value";
-    unit.id = `${module.id}-content-${property}-info-units`
+    unit.id = `${module.id}-content-controllers-${property}-info-units`
     unit.appendChild(document.createTextNode(units));
 
     valueUnit.className = "value-unit"
@@ -46,11 +48,11 @@ export default function createModuleSlider(module, property, initialValue, min, 
     valueUnit.appendChild(unit);
 
     info.className = "slider-info";
-    info.id = `${module.id}-content-${property}-info`
+    info.id = `${module.id}-content-controllers-${property}-info`
     info.appendChild(label);
     info.appendChild(valueUnit);
 
-    slider.id = `${module.id}-content-${property}-input`
+    slider.id = `${module.id}-content-controllers-${property}-input`
     slider.type = "range";
     slider.min = min;
     slider.max = max;
@@ -72,10 +74,21 @@ export default function createModuleSlider(module, property, initialValue, min, 
     sliderWraper.appendChild(slider)
 
     sliderDiv.classList.add("slider", `log-slider-is-${scaleLog}`);
-    sliderDiv.id = `${module.id}-content-${property}`
+    sliderDiv.id = `${module.id}-content-controllers-${property}`
     sliderDiv.appendChild(info);
     sliderDiv.appendChild(sliderWraper);
 
-    moduleContent.appendChild(sliderDiv);
+    moduleControllers.appendChild(sliderDiv);
+
+    audioParam.id = `${module.id}-footer-parameter-${property}`
+    audioParam.type = property; //keep it for stopMovingCable
+    audioParam.className = "audio-parameter"
+
+    audioParam.onConnectInput = function () {
+        this.style.filter = "grayscale(0%);"
+    }
+
+    footer.appendChild(audioParam)
+
     return slider;
 }

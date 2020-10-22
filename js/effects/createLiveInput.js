@@ -1,15 +1,15 @@
 import createModule from '../structure/createModule.js';
 import {
     audioContext
-} from '../main.js';
-
+}
+from '../main.js'
 
 function gotStream(stream) {
     this.audioNode = audioContext.createMediaStreamSource(stream);
 }
 export default function createLiveInput(event) {
     let module = createModule("live input", false, true, false, false, null);
-    let content = document.getElementById(`${module.id}-content`)
+    let content = document.getElementById(`${module.id}-content-controllers`)
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     if (navigator.getUserMedia)

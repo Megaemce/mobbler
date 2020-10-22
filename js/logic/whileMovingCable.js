@@ -1,6 +1,7 @@
 // returns destination if it's correct
 export default function whileMovingCable(event, sourceModule) {
     let destinationModule = event.toElement;
+    let modInputOrParamInputID;
 
     document.getElementById("svgCanvas").classList.add("jackCursor");
 
@@ -14,6 +15,11 @@ export default function whileMovingCable(event, sourceModule) {
 
     if (destinationModule.classList) { // if we don't have class, we're not a node.
 
+        if (destinationModule.classList.contains("node")) 
+            modInputOrParamInputID = "input";
+        if (destinationModule.classList.contains("audio-parameter")) 
+            modInputOrParamInputID = destinationModule.id
+        
         // search for module or final destination
         do {
             destinationModule = destinationModule.parentNode;
@@ -25,10 +31,7 @@ export default function whileMovingCable(event, sourceModule) {
         // if we're over our originating node, do nothing.
         if (destinationModule == sourceModule) return;
 
-        destinationModule.className += " canConnect";
-
-        return destinationModule;
-
+        return [destinationModule, modInputOrParamInputID];
     }
     event.preventDefault();
     event.stopPropagation();

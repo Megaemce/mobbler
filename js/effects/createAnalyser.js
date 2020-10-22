@@ -104,13 +104,13 @@ export function visualizeOn(moduleID, placeID, style, width, height) {
 
 export default function createAnalyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
     let module = createModule("analyser", true, true, false, false, visualSettings);
-    let content = document.getElementById(`${module.id}-content`);
-    let select = document.getElementById(`${module.id}-footer-select`)
+    let content = document.getElementById(`${module.id}-content-controllers`);
+    let select = document.getElementById(`${module.id}-content-options-select`)
     let canvas = document.createElement("canvas");
 
     select.onchange = function () {
         window.cancelAnimationFrame(drawVisual);
-        visualizeOn(module.id, `${module.id}-content`, visualSettings[this.selectedIndex], 240, 140);
+        visualizeOn(module.id, content.id, visualSettings[this.selectedIndex], 240, 140);
     }
 
     module.audioNode = audioContext.createAnalyser()
@@ -122,12 +122,12 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
 
     canvas.height = 140;
     canvas.width = 240;
-    canvas.id = `${module.id}-content-canvas`
+    canvas.id = `${module.id}-content-controllers-canvas`
     canvas.className = "analyserCanvas";
     canvas.style.backgroundImage = "url('img/analyser-bg.png')";
 
     module.onConnectInput = function () {
-        visualizeOn(module.id, `${module.id}-content`, initalType, 240, 140)
+        visualizeOn(module.id, content.id, initalType, 240, 140)
     };
 
     event.preventDefault();
