@@ -13,6 +13,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     let select = document.getElementById(`${module.id}-content-options-select`)
     let diode = document.getElementById(`${module.id}-head-diode`)
     let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
+    let footer = document.getElementById(`${module.id}-footer`)
 
     createModuleSlider(module, "frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true);
     createModuleSlider(module, "detune", initalDetune, -1200, 1200, 1, "cents", false);
@@ -59,6 +60,8 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             module.audioNode.start(0);
         }
     }
+
+    footer.classList.add("move-by-switch")
 
     select.onchange = function () {
         // if we have a playing oscillator, go ahead and switch it live

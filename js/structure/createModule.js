@@ -6,10 +6,11 @@ import disconnectModule from "../logic/disconnectModule.js"
 import movingModule from "../logic/movingModule.js";
 
 let tempx = 50,
-    tempy = 150,
+    tempy = 100,
     id = 0;
 
 export default function createModule(name, hasInput, hasOutput, hasLooper, hasNormalizer, arrayForSelect) {
+    let mainWidth = document.getElementById("modules").offsetWidth;
     let module = document.createElement("div");
     let content = document.createElement("div");
     let options = document.createElement("div");
@@ -27,13 +28,13 @@ export default function createModule(name, hasInput, hasOutput, hasLooper, hasNo
     module.style.left = `${tempx}px`;
     module.style.top = `${tempy}px`;
 
-    if (tempx > 700) {
-        tempy += 250;
-        tempx = 50;
+    if (tempx > mainWidth - 450) {
+        tempy += 300;
+        tempx = 50 + id;
     } else
-        tempx += 250;
-    if (tempy > 600)
-        tempy = 100;
+        tempx += 300;
+    if (tempy > window.innerHeight - 300)
+        tempy = 100 + id;
 
     diode.className = "diode"
     diode.id = `module-${id}-head-diode`;

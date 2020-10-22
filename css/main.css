@@ -477,6 +477,11 @@ body {
     cursor: auto;
 }
 
+.module footer.move-by-switch {
+    /* move by switch width (40px) + last footer padding-right (10px) */
+    padding-right: 50px;
+}
+
 .module footer .audio-parameter {
     background-image: url('../img/circle.svg');
     background-repeat: no-repeat;

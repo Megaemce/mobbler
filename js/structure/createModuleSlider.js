@@ -12,6 +12,7 @@ function logPosition(value, min, max, digitsAfterDot) {
 
 
 export default function createModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog) {
+    let propertyNoSpaces = property.split(' ').join('')
     let sliderDiv = document.createElement("div");
     let info = document.createElement("div");
     let label = document.createElement("span");
@@ -25,11 +26,11 @@ export default function createModuleSlider(module, property, initialValue, min, 
     let footer = document.getElementById(`${module.id}-footer`)
 
     label.className = "label";
-    label.id = `${module.id}-content-controllers-${property}-info-property`
+    label.id = `${module.id}-content-controllers-${propertyNoSpaces}-info-property`
     label.appendChild(document.createTextNode(property));
 
     value.className = "value";
-    value.id = `${module.id}-content-controllers-${property}-info-value`
+    value.id = `${module.id}-content-controllers-${propertyNoSpaces}-info-value`
     // there is a bug with range between 0-0.9: (0,0.5) = 0, [0.5,1) = 1 
     // thus showing "real" range value before user interaction
     if (initialValue >= 0 && initialValue < 0.5)
@@ -40,7 +41,7 @@ export default function createModuleSlider(module, property, initialValue, min, 
     value.appendChild(document.createTextNode(initialValue));
 
     unit.className = "value";
-    unit.id = `${module.id}-content-controllers-${property}-info-units`
+    unit.id = `${module.id}-content-controllers-${propertyNoSpaces}-info-units`
     unit.appendChild(document.createTextNode(units));
 
     valueUnit.className = "value-unit"
@@ -48,11 +49,11 @@ export default function createModuleSlider(module, property, initialValue, min, 
     valueUnit.appendChild(unit);
 
     info.className = "slider-info";
-    info.id = `${module.id}-content-controllers-${property}-info`
+    info.id = `${module.id}-content-controllers-${propertyNoSpaces}-info`
     info.appendChild(label);
     info.appendChild(valueUnit);
 
-    slider.id = `${module.id}-content-controllers-${property}-input`
+    slider.id = `${module.id}-content-controllers-${propertyNoSpaces}-input`
     slider.type = "range";
     slider.min = min;
     slider.max = max;
@@ -64,7 +65,7 @@ export default function createModuleSlider(module, property, initialValue, min, 
             sliderValue = logSlider(this.value, min, max, 2)
 
         if (module.audioNode)
-            module.audioNode[property].value = sliderValue;
+            module.audioNode[propertyNoSpaces].value = sliderValue;
 
         // in case user is just playing around without audio on
         value.innerHTML = sliderValue;
@@ -80,8 +81,8 @@ export default function createModuleSlider(module, property, initialValue, min, 
 
     moduleControllers.appendChild(sliderDiv);
 
-    audioParam.id = `${module.id}-footer-parameter-${property}`
-    audioParam.type = property; //keep it for stopMovingCable
+    audioParam.id = `${module.id}-footer-parameter-${propertyNoSpaces}`
+    audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
     audioParam.className = "audio-parameter"
 
     audioParam.onConnectInput = function () {

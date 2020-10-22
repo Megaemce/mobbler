@@ -11,7 +11,7 @@ export default function createDelay(event, initialDelay, maxDelay) {
     module.audioNode = audioContext.createDelay(maxDelay);
     module.audioNode.delayTime.value = initialDelay;
 
-    createModuleSlider(module, "delayTime", initialDelay, 0.0, maxDelay, 0.01, "sec", false);
+    createModuleSlider(module, "delay Time", initialDelay, 0.0, maxDelay, 0.01, "sec", false);
 
     event.preventDefault();
 }

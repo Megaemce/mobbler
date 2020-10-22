@@ -39,8 +39,8 @@ export default function stopMovingCable(sourceModule, returnedPairValue) {
 
     destinationModule.incomingCables.push(cablePointer);
 
-    // can connect! 
-    if (modInputOrParamInputID === "input"){
+    // different action for input and audio parameter
+    if (modInputOrParamInputID === "input") {
         connectModules(sourceModule, destinationModule);
     } else if (!modInputOrParamInputID) {
         connectParameter(sourceModule, destinationModule, modInputOrParamInputID)
