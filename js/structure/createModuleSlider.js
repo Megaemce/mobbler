@@ -1,3 +1,5 @@
+import audioContext from '../main.js'
+
 function logSlider(position, min, max, digitsAfterDot) {
     // calculate adjustment factor
     let scale = (Math.log(max) - Math.log(min || 1)) / (max - min);
@@ -9,7 +11,6 @@ function logPosition(value, min, max, digitsAfterDot) {
     let scale = (Math.log(max) - Math.log(min || 1)) / (max - min);
     return (min + (Math.log(value || 1) - Math.log(min || 1)) / scale).toFixed(digitsAfterDot);
 }
-
 
 export default function createModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog) {
     let propertyNoSpaces = property.split(' ').join('')
@@ -24,6 +25,7 @@ export default function createModuleSlider(module, property, initialValue, min, 
     let audioParam = document.createElement("div");
     let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
     let footer = document.getElementById(`${module.id}-footer`)
+    let sliderValue = undefined;
 
     label.className = "label";
     label.id = `${module.id}-content-controllers-${propertyNoSpaces}-info-property`
@@ -60,7 +62,8 @@ export default function createModuleSlider(module, property, initialValue, min, 
     slider.value = scaleLog ? logPosition(initialValue, min, max, 2) : initialValue;
     slider.step = stepUnits;
     slider.oninput = function () {
-        let sliderValue = this.value
+        sliderValue = this.value
+
         if (scaleLog)
             sliderValue = logSlider(this.value, min, max, 2)
 
@@ -69,6 +72,39 @@ export default function createModuleSlider(module, property, initialValue, min, 
 
         // in case user is just playing around without audio on
         value.innerHTML = sliderValue;
+    }
+    slider.onConnectParameter = function (sourceModule) {
+        if (!sourceModule.audioNode) return
+        let slider = this;
+
+        slider.classList.add("disabled");
+        slider.audioNode = audioContext.createAnalyser();
+
+        sourceModule.audioNode.connect(slider.audioNode);
+
+        let bufferLength = slider.audioNode.fftSize = 32;
+        let dataArray = new Uint8Array(bufferLength);
+
+        // use arrow function to pass slider (as a this)
+        function drawWave() {
+            slider.audioNode.getByteTimeDomainData(dataArray);
+
+            dataArray.forEach((element) => {
+                slider.value = scaleLog ? logPosition(element, min, max, 2) : element;
+
+                if (scaleLog)
+                    sliderValue = logSlider(slider.value, min, max, 2)
+
+                if (module.audioNode)
+                    module.audioNode[propertyNoSpaces].value = sliderValue;
+            });
+
+            setTimeout(() => {
+                requestAnimationFrame(drawWave);
+            }, 1000 / 5);
+        }
+
+        drawWave();
     }
 
     sliderWraper.className = "input-wrapper";
@@ -84,10 +120,6 @@ export default function createModuleSlider(module, property, initialValue, min, 
     audioParam.id = `${module.id}-footer-parameter-${propertyNoSpaces}`
     audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
     audioParam.className = "audio-parameter"
-
-    audioParam.onConnectInput = function () {
-        this.style.filter = "grayscale(0%);"
-    }
 
     footer.appendChild(audioParam)
 

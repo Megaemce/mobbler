@@ -1,12 +1,9 @@
 import createModule from '../structure/createModule.js';
 import createModuleSlider from '../structure/createModuleSlider.js';
-import {
-    audioContext
-}
-from '../main.js'
+import audioContext from '../main.js'
 
 export default function createDynamicsCompressor(event, initalThreshold, initalKnee, initalRatio, initalAttack, initalRelease) {
-    let module = createModule("dynamics compressor", true, true, false, false, null);
+    let module = createModule("dynamics compressor", true, false, false, undefined);
 
     module.audioNode = audioContext.createDynamicsCompressor();
 

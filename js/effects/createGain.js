@@ -1,12 +1,9 @@
 import createModule from '../structure/createModule.js';
 import createModuleSlider from '../structure/createModuleSlider.js';
-import {
-    audioContext
-}
-from '../main.js'
+import audioContext from '../main.js'
 
 export default function createGain(event, initalGain) {
-    let module = createModule("gain", true, true, false, false, null);
+    let module = createModule("gain", true, false, false, undefined);
 
     module.audioNode = audioContext.createGain();
     module.audioNode.gain.value = initalGain;

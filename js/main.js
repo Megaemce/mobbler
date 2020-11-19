@@ -8,7 +8,7 @@ import createDelay from './effects/createDelay.js';
 import createAudioBufferSource from './effects/createAudioBufferSource.js';
 import createLiveInput from './effects/createLiveInput.js';
 
-export let audioContext;
+let audioContext;
 
 // adding sounds to the audioContext
 function loadFilesIntoAudioContext(audioContext, soundArray, isSound) {
@@ -106,3 +106,4 @@ function init() {
 }
 
 window.onload = init()
+export default audioContext;

@@ -1,7 +1,4 @@
-import {
-    createCable
-} from "../logic/createCable.js";
-
+import createCable from "../logic/createCable.js";
 import disconnectModule from "../logic/disconnectModule.js"
 import movingModule from "../logic/movingModule.js";
 
@@ -9,18 +6,19 @@ let tempx = 50,
     tempy = 100,
     id = 0;
 
-export default function createModule(name, hasInput, hasOutput, hasLooper, hasNormalizer, arrayForSelect) {
+export default function createModule(name, hasInput, hasLooper, hasNormalizer, arrayForSelect) {
     let mainWidth = document.getElementById("modules").offsetWidth;
     let module = document.createElement("div");
-    let content = document.createElement("div");
-    let options = document.createElement("div");
-    let controllers = document.createElement("div");
     let head = document.createElement("div");
     let title = document.createElement("span");
     let close = document.createElement("a");
-    let diode = document.createElement("div")
+    let diode = document.createElement("div");
+    let content = document.createElement("div");
+    let options = document.createElement("div");
+    let controllers = document.createElement("div");
     let nodes = document.createElement("div");
-    let footer // keep null just to test if it was created
+    let output = document.createElement("div");
+    let footer = undefined; // keep undefined just to test if it was created
     id++;
 
     module.className = "module";
@@ -99,7 +97,6 @@ export default function createModule(name, hasInput, hasOutput, hasLooper, hasNo
                 looper.appendChild(check);
                 looper.appendChild(label);
 
-
                 module.classList.add("has-looper");
                 options.appendChild(looper);
             }
@@ -135,7 +132,6 @@ export default function createModule(name, hasInput, hasOutput, hasLooper, hasNo
     nodes.className = "nodes"
     nodes.id = `module-${id}-nodes`
 
-
     if (hasInput) {
         let input = document.createElement("div");
         input.className = "node module-input";
@@ -144,16 +140,13 @@ export default function createModule(name, hasInput, hasOutput, hasLooper, hasNo
         module.inputs = input;
     }
 
-    if (hasOutput) {
-        let output = document.createElement("div");
-        output.className = "node module-output";
-        output.id = `module-${id}-nodes-output`
-        output.onmousedown = function (event) {
-            createCable(event, module);
-        }
-        nodes.appendChild(output);
-        module.outputs = output;
+    output.className = "node module-output";
+    output.id = `module-${id}-nodes-output`
+    output.onmousedown = function (event) {
+        createCable(event, module);
     }
+    nodes.appendChild(output);
+    module.outputs = output;
 
     footer = document.createElement("footer");
     footer.className = "footer";
@@ -165,7 +158,6 @@ export default function createModule(name, hasInput, hasOutput, hasLooper, hasNo
     module.appendChild(content);
     module.appendChild(nodes);
     footer && module.appendChild(footer);
-
 
     // add the node into the soundfield
     document.getElementById("modules").appendChild(module);

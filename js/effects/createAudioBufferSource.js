@@ -1,8 +1,5 @@
 import createModule from '../structure/createModule.js';
-import {
-    audioContext
-}
-from '../main.js'
+import audioContext from '../main.js'
 
 function addOpenFileButtonTo(element) {
     let input = document.createElement("input");
@@ -52,31 +49,41 @@ function openFileHandler(fileButton, module) {
 }
 
 function stopSound(module, playButton) {
+    let diode = document.getElementById(`${module.id}-head-diode`)
+    let looper = document.getElementById(`${module.id}-content-options-checkbox`);
+
     playButton.isPlaying = false;
     playButton.classList.remove("switch-on");
+    diode.className = "diode"
 
     if (module.audioNode.stopTimer) {
         window.clearTimeout(module.audioNode.stopTimer);
         module.audioNode.stopTimer = 0;
+    }
+    // if loop is enabled sound will play even with switch-off thus kill it with fire
+    if (module.audioNode.loop) {
+        module.audioNode.loop = false
+        looper.checked = false;
     }
 }
 
 function playSelectedSound(module, playButton) {
     let loop = document.getElementById(`${module.id}-content-options-checkbox`).checked
     let selectedBufferName = document.getElementById(`${module.id}-content-options-select`).value
-
+    let diode = document.getElementById(`${module.id}-head-diode`)
 
     if (playButton.isPlaying)
         stopSound(module, playButton);
     else {
         playButton.isPlaying = true;
+        diode.className = "diode diode-on";
         playButton.classList.add("switch-on");
 
         // if there's already a note playing, cut it off
         if (module.audioNode) {
             module.audioNode.stop(0);
             module.audioNode.disconnect();
-            module.audioNode = null
+            module.audioNode = undefined;
         }
 
         // create a new BufferSource and connect it
@@ -102,11 +109,13 @@ function playSelectedSound(module, playButton) {
 
 export default function createAudioBufferSource(event, initalLoop, initalBufferName) {
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
-    let module = createModule("audio buffer source", false, true, true, false, soundNames);
+    let module = createModule("audio buffer source", false, true, false, soundNames);
     let playButton = document.createElement("div");
-    let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
-    let footer = document.getElementById(`${module.id}-footer`)
-    let select = document.getElementById(`${module.id}-content-options-select`)
+    let footer = document.getElementById(`${module.id}-footer`);
+    let select = document.getElementById(`${module.id}-content-options-select`);
+    let looper = document.getElementById(`${module.id}-content-options-checkbox`);
+    let moduleControllers = document.getElementById(`${module.id}-content-controllers`);
+
 
     playButton.classList.add("switch");
     playButton.onclick = function () {
@@ -134,6 +143,11 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
             module.buffer = audioContext.nameSoundBuffer[this.value];
         }
     };
+
+    // when changing looper settings reset the sound
+    looper.onchange = function () {
+        playSelectedSound(module, playButton);
+    }
 
     module.loop = initalLoop;
     module.buffer = audioContext.nameSoundBuffer[initalBufferName];

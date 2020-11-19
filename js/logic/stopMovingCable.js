@@ -15,9 +15,9 @@ export default function stopMovingCable(sourceModule, returnedPairValue) {
     canvas.classList.remove("jackCursor");
 
     // destination was not a real output, thus erase the line
-    if (!destinationModule) {
+    if (!destinationModule || !modInputOrParamInputID) {
         sourceModule.activeCable.deleteCable()
-        sourceModule.activeCable = null; // removing the pointer
+        sourceModule.activeCable = undefined; // removing the pointer
         return
     }
 
@@ -40,12 +40,11 @@ export default function stopMovingCable(sourceModule, returnedPairValue) {
     destinationModule.incomingCables.push(cablePointer);
 
     // different action for input and audio parameter
-    if (modInputOrParamInputID === "input") {
+    if (modInputOrParamInputID === "input")
         connectModules(sourceModule, destinationModule);
-    } else if (!modInputOrParamInputID) {
+    else if (modInputOrParamInputID)
         connectParameter(sourceModule, destinationModule, modInputOrParamInputID)
-    }
 
     // remove the pointer as shape is already on screen
-    sourceModule.activeCable = null;
+    sourceModule.activeCable = undefined;
 }

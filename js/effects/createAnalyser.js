@@ -1,8 +1,5 @@
 import createModule from '../structure/createModule.js';
-import {
-    audioContext
-}
-from '../main.js'
+import audioContext from '../main.js'
 
 let drawVisual;
 let visualSettings = ["sine wave", "frequency bars"];
@@ -33,13 +30,14 @@ export function visualizeOn(moduleID, placeID, style, width, height) {
     switch (style) {
         case "frequency bars":
             module.audioNode.fftSize = 512;
-            let bufferLengthAlt = module.audioNode.frequencyBinCount
+            let bufferLengthAlt = module.audioNode.frequencyBinCount; //it's always half of fftSize
             let dataArrayAlt = new Uint8Array(bufferLengthAlt);
 
             let drawBar = function () {
                 drawVisual = requestAnimationFrame(drawBar);
 
                 module.audioNode.getByteFrequencyData(dataArrayAlt);
+                // data returned in dataArrayAlt array will in range [0-255]
 
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, width, height);
@@ -47,28 +45,27 @@ export function visualizeOn(moduleID, placeID, style, width, height) {
                 let barWidth = (width / bufferLengthAlt) * 2.5;
                 let x = 0;
 
-                for (let i = 0; i < bufferLengthAlt; i++) {
-                    let barHeight = dataArrayAlt[i];
-
+                dataArrayAlt.forEach(barHeight => {
                     ctx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+                    // contex grid is upside down so we substract from y value
                     ctx.fillRect(x, height - barHeight / 2, barWidth, barHeight / 2);
 
                     x += barWidth + 1;
-                }
+                })
             };
 
             drawBar();
             break;
 
         case "sine wave":
-            module.audioNode.fftSize = 2048;
-            let bufferLength = module.audioNode.fftSize;
+            let bufferLength = module.audioNode.fftSize = 2048;
             let dataArray = new Uint8Array(bufferLength);
 
             let drawWave = function () {
                 drawVisual = requestAnimationFrame(drawWave);
 
                 module.audioNode.getByteTimeDomainData(dataArray);
+                // data returned in dataArray will be in range [0-255]
 
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, width, height);
@@ -76,24 +73,16 @@ export function visualizeOn(moduleID, placeID, style, width, height) {
                 ctx.strokeStyle = 'rgb(0, 0, 0)';
                 ctx.beginPath();
 
-                let sliceWidth = width * 1.0 / bufferLength;
-                let x = 0;
-
-                for (let i = 0; i < bufferLength; i++) {
-
-                    let v = dataArray[i] / 128.0;
-                    let y = v * height / 2;
-
-                    if (i === 0) {
+                dataArray.forEach((element, index) => {
+                    let x = (width / bufferLength) * index; // sliceWidth * index
+                    let y = element * height / 256 // 256 comes from dataArray max value;
+                    if (!index === 0)
                         ctx.moveTo(x, y);
-                    } else {
+                    else
                         ctx.lineTo(x, y);
-                    }
+                });
 
-                    x += sliceWidth;
-                }
-
-                ctx.lineTo(canvas.width + 20, canvas.height / 2);
+                //ctx.lineTo(canvas.width + 20, canvas.height / 2);
                 ctx.stroke();
             };
 
@@ -103,7 +92,7 @@ export function visualizeOn(moduleID, placeID, style, width, height) {
 }
 
 export default function createAnalyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
-    let module = createModule("analyser", true, true, false, false, visualSettings);
+    let module = createModule("analyser", true, false, false, visualSettings);
     let content = document.getElementById(`${module.id}-content-controllers`);
     let select = document.getElementById(`${module.id}-content-options-select`)
     let canvas = document.createElement("canvas");
@@ -113,8 +102,8 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
         visualizeOn(module.id, content.id, visualSettings[this.selectedIndex], 240, 140);
     }
 
-    module.audioNode = audioContext.createAnalyser()
-    module.audioNode.smoothingTimeConstant = initalSmoothingTimeConstant; // not much smoothing
+    module.audioNode = audioContext.createAnalyser();
+    module.audioNode.smoothingTimeConstant = initalSmoothingTimeConstant;
     module.audioNode.maxDecibels = initalMaxDecibels;
 
     content.drawingContext = canvas.getContext('2d');

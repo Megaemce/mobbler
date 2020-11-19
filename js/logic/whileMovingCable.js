@@ -10,16 +10,15 @@ export default function whileMovingCable(event, sourceModule) {
     let y = event.clientY + window.scrollY;
 
     // Move connector visual line
-    sourceModule.activeCable.shape.setAttributeNS(null, "x2", x);
-    sourceModule.activeCable.shape.setAttributeNS(null, "y2", y);
+    sourceModule.activeCable.shape.setAttributeNS(undefined, "x2", x);
+    sourceModule.activeCable.shape.setAttributeNS(undefined, "y2", y);
 
     if (destinationModule.classList) { // if we don't have class, we're not a node.
-
-        if (destinationModule.classList.contains("node")) 
+        if (destinationModule.classList.contains("module-input") || destinationModule.classList.contains("destination-input"))
             modInputOrParamInputID = "input";
-        if (destinationModule.classList.contains("audio-parameter")) 
+        if (destinationModule.classList.contains("audio-parameter"))
             modInputOrParamInputID = destinationModule.id
-        
+
         // search for module or final destination
         do {
             destinationModule = destinationModule.parentNode;

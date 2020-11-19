@@ -1,15 +1,12 @@
 import createModule from '../structure/createModule.js';
 import createModuleSlider from '../structure/createModuleSlider.js';
-import {
-    audioContext
-}
-from '../main.js'
+import audioContext from '../main.js'
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
 
     let playButton = document.createElement("div");
-    let module = createModule("oscillator", false, true, false, false, oscTypes);
+    let module = createModule("oscillator", false, false, false, oscTypes);
     let select = document.getElementById(`${module.id}-content-options-select`)
     let diode = document.getElementById(`${module.id}-head-diode`)
     let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
@@ -39,7 +36,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
                         module.audioNode.disconnect(cable.destination.audioNode);
                     });
                 }
-                module.audioNode = null;
+                module.audioNode = undefined;
             }
 
         } else {

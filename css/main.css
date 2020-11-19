@@ -465,7 +465,6 @@ body {
 }
 
 
-
 /* Module footer */
 .module footer {
     border-radius: 0 0 5px 5px;
@@ -483,7 +482,7 @@ body {
 }
 
 .module footer .audio-parameter {
-    background-image: url('../img/circle.svg');
+    background-image: url('../img/jack_in_2.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;

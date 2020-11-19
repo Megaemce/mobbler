@@ -10,12 +10,12 @@ export default class Cable {
     }
 
     updateStartPoint(x, y) {
-        this.shape.setAttributeNS(null, "x1", x);
-        this.shape.setAttributeNS(null, "y1", y);
+        this.shape.setAttributeNS(undefined, "x1", x);
+        this.shape.setAttributeNS(undefined, "y1", y);
     }
     updateEndPoint(x, y) {
-        this.shape.setAttributeNS(null, "x2", x);
-        this.shape.setAttributeNS(null, "y2", y);
+        this.shape.setAttributeNS(undefined, "x2", x);
+        this.shape.setAttributeNS(undefined, "y2", y);
     }
 
     deleteCable() {
@@ -54,7 +54,7 @@ export default class Cable {
         }
     }
     drawOnCanvas() {
-        // set id based on destination: if null it means that this is still an active cable
+        // set id based on destination: if undefined it means that this is still an active cable
         this.shape.id = this.destination ? `${this.source.id}-cable-to-${this.destination.id}` : `${this.source.id}-cable-active`;
         document.getElementById("svgCanvas").appendChild(this.shape);
 

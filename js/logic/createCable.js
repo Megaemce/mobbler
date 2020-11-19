@@ -1,8 +1,8 @@
 import whileMovingCable from "./whileMovingCable.js";
 import stopMovingCable from "./stopMovingCable.js";
-import Cable from "../classes/classCable.js"; 
+import Cable from "../classes/classCable.js";
 
-export function createCable(event, sourceModule) {
+export default function createCable(event, sourceModule) {
     if (!sourceModule) console.log("missing module!");
 
     let clickedNode = event.target;
@@ -27,14 +27,14 @@ export function createCable(event, sourceModule) {
     let svgns = "http://www.w3.org/2000/svg";
 
     let shape = document.createElementNS(svgns, "line");
-    shape.setAttributeNS(null, "x1", x);
-    shape.setAttributeNS(null, "y1", y);
-    shape.setAttributeNS(null, "x2", x);
-    shape.setAttributeNS(null, "y2", y);
-    shape.setAttributeNS(null, "stroke", "black");
-    shape.setAttributeNS(null, "stroke-width", "5");
+    shape.setAttributeNS(undefined, "x1", x);
+    shape.setAttributeNS(undefined, "y1", y);
+    shape.setAttributeNS(undefined, "x2", x);
+    shape.setAttributeNS(undefined, "y2", y);
+    shape.setAttributeNS(undefined, "stroke", "black");
+    shape.setAttributeNS(undefined, "stroke-width", "5");
 
-    sourceModule.activeCable = new Cable(sourceModule, null, shape);
+    sourceModule.activeCable = new Cable(sourceModule, undefined, shape);
     sourceModule.activeCable.drawOnCanvas();
 
     // Capture mousemove and mouseup events on the page.
