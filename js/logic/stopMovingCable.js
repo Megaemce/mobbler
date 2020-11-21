@@ -7,15 +7,12 @@ export default function stopMovingCable(sourceModule, returnedPairValue) {
     let modInputOrParamInputID
     let canvas = document.getElementById("svgCanvas");
 
-    if (returnedPairValue) {
-        destinationModule = returnedPairValue[0];
-        modInputOrParamInputID = returnedPairValue[1];
-    }
-
     canvas.classList.remove("jackCursor");
 
-    // destination was not a real output, thus erase the line
-    if (!destinationModule || !modInputOrParamInputID) {
+    if (returnedPairValue && returnedPairValue[0] && returnedPairValue[1]) {
+        destinationModule = returnedPairValue[0];
+        modInputOrParamInputID = returnedPairValue[1];
+    } else { // destination was not a real output, thus erase the line
         sourceModule.activeCable.deleteCable()
         sourceModule.activeCable = undefined; // removing the pointer
         return

@@ -1,16 +1,7 @@
-import audioContext from '../main.js'
-
-function logSlider(position, min, max, digitsAfterDot) {
-    // calculate adjustment factor
-    let scale = (Math.log(max) - Math.log(min || 1)) / (max - min);
-    return (Math.exp((position - min) * scale + Math.log(min || 1))).toFixed(digitsAfterDot);
-}
-
-function logPosition(value, min, max, digitsAfterDot) {
-    // calculate adjustment factor
-    let scale = (Math.log(max) - Math.log(min || 1)) / (max - min);
-    return (min + (Math.log(value || 1) - Math.log(min || 1)) / scale).toFixed(digitsAfterDot);
-}
+import {
+    valueToLogPosition,
+    logPositionToValue,
+} from '../math/helper.js'
 
 export default function createModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog) {
     let propertyNoSpaces = property.split(' ').join('')
@@ -57,15 +48,14 @@ export default function createModuleSlider(module, property, initialValue, min, 
 
     slider.id = `${module.id}-content-controllers-${propertyNoSpaces}-input`
     slider.type = "range";
+    slider.scaleLog = scaleLog
     slider.min = min;
     slider.max = max;
-    slider.value = scaleLog ? logPosition(initialValue, min, max, 2) : initialValue;
+    // set inital value to the correct position before user starts to play
+    slider.value = scaleLog ? valueToLogPosition(initialValue, min, max, 2) : initialValue;
     slider.step = stepUnits;
     slider.oninput = function () {
-        sliderValue = this.value
-
-        if (scaleLog)
-            sliderValue = logSlider(this.value, min, max, 2)
+        sliderValue = scaleLog ? logPositionToValue(this.value, min, max, 2) : this.value
 
         if (module.audioNode)
             module.audioNode[propertyNoSpaces].value = sliderValue;
@@ -73,44 +63,11 @@ export default function createModuleSlider(module, property, initialValue, min, 
         // in case user is just playing around without audio on
         value.innerHTML = sliderValue;
     }
-    slider.onConnectParameter = function (sourceModule) {
-        if (!sourceModule.audioNode) return
-        let slider = this;
-
-        slider.classList.add("disabled");
-        slider.audioNode = audioContext.createAnalyser();
-
-        sourceModule.audioNode.connect(slider.audioNode);
-
-        let bufferLength = slider.audioNode.fftSize = 32;
-        let dataArray = new Uint8Array(bufferLength);
-
-        // use arrow function to pass slider (as a this)
-        function drawWave() {
-            slider.audioNode.getByteTimeDomainData(dataArray);
-
-            dataArray.forEach((element) => {
-                slider.value = scaleLog ? logPosition(element, min, max, 2) : element;
-
-                if (scaleLog)
-                    sliderValue = logSlider(slider.value, min, max, 2)
-
-                if (module.audioNode)
-                    module.audioNode[propertyNoSpaces].value = sliderValue;
-            });
-
-            setTimeout(() => {
-                requestAnimationFrame(drawWave);
-            }, 1000 / 5);
-        }
-
-        drawWave();
-    }
 
     sliderWraper.className = "input-wrapper";
     sliderWraper.appendChild(slider)
 
-    sliderDiv.classList.add("slider", `log-slider-is-${scaleLog}`);
+    sliderDiv.className = "slider";
     sliderDiv.id = `${module.id}-content-controllers-${property}`
     sliderDiv.appendChild(info);
     sliderDiv.appendChild(sliderWraper);
