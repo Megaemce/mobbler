@@ -52,10 +52,10 @@ export default function createModuleSlider(module, property, initialValue, min, 
     slider.min = min;
     slider.max = max;
     // set inital value to the correct position before user starts to play
-    slider.value = scaleLog ? valueToLogPosition(initialValue, min, max, 2) : initialValue;
+    slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : initialValue;
     slider.step = stepUnits;
     slider.oninput = function () {
-        sliderValue = scaleLog ? logPositionToValue(this.value, min, max, 2) : this.value
+        sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value
 
         if (module.audioNode)
             module.audioNode[propertyNoSpaces].value = sliderValue;

@@ -23,9 +23,9 @@ export default function connectParameter(sourceModule, destinationModule, parame
 
             // performance tweak - just get the max value of array instead of iterating
             let element = Math.max(...dataArray)
-            let scaledValue = scaleBetween(element, 0, 255, slider.min, slider.max, 2);
+            let scaledValue = scaleBetween(element, 0, 255, slider.min, slider.max);
 
-            slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.min, slider.max, 2) : scaledValue;
+            slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.min, slider.max) : scaledValue;
 
             if (destinationModule.audioNode)
                 destinationModule.audioNode[parameterType].value = slider.value;
