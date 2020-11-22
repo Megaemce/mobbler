@@ -6,7 +6,6 @@ function gotStream(stream) {
 }
 export default function createLiveInput(event) {
     let module = createModule("live input", false, false, false, undefined);
-    let content = document.getElementById(`${module.id}-content-controllers`)
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     if (navigator.getUserMedia)
@@ -29,7 +28,7 @@ export default function createLiveInput(event) {
     let recordingImg = document.createElement("img")
     recordingImg.src = "./img/circle.svg"
 
-    content.appendChild(recordingImg)
+    module.content.controllers.appendChild(recordingImg)
 
     event.preventDefault();
 }

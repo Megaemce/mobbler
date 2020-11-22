@@ -7,10 +7,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
     let playButton = document.createElement("div");
     let module = createModule("oscillator", false, false, false, oscTypes);
-    let select = document.getElementById(`${module.id}-content-options-select`)
-    let diode = document.getElementById(`${module.id}-head-diode`)
-    let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
-    let footer = document.getElementById(`${module.id}-footer`)
 
     createModuleSlider(module, "frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true);
     createModuleSlider(module, "detune", initalDetune, -1200, 1200, 1, "cents", false);
@@ -18,14 +14,14 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     playButton.classList.add("switch");
     playButton.alt = "play";
     playButton.onclick = function () {
-        let frequency = document.getElementById(`${module.id}-content-controllers-frequency-info-value`).textContent;
-        let detune = document.getElementById(`${module.id}-content-controllers-detune-input`).value;
-        let type = oscTypes[document.getElementById(`${module.id}-content-options-select`).selectedIndex];
+        let frequency = module.content.controllers.frequency.value.innerText; //.value is a pointer not returner
+        let detune = module.content.controllers.detune.slider.value;
+        let type = oscTypes[module.content.options.select.selectedIndex];
         let playButton = this;
 
         if (playButton.isPlaying) {
             //stop
-            diode.className = "diode";
+            module.head.diode.className = "diode";
             playButton.isPlaying = false;
             playButton.classList.remove("switch-on");
 
@@ -40,7 +36,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             }
 
         } else {
-            diode.className = "diode diode-on";
+            module.head.diode.className = "diode diode-on";
             playButton.isPlaying = true;
             playButton.classList.add("switch-on");
 
@@ -58,16 +54,16 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
         }
     }
 
-    footer.classList.add("move-by-switch")
+    module.footer.classList.add("move-by-switch")
 
-    select.onchange = function () {
+    module.content.options.select.onchange = function () {
         // if we have a playing oscillator, go ahead and switch it live
         if (module.audioNode)
             module.audioNode.type = oscTypes[this.selectedIndex];
     };
 
 
-    moduleControllers.appendChild(playButton);
+    module.content.controllers.appendChild(playButton);
 
     event.preventDefault();
 }

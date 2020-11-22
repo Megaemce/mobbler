@@ -2,12 +2,11 @@ import audioContext from '../main.js'
 import {
     valueToLogPosition,
     scaleBetween
-} from '../math/helper.js'
+} from '../helpers/math.js'
 
 export default function connectParameter(sourceModule, destinationModule, parameterID) {
     let parameterType = document.getElementById(parameterID).type
-    let slider = document.getElementById(`${destinationModule.id}-content-controllers-${parameterType}-input`);
-    let value = document.getElementById(`${destinationModule.id}-content-controllers-${parameterType}-info-value`);
+    let slider = destinationModule.content.controllers[parameterType].slider;
 
     if (slider && sourceModule.audioNode) {
         slider.classList.add("disabled");
@@ -30,7 +29,7 @@ export default function connectParameter(sourceModule, destinationModule, parame
             if (destinationModule.audioNode)
                 destinationModule.audioNode[parameterType].value = slider.value;
 
-            value.innerHTML = scaledValue;
+            destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
 
             //setTimeout(() => {
             requestAnimationFrame(connectToSlider);

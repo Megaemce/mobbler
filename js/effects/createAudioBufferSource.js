@@ -48,13 +48,12 @@ function openFileHandler(fileButton, module) {
     input.click();
 }
 
-function stopSound(module, playButton) {
-    let diode = document.getElementById(`${module.id}-head-diode`)
-    let looper = document.getElementById(`${module.id}-content-options-checkbox`);
+function stopSound(module) {
+    let playButton = module.content.controllers.playButton
 
     playButton.isPlaying = false;
     playButton.classList.remove("switch-on");
-    diode.className = "diode"
+    module.head.diode.className = "diode"
 
     if (module.audioNode.stopTimer) {
         window.clearTimeout(module.audioNode.stopTimer);
@@ -63,20 +62,20 @@ function stopSound(module, playButton) {
     // if loop is enabled sound will play even with switch-off thus kill it with fire
     if (module.audioNode.loop) {
         module.audioNode.loop = false
-        looper.checked = false;
+        module.content.options.looper.checkbox.checked = false;
     }
 }
 
-function playSelectedSound(module, playButton) {
-    let loop = document.getElementById(`${module.id}-content-options-checkbox`).checked
-    let selectedBufferName = document.getElementById(`${module.id}-content-options-select`).value
-    let diode = document.getElementById(`${module.id}-head-diode`)
+function playSelectedSound(module) {
+    let loop = module.content.options.looper.checkbox.checked;
+    let selectedBufferName = module.content.options.select.value;
+    let playButton = module.content.controllers.playButton
 
     if (playButton.isPlaying)
         stopSound(module, playButton);
     else {
         playButton.isPlaying = true;
-        diode.className = "diode diode-on";
+        module.head.diode.className = "diode diode-on";
         playButton.classList.add("switch-on");
 
         // if there's already a note playing, cut it off
@@ -111,25 +110,21 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
     let module = createModule("audio buffer source", false, true, false, soundNames);
     let playButton = document.createElement("div");
-    let footer = document.getElementById(`${module.id}-footer`);
-    let select = document.getElementById(`${module.id}-content-options-select`);
-    let looper = document.getElementById(`${module.id}-content-options-checkbox`);
-    let moduleControllers = document.getElementById(`${module.id}-content-controllers`);
-
 
     playButton.classList.add("switch");
     playButton.onclick = function () {
-        playSelectedSound(module, this)
+        playSelectedSound(module)
     };
 
-    moduleControllers.appendChild(playButton);
+    module.content.controllers.appendChild(playButton);
+    module.content.controllers.playButton = playButton;
 
-    footer.classList.add("move-by-switch")
+    module.footer.classList.add("move-by-switch")
 
-    addOpenFileButtonTo(select);
+    addOpenFileButtonTo(module.content.options.select);
 
     // when select changes
-    select.onchange = function () {
+    module.content.options.select.onchange = function () {
         // select get changed later when the file is open thus onchange 
         // get executed once more - we want to ignore this callout
         if (this.type == "file")
@@ -145,8 +140,8 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
     };
 
     // when changing looper settings reset the sound
-    looper.onchange = function () {
-        playSelectedSound(module, playButton);
+    module.content.options.looper.checkbox.onchange = function () {
+        playSelectedSound(module);
     }
 
     module.loop = initalLoop;

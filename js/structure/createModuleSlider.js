@@ -1,7 +1,7 @@
 import {
     valueToLogPosition,
     logPositionToValue,
-} from '../math/helper.js'
+} from '../helpers/math.js'
 
 export default function createModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog) {
     let propertyNoSpaces = property.split(' ').join('')
@@ -14,9 +14,6 @@ export default function createModuleSlider(module, property, initialValue, min, 
     let slider = document.createElement("input");
     let sliderWraper = document.createElement("div");
     let audioParam = document.createElement("div");
-    let moduleControllers = document.getElementById(`${module.id}-content-controllers`)
-    let footer = document.getElementById(`${module.id}-footer`)
-    let sliderValue = undefined;
 
     label.className = "label";
     label.id = `${module.id}-content-controllers-${propertyNoSpaces}-info-property`
@@ -41,12 +38,17 @@ export default function createModuleSlider(module, property, initialValue, min, 
     valueUnit.appendChild(value);
     valueUnit.appendChild(unit);
 
+    valueUnit.value = value;
+    valueUnit.unit = unit;
+
     info.className = "slider-info";
     info.id = `${module.id}-content-controllers-${propertyNoSpaces}-info`
     info.appendChild(label);
     info.appendChild(valueUnit);
 
-    slider.id = `${module.id}-content-controllers-${propertyNoSpaces}-input`
+    info.label = label;
+
+    slider.id = `${module.id}-content-controllers-${propertyNoSpaces}-slider`
     slider.type = "range";
     slider.scaleLog = scaleLog
     slider.min = min;
@@ -55,7 +57,7 @@ export default function createModuleSlider(module, property, initialValue, min, 
     slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : initialValue;
     slider.step = stepUnits;
     slider.oninput = function () {
-        sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value
+        let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value
 
         if (module.audioNode)
             module.audioNode[propertyNoSpaces].value = sliderValue;
@@ -68,17 +70,24 @@ export default function createModuleSlider(module, property, initialValue, min, 
     sliderWraper.appendChild(slider)
 
     sliderDiv.className = "slider";
-    sliderDiv.id = `${module.id}-content-controllers-${property}`
+    sliderDiv.id = `${module.id}-content-controllers-${propertyNoSpaces}`
     sliderDiv.appendChild(info);
     sliderDiv.appendChild(sliderWraper);
 
-    moduleControllers.appendChild(sliderDiv);
+    sliderDiv.info = info;
+    sliderDiv.slider = slider;
+
+    module.content.controllers.appendChild(sliderDiv);
+
+    module.content.controllers[property] = sliderDiv;
+    module.content.controllers[property].value = value;
+    module.content.controllers[property].unit = unit;
 
     audioParam.id = `${module.id}-footer-parameter-${propertyNoSpaces}`
     audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
     audioParam.className = "audio-parameter"
 
-    footer.appendChild(audioParam)
+    module.footer.appendChild(audioParam)
 
-    return slider;
+    module.footer[propertyNoSpaces] = audioParam;
 }

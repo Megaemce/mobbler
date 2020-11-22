@@ -9,22 +9,22 @@ const fftSizeFrequencyBars = 512;
 const fftSizeSineWave = 2048;
 
 // create analyser on given module with given setting
-export function visualizeOn(module, placeID, style) {
-    let modulePlace = document.getElementById(placeID);
-    let canvas = document.getElementById(`${placeID}-canvas`)
+export function visualizeOn(module, style) {
+    let canvas = module.content.canvas
 
     if (canvas)
         canvas.remove()
 
     canvas = document.createElement("canvas");
-    canvas.id = `${placeID}-canvas`
+    canvas.id = `${module.id}-content-controllers-canvas`
     canvas.height = canvasHeight;
     canvas.width = canvasWidth;
     canvas.className = "analyserCanvas";
 
-    modulePlace.appendChild(canvas);
+    module.content.appendChild(canvas);
+    module.content.canvas = canvas
 
-    let ctx = modulePlace.drawingContext = canvas.getContext('2d');
+    let ctx = module.content.drawingContext = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -88,21 +88,20 @@ export function visualizeOn(module, placeID, style) {
 
 export default function createAnalyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
     let module = createModule("analyser", true, false, false, visualSettings);
-    let content = document.getElementById(`${module.id}-content-controllers`);
-    let select = document.getElementById(`${module.id}-content-options-select`)
     let canvas = document.createElement("canvas");
 
-    select.onchange = function () {
+    module.content.options.select.onchange = function () {
         window.cancelAnimationFrame(drawVisual);
-        visualizeOn(module, content.id, visualSettings[this.selectedIndex]);
+        visualizeOn(module, visualSettings[this.selectedIndex]);
     }
 
     module.audioNode = audioContext.createAnalyser();
     module.audioNode.smoothingTimeConstant = initalSmoothingTimeConstant;
     module.audioNode.maxDecibels = initalMaxDecibels;
 
-    content.drawingContext = canvas.getContext('2d');
-    content.appendChild(canvas);
+    module.content.drawingContext = canvas.getContext('2d');
+    module.content.appendChild(canvas);
+    module.content.canvas = canvas;
 
     canvas.height = canvasHeight;
     canvas.width = canvasWidth;
@@ -110,7 +109,7 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
     canvas.className = "analyserCanvas";
 
     module.onConnectInput = function () {
-        visualizeOn(module, content.id, initalType)
+        visualizeOn(module, initalType)
     };
 
     event.preventDefault();
