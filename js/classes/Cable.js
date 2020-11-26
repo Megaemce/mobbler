@@ -1,3 +1,4 @@
+// Cable is made out of multiply points connected with lines
 export default class Cable {
     constructor(source, destination, shape) {
         this.source = source;
@@ -8,7 +9,6 @@ export default class Cable {
         let canvasShape = document.getElementById(this.shape.id)
         canvasShape && canvasShape.parentNode.removeChild(canvasShape);
     }
-
     updateStartPoint(x, y) {
         this.shape.setAttributeNS(undefined, "x1", x);
         this.shape.setAttributeNS(undefined, "y1", y);
@@ -17,7 +17,6 @@ export default class Cable {
         this.shape.setAttributeNS(undefined, "x2", x);
         this.shape.setAttributeNS(undefined, "y2", y);
     }
-
     deleteCable() {
         this.removeFromCanvas();
 

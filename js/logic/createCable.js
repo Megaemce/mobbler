@@ -1,12 +1,84 @@
-import whileMovingCable from "./whileMovingCable.js";
 import stopMovingCable from "./stopMovingCable.js";
-import Cable from "../classes/classCable.js";
+import Cable from "../classes/Cable.js";
+import Line from "../classes/Line.js";
+import Point from "../classes/Point.js";
 
-export default function createCable(event, sourceModule) {
-    if (!sourceModule) console.log("missing module!");
+
+function init(canvas, startX, startY) {
+    let particles = [],
+        lines = [],
+        animation = undefined,
+        mouse = undefined,
+        start = undefined,
+        count = 12,
+        sqrtX = startX,
+        sqrtY = startY;
+
+    for (let i = 0; i < count; ++i) {
+        particles.push(new Point(sqrtX, sqrtY, 10));
+        sqrtX = sqrtX + 0.5;
+        sqrtY = Math.pow(sqrtX - startX, 2) + startY;
+        if (i > 0) lines.push(new Line(particles[i - 1], particles[i], -Math.log(sqrtX), 0.9));
+    }
+
+    // first point
+    start = particles[0];
+    start.fixed = true;
+    start.x = startX;
+    start.y = startY;
+
+    // Last point = mouse
+    mouse = particles[count - 1];
+    mouse.fixed = true;
+
+    function updateLine() {
+        lines.forEach((line) => {
+            line.update()
+        })
+
+        ctx.clearRect(0, 0, width, height);
+
+        lines.forEach((line) => {
+            ctx.beginPath();
+            ctx.moveTo(line.p1.x, line.p1.y);
+            ctx.lineTo(line.p2.x, line.p2.y);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        })
+        animation = window.requestAnimationFrame(updateLine)
+
+    };
+
+    animation = requestAnimationFrame(updateLine)
+
+    canvas.onmousedown = function () {
+        lines.forEach((line) => {
+            line.gravity = true
+        })
+        canvas.style = "cursor: url('./img/jack_cleared.svg'), auto;"
+        canvas.onmousemove = function (event) {
+            mouse.x = event.offsetX + 2;
+            mouse.y = event.offsetY + 4.5;
+            particles[count - 2].x = event.offsetX - 3;
+            particles[count - 2].y = event.offsetY + 4.5;
+            particles[count - 2].fixed = true;
+        }
+    }
+    canvas.onmouseup = () => {
+        setTimeout(() => {
+            window.cancelAnimationFrame(animation);
+        }, 100);
+        return
+    }
+};
+
+
+export default function createCable(event, module) {
+    if (!module) console.log("missing module!");
 
     let clickedNode = event.target;
-    let returnedPairValue;
+    let canvas = document.getElementById("svgCanvas");
 
     // Get the position of the originating connector with respect to the page.
     let x = window.scrollX + 12;
@@ -20,8 +92,8 @@ export default function createCable(event, sourceModule) {
     }
 
     // Save starting positions of cursor and element.
-    sourceModule.cursorStartX = x;
-    sourceModule.cursorStartY = y;
+    module.cursorStartX = x;
+    module.cursorStartY = y;
 
     // Create a connector visual line
     let svgns = "http://www.w3.org/2000/svg";
@@ -34,26 +106,31 @@ export default function createCable(event, sourceModule) {
     shape.setAttributeNS(undefined, "stroke", "black");
     shape.setAttributeNS(undefined, "stroke-width", "5");
 
-    sourceModule.activeCable = new Cable(sourceModule, undefined, shape);
-    sourceModule.activeCable.drawOnCanvas();
+    module.activeCable = new Cable(module, undefined, shape);
+    module.activeCable.drawOnCanvas();
 
-    // Capture mousemove and mouseup events on the page.
-    // capturing the 
-    let whileMovingCableHandler = function (event) {
-        returnedPairValue = whileMovingCable(event, sourceModule);
-    };
-
-    let stopMovingCableHandler = function () {
-        // Stop capturing mousemove and mouseup events.
-        document.removeEventListener("mousemove", whileMovingCableHandler, true);
-        document.removeEventListener("mouseup", stopMovingCableHandler, true);
-        stopMovingCable(sourceModule, returnedPairValue);
-    }
-
+    // onmousedown is hooked to module thus working with mouse move
     // don't set listener as long as we have not started from real input
-    sourceModule && document.addEventListener("mousemove", whileMovingCableHandler, true);
-    document.addEventListener("mouseup", stopMovingCableHandler, true);
+    if (module) {
+        document.onmousemove = function (event) {
+            canvas.classList.add("jackCursor");
 
+            // Get cursor position with respect to the page.
+            let x = event.clientX + window.scrollX;
+            let y = event.clientY + window.scrollY;
+
+            shape.setAttributeNS(undefined, "x2", x);
+            shape.setAttributeNS(undefined, "y2", y);
+        }
+        document.onmouseup = function (event) {
+            canvas.classList.remove("jackCursor");
+
+            stopMovingCable(event, module);
+
+            document.onmousemove = undefined;
+            document.onmouseup = undefined;
+        }
+    }
     event.preventDefault();
     event.stopPropagation();
 }

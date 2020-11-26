@@ -9,8 +9,8 @@ export default function connectModules(sourceModule, destinationModule) {
     if (destinationModule.onConnectInput)
         destinationModule.onConnectInput();
 
-    // turn diode on
-    if (destinationModule.head.diode)
+    // check if not final destination and turn diode on
+    if (destinationModule.head && destinationModule.head.diode)
         destinationModule.head.diode.classList.add("diode-on");
 
 }

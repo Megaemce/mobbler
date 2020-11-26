@@ -7,7 +7,6 @@ export default function createDynamicsCompressor(event, initalThreshold, initalK
 
     module.audioNode = audioContext.createDynamicsCompressor();
 
-    //createModuleSlider(mod, property, initalValue, min, max, step, units, logScale)
     createModuleSlider(module, "threshold", initalThreshold, -36.0, 0.0, 0.01, "Db", false);
     createModuleSlider(module, "knee", initalKnee, 0.0, 40.0, 0.01, "Db", false);
     createModuleSlider(module, "ratio", initalRatio, 1.0, 20.0, 0.1, "", false);

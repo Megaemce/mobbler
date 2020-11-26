@@ -4,8 +4,7 @@ import {
     scaleBetween
 } from '../helpers/math.js'
 
-export default function connectParameter(sourceModule, destinationModule, parameterID) {
-    let parameterType = document.getElementById(parameterID).type
+export default function connectParameter(sourceModule, destinationModule, parameterType) {
     let slider = destinationModule.content.controllers[parameterType].slider;
 
     if (slider && sourceModule.audioNode) {
