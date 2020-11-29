@@ -3,26 +3,17 @@ import connectModules from "./connectModules.js";
 import connectParameter from "./connectParameter.js";
 
 export default function stopMovingCable(event, sourceModule) {
-    let destinationModule = event.toElement
-    let modInputOrParamType = undefined;
+    let choosenElement = event.toElement;
+    let destinationModule = undefined;
 
-    if (destinationModule.classList) { // if we don't have class, we're not a node.
-        if (destinationModule.classList.contains("module-input") || destinationModule.classList.contains("destination-input"))
-            modInputOrParamType = "input";
-        if (destinationModule.classList.contains("audio-parameter"))
-            modInputOrParamType = destinationModule.type
-
-        // search for module or final destination
-        do {
-            destinationModule = destinationModule.parentNode;
-        } while (destinationModule.classList && !destinationModule.classList.contains("module") && !destinationModule.classList.contains("destination"))
-
-        // not real module/destination, probably hit the #document or  we're over our originating node
-        if (!destinationModule.classList || (destinationModule == sourceModule)) {
-            sourceModule.activeCable.deleteCable()
-            sourceModule.activeCable = undefined; // removing the pointer
-            return
-        }
+    if (choosenElement.classList && choosenElement.parentModule) {
+        destinationModule = choosenElement.parentModule; // parentModule is set on input and audio parameters only
+    } else if (choosenElement.classList && choosenElement.classList.contains("destination-input")) {
+        destinationModule = choosenElement.parentNode; // final destination, built-in attribute
+    } else {
+        sourceModule.activeCable.deleteCable()
+        sourceModule.activeCable = undefined; // removing the pointer
+        return // something else thus kill it with fire
     }
 
     // Put an entry into the sourceModule's outputs
@@ -31,8 +22,6 @@ export default function stopMovingCable(event, sourceModule) {
 
     let newCable = new Cable(sourceModule, destinationModule, sourceModule.activeCable.shape)
     sourceModule.outcomingCables.push(newCable);
-
-    newCable.drawOnCanvas()
 
     // this will works just like an pointer
     let cablePointer = newCable
@@ -44,10 +33,10 @@ export default function stopMovingCable(event, sourceModule) {
     destinationModule.incomingCables.push(cablePointer);
 
     // different action for input and audio parameter
-    if (modInputOrParamType === "input")
+    if (choosenElement.type === "input")
         connectModules(sourceModule, destinationModule);
-    else if (modInputOrParamType)
-        connectParameter(sourceModule, destinationModule, modInputOrParamType)
+    else // type === audio node property name without spaces
+        connectParameter(sourceModule, destinationModule, choosenElement.type)
 
     // remove the pointer as shape is already on screen
     sourceModule.activeCable = undefined;

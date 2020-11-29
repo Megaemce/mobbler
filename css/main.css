@@ -214,9 +214,9 @@ body {
 }
 
 /*	---------------------------------------------------------------------------
- *	:: Output
+ *	:: Final destination 
  *	-------------------------------------------------------------------------*/
-#output {
+.destination {
     background:
         url('../img/ico-speaker.png') 50% 50% no-repeat,
         url('../img/output-bkg.gif') 0 0 repeat;
@@ -232,7 +232,7 @@ body {
     z-index: 100;
 }
 
-#output .destination-input {
+.destination .destination-input {
     background: url(../img/jack_in.svg);
     left: -80px;
     width: 100%;

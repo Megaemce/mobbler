@@ -4,6 +4,19 @@ export default class Cable {
         this.source = source;
         this.destination = destination;
         this.shape = shape;
+
+        // draw on the canvas 
+        document.getElementById("svgCanvas").appendChild(this.shape);
+
+        // set id based on destination: if undefined it means that this is still an active cable
+        if (this.destination) {
+            this.shape.id = `${this.source.id}-cable-to-${this.destination.id}`
+            this.shape.onclick = () => {
+                this.deleteCable()
+            }
+        } else {
+            this.shape.id = `${this.source.id}-cable-active`;
+        }
     }
     removeFromCanvas() {
         let canvasShape = document.getElementById(this.shape.id)
@@ -49,18 +62,6 @@ export default class Cable {
                 this.source.outcomingCables.forEach(cable => {
                     this.source.audioNode.connect(cable.destination.audioNode);
                 });
-            }
-        }
-    }
-    drawOnCanvas() {
-        // set id based on destination: if undefined it means that this is still an active cable
-        this.shape.id = this.destination ? `${this.source.id}-cable-to-${this.destination.id}` : `${this.source.id}-cable-active`;
-        document.getElementById("svgCanvas").appendChild(this.shape);
-
-        //if real cable set onclick function as well
-        if (this.destination) {
-            this.shape.onclick = () => {
-                this.deleteCable()
             }
         }
     }

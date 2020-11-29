@@ -73,8 +73,9 @@ function init() {
     loadFilesIntoAudioContext(audioContext, sounds, true);
     loadFilesIntoAudioContext(audioContext, impulseResponses, false);
 
-    // hook only destination to output element
-    document.getElementById("output").audioNode = audioContext.destination;
+    // hook audioContent final destination only to destination element. 
+    document.getElementById("destination").audioNode = audioContext.destination;
+    document.getElementById("destination-input").type = "input"; // Keep type info for stopMovingCable
 
     document.getElementById("cana").onmousedown = function (event) {
         createAnalyser(event, initAnalyserSmoothingTimeConstant, initAnalyserMaxDecibles, initAnalyserType);

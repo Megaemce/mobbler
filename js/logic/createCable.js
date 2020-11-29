@@ -107,7 +107,6 @@ export default function createCable(event, module) {
     shape.setAttributeNS(undefined, "stroke-width", "5");
 
     module.activeCable = new Cable(module, undefined, shape);
-    module.activeCable.drawOnCanvas();
 
     // onmousedown is hooked to module thus working with mouse move
     // don't set listener as long as we have not started from real input

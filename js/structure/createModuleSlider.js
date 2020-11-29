@@ -50,9 +50,11 @@ export default function createModuleSlider(module, property, initialValue, min, 
 
     slider.id = `${module.id}-content-controllers-${propertyNoSpaces}-slider`
     slider.type = "range";
-    slider.scaleLog = scaleLog
+    slider.scaleLog = scaleLog;
     slider.min = min;
     slider.max = max;
+    slider.minFloat = parseFloat(min);
+    slider.maxFloat = parseFloat(max);
     // set inital value to the correct position before user starts to play
     slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : initialValue;
     slider.step = stepUnits;
@@ -85,6 +87,8 @@ export default function createModuleSlider(module, property, initialValue, min, 
 
     audioParam.id = `${module.id}-footer-parameter-${propertyNoSpaces}`
     audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
+    audioParam.parentModule = module; // keep info about parent for stopMovingCable
+
     audioParam.className = "audio-parameter"
 
     module.footer.appendChild(audioParam)

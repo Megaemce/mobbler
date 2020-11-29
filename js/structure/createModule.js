@@ -161,13 +161,15 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
         let input = document.createElement("div");
         input.className = "node module-input";
         input.id = `module-${id}-nodes-input`
+        input.parentModule = module; // keep info about parent for stopMovingCable
+        input.type = "input"; // keep info about type for stopMovingCable
         nodes.appendChild(input);
 
         nodes.input = input;
     }
 
     output.className = "node module-output";
-    output.id = `module-${id}-nodes-output`
+    output.id = `module-${id}-nodes-output`;
     output.onmousedown = function (event) {
         createCable(event, module);
     }
