@@ -61,7 +61,6 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
     head.appendChild(close);
 
     head.diode = diode;
-    head.title = title;
     head.close = close;
 
     options.className = "options"
@@ -171,6 +170,7 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
     output.className = "node module-output";
     output.id = `module-${id}-nodes-output`;
     output.onmousedown = function (event) {
+        output.classList.add("hidden");
         createCable(event, module);
     }
     nodes.appendChild(output);

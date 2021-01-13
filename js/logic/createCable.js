@@ -99,12 +99,12 @@ export default function createCable(event, module) {
     let svgns = "http://www.w3.org/2000/svg";
 
     let shape = document.createElementNS(svgns, "line");
-    shape.setAttributeNS(undefined, "x1", x);
-    shape.setAttributeNS(undefined, "y1", y);
-    shape.setAttributeNS(undefined, "x2", x);
-    shape.setAttributeNS(undefined, "y2", y);
-    shape.setAttributeNS(undefined, "stroke", "black");
-    shape.setAttributeNS(undefined, "stroke-width", "5");
+    shape.setAttribute("x1", x);
+    shape.setAttribute("y1", y);
+    shape.setAttribute("x2", x);
+    shape.setAttribute("y2", y);
+    shape.setAttribute("stroke", "black");
+    shape.setAttribute("stroke-width", "5");
 
     module.activeCable = new Cable(module, undefined, shape);
 
@@ -118,8 +118,8 @@ export default function createCable(event, module) {
             let x = event.clientX + window.scrollX;
             let y = event.clientY + window.scrollY;
 
-            shape.setAttributeNS(undefined, "x2", x);
-            shape.setAttributeNS(undefined, "y2", y);
+            shape.setAttribute("x2", x);
+            shape.setAttribute("y2", y);
         }
         document.onmouseup = function (event) {
             canvas.classList.remove("jackCursor");

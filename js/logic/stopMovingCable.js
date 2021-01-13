@@ -6,6 +6,8 @@ export default function stopMovingCable(event, sourceModule) {
     let choosenElement = event.toElement;
     let destinationModule = undefined;
 
+    sourceModule.nodes.output.classList.remove("hidden"); // make "new" output visible
+
     if (choosenElement.classList && choosenElement.parentModule) {
         destinationModule = choosenElement.parentModule; // parentModule is set on input and audio parameters only
     } else if (choosenElement.classList && choosenElement.classList.contains("destination-input")) {

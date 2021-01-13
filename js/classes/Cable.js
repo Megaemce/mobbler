@@ -23,12 +23,12 @@ export default class Cable {
         canvasShape && canvasShape.parentNode.removeChild(canvasShape);
     }
     updateStartPoint(x, y) {
-        this.shape.setAttributeNS(undefined, "x1", x);
-        this.shape.setAttributeNS(undefined, "y1", y);
+        this.shape.setAttribute("x1", x);
+        this.shape.setAttribute("y1", y);
     }
     updateEndPoint(x, y) {
-        this.shape.setAttributeNS(undefined, "x2", x);
-        this.shape.setAttributeNS(undefined, "y2", y);
+        this.shape.setAttribute("x2", x);
+        this.shape.setAttribute("y2", y);
     }
     deleteCable() {
         this.removeFromCanvas();

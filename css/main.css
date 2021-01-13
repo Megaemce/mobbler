@@ -339,7 +339,7 @@ body {
 
 .module .nodes {
 
-    cursor: crosshair;
+    cursor: grab;
     position: absolute;
     top: 0%;
     left: 0;
@@ -347,15 +347,18 @@ body {
 }
 
 .module .nodes .module-output {
-    background-image: url('../img/jack.svg');
+    background-image: url('../img/jack_hanging.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    width: 30px;
-    height: 30px;
-    right: -30px;
+    width: 23px;
+    height: 106px;
+    right: -23px;
     position: absolute;
+}
 
+.module .nodes .module-output.hidden {
+    opacity: 0;
 }
 
 .module .nodes .module-input {
@@ -368,6 +371,8 @@ body {
     left: -30px;
     position: absolute;
 }
+
+
 
 .nodes:hover {
     box-shadow: 0 0 3px rgba(0, 0, 0, 1);
