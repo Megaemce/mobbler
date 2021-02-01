@@ -15,7 +15,7 @@ export default function stopMovingCable(event, sourceModule) {
     } else {
         sourceModule.activeCable.deleteCable()
         sourceModule.activeCable = undefined; // removing the pointer
-        return // something else thus kill it with fire
+        return false // something else thus kill it with fire
     }
 
     // Put an entry into the sourceModule's outputs

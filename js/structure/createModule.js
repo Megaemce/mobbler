@@ -1,5 +1,4 @@
-import createCable from "../logic/createCable.js";
-import disconnectModule from "../logic/disconnectModule.js"
+import disconnectModule from "../logic/disconnectModule.js";
 import movingModule from "../logic/movingModule.js";
 
 let tempx = 50,
@@ -30,18 +29,16 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
     if (tempx > mainWidth - 450) {
         tempy += 300;
         tempx = 50 + id;
-    } else
-        tempx += 300;
-    if (tempy > window.innerHeight - 300)
-        tempy = 100 + id;
+    } else tempx += 300;
+    if (tempy > window.innerHeight - 300) tempy = 100 + id;
 
-    diode.className = "diode"
+    diode.className = "diode";
     diode.id = `module-${id}-head-diode`;
 
     title.className = "title";
     title.id = `module-${id}-head-title`;
     title.appendChild(document.createTextNode(name));
-    title.name = name
+    title.name = name;
 
     close.className = "close";
     close.id = `module-${id}-head-close`;
@@ -51,11 +48,11 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
         module.parentNode.removeChild(module);
     };
 
-    head.className = "head"
-    head.id = `module-${id}-head`
+    head.className = "head";
+    head.id = `module-${id}-head`;
     head.onmousedown = function (event) {
-        movingModule(event, module)
-    }
+        movingModule(event, module);
+    };
     head.appendChild(diode);
     head.appendChild(title);
     head.appendChild(close);
@@ -63,27 +60,27 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
     head.diode = diode;
     head.close = close;
 
-    options.className = "options"
-    options.id = `module-${id}-content-options`
+    options.className = "options";
+    options.id = `module-${id}-content-options`;
 
     if (hasLooper || hasNormalizer || arrayForSelect) {
         if (arrayForSelect) {
             let select = document.createElement("select");
 
             select.className = "ab-source";
-            select.id = `module-${id}-content-options-select`
+            select.id = `module-${id}-content-options-select`;
 
             arrayForSelect.forEach((object) => {
                 let option = document.createElement("option");
                 option.appendChild(document.createTextNode(object));
-                select.appendChild(option)
+                select.appendChild(option);
 
-                select.option = option
-            })
+                select.option = option;
+            });
 
             options.appendChild(select);
 
-            options.select = select
+            options.select = select;
         }
         if (hasLooper || hasNormalizer) {
             let checkbox = document.createElement("input");
@@ -99,6 +96,7 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
                     module.loop = this.checked;
                 };
 
+                // To associate label with an input element, you need to give the input an id attribute.
                 label.htmlFor = `module-${id}-content-options-looper`;
                 label.appendChild(document.createTextNode("Loop"));
 
@@ -137,14 +135,14 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
 
                 options.normalizer = normalizer;
             }
-        };
-        content.appendChild(options)
+        }
+        content.appendChild(options);
 
         content.options = options;
     }
 
-    controllers.className = "controllers"
-    controllers.id = `module-${id}-content-controllers`
+    controllers.className = "controllers";
+    controllers.id = `module-${id}-content-controllers`;
 
     content.className = "content";
     content.id = `module-${id}-content`;
@@ -153,13 +151,13 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
 
     content.controllers = controllers;
 
-    nodes.className = "nodes"
-    nodes.id = `module-${id}-nodes`
+    nodes.className = "nodes";
+    nodes.id = `module-${id}-nodes`;
 
     if (hasInput) {
         let input = document.createElement("div");
         input.className = "node module-input";
-        input.id = `module-${id}-nodes-input`
+        input.id = `module-${id}-nodes-input`;
         input.parentModule = module; // keep info about parent for stopMovingCable
         input.type = "input"; // keep info about type for stopMovingCable
         nodes.appendChild(input);
@@ -167,15 +165,16 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
         nodes.input = input;
     }
 
-    output.className = "node module-output";
-    output.id = `module-${id}-nodes-output`;
-    output.onmousedown = function (event) {
-        output.classList.add("hidden");
-        createCable(event, module);
-    }
-    nodes.appendChild(output);
+    //output.className = "node module-output";
+    //output.id = `module-${id}-nodes-output`;
 
-    nodes.output = output;
+    // output.onmousedown = function (event) {
+    //     output.classList.add("hidden");
+    //     createCable(event, module);
+    // }
+    //nodes.appendChild(output);
+
+    //nodes.output = output;
 
     footer = document.createElement("footer");
     footer.className = "footer";
@@ -196,5 +195,5 @@ export default function createModule(name, hasInput, hasLooper, hasNormalizer, a
     modules.appendChild(module);
     modules[id] = module;
 
-    return (module);
+    return module;
 }

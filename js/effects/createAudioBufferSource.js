@@ -1,5 +1,6 @@
-import createModule from '../structure/createModule.js';
-import audioContext from '../main.js'
+import createModule from "../structure/createModule.js";
+import createModuleCable from "../structure/createModuleCable.js";
+import audioContext from "../main.js";
 
 function addOpenFileButtonTo(element) {
     let input = document.createElement("input");
@@ -10,10 +11,10 @@ function addOpenFileButtonTo(element) {
     input.type = "file";
     input.id = "file-input";
 
-    button.innerText = "Open file..."
-    button.id = "button"
+    button.innerText = "Open file...";
+    button.id = "button";
 
-    option.id = "file button"
+    option.id = "file button";
     option.appendChild(button);
     option.appendChild(input);
 
@@ -21,11 +22,11 @@ function addOpenFileButtonTo(element) {
 }
 
 function openFileHandler(fileButton, module) {
-    let input = document.getElementById('file-input');
+    let input = document.getElementById("file-input");
     // when file is choosen
     input.onchange = function () {
         let fileLoaded = this.files[0];
-        let reader = new FileReader()
+        let reader = new FileReader();
         // when file is loaded as array buffer
         reader.onload = function () {
             let fileAsArrayBuffer = this.result;
@@ -34,7 +35,7 @@ function openFileHandler(fileButton, module) {
                 // store it as an module buffer
                 module.buffer = decodedData;
                 audioContext.nameSoundBuffer[fileLoaded.name] = decodedData;
-            })
+            });
         };
         reader.onerror = () => {
             alert("Error: " + reader.error);
@@ -42,18 +43,18 @@ function openFileHandler(fileButton, module) {
         reader.readAsArrayBuffer(fileLoaded);
 
         fileButton.innerHTML = fileLoaded.name;
-        fileButton.removeAttribute("id") // not button anymore
-        addOpenFileButtonTo(fileButton.parentNode)
+        fileButton.removeAttribute("id"); // not button anymore
+        addOpenFileButtonTo(fileButton.parentNode);
     };
     input.click();
 }
 
 function stopSound(module) {
-    let playButton = module.content.controllers.playButton
+    let playButton = module.content.controllers.playButton;
 
     playButton.isPlaying = false;
     playButton.classList.remove("switch-on");
-    module.head.diode.className = "diode"
+    module.head.diode.className = "diode";
 
     if (module.audioNode.stopTimer) {
         window.clearTimeout(module.audioNode.stopTimer);
@@ -61,7 +62,7 @@ function stopSound(module) {
     }
     // if loop is enabled sound will play even with switch-off thus kill it with fire
     if (module.audioNode.loop) {
-        module.audioNode.loop = false
+        module.audioNode.loop = false;
         module.content.options.looper.checkbox.checked = false;
     }
 }
@@ -69,10 +70,9 @@ function stopSound(module) {
 function playSelectedSound(module) {
     let loop = module.content.options.looper.checkbox.checked;
     let selectedBufferName = module.content.options.select.value;
-    let playButton = module.content.controllers.playButton
+    let playButton = module.content.controllers.playButton;
 
-    if (playButton.isPlaying)
-        stopSound(module, playButton);
+    if (playButton.isPlaying) stopSound(module, playButton);
     else {
         playButton.isPlaying = true;
         module.head.diode.className = "diode diode-on";
@@ -113,26 +113,25 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
 
     playButton.classList.add("switch");
     playButton.onclick = function () {
-        playSelectedSound(module)
+        playSelectedSound(module);
     };
 
     module.content.controllers.appendChild(playButton);
     module.content.controllers.playButton = playButton;
 
-    module.footer.classList.add("move-by-switch")
+    module.footer.classList.add("move-by-switch");
 
     addOpenFileButtonTo(module.content.options.select);
 
     // when select changes
     module.content.options.select.onchange = function () {
-        // select get changed later when the file is open thus onchange 
+        // select get changed later when the file is open thus onchange
         // get executed once more - we want to ignore this callout
-        if (this.type == "file")
-            return;
+        if (this.type == "file") return;
 
-        let clickedOption = this[this.selectedIndex]
+        let clickedOption = this[this.selectedIndex];
 
-        if (clickedOption.id == 'file button') {
+        if (clickedOption.id == "file button") {
             openFileHandler(this[this.selectedIndex], module);
         } else {
             module.buffer = audioContext.nameSoundBuffer[this.value];
@@ -142,10 +141,12 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
     // when changing looper settings reset the sound
     module.content.options.looper.checkbox.onchange = function () {
         playSelectedSound(module);
-    }
+    };
 
     module.loop = initalLoop;
     module.buffer = audioContext.nameSoundBuffer[initalBufferName];
+
+    createModuleCable(module);
 
     event.preventDefault();
 }

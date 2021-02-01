@@ -1,6 +1,7 @@
-import createModule from '../structure/createModule.js';
-import createModuleSlider from '../structure/createModuleSlider.js';
-import audioContext from '../main.js'
+import createModule from "../structure/createModule.js";
+import createModuleCable from "../structure/createModuleCable.js";
+import createModuleSlider from "../structure/createModuleSlider.js";
+import audioContext from "../main.js";
 
 export default function createDynamicsCompressor(event, initalThreshold, initalKnee, initalRatio, initalAttack, initalRelease) {
     let module = createModule("dynamics compressor", true, false, false, undefined);
@@ -12,6 +13,8 @@ export default function createDynamicsCompressor(event, initalThreshold, initalK
     createModuleSlider(module, "ratio", initalRatio, 1.0, 20.0, 0.1, "", false);
     createModuleSlider(module, "attack", initalAttack, 0, 1.0, 0.001, "sec", false);
     createModuleSlider(module, "release", initalRelease, 0, 1.0, 0.05, "sec", false);
+
+    createModuleCable(module);
 
     event.preventDefault();
 }

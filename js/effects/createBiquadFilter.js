@@ -1,6 +1,7 @@
-import createModule from '../structure/createModule.js';
-import createModuleSlider from '../structure/createModuleSlider.js';
-import audioContext from '../main.js'
+import createModule from "../structure/createModule.js";
+import createModuleCable from "../structure/createModuleCable.js";
+import createModuleSlider from "../structure/createModuleSlider.js";
+import audioContext from "../main.js";
 
 export default function createBiquadFilter(event, initalFrequency, initalQ, initalGain, initalType) {
     const filterTypes = ["peaking", "lowshelf", "highshelf", "lowpass", "highpass", "bandpass", "notch", "allpass"];
@@ -19,10 +20,10 @@ export default function createBiquadFilter(event, initalFrequency, initalQ, init
     module.content.options.select.onchange = function () {
         if (gainDisabled.includes(module.audioNode.type)) {
             module.footer.gain.classList.add("disabled");
-            module.content.controllers.gain.slider.classList.add("disabled")
+            module.content.controllers.gain.slider.classList.add("disabled");
         } else {
-            module.footer.gain.classList.remove("disabled")
-            module.content.controllers.gain.slider.classList.remove("disabled")
+            module.footer.gain.classList.remove("disabled");
+            module.content.controllers.gain.slider.classList.remove("disabled");
         }
         if (qDisabled.includes(module.audioNode.type)) {
             module.footer.Q.classList.add("disabled");
@@ -33,6 +34,8 @@ export default function createBiquadFilter(event, initalFrequency, initalQ, init
         }
         module.audioNode.type = this.value;
     };
+
+    createModuleCable(module);
 
     event.preventDefault();
 }

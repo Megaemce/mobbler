@@ -1,6 +1,7 @@
-import createModule from '../structure/createModule.js';
-import createModuleSlider from '../structure/createModuleSlider.js';
-import audioContext from '../main.js'
+import createModule from "../structure/createModule.js";
+import createModuleCable from "../structure/createModuleCable.js";
+import createModuleSlider from "../structure/createModuleSlider.js";
+import audioContext from "../main.js";
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
@@ -34,7 +35,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
                 }
                 module.audioNode = undefined;
             }
-
         } else {
             module.head.diode.className = "diode diode-on";
             playButton.isPlaying = true;
@@ -52,18 +52,18 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             }
             module.audioNode.start(0);
         }
-    }
+    };
 
-    module.footer.classList.add("move-by-switch")
+    module.footer.classList.add("move-by-switch");
 
     module.content.options.select.onchange = function () {
         // if we have a playing oscillator, go ahead and switch it live
-        if (module.audioNode)
-            module.audioNode.type = oscTypes[this.selectedIndex];
+        if (module.audioNode) module.audioNode.type = oscTypes[this.selectedIndex];
     };
 
-
     module.content.controllers.appendChild(playButton);
+
+    createModuleCable(module);
 
     event.preventDefault();
 }

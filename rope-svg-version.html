@@ -175,8 +175,6 @@
                 }
 
                 svg.onmouseup = () => {
-                    jack.style.opacity = "1"
-
                     // give some time for a physic calculation to finish
                     setTimeout(() => {
                         window.cancelAnimationFrame(animationID);
@@ -200,7 +198,7 @@
                         svg.removeChild(shape);
                     }
 
-                    createLine(svg, jack, 150, 150);
+                    createLine(svg, jack, xPosition, yPosition);
                 }
             }
 
