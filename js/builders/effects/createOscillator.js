@@ -1,7 +1,7 @@
-import createModule from "../structure/createModule.js";
-import createModuleCable from "../structure/createModuleCable.js";
-import createModuleSlider from "../structure/createModuleSlider.js";
-import audioContext from "../main.js";
+import createModule from "../createModuleObject.js";
+import createModuleSlider from "../createModuleSlider.js";
+import audioContext from "../../main.js";
+import Cable from "../../classes/Cable.js";
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
@@ -63,7 +63,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
     module.content.controllers.appendChild(playButton);
 
-    createModuleCable(module);
+    new Cable(module); // create first inital cable linked to module
 
     event.preventDefault();
 }

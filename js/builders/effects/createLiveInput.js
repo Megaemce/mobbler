@@ -1,6 +1,6 @@
-import createModule from "../structure/createModule.js";
-import createModuleCable from "../structure/createModuleCable.js";
-import audioContext from "../main.js";
+import createModule from "../createModuleObject.js";
+import audioContext from "../../main.js";
+import Cable from "../../classes/Cable.js";
 
 function gotStream(stream) {
     this.audioNode = audioContext.createMediaStreamSource(stream);
@@ -34,7 +34,7 @@ export default function createLiveInput(event) {
 
     module.content.controllers.appendChild(recordingImg);
 
-    createModuleCable(module);
+    new Cable(module); // create first inital cable linked to module
 
     event.preventDefault();
 }

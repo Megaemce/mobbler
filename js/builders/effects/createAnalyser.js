@@ -1,6 +1,6 @@
-import createModule from "../structure/createModule.js";
-import createModuleCable from "../structure/createModuleCable.js";
-import audioContext from "../main.js";
+import createModule from "../createModuleObject.js";
+import audioContext from "../../main.js";
+import Cable from "../../classes/Cable.js";
 
 let drawVisual;
 const visualSettings = ["sine wave", "frequency bars"];
@@ -110,7 +110,7 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
         visualizeOn(module, initalType);
     };
 
-    createModuleCable(module);
+    new Cable(module); // create first inital cable linked to module
 
     event.preventDefault();
 }

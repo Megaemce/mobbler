@@ -1,62 +1,64 @@
 <!doctype html>
 <html class="no-js" lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta charset="utf-8" />
-        <title>mobbler: mobbly the sound</title>
 
-        <link rel="shortcut icon" href="favicon.ico" />
-        <!-- <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Serif:400italic" /> -->
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>mobbler: mobbly the sound</title>
+
+    <link rel="shortcut icon" href="favicon.ico" />
+    <!-- <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Droid+Serif:400italic" /> -->
     <!-- <link rel="stylesheet" href="css/reset.css" /> -->
-        <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/main.css" />
 
-        <script src="http://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
+    <script src="http://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
 
-        <script type="module" src="js/main.js"></script>
-        <!-- <script>
+    <script type="module" src="js/main.js"></script>
+    <!-- <script>
             if (window != window.top)
                 document.write("<style>#header {display:none}</style>")
         </script> -->
-    </head>
+</head>
 
-    <body>
-        <div id="main" class="container">
-            <nav id="nav">
-                <ul id="controls" class="container">
-                    <li>
-                        <a href="#">Add Audio Source</a>
-                        <div class="sub-menu">
-                            <ul>
-                                <li><a href="#" id="cabs">Audio Buffer Source</a></li>
-                                <li><a href="#" id="cosc">Oscillator</a></li>
-                                <li><a href="#" id="cliv">Live Input</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="#">Add Module</a>
-                        <div class="sub-menu">
-                            <ul>
-                                <li><a href="#" id="cana">Analyser</a></li>
-                                <li><a href="#" id="cbqf">Biquad Filter</a></li>
-                                <li><a href="#" id="ccon">Convolver</a></li>
-                                <li><a href="#" id="cdel">Delay Node</a></li>
-                                <li><a href="#" id="cdyc">Dynamics Compressor</a></li>
-                                <li><a href="#" id="cgai">Gain Node</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-            <section id="modules" class="container">
+<body>
+    <div id="main" class="container">
+        <nav id="nav">
+            <ul id="controls" class="container">
+                <li>
+                    <a href="#">Add Audio Source</a>
+                    <div class="sub-menu">
+                        <ul>
+                            <li><a href="#" id="cabs">Audio Buffer Source</a></li>
+                            <li><a href="#" id="cosc">Oscillator</a></li>
+                            <li><a href="#" id="cliv">Live Input</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="#">Add Module</a>
+                    <div class="sub-menu">
+                        <ul>
+                            <li><a href="#" id="cana">Analyser</a></li>
+                            <li><a href="#" id="cbqf">Biquad Filter</a></li>
+                            <li><a href="#" id="ccon">Convolver</a></li>
+                            <li><a href="#" id="cdel">Delay Node</a></li>
+                            <li><a href="#" id="cdyc">Dynamics Compressor</a></li>
+                            <li><a href="#" id="cgai">Gain Node</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <section id="modules" class="container">
 
-            </section>
-        </div>
+        </section>
+    </div>
 
-        <div class="destination" id="destination">
-            <div class="destination-input node" id="destination-input"></div>
-        </div>
+    <div class="destination" id="destination">
+        <div class="destination-input node" id="destination-input"></div>
+    </div>
 
-        <svg id=svgCanvas xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
-    </body>
+    <svg id=svgCanvas xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
+</body>
+
 </html>

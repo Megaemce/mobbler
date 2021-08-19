@@ -1,6 +1,6 @@
-import createModule from "../structure/createModule.js";
-import createModuleCable from "../structure/createModuleCable.js";
-import audioContext from "../main.js";
+import createModule from "../createModuleObject.js";
+import audioContext from "../../main.js";
+import Cable from "../../classes/Cable.js";
 
 function addOpenFileButtonTo(element) {
     let input = document.createElement("input");
@@ -146,7 +146,7 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
     module.loop = initalLoop;
     module.buffer = audioContext.nameSoundBuffer[initalBufferName];
 
-    createModuleCable(module);
+    new Cable(module); // create first inital cable linked to module
 
     event.preventDefault();
 }

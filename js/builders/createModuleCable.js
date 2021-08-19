@@ -1,13 +1,19 @@
+// ** TO DO  ** //
+// -po wyjściu do outputu koncowego linia nie umiera
+// -po zakonczeniu ruszania lina linia nie umiera
+
 import Line from "../classes/Line.js";
 import Point from "../classes/Point.js";
+import stopMovingCable from "../logic/stopMovingCable.js";
 
-function createLine(svg, jack, xPosition, yPosition) {
+function createCable(svg, jack, module, xPosition, yPosition) {
     let lines = [];
     let count = 12;
     let pointsString = "";
     let initalPosition = "";
     let animationID = undefined;
     let jackAnimationID = `${jack.id}-animation`;
+    let destinationInput = document.getElementById("destination-input");
     let shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
     let shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
     let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
@@ -27,10 +33,6 @@ function createLine(svg, jack, xPosition, yPosition) {
         new Point(17.906, 45.122, 0.4, true),
         new Point(18.142, 53.97, 0.4, true),
     ];
-
-    shape.onclick = () => {
-        svg.removeChild(shape);
-    };
 
     svg.appendChild(shape);
     svg.appendChild(jack);
@@ -132,6 +134,11 @@ function createLine(svg, jack, xPosition, yPosition) {
                 window.cancelAnimationFrame(animationID);
             }, 100);
 
+            // only when shape is created enable removal
+            shape.onclick = () => {
+                svg.removeChild(shape);
+            };
+
             svg.style.cursor = "default";
             svg.onmousedown = undefined;
             svg.onmousemove = undefined;
@@ -140,23 +147,23 @@ function createLine(svg, jack, xPosition, yPosition) {
             // unhide jack
             jack.style.opacity = "1";
 
-            //stopMovingCable(event, module);
+            stopMovingCable(event, module);
 
-            // shapeFoldAnimation.setAttribute("attributeName", "points");
-            // shapeFoldAnimation.setAttribute("from", pointsString);
-            // shapeFoldAnimation.setAttribute("to", initalPosition);
-            // shapeFoldAnimation.setAttribute("dur", "0.5s");
-            // shapeFoldAnimation.setAttribute("fill", "freeze");
+            shapeFoldAnimation.setAttribute("attributeName", "points");
+            shapeFoldAnimation.setAttribute("from", pointsString);
+            shapeFoldAnimation.setAttribute("to", initalPosition);
+            shapeFoldAnimation.setAttribute("dur", "0.5s");
+            shapeFoldAnimation.setAttribute("fill", "freeze");
 
-            // shape.appendChild(shapeFoldAnimation);
-            // shapeFoldAnimation.beginElement();
+            shape.appendChild(shapeFoldAnimation);
+            shapeFoldAnimation.beginElement();
 
-            // shapeFoldAnimation.onend = () => {
-            //     svg.removeChild(shape);
-            // }
+            shapeFoldAnimation.onend = () => {
+                svg.removeChild(shape);
+            };
 
             // when cable is dropped create new one from module
-            createLine(svg, jack, xPosition, yPosition);
+            createCable(svg, jack, module, xPosition, yPosition);
         };
     };
 }
@@ -178,5 +185,5 @@ export default function createModuleCable(module) {
         if (svg.style.cursor === "grab") svg.style = "cursor: default";
     };
 
-    createLine(svg, jack, module.getBoundingClientRect().right, module.getBoundingClientRect().top + 10);
+    createCable(svg, jack, module, module.getBoundingClientRect().right, module.getBoundingClientRect().top + 10);
 }

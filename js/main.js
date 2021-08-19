@@ -1,12 +1,12 @@
-import createAnalyser from "./effects/createAnalyser.js";
-import createBiquadFilter from './effects/createBiquadFilter.js';
-import createConvolver from './effects/createConvolver.js';
-import createDynamicsCompressor from './effects/createDynamicsCompressor.js';
-import createGain from './effects/createGain.js';
-import createOscillator from './effects/createOscillator.js';
-import createDelay from './effects/createDelay.js';
-import createAudioBufferSource from './effects/createAudioBufferSource.js';
-import createLiveInput from './effects/createLiveInput.js';
+import createAnalyser from "./builders/effects/createAnalyser.js";
+import createBiquadFilter from "./builders/effects/createBiquadFilter.js";
+import createConvolver from "./builders/effects/createConvolver.js";
+import createDynamicsCompressor from "./builders/effects/createDynamicsCompressor.js";
+import createGain from "./builders/effects/createGain.js";
+import createOscillator from "./builders/effects/createOscillator.js";
+import createDelay from "./builders/effects/createDelay.js";
+import createAudioBufferSource from "./builders/effects/createAudioBufferSource.js";
+import createLiveInput from "./builders/effects/createLiveInput.js";
 
 let audioContext;
 
@@ -21,10 +21,10 @@ function loadFilesIntoAudioContext(audioContext, soundArray, isSound) {
             audioContext.decodeAudioData(soundRequest.response, function (buffer) {
                 nameBufferDictonary[fileName] = buffer;
             });
-        }
+        };
         soundRequest.send();
-    })
-    isSound ? audioContext.nameSoundBuffer = nameBufferDictonary : audioContext.nameIRBuffer = nameBufferDictonary
+    });
+    isSound ? (audioContext.nameSoundBuffer = nameBufferDictonary) : (audioContext.nameIRBuffer = nameBufferDictonary);
 }
 
 // Initialization function for the page.
@@ -63,48 +63,47 @@ function init() {
     const initOscillatorFrequency = 440;
     const initOscillatorDetune = 0;
 
-
     try {
         audioContext = new AudioContext();
     } catch (e) {
-        alert('The Web Audio API is not supported in this browser.');
+        alert("The Web Audio API is not supported in this browser.");
     }
 
     loadFilesIntoAudioContext(audioContext, sounds, true);
     loadFilesIntoAudioContext(audioContext, impulseResponses, false);
 
-    // hook audioContent final destination only to destination element. 
+    // hook audioContent final destination only to destination element.
     document.getElementById("destination").audioNode = audioContext.destination;
     document.getElementById("destination-input").type = "input"; // Keep type info for stopMovingCable
 
     document.getElementById("cana").onmousedown = function (event) {
         createAnalyser(event, initAnalyserSmoothingTimeConstant, initAnalyserMaxDecibles, initAnalyserType);
-    }
+    };
     document.getElementById("cabs").onmousedown = function (event) {
         createAudioBufferSource(event, initAudioBufferSourceLoop, initAudioBufferSourceBufferName);
-    }
+    };
     document.getElementById("cbqf").onmousedown = function (event) {
         createBiquadFilter(event, initBiquadFrequency, initBiquadQ, initBiquadGain, initBiquadType);
-    }
+    };
     document.getElementById("ccon").onmousedown = function (event) {
         createConvolver(event, initConvolerBufferName, initConvolerNormalizer);
-    }
+    };
     document.getElementById("cdel").onmousedown = function (event) {
         createDelay(event, initialDelayDelay, initialDelayMaxDelay);
-    }
+    };
     document.getElementById("cdyc").onmousedown = function (event) {
         createDynamicsCompressor(event, initCompressorThreshold, initCompressorKnee, initCompressorRatio, initCompressorAttack, initCompressorRelease);
-    }
+    };
     document.getElementById("cgai").onmousedown = function (event) {
         createGain(event, initialGainGain);
-    }
+    };
     document.getElementById("cliv").onmousedown = function (event) {
         createLiveInput(event);
-    }
+    };
     document.getElementById("cosc").onmousedown = function (event) {
         createOscillator(event, initOscillatorFrequency, initOscillatorDetune);
-    }
+    };
 }
 
-window.onload = init()
+window.onload = init();
 export default audioContext;

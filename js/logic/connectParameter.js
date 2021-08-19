@@ -1,8 +1,5 @@
-import audioContext from '../main.js'
-import {
-    valueToLogPosition,
-    scaleBetween
-} from '../helpers/math.js'
+import audioContext from "../main.js";
+import { valueToLogPosition, scaleBetween } from "../helpers/math.js";
 
 export default function connectParameter(sourceModule, destinationModule, parameterType) {
     let slider = destinationModule.content.controllers[parameterType].slider;
@@ -20,13 +17,12 @@ export default function connectParameter(sourceModule, destinationModule, parame
             slider.audioNode.getByteTimeDomainData(dataArray);
 
             // performance tweak - just get the max value of array instead of iterating
-            let element = Math.max(...dataArray)
+            let element = Math.max(...dataArray);
             let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
 
             slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
 
-            if (destinationModule.audioNode)
-                destinationModule.audioNode[parameterType].value = slider.value;
+            if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
 
             destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
 

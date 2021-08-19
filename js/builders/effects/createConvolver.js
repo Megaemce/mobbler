@@ -1,6 +1,6 @@
-import createModule from "../structure/createModule.js";
-import createModuleCable from "../structure/createModuleCable.js";
-import audioContext from "../main.js";
+import createModule from "../createModuleObject.js";
+import audioContext from "../../main.js";
+import Cable from "../../classes/Cable.js";
 
 export default function createConvolver(event, initalBufferName, initalNormalizer) {
     let irNames = Object.keys(audioContext.nameIRBuffer);
@@ -14,7 +14,7 @@ export default function createConvolver(event, initalBufferName, initalNormalize
         module.audioNode.buffer = audioContext.nameIRBuffer[this.value];
     };
 
-    createModuleCable(module);
+    new Cable(module); // create first inital cable linked to module
 
     event.preventDefault();
 }
