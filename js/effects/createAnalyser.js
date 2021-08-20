@@ -1,6 +1,6 @@
-import createModule from "../createModuleObject.js";
-import audioContext from "../../main.js";
-import Cable from "../../classes/Cable.js";
+import Module from "../classes/Module.js";
+import audioContext from "../main.js";
+import Cable from "../classes/Cable.js";
 
 let drawVisual;
 const visualSettings = ["sine wave", "frequency bars"];
@@ -85,7 +85,7 @@ export function visualizeOn(module, style) {
 }
 
 export default function createAnalyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
-    let module = createModule("analyser", true, false, false, visualSettings);
+    let module = new Module("analyser", true, false, false, visualSettings);
     let canvas = document.createElement("canvas");
 
     module.content.options.select.onchange = function () {

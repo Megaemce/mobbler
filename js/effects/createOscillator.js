@@ -1,16 +1,14 @@
-import createModule from "../createModuleObject.js";
-import createModuleSlider from "../createModuleSlider.js";
-import audioContext from "../../main.js";
-import Cable from "../../classes/Cable.js";
+import Module from "../classes/Module.js";
+import audioContext from "../main.js";
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
 
     let playButton = document.createElement("div");
-    let module = createModule("oscillator", false, false, false, oscTypes);
+    let module = new Module("oscillator", false, false, false, oscTypes);
 
-    createModuleSlider(module, "frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true);
-    createModuleSlider(module, "detune", initalDetune, -1200, 1200, 1, "cents", false);
+    module.createModuleSlider("frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true);
+    module.createModuleSlider("detune", initalDetune, -1200, 1200, 1, "cents", false);
 
     playButton.classList.add("switch");
     playButton.alt = "play";
@@ -30,7 +28,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             if (module.audioNode) {
                 if (module.outcomingCables) {
                     module.outcomingCables.forEach(function (cable) {
-                        module.audioNode.disconnect(cable.destination.audioNode);
+                        cable.destination && module.audioNode.disconnect(cable.destination.audioNode);
                     });
                 }
                 module.audioNode = undefined;
@@ -47,7 +45,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
             if (module.outcomingCables) {
                 module.outcomingCables.forEach(function (cable) {
-                    module.audioNode.connect(cable.destination.audioNode);
+                    cable.destination && module.audioNode.connect(cable.destination.audioNode);
                 });
             }
             module.audioNode.start(0);
@@ -62,8 +60,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     };
 
     module.content.controllers.appendChild(playButton);
-
-    new Cable(module); // create first inital cable linked to module
+    module.addFirstCable();
 
     event.preventDefault();
 }

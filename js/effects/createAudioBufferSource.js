@@ -1,6 +1,6 @@
-import createModule from "../createModuleObject.js";
-import audioContext from "../../main.js";
-import Cable from "../../classes/Cable.js";
+import Module from "../classes/Module.js";
+import audioContext from "../main.js";
+import Cable from "../classes/Cable.js";
 
 function addOpenFileButtonTo(element) {
     let input = document.createElement("input");
@@ -93,8 +93,9 @@ function playSelectedSound(module) {
         // play sound on all connected output
         if (module.outcomingCables) {
             module.outcomingCables.forEach(function (cable) {
-                //  console.log(cable)
-                module.audioNode.connect(cable.destination.audioNode);
+                // it might be that someone click on the loop button when the module is not connected
+                // thus checking audioNode from loose (not connected) cable
+                cable.destination && module.audioNode.connect(cable.destination.audioNode);
             });
         }
         module.audioNode.start(audioContext.currentTime);
@@ -108,7 +109,7 @@ function playSelectedSound(module) {
 
 export default function createAudioBufferSource(event, initalLoop, initalBufferName) {
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
-    let module = createModule("audio buffer source", false, true, false, soundNames);
+    let module = new Module("audio buffer source", false, true, false, soundNames);
     let playButton = document.createElement("div");
 
     playButton.classList.add("switch");

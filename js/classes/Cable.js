@@ -1,7 +1,5 @@
 import Point from "../classes/Point.js";
 import Line from "../classes/Line.js";
-import connectModules from "../logic/connectModules.js";
-import connectParameter from "../logic/connectParameter.js";
 
 // Cable is made out of multiply points connected with lines
 export default class Cable {
@@ -9,13 +7,19 @@ export default class Cable {
         this.module = module;
         this.source = module.id;
         this.destination = destination || null;
+
+        this.createCable(); // moze powinien byc tu atrybut module w odniesieniu do ktorego nowy kabel powinien byc tworzony?
+        // a to dlatego, ze jak usuwam kabel to this.createCable nie ma juz chyba atrybutow
+    }
+    createCable() {
         this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this.svg = document.getElementById("svgCanvas");
+        this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
 
         this.jack.setAttribute("href", "./img/jack_cleared.svg");
         this.jack.setAttribute("height", "9");
         this.jack.setAttribute("y", "-4.5");
-        this.jack.setAttribute("id", `${module.id}-jack`);
+        this.jack.setAttribute("id", `${this.module.id}-jack`);
 
         this.jack.onmouseover = () => {
             this.svg.style.cursor = "grab";
@@ -24,9 +28,6 @@ export default class Cable {
             if (this.svg.style.cursor === "grab") this.svg.style = "cursor: default";
         };
 
-        this.createCable();
-    }
-    createCable() {
         let lines = [];
         let count = 12;
         let pointsString = "";
@@ -34,11 +35,11 @@ export default class Cable {
         let svg = this.svg;
         let initalPosition = "";
         let animationID = undefined;
-        let xPosition = this.module.getBoundingClientRect().right;
-        let yPosition = this.module.getBoundingClientRect().top + 10;
-        let jackAnimationID = `${this.jack.id}-animation`;
+        let xPosition = this.module.getBoundingClientRect("right");
+        let yPosition = this.module.getBoundingClientRect("top") + 10;
+        let jackAnimationID = `${jack.id}-animation`;
         let destinationInput = document.getElementById("destination-input");
-        let shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        let shape = this.shape;
         let shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
@@ -58,6 +59,11 @@ export default class Cable {
             new Point(18.142, 53.97, 0.4, true),
         ];
 
+        // first dinggling (not connected) cable needs to be keep in the outcoming to keep it
+        // updated while just moving the module around
+        if (!this.module.outcomingCables) this.module.outcomingCables = new Array();
+        this.module.outcomingCables.push(this); // this is the active Cable
+
         svg.appendChild(shape);
         svg.appendChild(jack);
 
@@ -75,7 +81,7 @@ export default class Cable {
         shape.setAttribute("fill", "none");
         shape.setAttribute("stroke-width", "2");
         shape.setAttribute("points", pointsString);
-        shape.setAttribute("stroke-dasharray", "60");
+        //shape.setAttribute("stroke-dasharray", "6");
 
         shapeUnfoldAnimation.setAttribute("attributeName", "stroke-dashoffset");
         shapeUnfoldAnimation.setAttribute("from", "60");
@@ -153,7 +159,8 @@ export default class Cable {
                 points[count - 2].y = event.offsetY + 4.75;
             };
 
-            svg.onmouseup = () => {
+            // we ended moving around with cable
+            svg.onmouseup = (event) => {
                 // give some time for a physic calculation to finish
                 setTimeout(() => {
                     window.cancelAnimationFrame(animationID);
@@ -172,7 +179,7 @@ export default class Cable {
                 // unhide jack
                 jack.style.opacity = "1";
 
-                // this.stopMovingCable(event);
+                this.stopMovingCable(event);
 
                 shapeFoldAnimation.setAttribute("attributeName", "points");
                 shapeFoldAnimation.setAttribute("from", pointsString);
@@ -192,6 +199,52 @@ export default class Cable {
             };
         };
     }
+    removeFromCanvas() {
+        let canvasShape = document.getElementById(this.shape.id);
+        canvasShape && canvasShape.parentNode.removeChild(canvasShape);
+    }
+    updateStartPoint(x, y) {
+        this.shape.setAttribute("x1", x);
+        this.shape.setAttribute("y1", y);
+    }
+    updateEndPoint(x, y) {
+        this.shape.setAttribute("x2", x);
+        this.shape.setAttribute("y2", y);
+    }
+    deleteCable() {
+        this.removeFromCanvas();
+
+        // go to the neighboors and check if there are pointing back to the same direction as cable
+        // if yes, remove it from the incomingCables list
+        // checking destination in case of activeCable removal
+        if (this.destination && this.destination.incomingCables) {
+            this.destination.incomingCables.slice(0).forEach((cable, index) => {
+                if (cable.source === this.module) {
+                    this.destination.incomingCables.splice(index, 1);
+                }
+            });
+        }
+
+        // remove it from the outcomingCables list
+        if (this.module.outcomingCables) {
+            this.module.outcomingCables.slice(0).forEach((cable, index) => {
+                if (cable.destination === this.destination) {
+                    this.module.outcomingCables.splice(index, 1);
+                }
+            });
+        }
+
+        // reconnect all the others nodes
+        if (this.module.audioNode) {
+            this.module.audioNode.disconnect();
+
+            if (this.module.outcomingCables) {
+                this.module.outcomingCables.forEach((cable) => {
+                    this.module.audioNode.connect(cable.destination.audioNode);
+                });
+            }
+        }
+    }
     stopMovingCable(event) {
         let choosenElement = event.toElement;
         let destinationModule = undefined;
@@ -205,6 +258,7 @@ export default class Cable {
         } else if (choosenElement.classList && choosenElement.classList.contains("destination-input")) {
             destinationModule = choosenElement.parentNode; // final destination, built-in attribute
         } else {
+            sourceModule.outcomingCables.pop(); // CABLE SHOULD BE REMOVED FROM OUTCOMING CABLES ARRAY
             return false; // something else thus kill it with fire
         }
 
@@ -219,8 +273,8 @@ export default class Cable {
         destinationModule.incomingCables.push(this);
 
         // different action for input and audio parameter
-        if (choosenElement.type === "input") connectModules(sourceModule, destinationModule);
+        if (choosenElement.type === "input") sourceModule.connectToModule(destinationModule);
         // type === audio node property name without spaces
-        else connectParameter(sourceModule, destinationModule, choosenElement.type);
+        else sourceModule.connectToParameter(destinationModule, choosenElement.type);
     }
 }
