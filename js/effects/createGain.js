@@ -1,5 +1,5 @@
 import Module from "../classes/Module.js";
-import audioContext from "../main.js";
+import { audioContext } from "../main.js";
 
 export default function createGain(event, initalGain) {
     let module = new Module("gain", true, false, false, undefined);
@@ -8,7 +8,6 @@ export default function createGain(event, initalGain) {
     module.audioNode.gain.value = initalGain;
 
     module.createModuleSlider("gain", initalGain, 0, 10, 0.1, "", false);
-    module.addFirstCable();
 
     event.preventDefault();
 }

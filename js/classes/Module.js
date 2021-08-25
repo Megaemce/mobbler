@@ -1,4 +1,5 @@
-import audioContext from "../main.js";
+import { audioContext } from "../main.js";
+
 import Cable from "./Cable.js";
 import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers/math.js";
 
@@ -11,7 +12,7 @@ let whileMovingModuleHandler;
 // Node moving functions - these are used for dragging the audio modules,
 // function is set on head div inside the module
 function stopMovingModule() {
-    // Stop capturing mousemove and m ouseup events.
+    // Stop capturing mousemove and mouseup events.
     document.removeEventListener("mousemove", whileMovingModuleHandler, true);
     document.removeEventListener("mouseup", stopMovingModule, true);
 }
@@ -23,13 +24,23 @@ export default class Module {
         this.hasLooper = hasLooper;
         this.hasNormalizer = hasNormalizer;
         this.arrayForSelect = arrayForSelect;
+        this.incomingCables = new Array();
+        this.outcomingCables = new Array();
         this.createModuleObject();
+        new Cable(this); //create new cable linked with this module
     }
     createModuleObject() {
         let modules = document.getElementById("modules");
         let mainWidth = modules.offsetWidth;
         let module = document.createElement("div");
-        this.module = module;
+        this.html = module;
+        this.html.self = this; // just for logging
+
+        // ------------------------------------------- //
+        // module.module to jest HTMLowy object        //
+        // module, aka this to sam object klasy module //
+        // ------------------------------------------- //
+
         let head = document.createElement("div");
         let title = document.createElement("span");
         let close = document.createElement("a");
@@ -314,14 +325,14 @@ export default class Module {
         let y = event.clientY + window.scrollY;
 
         // Save starting positions of cursor and element.
-        this.cursorStartX = x;
-        this.cursorStartY = y;
+        this.html.cursorStartX = x;
+        this.html.cursorStartY = y;
 
-        this.elStartLeft = parseInt(this.module.style.left, 10) || 0;
-        this.elStartTop = parseInt(this.module.style.top, 10) || 0;
+        this.html.elStartLeft = parseInt(this.html.style.left, 10) || 0;
+        this.html.elStartTop = parseInt(this.html.style.top, 10) || 0;
 
         // Update element's z-index.
-        ++this.module.style.zIndex;
+        ++this.html.style.zIndex;
 
         // Capture mousemove and mouseup events on the page.
         whileMovingModuleHandler = (event) => {
@@ -336,16 +347,15 @@ export default class Module {
         // Get cursor position with respect to the page.
         let x = event.clientX + window.scrollX;
         let y = event.clientY + window.scrollY;
-        let module = this.module;
 
         // Move drag element by the same amount the cursor has moved.
-        module.style.left = module.elStartLeft + x - module.cursorStartX + 2 + "px";
-        module.style.top = module.elStartTop + y - module.cursorStartY + 5 + "px";
+        this.html.style.left = this.html.elStartLeft + x - this.html.cursorStartX + 2 + "px";
+        this.html.style.top = this.html.elStartTop + y - this.html.cursorStartY + 5 + "px";
 
-        if (module.incomingCables) {
+        if (this.incomingCables) {
             // update any lines that point in here.
 
-            let off = module;
+            let off = this.html;
             x = window.scrollX + 12;
             y = window.scrollY + 12;
 
@@ -355,14 +365,14 @@ export default class Module {
                 off = off.offsetParent;
             }
 
-            module.incomingCables.forEach((cable) => {
+            this.incomingCables.forEach((cable) => {
                 cable.updateEndPoint(x, y);
             });
         }
 
-        if (module.outcomingCables) {
+        if (this.outcomingCables) {
             // update any lines that point out of here.
-            let off = module.outputs;
+            let off = this.html;
             x = window.scrollX + 12;
             y = window.scrollY + 12;
 
@@ -372,7 +382,7 @@ export default class Module {
                 off = off.offsetParent;
             }
 
-            module.outcomingCables.forEach((cable) => {
+            this.outcomingCables.forEach((cable) => {
                 cable.updateStartPoint(x, y);
             });
         }
@@ -440,8 +450,134 @@ export default class Module {
             connectToSlider();
         }
     }
-    getBoundingClientRect(direction) {
-        if (direction === "right") return this.module.getBoundingClientRect().right;
-        if (direction === "top") return this.module.getBoundingClientRect().top;
+    playSelectedSound() {
+        let loop = this.content.options.looper.checkbox.checked;
+        let selectedBufferName = this.content.options.select.value;
+        let playButton = this.content.controllers.playButton;
+
+        if (playButton.isPlaying) this.stopSound(this, playButton);
+        else {
+            playButton.isPlaying = true;
+            this.head.diode.className = "diode diode-on";
+            playButton.classList.add("switch-on");
+
+            // if there's already a note playing, cut it off
+            if (this.audioNode) {
+                this.audioNode.stop(0);
+                this.audioNode.disconnect();
+                this.audioNode = undefined;
+            }
+
+            // create a new BufferSource and connect it
+            this.audioNode = audioContext.createBufferSource();
+            this.audioNode.loop = loop;
+            this.audioNode.buffer = audioContext.nameSoundBuffer[selectedBufferName];
+
+            // play sound on all connected output
+            if (this.outcomingCables) {
+                this.outcomingCables.forEach(function (cable) {
+                    // it might be that someone click on the loop button when the module is not connected
+                    // thus checking audioNode from loose (not connected) cable
+                    cable.destination && this.audioNode.connect(cable.destination.audioNode);
+                });
+            }
+            this.audioNode.start(audioContext.currentTime);
+
+            if (!this.audioNode.loop) {
+                let delay = Math.floor(this.buffer.duration * 1000) + 1;
+                this.audioNode.stopTimer = window.setTimeout(this.stopSound, delay, this, playButton);
+            }
+        }
+    }
+    stopSound() {
+        let playButton = this.content.controllers.playButton;
+
+        playButton.isPlaying = false;
+        playButton.classList.remove("switch-on");
+        this.head.diode.className = "diode";
+
+        if (this.audioNode.stopTimer) {
+            window.clearTimeout(this.audioNode.stopTimer);
+            this.audioNode.stopTimer = 0;
+        }
+        // if loop is enabled sound will play even with switch-off thus kill it with fire
+        if (this.audioNode.loop) {
+            this.audioNode.loop = false;
+            this.content.options.looper.checkbox.checked = false;
+        }
+    }
+    // create analyser on given module with given setting
+    visualizeOn(drawVisual, canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
+        let canvas = this.content.canvas;
+
+        if (canvas) canvas.remove();
+
+        canvas = document.createElement("canvas");
+        canvas.id = `${this.id}-content-controllers-canvas`;
+        canvas.height = canvasHeight;
+        canvas.width = canvasWidth;
+        canvas.className = "analyserCanvas";
+
+        this.content.appendChild(canvas);
+        this.content.canvas = canvas;
+
+        let ctx = (this.content.drawingContext = canvas.getContext("2d"));
+
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        if (style === "frequency bars") {
+            this.audioNode.fftSize = fftSizeFrequencyBars;
+            let bufferLengthAlt = this.audioNode.frequencyBinCount; //it's always half of fftSize
+            let dataArrayAlt = new Uint8Array(bufferLengthAlt);
+
+            let drawBar = () => {
+                drawVisual = requestAnimationFrame(drawBar);
+
+                this.audioNode.getByteFrequencyData(dataArrayAlt);
+                // data returned in dataArrayAlt array will in range [0-255]
+
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                let barWidth = (canvasWidth / bufferLengthAlt) * 2.5;
+                let x = 0;
+
+                dataArrayAlt.forEach((barHeight) => {
+                    ctx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
+                    // contex grid is upside down so we substract from y value
+                    ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
+
+                    x += barWidth + 1;
+                });
+            };
+            drawBar();
+        }
+        if (style === "sine wave") {
+            let bufferLength = (this.audioNode.fftSize = fftSizeSineWave);
+            let dataArray = new Uint8Array(bufferLength);
+
+            let drawWave = function () {
+                drawVisual = requestAnimationFrame(drawWave);
+
+                this.audioNode.getByteTimeDomainData(dataArray);
+                // data returned in dataArray will be in range [0-255]
+
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgb(0, 0, 0)";
+                ctx.beginPath();
+
+                dataArray.forEach((element, index) => {
+                    let x = (canvasWidth / bufferLength) * index; // sliceWidth * index
+                    let y = (element * canvasHeight) / 256; // 256 comes from dataArray max value;
+                    if (!index === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+
+                ctx.stroke();
+            };
+            drawWave();
+        }
     }
 }

@@ -1,5 +1,5 @@
 import Module from "../classes/Module.js";
-import audioContext from "../main.js";
+import { audioContext } from "../main.js";
 
 function gotStream(stream) {
     this.audioNode = audioContext.createMediaStreamSource(stream);
@@ -32,7 +32,6 @@ export default function createLiveInput(event) {
     recordingImg.src = "./img/circle.svg";
 
     module.content.controllers.appendChild(recordingImg);
-    module.addFirstCable();
 
     event.preventDefault();
 }

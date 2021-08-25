@@ -1,5 +1,5 @@
 import Module from "../classes/Module.js";
-import audioContext from "../main.js";
+import { audioContext } from "../main.js";
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
@@ -60,7 +60,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     };
 
     module.content.controllers.appendChild(playButton);
-    module.addFirstCable();
 
     event.preventDefault();
 }

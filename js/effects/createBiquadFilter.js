@@ -1,5 +1,5 @@
 import Module from "../classes/Module.js";
-import audioContext from "../main.js";
+import { audioContext } from "../main.js";
 
 export default function createBiquadFilter(event, initalFrequency, initalQ, initalGain, initalType) {
     const filterTypes = ["peaking", "lowshelf", "highshelf", "lowpass", "highpass", "bandpass", "notch", "allpass"];
@@ -32,8 +32,6 @@ export default function createBiquadFilter(event, initalFrequency, initalQ, init
         }
         module.audioNode.type = this.value;
     };
-
-    module.addFirstCable();
 
     event.preventDefault();
 }

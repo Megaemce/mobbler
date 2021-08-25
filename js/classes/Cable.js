@@ -4,42 +4,38 @@ import Line from "../classes/Line.js";
 // Cable is made out of multiply points connected with lines
 export default class Cable {
     constructor(module, destination) {
-        this.module = module;
-        this.source = module.id;
+        this.source = module;
         this.destination = destination || null;
 
-        this.createCable(); // moze powinien byc tu atrybut module w odniesieniu do ktorego nowy kabel powinien byc tworzony?
-        // a to dlatego, ze jak usuwam kabel to this.createCable nie ma juz chyba atrybutow
+        this.createCable(); // create cable linked with module
     }
     createCable() {
-        this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
-        this.svg = document.getElementById("svgCanvas");
-        this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        let jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
+        let svg = document.getElementById("svgCanvas");
+        let shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        this.shape = shape;
 
-        this.jack.setAttribute("href", "./img/jack_cleared.svg");
-        this.jack.setAttribute("height", "9");
-        this.jack.setAttribute("y", "-4.5");
-        this.jack.setAttribute("id", `${this.module.id}-jack`);
+        jack.setAttribute("href", "./img/jack_cleared.svg");
+        jack.setAttribute("height", "9");
+        jack.setAttribute("y", "-4.5");
+        jack.setAttribute("id", `${this.source.id}-jack`);
 
-        this.jack.onmouseover = () => {
-            this.svg.style.cursor = "grab";
+        jack.onmouseover = () => {
+            svg.style.cursor = "grab";
         };
-        this.jack.onmouseout = () => {
-            if (this.svg.style.cursor === "grab") this.svg.style = "cursor: default";
+        jack.onmouseout = () => {
+            if (svg.style.cursor === "grab") svg.style = "cursor: default";
         };
 
         let lines = [];
         let count = 12;
         let pointsString = "";
-        let jack = this.jack;
-        let svg = this.svg;
         let initalPosition = "";
         let animationID = undefined;
-        let xPosition = this.module.getBoundingClientRect("right");
-        let yPosition = this.module.getBoundingClientRect("top") + 10;
+        let xPosition = this.source.html.getBoundingClientRect().right;
+        let yPosition = this.source.html.getBoundingClientRect().top + 10;
         let jackAnimationID = `${jack.id}-animation`;
         let destinationInput = document.getElementById("destination-input");
-        let shape = this.shape;
         let shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
@@ -61,8 +57,8 @@ export default class Cable {
 
         // first dinggling (not connected) cable needs to be keep in the outcoming to keep it
         // updated while just moving the module around
-        if (!this.module.outcomingCables) this.module.outcomingCables = new Array();
-        this.module.outcomingCables.push(this); // this is the active Cable
+        if (!this.source.outcomingCables) this.source.outcomingCables = new Array();
+        this.source.outcomingCables.push(this); // this is the active Cable
 
         svg.appendChild(shape);
         svg.appendChild(jack);
@@ -194,7 +190,7 @@ export default class Cable {
                     svg.removeChild(shape);
                 };
 
-                // when cable is dropped create new one from module
+                // when cable is dropped create new one
                 this.createCable();
             };
         };
@@ -219,28 +215,28 @@ export default class Cable {
         // checking destination in case of activeCable removal
         if (this.destination && this.destination.incomingCables) {
             this.destination.incomingCables.slice(0).forEach((cable, index) => {
-                if (cable.source === this.module) {
+                if (cable.source === this.source) {
                     this.destination.incomingCables.splice(index, 1);
                 }
             });
         }
 
         // remove it from the outcomingCables list
-        if (this.module.outcomingCables) {
-            this.module.outcomingCables.slice(0).forEach((cable, index) => {
+        if (this.source.outcomingCables) {
+            this.source.outcomingCables.slice(0).forEach((cable, index) => {
                 if (cable.destination === this.destination) {
-                    this.module.outcomingCables.splice(index, 1);
+                    this.source.outcomingCables.splice(index, 1);
                 }
             });
         }
 
         // reconnect all the others nodes
-        if (this.module.audioNode) {
-            this.module.audioNode.disconnect();
+        if (this.source.audioNode) {
+            this.source.audioNode.disconnect();
 
-            if (this.module.outcomingCables) {
-                this.module.outcomingCables.forEach((cable) => {
-                    this.module.audioNode.connect(cable.destination.audioNode);
+            if (this.source.outcomingCables) {
+                this.source.outcomingCables.forEach((cable) => {
+                    this.source.audioNode.connect(cable.destination.audioNode);
                 });
             }
         }
@@ -248,7 +244,7 @@ export default class Cable {
     stopMovingCable(event) {
         let choosenElement = event.toElement;
         let destinationModule = undefined;
-        let sourceModule = this.module;
+        let sourceModule = this.source;
 
         // if we are creating first cable there will be no output nodes
         sourceModule.nodes.output && sourceModule.nodes.output.classList.remove("hidden"); // make "new" output visible
