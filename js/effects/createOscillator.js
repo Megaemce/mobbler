@@ -26,11 +26,13 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
             // if there is a sound installed
             if (module.audioNode) {
-                if (module.outcomingCables) {
-                    module.outcomingCables.forEach(function (cable) {
-                        cable.destination && module.audioNode.disconnect(cable.destination.audioNode);
-                    });
-                }
+                // if (module.outcomingCables) {
+                //     module.outcomingCables.forEach(function (cable) {
+                //         cable.destination && module.audioNode.disconnect(cable.destination.audioNode);
+                //     });
+                // } MAYBE THERE IS NO NEED TO GO THROUGH THE OUTCOMING CABLES AND SIMPLY:
+                module.audioNode.disconnect();
+
                 module.audioNode = undefined;
             }
         } else {
@@ -60,6 +62,10 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     };
 
     module.content.controllers.appendChild(playButton);
+
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
 
     event.preventDefault();
 }

@@ -18,29 +18,21 @@ function stopMovingModule() {
 }
 
 export default class Module {
-    constructor(name, hasOutput, hasLooper, hasNormalizer, arrayForSelect) {
+    constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect) {
         this.name = name;
-        this.hasOutput = hasOutput;
         this.hasLooper = hasLooper;
+        this.hasInput = hasInput;
         this.hasNormalizer = hasNormalizer;
         this.arrayForSelect = arrayForSelect;
         this.incomingCables = new Array();
         this.outcomingCables = new Array();
+        this.id = `module-${++id}`;
         this.createModuleObject();
-        new Cable(this); //create new cable linked with this module
     }
     createModuleObject() {
         let modules = document.getElementById("modules");
         let mainWidth = modules.offsetWidth;
         let module = document.createElement("div");
-        this.html = module;
-        this.html.self = this; // just for logging
-
-        // ------------------------------------------- //
-        // module.module to jest HTMLowy object        //
-        // module, aka this to sam object klasy module //
-        // ------------------------------------------- //
-
         let head = document.createElement("div");
         let title = document.createElement("span");
         let close = document.createElement("a");
@@ -48,13 +40,14 @@ export default class Module {
         let content = document.createElement("div");
         let options = document.createElement("div");
         let controllers = document.createElement("div");
-        let nodes = document.createElement("div");
-        let output = document.createElement("div");
         let footer = undefined; // keep undefined just to test if it was created
-        ++id;
+
+        this.html = module;
+        this.html.id = this.id; // just for logging
+        this.html.self = this; // just for logging
 
         module.className = "module";
-        module.id = `module-${id}`;
+
         module.style.left = `${tempx}px`;
         module.style.top = `${tempy}px`;
 
@@ -65,15 +58,15 @@ export default class Module {
         if (tempy > window.innerHeight - 300) tempy = 100 + id;
 
         diode.className = "diode";
-        diode.id = `module-${id}-head-diode`;
+        diode.id = `${this.id}-head-diode`;
 
         title.className = "title";
-        title.id = `module-${id}-head-title`;
+        title.id = `${this.id}-head-title`;
         title.appendChild(document.createTextNode(this.name));
         title.name = this.name;
 
         close.className = "close";
-        close.id = `module-${id}-head-close`;
+        close.id = `${this.id}-head-close`;
         close.href = "#";
         close.onclick = () => {
             this.disconnectModule();
@@ -81,7 +74,7 @@ export default class Module {
         };
 
         head.className = "head";
-        head.id = `module-${id}-head`;
+        head.id = `${this.id}-head`;
         head.onmousedown = (event) => {
             this.movingModule(event);
         };
@@ -93,14 +86,14 @@ export default class Module {
         head.close = close;
 
         options.className = "options";
-        options.id = `module-${id}-content-options`;
+        options.id = `${this.id}-content-options`;
 
         if (this.hasLooper || this.hasNormalizer || this.arrayForSelect) {
             if (this.arrayForSelect) {
                 let select = document.createElement("select");
 
                 select.className = "ab-source";
-                select.id = `module-${id}-content-options-select`;
+                select.id = `${this.id}-content-options-select`;
 
                 this.arrayForSelect.forEach((object) => {
                     let option = document.createElement("option");
@@ -121,7 +114,7 @@ export default class Module {
                 let normalizer = document.createElement("div");
 
                 checkbox.type = "checkbox";
-                checkbox.id = `module-${id}-content-options-checkbox`;
+                checkbox.id = `${this.id}-content-options-checkbox`;
 
                 if (this.hasLooper) {
                     checkbox.onchange = function () {
@@ -129,11 +122,11 @@ export default class Module {
                     };
 
                     // To associate label with an input element, you need to give the input an id attribute.
-                    label.htmlFor = `module-${id}-content-options-looper`;
+                    label.htmlFor = `${this.id}-content-options-looper`;
                     label.appendChild(document.createTextNode("Loop"));
 
                     looper.className = "looper";
-                    looper.id = `module-${id}-content-options-looper`;
+                    looper.id = `${this.id}-content-options-looper`;
                     looper.appendChild(checkbox);
                     looper.appendChild(label);
 
@@ -151,11 +144,11 @@ export default class Module {
                         this.audioNode.normalize = this.checked;
                     };
 
-                    label.htmlFor = `module-${id}-content-options-looper`;
+                    label.htmlFor = `${this.id}-content-options-looper`;
                     label.appendChild(document.createTextNode("Norm"));
 
                     normalizer.className = "normalizer";
-                    normalizer.id = `module-${id}-content-options-normalizer`;
+                    normalizer.id = `${this.id}-content-options-normalizer`;
                     normalizer.appendChild(checkbox);
                     normalizer.appendChild(label);
 
@@ -174,53 +167,36 @@ export default class Module {
         }
 
         controllers.className = "controllers";
-        controllers.id = `module-${id}-content-controllers`;
+        controllers.id = `${this.id}-content-controllers`;
 
         content.className = "content";
-        content.id = `module-${id}-content`;
+        content.id = `${this.id}-content`;
 
         content.appendChild(controllers);
 
         content.controllers = controllers;
 
-        nodes.className = "nodes";
-        nodes.id = `module-${id}-nodes`;
-
         if (this.hasInput) {
             let input = document.createElement("div");
-            input.className = "node module-input";
-            input.id = `module-${id}-nodes-input`;
-            input.parentModule = module; // keep info about parent for stopMovingCable
+            input.id = `${this.id}-input`;
+            input.className = "input";
+            input.parentModule = this; // keep info about parent for stopMovingCable
             input.type = "input"; // keep info about type for stopMovingCable
-            nodes.appendChild(input);
-
-            nodes.input = input;
+            this.input = input;
+            module.appendChild(input);
         }
-
-        //output.className = "node module-output";
-        //output.id = `module-${id}-nodes-output`;
-
-        // output.onmousedown = function (event) {
-        //     output.classList.add("hidden");
-        //     createCable(event, module);
-        // }
-        //nodes.appendChild(output);
-
-        //nodes.output = output;
 
         footer = document.createElement("footer");
         footer.className = "footer";
-        footer.id = `module-${id}-footer`;
+        footer.id = `${this.id}-footer`;
 
         module.setAttribute("audioNodeType", this.name);
         module.appendChild(head);
         module.appendChild(content);
-        module.appendChild(nodes);
         module.appendChild(footer);
 
         this.head = head;
         this.content = content;
-        this.nodes = nodes;
         this.footer = footer;
 
         // add the node into the soundfield
@@ -280,10 +256,11 @@ export default class Module {
         // set inital value to the correct position before user starts to play
         slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : initialValue;
         slider.step = stepUnits;
+        let that = this;
         slider.oninput = function () {
             let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
 
-            if (this.audioNode) this.audioNode[propertyNoSpaces].value = sliderValue;
+            if (that.audioNode) that.audioNode[propertyNoSpaces].value = sliderValue;
 
             // in case user is just playing around without audio on
             value.innerHTML = sliderValue;
@@ -416,7 +393,7 @@ export default class Module {
         if (this.onConnectInput) this.onConnectInput();
 
         // check if not final destination (no head) and turn diode on
-        if (this.head && this.head.diode) destinationModule.head.diode.classList.add("diode-on");
+        if (destinationModule.head && destinationModule.head.diode) destinationModule.head.diode.classList.add("diode-on");
     }
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
@@ -475,7 +452,7 @@ export default class Module {
 
             // play sound on all connected output
             if (this.outcomingCables) {
-                this.outcomingCables.forEach(function (cable) {
+                this.outcomingCables.forEach((cable) => {
                     // it might be that someone click on the loop button when the module is not connected
                     // thus checking audioNode from loose (not connected) cable
                     cable.destination && this.audioNode.connect(cable.destination.audioNode);
@@ -485,7 +462,9 @@ export default class Module {
 
             if (!this.audioNode.loop) {
                 let delay = Math.floor(this.buffer.duration * 1000) + 1;
-                this.audioNode.stopTimer = window.setTimeout(this.stopSound, delay, this, playButton);
+                // bind: set the value of a function's 'this' regardless of how it's called
+                // without bind stopSound will be called on this === window
+                this.audioNode.stopTimer = window.setTimeout(this.stopSound.bind(this), delay);
             }
         }
     }
@@ -556,7 +535,7 @@ export default class Module {
             let bufferLength = (this.audioNode.fftSize = fftSizeSineWave);
             let dataArray = new Uint8Array(bufferLength);
 
-            let drawWave = function () {
+            let drawWave = () => {
                 drawVisual = requestAnimationFrame(drawWave);
 
                 this.audioNode.getByteTimeDomainData(dataArray);

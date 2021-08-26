@@ -13,5 +13,9 @@ export default function createConvolver(event, initalBufferName, initalNormalize
         module.audioNode.buffer = audioContext.nameIRBuffer[this.value];
     };
 
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
+
     event.preventDefault();
 }

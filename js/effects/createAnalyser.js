@@ -1,14 +1,14 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-let drawVisual;
-const visualSettings = ["sine wave", "frequency bars"];
-const canvasHeight = 140;
-const canvasWidth = 240;
-const fftSizeFrequencyBars = 512;
-const fftSizeSineWave = 2048;
-
 export default function createAnalyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
+    const visualSettings = ["sine wave", "frequency bars"];
+    const canvasHeight = 140;
+    const canvasWidth = 240;
+    const fftSizeFrequencyBars = 512;
+    const fftSizeSineWave = 2048;
+    let drawVisual;
+
     let module = new Module("analyser", true, false, false, visualSettings);
     let canvas = document.createElement("canvas");
 
@@ -33,6 +33,10 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
     module.onConnectInput = function () {
         module.visualizeOn(drawVisual, canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, initalType);
     };
+
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
 
     event.preventDefault();
 }

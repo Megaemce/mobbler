@@ -9,5 +9,9 @@ export default function createDelay(event, initialDelay, maxDelay) {
 
     module.createModuleSlider("delay Time", initialDelay, 0.0, maxDelay, 0.01, "sec", false);
 
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
+
     event.preventDefault();
 }

@@ -33,5 +33,9 @@ export default function createBiquadFilter(event, initalFrequency, initalQ, init
         module.audioNode.type = this.value;
     };
 
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
+
     event.preventDefault();
 }

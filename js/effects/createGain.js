@@ -9,5 +9,9 @@ export default function createGain(event, initalGain) {
 
     module.createModuleSlider("gain", initalGain, 0, 10, 0.1, "", false);
 
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
+
     event.preventDefault();
 }

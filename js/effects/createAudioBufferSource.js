@@ -43,5 +43,9 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
     module.loop = initalLoop;
     module.buffer = audioContext.nameSoundBuffer[initalBufferName];
 
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
+
     event.preventDefault();
 }

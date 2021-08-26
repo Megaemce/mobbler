@@ -12,5 +12,9 @@ export default function createDynamicsCompressor(event, initalThreshold, initalK
     module.createModuleSlider("attack", initalAttack, 0, 1.0, 0.001, "sec", false);
     module.createModuleSlider("release", initalRelease, 0, 1.0, 0.05, "sec", false);
 
+    // create new cable linked with this module. It's done here as the module html
+    // structure needs to be fully build before - getBoundingClientRect related.
+    module.addFirstCable();
+
     event.preventDefault();
 }
