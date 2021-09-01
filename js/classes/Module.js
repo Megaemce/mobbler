@@ -336,10 +336,10 @@ export default class Module {
         document.onmouseup = () => {
             // cancel physic animation on all cables
             this.incomingCables.forEach((cable) => {
-                cable.cancelAnimation();
+                cable.stopAnimation();
             });
             this.outcomingCables.forEach((cable) => {
-                cable.cancelAnimation();
+                cable.stopAnimation();
             });
             document.onmousemove = undefined;
             document.onmouseup = undefined;
