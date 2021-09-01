@@ -7,7 +7,7 @@ export default class Point {
         this.fixed = fixed || false;
     }
     move(x, y) {
-        this.x = this.x + x;
-        this.y = this.y + y;
+        this.x += x;
+        this.y += y;
     }
 }

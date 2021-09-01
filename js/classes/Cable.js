@@ -1,6 +1,5 @@
 import Point from "../classes/Point.js";
 import Line from "../classes/Line.js";
-import Module from "./Module.js";
 
 // Cable is made out of multiply points connected with lines
 export default class Cable {
@@ -9,7 +8,52 @@ export default class Cable {
         this.destination = destination || null;
         this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        this.animationID = undefined;
+        this.lines = [];
+        this.points = [
+            // inital hanging shape:
+            new Point(0.378, 1.056, 0.4, true),
+            new Point(2.695, 2.016, 0.4),
+            new Point(4.831, 3.454, 0.4),
+            new Point(6.789, 5.335, 0.4),
+            new Point(8.575, 7.623, 0.4),
+            new Point(10.192, 10.284, 0.4),
+            new Point(11.646, 13.281, 0.4),
+            new Point(14.078, 20.143, 0.4),
+            new Point(15.909, 27.926, 0.4),
+            new Point(17.173, 36.348, 0.4),
+            new Point(17.906, 45.122, 0.4, true),
+            new Point(18.142, 53.97, 0.4, true),
+        ];
         this.createCable(); // create cable linked with module
+    }
+    // update
+    startAnimation() {
+        let pointsString = "";
+
+        this.shape.onmouseover = () => {
+            this.shape.style.cursor = "no-drop";
+        };
+
+        this.lines.forEach((line) => {
+            line.gravity = true;
+            line.update();
+        });
+
+        this.points.forEach((point) => {
+            pointsString += `${point.x},${point.y} `;
+        });
+
+        this.shape.setAttribute("points", pointsString);
+
+        this.animationID = requestAnimationFrame(() => {
+            this.startAnimation();
+        });
+    }
+    cancelAnimation() {
+        setTimeout(() => {
+            window.cancelAnimationFrame(this.animationID);
+        }, 100);
     }
     createCable() {
         let svg = document.getElementById("svgCanvas");
@@ -32,7 +76,6 @@ export default class Cable {
         let count = 12;
         let pointsString = "";
         let initalPosition = "";
-        let animationID = undefined;
         let xPosition = this.source.html.getBoundingClientRect().right;
         let yPosition = this.source.html.getBoundingClientRect().top + 10;
         let jackAnimationID = `${this.source.id}-jack-animation`;
@@ -40,21 +83,7 @@ export default class Cable {
         let shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
-        let points = [
-            // inital hanging shape:
-            new Point(0.378, 1.056, 0.4, true),
-            new Point(2.695, 2.016, 0.4),
-            new Point(4.831, 3.454, 0.4),
-            new Point(6.789, 5.335, 0.4),
-            new Point(8.575, 7.623, 0.4),
-            new Point(10.192, 10.284, 0.4),
-            new Point(11.646, 13.281, 0.4),
-            new Point(14.078, 20.143, 0.4),
-            new Point(15.909, 27.926, 0.4),
-            new Point(17.173, 36.348, 0.4),
-            new Point(17.906, 45.122, 0.4, true),
-            new Point(18.142, 53.97, 0.4, true),
-        ];
+        let points = this.points;
 
         // first dinggling (not connected) cable needs to be keep in the outcoming to keep it
         // updated while just moving the module around
@@ -64,14 +93,16 @@ export default class Cable {
         svg.appendChild(shape);
         svg.appendChild(jack);
 
-        points.forEach((point, i) => {
+        this.points.forEach((point, i) => {
             point.move(xPosition, yPosition);
             if (i > 0) {
-                let newLine = new Line(points[i - 1], points[i], Math.log(point.x), 0.8);
-                lines.push(newLine);
+                // newLine keeps the array with pointers linked to Points which is cool!
+                // by updating the line we update the points in the points array too
+                let newLine = new Line(this.points[i - 1], this.points[i], Math.log(point.x), 0.8);
+                this.lines.push(newLine);
             }
             pointsString += `${point.x},${point.y} `;
-            initalPosition += `${points[0].x},${points[0].y} `;
+            initalPosition += `${this.points[0].x},${this.points[0].y} `;
         });
 
         shape.setAttribute("stroke", "#040404");
@@ -111,26 +142,6 @@ export default class Cable {
             shape.removeAttribute("stroke-dasharray");
         };
 
-        let calculatePhysics = () => {
-            pointsString = "";
-
-            shape.onmouseover = () => {
-                shape.style.cursor = "no-drop";
-            };
-
-            lines.forEach((line) => {
-                line.update();
-            });
-
-            points.forEach((point) => {
-                pointsString += `${point.x},${point.y} `;
-            });
-
-            shape.setAttribute("points", pointsString);
-
-            animationID = window.requestAnimationFrame(calculatePhysics);
-        };
-
         // moving cable part - maybe worth moving to separate method
         jack.onmousedown = (event) => {
             jack.style.opacity = "0";
@@ -138,30 +149,24 @@ export default class Cable {
             svg.style = "cursor: url('./img/jack_cleared.svg'), auto;";
 
             // values set like this so it looks cool
-            points[count - 1].x = event.offsetX + 2.5;
-            points[count - 1].y = event.offsetY + 4.75;
-            points[count - 2].x = event.offsetX - 3;
-            points[count - 2].y = event.offsetY + 4.75;
+            // update last two points of the cable
+            this.points[count - 1].x = event.offsetX + 2.5;
+            this.points[count - 1].y = event.offsetY + 4.75;
+            this.points[count - 2].x = event.offsetX - 3;
+            this.points[count - 2].y = event.offsetY + 4.75;
 
-            lines.forEach((line) => {
-                line.gravity = true;
-            });
-
-            calculatePhysics();
+            this.startAnimation();
 
             document.onmousemove = (event) => {
-                points[count - 1].x = event.clientX + 2.5;
-                points[count - 1].y = event.clientY + 4.75;
-                points[count - 2].x = event.clientX - 3;
-                points[count - 2].y = event.clientY + 4.75;
+                this.points[count - 1].x = event.clientX + 2.5;
+                this.points[count - 1].y = event.clientY + 4.75;
+                this.points[count - 2].x = event.clientX - 3;
+                this.points[count - 2].y = event.clientY + 4.75;
             };
 
             // we ended moving around with cable
             document.onmouseup = (event) => {
-                // give some time for a physic calculation to finish
-                setTimeout(() => {
-                    window.cancelAnimationFrame(animationID);
-                }, 100);
+                this.cancelAnimation();
 
                 // only when shape is created enable removal
                 shape.onclick = () => {
@@ -196,20 +201,18 @@ export default class Cable {
             };
         };
     }
-    removeFromCanvas() {
-        let canvasShape = document.getElementById(this.shape.id);
-        canvasShape && canvasShape.parentNode.removeChild(canvasShape);
-    }
     updateStartPoint(x, y) {
-        this.shape.setAttribute("x1", x);
-        this.shape.setAttribute("y1", y);
+        this.points[0].x = x;
+        this.points[0].y = y;
     }
     updateEndPoint(x, y) {
-        this.shape.setAttribute("x2", x);
-        this.shape.setAttribute("y2", y);
+        this.points[10].x = x;
+        this.points[10].y = y;
+        this.points[11].x = x;
+        this.points[11].y = y;
     }
     deleteCable() {
-        this.removeFromCanvas();
+        this.shape.parentNode && this.shape.parentNode.removeChild(this.shape);
 
         // go to the neighboors and check if there are pointing back to the same direction as cable
         // if yes, remove it from the incomingCables list

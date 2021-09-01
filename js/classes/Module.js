@@ -1,21 +1,10 @@
-import { audioContext } from "../main.js";
-
 import Cable from "./Cable.js";
+import { audioContext } from "../main.js";
 import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers/math.js";
 
 let tempx = 50,
     tempy = 100,
     id = 0;
-
-let whileMovingModuleHandler;
-
-// Node moving functions - these are used for dragging the audio modules,
-// function is set on head div inside the module
-function stopMovingModule() {
-    // Stop capturing mousemove and mouseup events.
-    document.removeEventListener("mousemove", whileMovingModuleHandler, true);
-    document.removeEventListener("mouseup", stopMovingModule, true);
-}
 
 export default class Module {
     constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect) {
@@ -26,6 +15,7 @@ export default class Module {
         this.arrayForSelect = arrayForSelect;
         this.incomingCables = new Array();
         this.outcomingCables = new Array();
+        this.html = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
         this.createModuleObject();
     }
@@ -40,7 +30,7 @@ export default class Module {
         let content = document.createElement("div");
         let options = document.createElement("div");
         let controllers = document.createElement("div");
-        let footer = undefined; // keep undefined just to test if it was created
+        let footer = document.createElement("footer");
 
         this.html = module;
         this.html.id = this.id; // just for logging
@@ -57,24 +47,24 @@ export default class Module {
         } else tempx += 300;
         if (tempy > window.innerHeight - 300) tempy = 100 + id;
 
+        // head-diode
         diode.className = "diode";
-        diode.id = `${this.id}-head-diode`;
 
+        // head-title
         title.className = "title";
-        title.id = `${this.id}-head-title`;
         title.appendChild(document.createTextNode(this.name));
         title.name = this.name;
 
+        // head-close
         close.className = "close";
-        close.id = `${this.id}-head-close`;
         close.href = "#";
         close.onclick = () => {
             this.disconnectModule();
             module.parentNode.removeChild(module);
         };
 
+        // head
         head.className = "head";
-        head.id = `${this.id}-head`;
         head.onmousedown = (event) => {
             this.movingModule(event);
         };
@@ -85,8 +75,8 @@ export default class Module {
         head.diode = diode;
         head.close = close;
 
+        // content-options
         options.className = "options";
-        options.id = `${this.id}-content-options`;
 
         if (this.hasLooper || this.hasNormalizer || this.arrayForSelect) {
             if (this.arrayForSelect) {
@@ -166,19 +156,19 @@ export default class Module {
             content.options = options;
         }
 
+        // content-controllers
         controllers.className = "controllers";
-        controllers.id = `${this.id}-content-controllers`;
 
+        // content
         content.className = "content";
-        content.id = `${this.id}-content`;
 
         content.appendChild(controllers);
 
         content.controllers = controllers;
 
         if (this.hasInput) {
+            // input
             let input = document.createElement("div");
-            input.id = `${this.id}-input`;
             input.className = "input";
             input.parentModule = this; // keep info about parent for stopMovingCable
             input.type = "input"; // keep info about type for stopMovingCable
@@ -186,9 +176,8 @@ export default class Module {
             module.appendChild(input);
         }
 
-        footer = document.createElement("footer");
+        // footer
         footer.className = "footer";
-        footer.id = `${this.id}-footer`;
 
         module.setAttribute("audioNodeType", this.name);
         module.appendChild(head);
@@ -215,21 +204,21 @@ export default class Module {
         let sliderWraper = document.createElement("div");
         let audioParam = document.createElement("div");
 
+        // content-cotrollers-$propertyNoSpaces-info-property
         label.className = "label";
-        label.id = `${this.id}-content-controllers-${propertyNoSpaces}-info-property`;
         label.appendChild(document.createTextNode(property));
 
+        // content-cotrollers-$propertyNoSpaces-info-value
         value.className = "value";
-        value.id = `${this.id}-content-controllers-${propertyNoSpaces}-info-value`;
         // there is a bug with range between 0-0.9: (0,0.5) = 0, [0.5,1) = 1
-        // thus showing "real" range value before user interaction
+        // thus showing buggy value before user interaction
         if (initialValue >= 0 && initialValue < 0.5) initialValue = 0;
         if (initialValue >= 0.5 && initialValue < 1) initialValue = 1;
 
         value.appendChild(document.createTextNode(initialValue));
 
+        // content-cotrollers-$propertyNoSpaces-info-units
         unit.className = "value";
-        unit.id = `${this.id}-content-controllers-${propertyNoSpaces}-info-units`;
         unit.appendChild(document.createTextNode(units));
 
         valueUnit.className = "value-unit";
@@ -239,14 +228,14 @@ export default class Module {
         valueUnit.value = value;
         valueUnit.unit = unit;
 
+        // content-cotrollers-$propertyNoSpaces-info
         info.className = "slider-info";
-        info.id = `${this.id}-content-controllers-${propertyNoSpaces}-info`;
         info.appendChild(label);
         info.appendChild(valueUnit);
 
         info.label = label;
 
-        slider.id = `${this.id}-content-controllers-${propertyNoSpaces}-slider`;
+        // content-cotrollers-$propertyNoSpaces-slider
         slider.type = "range";
         slider.scaleLog = scaleLog;
         slider.min = min;
@@ -269,8 +258,8 @@ export default class Module {
         sliderWraper.className = "input-wrapper";
         sliderWraper.appendChild(slider);
 
+        // content-cotrollers-$propertyNoSpaces
         sliderDiv.className = "slider";
-        sliderDiv.id = `${this.id}-content-controllers-${propertyNoSpaces}`;
         sliderDiv.appendChild(info);
         sliderDiv.appendChild(sliderWraper);
 
@@ -283,7 +272,7 @@ export default class Module {
         this.content.controllers[property].value = value;
         this.content.controllers[property].unit = unit;
 
-        audioParam.id = `${this.id}-footer-parameter-${propertyNoSpaces}`;
+        // footer-parameter-$propertyNoSpaces
         audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
         audioParam.parentModule = this; // keep info about parent for stopMovingCable
 
@@ -297,73 +286,64 @@ export default class Module {
         new Cable(this);
     }
     movingModule(event) {
-        // Get cursor position with respect to the page.
-        let x = event.clientX + window.scrollX;
-        let y = event.clientY + window.scrollY;
+        let startingX = event.clientX + window.scrollX; // Get cursor position with respect to the page.
+        let startingY = event.clientY + window.scrollY;
+        let moduleLeft = parseInt(this.html.style.left);
+        let moduleTop = parseInt(this.html.style.top);
 
-        // Save starting positions of cursor and element.
-        this.html.cursorStartX = x;
-        this.html.cursorStartY = y;
-
-        this.html.elStartLeft = parseInt(this.html.style.left, 10) || 0;
-        this.html.elStartTop = parseInt(this.html.style.top, 10) || 0;
-
-        // Update element's z-index.
+        // Keep module on front
         ++this.html.style.zIndex;
 
-        // Capture mousemove and mouseup events on the page.
-        whileMovingModuleHandler = (event) => {
-            this.whileMovingModule(event);
+        // Start physics on all cables
+        this.incomingCables.forEach((cable) => {
+            cable.startAnimation();
+        });
+        this.outcomingCables.forEach((cable) => {
+            cable.startAnimation();
+        });
+
+        // Update module's position and its cables
+        document.onmousemove = (event) => {
+            let x = event.clientX + window.scrollX;
+            let y = event.clientY + window.scrollY;
+
+            // Move drag element by the same amount the cursor has moved.
+            this.html.style.left = moduleLeft + x - startingX + 2 + "px";
+            this.html.style.top = moduleTop + y - startingY + 5 + "px";
+
+            // update any lines that point in here.
+            if (this.incomingCables) {
+                x = window.scrollX + this.html.offsetLeft + 12;
+                y = window.scrollY + this.html.offsetTop + 20;
+
+                this.incomingCables.forEach((cable) => {
+                    cable.updateEndPoint(x, y);
+                });
+            }
+
+            // update any lines that point out of here.
+            if (this.outcomingCables) {
+                x = window.scrollX + this.html.offsetLeft + this.html.offsetWidth;
+                y = window.scrollY + this.html.offsetTop + 12;
+
+                this.outcomingCables.forEach((cable) => {
+                    cable.updateStartPoint(x, y);
+                });
+            }
         };
 
-        document.addEventListener("mousemove", whileMovingModuleHandler, true);
-        document.addEventListener("mouseup", stopMovingModule, true);
-        event.preventDefault();
-    }
-    whileMovingModule(event) {
-        // Get cursor position with respect to the page.
-        let x = event.clientX + window.scrollX;
-        let y = event.clientY + window.scrollY;
-
-        // Move drag element by the same amount the cursor has moved.
-        this.html.style.left = this.html.elStartLeft + x - this.html.cursorStartX + 2 + "px";
-        this.html.style.top = this.html.elStartTop + y - this.html.cursorStartY + 5 + "px";
-
-        if (this.incomingCables) {
-            // update any lines that point in here.
-
-            let off = this.html;
-            x = window.scrollX + 12;
-            y = window.scrollY + 12;
-
-            while (off) {
-                x += off.offsetLeft;
-                y += off.offsetTop;
-                off = off.offsetParent;
-            }
-
+        // Remove listeners after module release
+        document.onmouseup = () => {
+            // cancel physic animation on all cables
             this.incomingCables.forEach((cable) => {
-                cable.updateEndPoint(x, y);
+                cable.cancelAnimation();
             });
-        }
-
-        if (this.outcomingCables) {
-            // update any lines that point out of here.
-            let off = this.html;
-            x = window.scrollX + 12;
-            y = window.scrollY + 12;
-
-            while (off) {
-                x += off.offsetLeft;
-                y += off.offsetTop;
-                off = off.offsetParent;
-            }
-
             this.outcomingCables.forEach((cable) => {
-                cable.updateStartPoint(x, y);
+                cable.cancelAnimation();
             });
-        }
-
+            document.onmousemove = undefined;
+            document.onmouseup = undefined;
+        };
         event.preventDefault();
     }
     disconnectModule() {

@@ -64,7 +64,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     module.content.controllers.appendChild(playButton);
 
     // create new cable linked with this module. It's done here as the module html
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // structure needs to be fully build before. GetBoundingClientRect related.
     module.addFirstCable();
 
     event.preventDefault();
