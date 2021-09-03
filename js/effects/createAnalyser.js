@@ -7,14 +7,14 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
     const canvasWidth = 240;
     const fftSizeFrequencyBars = 512;
     const fftSizeSineWave = 2048;
-    let drawVisual;
+    let animationID;
 
     let module = new Module("analyser", true, false, false, visualSettings);
     let canvas = document.createElement("canvas");
 
     module.content.options.select.onchange = function () {
-        window.cancelAnimationFrame(drawVisual);
-        module.visualizeOn(drawVisual, canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, visualSettings[this.selectedIndex]);
+        window.cancelAnimationFrame(animationID);
+        module.visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, this.value);
     };
 
     module.audioNode = audioContext.createAnalyser();
@@ -30,8 +30,8 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
     canvas.id = `${module.id}-content-controllers-canvas`;
     canvas.className = "analyserCanvas";
 
-    module.onConnectInput = function () {
-        module.visualizeOn(drawVisual, canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, initalType);
+    module.onConnectInput = () => {
+        animationID = module.visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, module.content.options.select.value);
     };
 
     // create new cable linked with this module. It's done here as the module html

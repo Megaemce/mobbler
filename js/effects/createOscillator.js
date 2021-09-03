@@ -15,7 +15,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     playButton.onclick = function () {
         let frequency = module.content.controllers.frequency.value.innerText; //.value is a pointer not returner
         let detune = module.content.controllers.detune.slider.value;
-        let type = oscTypes[module.content.options.select.selectedIndex];
+        let type = module.content.options.select.value;
         let playButton = this;
 
         if (playButton.isPlaying) {
@@ -26,13 +26,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
             // if there is a sound installed
             if (module.audioNode) {
-                // if (module.outcomingCables) {
-                //     module.outcomingCables.forEach(function (cable) {
-                //         cable.destination && module.audioNode.disconnect(cable.destination.audioNode);
-                //     });
-                // } MAYBE THERE IS NO NEED TO GO THROUGH THE OUTCOMING CABLES AND SIMPLY:
                 module.audioNode.disconnect();
-
                 module.audioNode = undefined;
             }
         } else {
@@ -46,8 +40,19 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             module.audioNode.type = type;
 
             if (module.outcomingCables) {
-                module.outcomingCables.forEach(function (cable) {
-                    cable.destination && module.audioNode.connect(cable.destination.audioNode);
+                module.outcomingCables.forEach((cable) => {
+                    if (cable.destination && cable.destination.audioNode) {
+                        if (cable.type === "input") {
+                            module.connectToModule(cable.destination);
+                        } else {
+                            module.connectToParameter(cable.destination, cable.type);
+                        }
+                    }
+
+                    // check if not final destination (no head) and turn diode on
+                    if (cable.destination.head && cable.destination.head.diode) {
+                        cable.destination.head.diode.classList.add("diode-on");
+                    }
                 });
             }
             module.audioNode.start(0);
@@ -58,7 +63,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
     module.content.options.select.onchange = function () {
         // if we have a playing oscillator, go ahead and switch it live
-        if (module.audioNode) module.audioNode.type = oscTypes[this.selectedIndex];
+        if (module.audioNode) module.audioNode.type = this.value;
     };
 
     module.content.controllers.appendChild(playButton);

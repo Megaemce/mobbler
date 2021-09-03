@@ -6,9 +6,9 @@ export default class Cable {
     constructor(module, destination) {
         this.source = module;
         this.destination = destination || null;
+        this.animationID = undefined;
         this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        this.animationID = undefined;
         this.svg = document.getElementById("svgCanvas");
         this.lines = [];
         this.points = [
@@ -26,7 +26,8 @@ export default class Cable {
             new Point(17.906, 45.122, 0.4, true),
             new Point(18.142, 53.97, 0.4, true),
         ];
-        this.createCable(); // create cable linked with module
+        this.createCableObject(); // create cable linked with module
+        this.type = undefined; // type of connection. Input or parameter type
     }
     get pointsToString() {
         let string = "";
@@ -38,7 +39,7 @@ export default class Cable {
     get zeroPositionString() {
         return `${this.points[0].x},${this.points[0].y} `.repeat(12);
     }
-    createCable() {
+    createCableObject() {
         this.jack.setAttribute("href", "./img/jack_cleared.svg");
         this.jack.setAttribute("height", "9");
         this.jack.setAttribute("y", "-4.5");
@@ -59,7 +60,7 @@ export default class Cable {
 
         // first dinggling (not connected) cable needs to be keep in the outcoming to keep it
         // updated while just moving the module around
-        this.source.outcomingCables.push(this); // this is the active Cable
+        this.source.initalCable = this;
 
         this.points.forEach((point, i) => {
             point.move(xPosition, yPosition);
@@ -88,9 +89,6 @@ export default class Cable {
 
         this.shape.appendChild(shapeUnfoldAnimation);
         shapeUnfoldAnimation.beginElement();
-
-        // remove old animation. This can't be done differently as I hate svg translate
-        document.getElementById(jackAnimationID) && this.jack.removeChild(document.getElementById(jackAnimationID));
 
         jackRotateAnimation.setAttribute(
             "path",
@@ -137,22 +135,19 @@ export default class Cable {
             window.cancelAnimationFrame(this.animationID);
         }, 100);
     }
-    updateStartPoint(x, y) {
-        this.points[0].x = x;
-        this.points[0].y = y;
+    moveStartPoint(x, y) {
+        this.points[0].move(x, y);
     }
-    updateEndPoint(x, y) {
-        this.points[10].x = x;
-        this.points[10].y = y;
-        this.points[11].x = x;
-        this.points[11].y = y;
+    moveEndPoint(x, y) {
+        this.points[10].move(x, y);
+        this.points[11].move(x, y);
     }
     deleteCable() {
-        this.shape.parentNode && this.shape.parentNode.removeChild(this.shape);
+        this.foldCable();
 
         // go to the neighboors and check if there are pointing back to the same direction as cable
         // if yes, remove it from the incomingCables list
-        // checking destination in case of activeCable removal
+        // checking destination in case of initalCable removal
         if (this.destination && this.destination.incomingCables) {
             this.destination.incomingCables.slice(0).forEach((cable, index) => {
                 if (cable.source === this.source) {
@@ -176,15 +171,20 @@ export default class Cable {
 
             if (this.source.outcomingCables) {
                 this.source.outcomingCables.forEach((cable) => {
-                    this.source.audioNode.connect(cable.destination.audioNode);
+                    if (cable.type === "input") {
+                        this.source.connectToModule(cable.destination);
+                    } else {
+                        this.source.connectToParameter(cable.destination, cable.type);
+                    }
                 });
             }
         }
     }
     movingCable(event) {
-        this.jack.style.opacity = "0";
-
         this.svg.style = "cursor: url('./img/jack_cleared.svg'), auto;";
+
+        this.svg.removeChild(this.jack);
+        this.jack = undefined;
 
         // two last points of the cable are set like this, so cable is in a middle of jack image
         this.points[11].x = event.offsetX + 2.5;
@@ -212,6 +212,8 @@ export default class Cable {
                 this.destination = choosenElement.parentModule; // parentModule is set on input and audio parameters only
                 this.source.outcomingCables.push(this);
                 this.destination.incomingCables.push(this);
+                this.type = choosenElement.type;
+
                 // different action for input and audio parameter
                 if (choosenElement.type === "input") {
                     this.source.connectToModule(this.destination);
@@ -223,39 +225,48 @@ export default class Cable {
 
                 // only when shape is created enable removal
                 this.shape.onclick = () => {
-                    this.svg.removeChild(shape);
+                    this.deleteCable();
                 };
             } else if (choosenElement.classList && choosenElement.classList.contains("destination-input")) {
                 // final destination, built-in attribute, 'this.destination.incomingCables' is undefined
                 this.destination = choosenElement.parentNode;
                 this.source.outcomingCables.push(this);
+                this.source.connectToModule(this.destination);
             } else {
-                // it's not final destination nor correct input thus remove cable from canvas
-                this.source.outcomingCables.pop(); // CABLE SHOULD BE REMOVED FROM OUTCOMING CABLES ARRAY
-
-                let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
-                shapeFoldAnimation.setAttribute("attributeName", "points");
-                shapeFoldAnimation.setAttribute("from", this.pointsToString);
-                shapeFoldAnimation.setAttribute("to", this.zeroPositionString);
-                shapeFoldAnimation.setAttribute("dur", "0.5s");
-                shapeFoldAnimation.setAttribute("fill", "freeze");
-
-                this.shape.appendChild(shapeFoldAnimation);
-                shapeFoldAnimation.beginElement();
-
-                shapeFoldAnimation.onend = () => {
-                    this.svg.removeChild(this.shape);
-                };
-
-                // unhide jack as it was hidden onclick while the mouse pointer changed to jack
-                this.jack.style.opacity = "1";
-                this.svg.style.cursor = "default";
-                document.onmousedown = undefined;
-                document.onmousemove = undefined;
-                document.onmouseup = undefined;
-
-                this.createCable(); // when cable is dropped create new one
+                // it's not final destination nor correct input thus cable has not been connected and can be fold
+                // without working about other connections (no need to this.deleteCable())
+                this.foldCable();
             }
+
+            // cable connected or not it's not inital anymore
+            this.source.initalCable = undefined;
+
+            this.svg.style.cursor = "default";
+            document.onmousedown = undefined;
+            document.onmousemove = undefined;
+            document.onmouseup = undefined;
+
+            this.source.addFirstCable(); // when cable is dropped create new one
+        };
+    }
+    foldCable(duration) {
+        if (!duration) duration = `0.5`;
+
+        // remove jack and fold the cable back to inital position
+        this.jack && this.svg.removeChild(this.jack);
+
+        let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        shapeFoldAnimation.setAttribute("attributeName", "points");
+        shapeFoldAnimation.setAttribute("from", this.pointsToString);
+        shapeFoldAnimation.setAttribute("to", this.zeroPositionString);
+        shapeFoldAnimation.setAttribute("dur", `${duration}s`);
+        shapeFoldAnimation.setAttribute("fill", "freeze");
+
+        this.shape.appendChild(shapeFoldAnimation);
+        shapeFoldAnimation.beginElement();
+
+        shapeFoldAnimation.onend = () => {
+            this.svg.removeChild(this.shape);
         };
     }
 }

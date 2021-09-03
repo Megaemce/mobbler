@@ -24,6 +24,7 @@ export default class Module {
         let mainWidth = modules.offsetWidth;
         let module = document.createElement("div");
         let head = document.createElement("div");
+        let titleWrapper = document.createElement("div");
         let title = document.createElement("span");
         let close = document.createElement("a");
         let diode = document.createElement("div");
@@ -47,54 +48,55 @@ export default class Module {
         } else tempx += 300;
         if (tempy > window.innerHeight - 300) tempy = 100 + id;
 
-        // head-diode
+        // module.head.diode
         diode.className = "diode";
 
-        // head-title
+        // module.head.title
         title.className = "title";
         title.appendChild(document.createTextNode(this.name));
         title.name = this.name;
 
-        // head-close
+        // module.head.title.wrapper
+        titleWrapper.appendChild(title);
+        titleWrapper.onmousedown = (event) => {
+            this.movingModule(event);
+        };
+
+        // module.head.close
         close.className = "close";
         close.href = "#";
         close.onclick = () => {
-            this.disconnectModule();
+            this.deleteModule();
             module.parentNode.removeChild(module);
         };
 
-        // head
+        // moudule.head
         head.className = "head";
-        head.onmousedown = (event) => {
-            this.movingModule(event);
-        };
+
         head.appendChild(diode);
-        head.appendChild(title);
+        head.appendChild(titleWrapper);
         head.appendChild(close);
 
         head.diode = diode;
         head.close = close;
 
-        // content-options
+        // module.content.options
         options.className = "options";
 
         if (this.hasLooper || this.hasNormalizer || this.arrayForSelect) {
             if (this.arrayForSelect) {
                 let select = document.createElement("select");
 
+                // module.content.options.select
                 select.className = "ab-source";
-                select.id = `${this.id}-content-options-select`;
 
                 this.arrayForSelect.forEach((object) => {
                     let option = document.createElement("option");
                     option.appendChild(document.createTextNode(object));
-                    select.appendChild(option);
-
-                    select.option = option;
+                    select.add(option);
                 });
 
                 options.appendChild(select);
-
                 options.select = select;
             }
             if (this.hasLooper || this.hasNormalizer) {
@@ -103,8 +105,8 @@ export default class Module {
                 let looper = document.createElement("div");
                 let normalizer = document.createElement("div");
 
+                // module.content.options.checkbox
                 checkbox.type = "checkbox";
-                checkbox.id = `${this.id}-content-options-checkbox`;
 
                 if (this.hasLooper) {
                     checkbox.onchange = function () {
@@ -156,10 +158,10 @@ export default class Module {
             content.options = options;
         }
 
-        // content-controllers
+        // module.content.controllers
         controllers.className = "controllers";
 
-        // content
+        // module.content
         content.className = "content";
 
         content.appendChild(controllers);
@@ -176,7 +178,7 @@ export default class Module {
             module.appendChild(input);
         }
 
-        // footer
+        // module.footer
         footer.className = "footer";
 
         module.setAttribute("audioNodeType", this.name);
@@ -204,11 +206,11 @@ export default class Module {
         let sliderWraper = document.createElement("div");
         let audioParam = document.createElement("div");
 
-        // content-cotrollers-$propertyNoSpaces-info-property
+        // module.content.cotrollers.$propertyNoSpaces.info.property
         label.className = "label";
         label.appendChild(document.createTextNode(property));
 
-        // content-cotrollers-$propertyNoSpaces-info-value
+        // module.content.cotrollers.$propertyNoSpaces.info.value
         value.className = "value";
         // there is a bug with range between 0-0.9: (0,0.5) = 0, [0.5,1) = 1
         // thus showing buggy value before user interaction
@@ -217,7 +219,7 @@ export default class Module {
 
         value.appendChild(document.createTextNode(initialValue));
 
-        // content-cotrollers-$propertyNoSpaces-info-units
+        // module.content.cotrollers.$propertyNoSpaces.info.units
         unit.className = "value";
         unit.appendChild(document.createTextNode(units));
 
@@ -228,14 +230,14 @@ export default class Module {
         valueUnit.value = value;
         valueUnit.unit = unit;
 
-        // content-cotrollers-$propertyNoSpaces-info
+        // module.content.cotrollers.$propertyNoSpaces.info
         info.className = "slider-info";
         info.appendChild(label);
         info.appendChild(valueUnit);
 
         info.label = label;
 
-        // content-cotrollers-$propertyNoSpaces-slider
+        // module.content.controllers.$propertyNoSpaces.slider
         slider.type = "range";
         slider.scaleLog = scaleLog;
         slider.min = min;
@@ -258,7 +260,7 @@ export default class Module {
         sliderWraper.className = "input-wrapper";
         sliderWraper.appendChild(slider);
 
-        // content-cotrollers-$propertyNoSpaces
+        // module.content.cotrollers.$propertyNoSpaces
         sliderDiv.className = "slider";
         sliderDiv.appendChild(info);
         sliderDiv.appendChild(sliderWraper);
@@ -272,7 +274,7 @@ export default class Module {
         this.content.controllers[property].value = value;
         this.content.controllers[property].unit = unit;
 
-        // footer-parameter-$propertyNoSpaces
+        // module.footer.parameter.$propertyNoSpaces
         audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
         audioParam.parentModule = this; // keep info about parent for stopMovingCable
 
@@ -286,13 +288,12 @@ export default class Module {
         new Cable(this);
     }
     movingModule(event) {
-        let startingX = event.clientX + window.scrollX; // Get cursor position with respect to the page.
-        let startingY = event.clientY + window.scrollY;
-        let moduleLeft = parseInt(this.html.style.left);
-        let moduleTop = parseInt(this.html.style.top);
-
+        let canvas = document.getElementById("svgCanvas");
         // Keep module on front
         ++this.html.style.zIndex;
+
+        // remove inital cable with time 0.1s
+        this.initalCable.foldCable(0.1);
 
         // Start physics on all cables
         this.incomingCables.forEach((cable) => {
@@ -304,36 +305,32 @@ export default class Module {
 
         // Update module's position and its cables
         document.onmousemove = (event) => {
-            let x = event.clientX + window.scrollX;
-            let y = event.clientY + window.scrollY;
+            // show cables on front while moving modules
+            canvas.style.zIndex = this.html.style.zIndex + 1;
 
             // Move drag element by the same amount the cursor has moved.
-            this.html.style.left = moduleLeft + x - startingX + 2 + "px";
-            this.html.style.top = moduleTop + y - startingY + 5 + "px";
+            this.html.style.left = parseInt(this.html.style.left) + event.movementX + "px";
+            this.html.style.top = parseInt(this.html.style.top) + event.movementY + "px";
 
             // update any lines that point in here.
             if (this.incomingCables) {
-                x = window.scrollX + this.html.offsetLeft + 12;
-                y = window.scrollY + this.html.offsetTop + 20;
-
                 this.incomingCables.forEach((cable) => {
-                    cable.updateEndPoint(x, y);
+                    cable.moveEndPoint(event.movementX, event.movementY);
                 });
             }
 
             // update any lines that point out of here.
             if (this.outcomingCables) {
-                x = window.scrollX + this.html.offsetLeft + this.html.offsetWidth;
-                y = window.scrollY + this.html.offsetTop + 12;
-
                 this.outcomingCables.forEach((cable) => {
-                    cable.updateStartPoint(x, y);
+                    cable.moveStartPoint(event.movementX, event.movementY);
                 });
             }
         };
 
         // Remove listeners after module release
         document.onmouseup = () => {
+            canvas.style.zIndex = 0;
+
             // cancel physic animation on all cables
             this.incomingCables.forEach((cable) => {
                 cable.stopAnimation();
@@ -341,10 +338,17 @@ export default class Module {
             this.outcomingCables.forEach((cable) => {
                 cable.stopAnimation();
             });
+
+            this.addFirstCable();
+
             document.onmousemove = undefined;
             document.onmouseup = undefined;
         };
         event.preventDefault();
+    }
+    deleteModule() {
+        this.initalCable && this.initalCable.foldCable();
+        this.disconnectModule();
     }
     disconnectModule() {
         // go to the neighboors and check if there are pointing back to the same direction as cable
@@ -367,44 +371,50 @@ export default class Module {
     connectToModule(destinationModule) {
         // if the sourceModule has an audio node, connect them up.
         // AudioBufferSourceNodes may not have an audio node yet.
-        if (this.audioNode && destinationModule.audioNode) this.audioNode.connect(destinationModule.audioNode);
+        if (this.audioNode && destinationModule.audioNode) {
+            this.audioNode.connect(destinationModule.audioNode);
+
+            // check if not final destination (no head) and turn diode on
+            if (destinationModule.head && destinationModule.head.diode) {
+                destinationModule.head.diode.classList.add("diode-on");
+            }
+        }
 
         // execute function if there is any hooked
-        if (this.onConnectInput) this.onConnectInput();
-
-        // check if not final destination (no head) and turn diode on
-        if (destinationModule.head && destinationModule.head.diode) destinationModule.head.diode.classList.add("diode-on");
+        if (destinationModule.onConnectInput) destinationModule.onConnectInput();
     }
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
 
-        if (slider && this.audioNode) {
+        if (slider) {
             slider.classList.add("disabled");
-            slider.audioNode = audioContext.createAnalyser();
+            if (this.audioNode) {
+                slider.audioNode = audioContext.createAnalyser();
 
-            this.audioNode.connect(slider.audioNode);
+                this.audioNode.connect(slider.audioNode);
 
-            // slider.audioNode.fftSize default vaue is 2048
-            let dataArray = new Uint8Array(slider.audioNode.fftSize);
+                // slider.audioNode.fftSize default vaue is 2048
+                let dataArray = new Uint8Array(slider.audioNode.fftSize);
 
-            function connectToSlider() {
-                slider.audioNode.getByteTimeDomainData(dataArray);
+                function connectToSlider() {
+                    slider.audioNode.getByteTimeDomainData(dataArray);
 
-                // performance tweak - just get the max value of array instead of iterating
-                let element = Math.max(...dataArray);
-                let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
+                    // performance tweak - just get the max value of array instead of iterating
+                    let element = Math.max(...dataArray);
+                    let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
 
-                slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
+                    slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
 
-                if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
+                    if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
 
-                destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
+                    destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
 
-                //setTimeout(() => {
-                requestAnimationFrame(connectToSlider);
-                //}, 1000 / 60);
+                    //setTimeout(() => {
+                    requestAnimationFrame(connectToSlider);
+                    //}, 1000 / 60);
+                }
+                connectToSlider();
             }
-            connectToSlider();
         }
     }
     playSelectedSound() {
@@ -433,9 +443,18 @@ export default class Module {
             // play sound on all connected output
             if (this.outcomingCables) {
                 this.outcomingCables.forEach((cable) => {
-                    // it might be that someone click on the loop button when the module is not connected
-                    // thus checking audioNode from loose (not connected) cable
-                    cable.destination && this.audioNode.connect(cable.destination.audioNode);
+                    if (cable.destination && cable.destination.audioNode) {
+                        if (cable.type === "input") {
+                            this.connectToModule(cable.destination);
+                        } else {
+                            this.connectToParameter(cable.destination, cable.type);
+                        }
+                    }
+
+                    // check if not final destination (no head) and turn diode on
+                    if (cable.destination.head && cable.destination.head.diode) {
+                        cable.destination.head.diode.classList.add("diode-on");
+                    }
                 });
             }
             this.audioNode.start(audioContext.currentTime);
@@ -466,7 +485,8 @@ export default class Module {
         }
     }
     // create analyser on given module with given setting
-    visualizeOn(drawVisual, canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
+    visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
+        let animationID = undefined;
         let canvas = this.content.canvas;
 
         if (canvas) canvas.remove();
@@ -490,7 +510,7 @@ export default class Module {
             let dataArrayAlt = new Uint8Array(bufferLengthAlt);
 
             let drawBar = () => {
-                drawVisual = requestAnimationFrame(drawBar);
+                animationID = requestAnimationFrame(drawBar);
 
                 this.audioNode.getByteFrequencyData(dataArrayAlt);
                 // data returned in dataArrayAlt array will in range [0-255]
@@ -516,7 +536,7 @@ export default class Module {
             let dataArray = new Uint8Array(bufferLength);
 
             let drawWave = () => {
-                drawVisual = requestAnimationFrame(drawWave);
+                animationID = requestAnimationFrame(drawWave);
 
                 this.audioNode.getByteTimeDomainData(dataArray);
                 // data returned in dataArray will be in range [0-255]
@@ -538,5 +558,7 @@ export default class Module {
             };
             drawWave();
         }
+
+        return animationID;
     }
 }
