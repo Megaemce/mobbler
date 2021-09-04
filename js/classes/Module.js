@@ -67,12 +67,10 @@ export default class Module {
         close.href = "#";
         close.onclick = () => {
             this.deleteModule();
-            module.parentNode.removeChild(module);
         };
 
         // moudule.head
         head.className = "head";
-
         head.appendChild(diode);
         head.appendChild(titleWrapper);
         head.appendChild(close);
@@ -145,7 +143,7 @@ export default class Module {
                     normalizer.appendChild(label);
 
                     normalizer.checkbox = checkbox;
-                    normalizer.lable = label;
+                    normalizer.label = label;
 
                     module.classList.add("has-normalizer");
                     options.appendChild(normalizer);
@@ -163,19 +161,17 @@ export default class Module {
 
         // module.content
         content.className = "content";
-
         content.appendChild(controllers);
-
         content.controllers = controllers;
 
         if (this.hasInput) {
-            // input
+            // module.input
             let input = document.createElement("div");
             input.className = "input";
-            input.parentModule = this; // keep info about parent for stopMovingCable
-            input.type = "input"; // keep info about type for stopMovingCable
-            this.input = input;
+            input.parentModule = this; // keep info about parent for movingCable
+            input.type = "input"; // keep info about type for movingCable
             module.appendChild(input);
+            module.input = input;
         }
 
         // module.footer
@@ -226,7 +222,6 @@ export default class Module {
         valueUnit.className = "value-unit";
         valueUnit.appendChild(value);
         valueUnit.appendChild(unit);
-
         valueUnit.value = value;
         valueUnit.unit = unit;
 
@@ -234,7 +229,6 @@ export default class Module {
         info.className = "slider-info";
         info.appendChild(label);
         info.appendChild(valueUnit);
-
         info.label = label;
 
         // module.content.controllers.$propertyNoSpaces.slider
@@ -264,20 +258,17 @@ export default class Module {
         sliderDiv.className = "slider";
         sliderDiv.appendChild(info);
         sliderDiv.appendChild(sliderWraper);
-
         sliderDiv.info = info;
         sliderDiv.slider = slider;
 
         this.content.controllers.appendChild(sliderDiv);
-
         this.content.controllers[property] = sliderDiv;
         this.content.controllers[property].value = value;
         this.content.controllers[property].unit = unit;
 
-        // module.footer.parameter.$propertyNoSpaces
+        // module.footer.$propertyNoSpaces
         audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
         audioParam.parentModule = this; // keep info about parent for stopMovingCable
-
         audioParam.className = "audio-parameter";
 
         this.footer.appendChild(audioParam);
@@ -332,12 +323,16 @@ export default class Module {
             canvas.style.zIndex = 0;
 
             // cancel physic animation on all cables
-            this.incomingCables.forEach((cable) => {
-                cable.stopAnimation();
-            });
-            this.outcomingCables.forEach((cable) => {
-                cable.stopAnimation();
-            });
+            if (this.incomingCables) {
+                this.incomingCables.forEach((cable) => {
+                    cable.stopAnimation();
+                });
+            }
+            if (this.outcomingCables) {
+                this.outcomingCables.forEach((cable) => {
+                    cable.stopAnimation();
+                });
+            }
 
             this.addFirstCable();
 
@@ -348,9 +343,7 @@ export default class Module {
     }
     deleteModule() {
         this.initalCable && this.initalCable.foldCable();
-        this.disconnectModule();
-    }
-    disconnectModule() {
+
         // go to the neighboors and check if there are pointing back to the same direction as cable
         if (this.outcomingCables) {
             // slice(0): little trick to delete element from array while iterating thru
@@ -367,6 +360,8 @@ export default class Module {
             this.incomingCables = undefined;
         }
         if (this.onDisconnect) this.onDisconnect();
+
+        this.html.parentNode.removeChild(this.html);
     }
     connectToModule(destinationModule) {
         // if the sourceModule has an audio node, connect them up.
@@ -461,9 +456,10 @@ export default class Module {
 
             if (!this.audioNode.loop) {
                 let delay = Math.floor(this.buffer.duration * 1000) + 1;
-                // bind: set the value of a function's 'this' regardless of how it's called
-                // without bind stopSound will be called on this === window
-                this.audioNode.stopTimer = window.setTimeout(this.stopSound.bind(this), delay);
+
+                this.audioNode.stopTimer = window.setTimeout(() => {
+                    this.stopSound();
+                }, delay);
             }
         }
     }

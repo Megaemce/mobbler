@@ -5,9 +5,8 @@ import Line from "../classes/Line.js";
 export default class Cable {
     constructor(module, destination) {
         this.source = module;
-        this.destination = destination || null;
+        this.destination = destination || undefined;
         this.animationID = undefined;
-        this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
         this.svg = document.getElementById("svgCanvas");
         this.lines = [];
@@ -36,19 +35,20 @@ export default class Cable {
         });
         return string;
     }
-    get zeroPositionString() {
+    get startPositionString() {
         return `${this.points[0].x},${this.points[0].y} `.repeat(12);
     }
     createCableObject() {
-        this.jack.setAttribute("href", "./img/jack_cleared.svg");
-        this.jack.setAttribute("height", "9");
-        this.jack.setAttribute("y", "-4.5");
-        this.jack.setAttribute("id", `${this.source.id}-jack`);
+        let jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
+        jack.setAttribute("href", "./img/jack_cleared.svg");
+        jack.setAttribute("height", "9");
+        jack.setAttribute("y", "-4.5");
+        jack.setAttribute("id", `${this.source.id}-jack`);
 
-        this.jack.onmouseover = () => {
+        jack.onmouseover = () => {
             this.svg.style.cursor = "grab";
         };
-        this.jack.onmouseout = () => {
+        jack.onmouseout = () => {
             if (this.svg.style.cursor === "grab") this.svg.style = "cursor: default";
         };
 
@@ -79,7 +79,7 @@ export default class Cable {
         this.shape.setAttribute("stroke-dasharray", "60");
 
         this.svg.appendChild(this.shape);
-        this.svg.appendChild(this.jack);
+        this.svg.appendChild(jack);
 
         shapeUnfoldAnimation.setAttribute("attributeName", "stroke-dashoffset");
         shapeUnfoldAnimation.setAttribute("from", "60");
@@ -101,7 +101,7 @@ export default class Cable {
         jackRotateAnimation.setAttribute("rotate", "auto");
         jackRotateAnimation.setAttribute("fill", "freeze");
 
-        this.jack.appendChild(jackRotateAnimation);
+        jack.appendChild(jackRotateAnimation);
         jackRotateAnimation.beginElement();
 
         jackRotateAnimation.onend = () => {
@@ -109,8 +109,9 @@ export default class Cable {
             this.shape.removeAttribute("stroke-dasharray");
         };
 
-        // when jack clicked start cable moving function
-        this.jack.onmousedown = (event) => {
+        // when jack is clicked start cable moving function
+        jack.onmousedown = (event) => {
+            this.svg.removeChild(jack);
             this.movingCable(event);
         };
     }
@@ -183,9 +184,6 @@ export default class Cable {
     movingCable(event) {
         this.svg.style = "cursor: url('./img/jack_cleared.svg'), auto;";
 
-        this.svg.removeChild(this.jack);
-        this.jack = undefined;
-
         // two last points of the cable are set like this, so cable is in a middle of jack image
         this.points[11].x = event.offsetX + 2.5;
         this.points[11].y = event.offsetY + 4.75;
@@ -230,6 +228,7 @@ export default class Cable {
             } else if (choosenElement.classList && choosenElement.classList.contains("destination-input")) {
                 // final destination, built-in attribute, 'this.destination.incomingCables' is undefined
                 this.destination = choosenElement.parentNode;
+                this.type = "input";
                 this.source.outcomingCables.push(this);
                 this.source.connectToModule(this.destination);
             } else {
@@ -253,12 +252,13 @@ export default class Cable {
         if (!duration) duration = `0.5`;
 
         // remove jack and fold the cable back to inital position
-        this.jack && this.svg.removeChild(this.jack);
+        let jack = document.getElementById(`${this.source.id}-jack`);
+        jack && this.svg.removeChild(jack);
 
         let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         shapeFoldAnimation.setAttribute("attributeName", "points");
         shapeFoldAnimation.setAttribute("from", this.pointsToString);
-        shapeFoldAnimation.setAttribute("to", this.zeroPositionString);
+        shapeFoldAnimation.setAttribute("to", this.startPositionString);
         shapeFoldAnimation.setAttribute("dur", `${duration}s`);
         shapeFoldAnimation.setAttribute("fill", "freeze");
 
