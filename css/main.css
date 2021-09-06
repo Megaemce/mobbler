@@ -11,6 +11,7 @@
 
 :root {
     --sliderWidth: 135px;
+    user-select: none
 }
 
 div.link {
@@ -273,6 +274,12 @@ body {
     *zoom: 1;
 }
 
+.selection-rect {
+    border: 1px dotted #000;
+    position: absolute;
+    background: #1c94c44b;
+  }
+
 /* Nodes */
 
 .jackCursor {
@@ -319,7 +326,12 @@ body {
     pointer-events: none;
     text-transform: uppercase;
     display: flex;
+    justify-content: space-around;
     align-items: center;
+}
+
+.module .head .title-wrapper {
+    width: 100%;
 }
 
 

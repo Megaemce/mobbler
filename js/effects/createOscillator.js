@@ -39,22 +39,21 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             module.audioNode.detune.value = detune;
             module.audioNode.type = type;
 
-            if (module.outcomingCables) {
-                module.outcomingCables.forEach((cable) => {
-                    if (cable.destination && cable.destination.audioNode) {
-                        if (cable.type === "input") {
-                            module.connectToModule(cable.destination);
-                        } else {
-                            module.connectToParameter(cable.destination, cable.type);
-                        }
+            module.outcomingCables.forEach((cable) => {
+                if (cable.destination && cable.destination.audioNode) {
+                    if (cable.type === "input") {
+                        module.connectToModule(cable.destination);
+                    } else {
+                        module.connectToParameter(cable.destination, cable.type);
                     }
+                }
 
-                    // check if not final destination (no head) and turn diode on
-                    if (cable.destination.head && cable.destination.head.diode) {
-                        cable.destination.head.diode.classList.add("diode-on");
-                    }
-                });
-            }
+                // check if not final destination (no head) and turn diode on
+                if (cable.destination.head && cable.destination.head.diode) {
+                    cable.destination.head.diode.classList.add("diode-on");
+                }
+            });
+
             module.audioNode.start(0);
         }
     };

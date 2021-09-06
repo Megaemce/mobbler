@@ -8,9 +8,12 @@ import createDelay from "./effects/createDelay.js";
 import createAudioBufferSource from "./effects/createAudioBufferSource.js";
 import createLiveInput from "./effects/createLiveInput.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
+import { createSelectionRectangle } from "./helpers/builders.js";
 
 // set all the initial variables
 export let audioContext;
+export let cables = new Object(); // keep all cables
+export let modules = new Object(); // keep all modules
 
 const sounds = ["glass-hit.ogg", "drums.ogg", "noise.ogg", "voice.ogg", "bass.ogg", "guitar.ogg", "stringbass.wav"];
 const impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "concert_voices.ogg"];
@@ -43,6 +46,11 @@ const initialGainGain = 1.0;
 
 const initOscillatorFrequency = 440;
 const initOscillatorDetune = 0;
+
+// create selection rectangle
+document.onmousedown = (event) => {
+    createSelectionRectangle(event);
+};
 
 // start audio with user click on the canvas (chrome policy)
 document.getElementById("svgCanvas").onclick = () => {
@@ -86,7 +94,6 @@ document.getElementById("svgCanvas").onclick = () => {
     document.getElementById("oscillator").onmousedown = (event) => {
         createOscillator(event, initOscillatorFrequency, initOscillatorDetune);
     };
-
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;
 };

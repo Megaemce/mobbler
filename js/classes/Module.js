@@ -1,5 +1,5 @@
 import Cable from "./Cable.js";
-import { audioContext } from "../main.js";
+import { audioContext, cables, modules } from "../main.js";
 import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers/math.js";
 
 let tempx = 50,
@@ -13,15 +13,45 @@ export default class Module {
         this.hasInput = hasInput;
         this.hasNormalizer = hasNormalizer;
         this.arrayForSelect = arrayForSelect;
-        this.incomingCables = new Array();
-        this.outcomingCables = new Array();
+        this.position = undefined; // module's position
         this.html = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
         this.createModuleObject();
     }
+    get relatedCables() {
+        let relCables = [];
+        Object.values(cables).forEach((value) => {
+            if (value.destination === this || value.source === this) {
+                relCables.push(value);
+            }
+        });
+        return relCables;
+    }
+    get incomingCables() {
+        let incCables = [];
+        Object.values(cables).forEach((value) => {
+            if (value.destination === this) {
+                incCables.push(value);
+            }
+        });
+        return incCables;
+    }
+    get outcomingCables() {
+        let outCables = [];
+        Object.values(cables).forEach((value) => {
+            if (value.source === this) {
+                outCables.push(value);
+            }
+        });
+        return outCables;
+    }
+    get modulePosition() {
+        this.position = this.html.getBoundingClientRect();
+        return this.position;
+    }
     createModuleObject() {
-        let modules = document.getElementById("modules");
-        let mainWidth = modules.offsetWidth;
+        let modulesDiv = document.getElementById("modules");
+        let mainWidth = modulesDiv.offsetWidth;
         let module = document.createElement("div");
         let head = document.createElement("div");
         let titleWrapper = document.createElement("div");
@@ -57,6 +87,7 @@ export default class Module {
         title.name = this.name;
 
         // module.head.title.wrapper
+        titleWrapper.className = "title-wrapper";
         titleWrapper.appendChild(title);
         titleWrapper.onmousedown = (event) => {
             this.movingModule(event);
@@ -187,8 +218,10 @@ export default class Module {
         this.footer = footer;
 
         // add the node into the soundfield
-        modules.appendChild(module);
-        modules[id] = module;
+        modulesDiv.appendChild(module);
+
+        // add module to the dictionary
+        modules[this.id] = this;
     }
     createModuleSlider(property, initialValue, min, max, stepUnits, units, scaleLog) {
         let propertyNoSpaces = property.split(" ").join("");
@@ -287,10 +320,7 @@ export default class Module {
         this.initalCable.foldCable(0.1);
 
         // Start physics on all cables
-        this.incomingCables.forEach((cable) => {
-            cable.startAnimation();
-        });
-        this.outcomingCables.forEach((cable) => {
+        this.relatedCables.forEach((cable) => {
             cable.startAnimation();
         });
 
@@ -304,18 +334,14 @@ export default class Module {
             this.html.style.top = parseInt(this.html.style.top) + event.movementY + "px";
 
             // update any lines that point in here.
-            if (this.incomingCables) {
-                this.incomingCables.forEach((cable) => {
-                    cable.moveEndPoint(event.movementX, event.movementY);
-                });
-            }
+            this.incomingCables.forEach((cable) => {
+                cable.moveEndPoint(event.movementX, event.movementY);
+            });
 
             // update any lines that point out of here.
-            if (this.outcomingCables) {
-                this.outcomingCables.forEach((cable) => {
-                    cable.moveStartPoint(event.movementX, event.movementY);
-                });
-            }
+            this.outcomingCables.forEach((cable) => {
+                cable.moveStartPoint(event.movementX, event.movementY);
+            });
         };
 
         // Remove listeners after module release
@@ -323,16 +349,9 @@ export default class Module {
             canvas.style.zIndex = 0;
 
             // cancel physic animation on all cables
-            if (this.incomingCables) {
-                this.incomingCables.forEach((cable) => {
-                    cable.stopAnimation();
-                });
-            }
-            if (this.outcomingCables) {
-                this.outcomingCables.forEach((cable) => {
-                    cable.stopAnimation();
-                });
-            }
+            this.relatedCables.forEach((cable) => {
+                cable.stopAnimation();
+            });
 
             this.addFirstCable();
 
@@ -342,26 +361,22 @@ export default class Module {
         event.preventDefault();
     }
     deleteModule() {
+        // remove inital cable
         this.initalCable && this.initalCable.foldCable();
 
-        // go to the neighboors and check if there are pointing back to the same direction as cable
-        if (this.outcomingCables) {
-            // slice(0): little trick to delete element from array while iterating thru
-            this.outcomingCables.slice(0).forEach((cable) => {
-                cable.deleteCable();
-            });
-            this.outcomingCables = undefined;
-        }
+        // remove all related cables
+        this.relatedCables.forEach((cable) => {
+            cable.deleteCable();
+        });
 
-        if (this.incomingCables) {
-            this.incomingCables.slice(0).forEach((cable) => {
-                cable.deleteCable();
-            });
-            this.incomingCables = undefined;
-        }
-        if (this.onDisconnect) this.onDisconnect();
+        // execute any module-specific function if there is any
+        this.onDeletion && this.onDeletion();
 
+        // remove html object
         this.html.parentNode.removeChild(this.html);
+
+        // remove module from modules
+        delete modules[this.id];
     }
     connectToModule(destinationModule) {
         // if the sourceModule has an audio node, connect them up.
@@ -436,22 +451,21 @@ export default class Module {
             this.audioNode.buffer = audioContext.nameSoundBuffer[selectedBufferName];
 
             // play sound on all connected output
-            if (this.outcomingCables) {
-                this.outcomingCables.forEach((cable) => {
-                    if (cable.destination && cable.destination.audioNode) {
-                        if (cable.type === "input") {
-                            this.connectToModule(cable.destination);
-                        } else {
-                            this.connectToParameter(cable.destination, cable.type);
-                        }
+            this.outcomingCables.forEach((cable) => {
+                if (cable.destination && cable.destination.audioNode) {
+                    if (cable.type === "input") {
+                        this.connectToModule(cable.destination);
+                    } else {
+                        this.connectToParameter(cable.destination, cable.type);
                     }
+                }
 
-                    // check if not final destination (no head) and turn diode on
-                    if (cable.destination.head && cable.destination.head.diode) {
-                        cable.destination.head.diode.classList.add("diode-on");
-                    }
-                });
-            }
+                // check if not final destination (no head) and turn diode on
+                if (cable.destination.head && cable.destination.head.diode) {
+                    cable.destination.head.diode.classList.add("diode-on");
+                }
+            });
+
             this.audioNode.start(audioContext.currentTime);
 
             if (!this.audioNode.loop) {
