@@ -16,31 +16,60 @@ export default class Module {
         this.position = undefined; // module's position
         this.html = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
+        this.isTransmitting = false; // sending audio pulses or not
         this.createModuleObject();
+    }
+    get inputActivity() {
+        // input should be module's input or module's parameter
+        // check all incoming cables if there is anything activly talking to this module
+        // this function is used for diode
+        let isActive = false;
+        Object.values(cables).forEach((cable) => {
+            if (cable.destination === this && cable.source.isTransmitting) {
+                isActive = true;
+            }
+        });
+
+        return isActive; // input is receiving active impulse(s)
+    }
+    get parametersActivity() {
+        let parametersWithStatus = new Object();
+
+        Object.values(cables).forEach((cable) => {
+            if (cable.destination === this && cable.type !== "input") {
+                if (cable.source.isTransmitting) {
+                    parametersWithStatus[cable.type] = true;
+                } else {
+                    parametersWithStatus[cable.type] = false;
+                }
+            }
+        });
+
+        return parametersWithStatus;
     }
     get relatedCables() {
         let relCables = [];
-        Object.values(cables).forEach((value) => {
-            if (value.destination === this || value.source === this) {
-                relCables.push(value);
+        Object.values(cables).forEach((cable) => {
+            if (cable.destination === this || cable.source === this) {
+                relCables.push(cable);
             }
         });
         return relCables;
     }
     get incomingCables() {
         let incCables = [];
-        Object.values(cables).forEach((value) => {
-            if (value.destination === this) {
-                incCables.push(value);
+        Object.values(cables).forEach((cable) => {
+            if (cable.destination === this) {
+                incCables.push(cable);
             }
         });
         return incCables;
     }
     get outcomingCables() {
         let outCables = [];
-        Object.values(cables).forEach((value) => {
-            if (value.source === this) {
-                outCables.push(value);
+        Object.values(cables).forEach((cable) => {
+            if (cable.source === this) {
+                outCables.push(cable);
             }
         });
         return outCables;
@@ -369,6 +398,17 @@ export default class Module {
             cable.deleteCable();
         });
 
+        // recheck other modules if they are still receiving (change diode)
+        this.outcomingCables.forEach((cable) => {
+            if (cable.destination.head && cable.destination.head.diode) {
+                if (cable.destination.inputActivity) {
+                    cable.destination.head.diode.className = "diode diode-on";
+                } else {
+                    cable.destination.head.diode.className = "diode diode-ready";
+                }
+            }
+        });
+
         // execute any module-specific function if there is any
         this.onDeletion && this.onDeletion();
 
@@ -381,12 +421,17 @@ export default class Module {
     connectToModule(destinationModule) {
         // if the sourceModule has an audio node, connect them up.
         // AudioBufferSourceNodes may not have an audio node yet.
+
         if (this.audioNode && destinationModule.audioNode) {
             this.audioNode.connect(destinationModule.audioNode);
+        }
 
-            // check if not final destination (no head) and turn diode on
-            if (destinationModule.head && destinationModule.head.diode) {
-                destinationModule.head.diode.classList.add("diode-on");
+        // check if not final destination (no head) and turn diode on
+        if (destinationModule.head && destinationModule.head.diode) {
+            if (destinationModule.inputActivity) {
+                destinationModule.head.diode.className = "diode diode-on";
+            } else {
+                destinationModule.head.diode.className = "diode diode-ready";
             }
         }
 
@@ -432,8 +477,10 @@ export default class Module {
         let selectedBufferName = this.content.options.select.value;
         let playButton = this.content.controllers.playButton;
 
-        if (playButton.isPlaying) this.stopSound(this, playButton);
-        else {
+        if (playButton.isPlaying) {
+            this.stopSound(this, playButton);
+        } else {
+            this.isTransmitting = true;
             playButton.isPlaying = true;
             this.head.diode.className = "diode diode-on";
             playButton.classList.add("switch-on");
@@ -462,7 +509,7 @@ export default class Module {
 
                 // check if not final destination (no head) and turn diode on
                 if (cable.destination.head && cable.destination.head.diode) {
-                    cable.destination.head.diode.classList.add("diode-on");
+                    cable.destination.head.diode.className = "diode diode-on";
                 }
             });
 
@@ -480,6 +527,8 @@ export default class Module {
     stopSound() {
         let playButton = this.content.controllers.playButton;
 
+        this.isTransmitting = false;
+
         playButton.isPlaying = false;
         playButton.classList.remove("switch-on");
         this.head.diode.className = "diode";
@@ -493,6 +542,16 @@ export default class Module {
             this.audioNode.loop = false;
             this.content.options.looper.checkbox.checked = false;
         }
+
+        this.outcomingCables.forEach((cable) => {
+            if (cable.destination.head && cable.destination.head.diode) {
+                if (cable.destination.inputActivity) {
+                    cable.destination.head.diode.className = "diode diode-on";
+                } else {
+                    cable.destination.head.diode.className = "diode diode-ready";
+                }
+            }
+        });
     }
     // create analyser on given module with given setting
     visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {

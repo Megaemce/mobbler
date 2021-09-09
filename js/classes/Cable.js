@@ -12,6 +12,7 @@ export default class Cable {
         this.animationID = undefined;
         this.type = undefined; // type of connection. Input or parameter type
         this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        this.activeShape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
         this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this.svg = document.getElementById("svgCanvas");
         this.lines = [];
@@ -28,6 +29,34 @@ export default class Cable {
     }
     get startPositionString() {
         return `${this.points[0].x},${this.points[0].y} `.repeat(12);
+    }
+    activeCableAnimation() {
+        this.activeShape.setAttribute("stroke", `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+        this.activeShape.setAttribute("fill", "none");
+        this.activeShape.setAttribute("stroke-width", "3");
+        this.activeShape.setAttribute("points", this.pointsToString);
+        this.activeShape.setAttribute("stroke-dasharray", "4");
+        this.activeShape.setAttribute("stroke-dashoffset", "200");
+
+        let shapeActiveAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        shapeActiveAnimation.setAttribute("attributeName", "opacity");
+        shapeActiveAnimation.setAttribute("values", "1;0.5;1");
+        shapeActiveAnimation.setAttribute("dur", "2s");
+        shapeActiveAnimation.setAttribute("repeatCount", "indefinite");
+
+        let shapeActiveAnimation2 = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        shapeActiveAnimation2.setAttribute("attributeName", "stroke-dashoffset");
+        shapeActiveAnimation2.setAttribute("values", "0;-200");
+        shapeActiveAnimation2.setAttribute("dur", "4s");
+        shapeActiveAnimation2.setAttribute("repeatCount", "indefinite");
+
+        this.svg.removeChild(this.shape);
+        this.activeShape.appendChild(shapeActiveAnimation);
+        this.activeShape.appendChild(shapeActiveAnimation2);
+        this.svg.appendChild(this.activeShape);
+        this.svg.appendChild(this.shape);
+        shapeActiveAnimation.beginElement();
+        shapeActiveAnimation2.beginElement();
     }
     createCableObject() {
         let xPosition = this.source.modulePosition.right;
@@ -64,6 +93,7 @@ export default class Cable {
         // translate points to actual svg shape (polyline)
         this.shape.setAttribute("stroke", "#040404");
         this.shape.setAttribute("fill", "none");
+        this.shape.setAttribute("opacity", "0.9");
         this.shape.setAttribute("stroke-width", "2");
         this.shape.setAttribute("points", this.pointsToString);
         this.shape.setAttribute("stroke-dasharray", "60");
@@ -80,6 +110,10 @@ export default class Cable {
 
         this.shape.appendChild(shapeUnfoldAnimation);
         shapeUnfoldAnimation.beginElement();
+
+        shapeUnfoldAnimation.onend = () => {
+            this.shape.removeChild(shapeUnfoldAnimation);
+        };
 
         // rotate jack from starting point so it looks like it's attached to the cable
         jackRotateAnimation.setAttribute(
@@ -150,7 +184,6 @@ export default class Cable {
     }
     movingCable(event) {
         this.svg.style = "cursor: url('./img/jack_cleared.svg'), auto;";
-        console.log(this.svg.style.cursor);
 
         // two last points of the cable are set like this, so cable is in a middle of jack image
         this.points[11].x = event.offsetX + 2.5;
@@ -180,16 +213,25 @@ export default class Cable {
                 // different action for input and audio parameter
                 if (choosenElement.type === "input") {
                     this.source.connectToModule(this.destination);
+                    if (this.source.isTransmitting) {
+                        this.activeCableAnimation();
+                    }
                 }
                 // in parameters .type is an audio node property name without spaces
                 else {
                     this.source.connectToParameter(this.destination, choosenElement.type);
+                    if (this.source.isTransmitting) {
+                        this.activeCableAnimation();
+                    }
                 }
             } else if (choosenElement.classList && choosenElement.classList.contains("destination-input")) {
                 // final destination
                 this.destination = choosenElement.parentNode; // parentNode is built-in attribute
                 this.type = "input";
                 this.source.connectToModule(this.destination);
+                if (this.source.isTransmitting) {
+                    this.activeCableAnimation();
+                }
 
                 cables[this.id] = this;
             } else {
@@ -223,7 +265,7 @@ export default class Cable {
         if (!duration) duration = `0.5`;
 
         // remove jack and fold the cable back to inital position
-        this.jack && this.svg.removeChild(this.jack);
+        this.jack && this.jack.parentNode === this.svg && this.svg.removeChild(this.jack);
 
         let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         shapeFoldAnimation.setAttribute("attributeName", "points");
@@ -237,6 +279,7 @@ export default class Cable {
 
         shapeFoldAnimation.onend = () => {
             this.svg.removeChild(this.shape);
+            this.activeShape.parentNode === this.svg && this.svg.removeChild(this.activeShape);
         };
     }
 }

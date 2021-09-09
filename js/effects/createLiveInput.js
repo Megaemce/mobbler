@@ -32,6 +32,7 @@ export default function createLiveInput(event) {
     recordingImg.src = "./img/circle.svg";
 
     module.content.controllers.appendChild(recordingImg);
+    module.isTransmitting = true;
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.

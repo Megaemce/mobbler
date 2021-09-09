@@ -24,6 +24,8 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             playButton.isPlaying = false;
             playButton.classList.remove("switch-on");
 
+            module.isTransmitting = false;
+
             // if there is a sound installed
             if (module.audioNode) {
                 module.audioNode.disconnect();
@@ -33,6 +35,8 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             module.head.diode.className = "diode diode-on";
             playButton.isPlaying = true;
             playButton.classList.add("switch-on");
+
+            module.isTransmitting = true;
 
             module.audioNode = audioContext.createOscillator();
             module.audioNode.frequency.value = frequency;
