@@ -303,24 +303,6 @@ body {
     align-items: center;
     padding: 5px 5px;
 }
-
-
-.module .head .diode {
-    background-image: url('../img/dioda_off.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    width: 16px;
-    height: 16px;
-}
-
-
-.module .head .diode-on {
-    background-image: url('../img/dioda_on.svg');
-}
-.module .head .diode-ready {
-    background-image: url('../img/dioda_ready.svg');
-}
 .module .head .title {
     font-size: .75em;
     margin: 0 10px;

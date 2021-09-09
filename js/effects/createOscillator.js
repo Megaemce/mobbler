@@ -20,7 +20,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
         if (playButton.isPlaying) {
             //stop
-            module.head.diode.className = "diode";
             playButton.isPlaying = false;
             playButton.classList.remove("switch-on");
 
@@ -32,7 +31,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
                 module.audioNode = undefined;
             }
         } else {
-            module.head.diode.className = "diode diode-on";
             playButton.isPlaying = true;
             playButton.classList.add("switch-on");
 
@@ -50,11 +48,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
                     } else {
                         module.connectToParameter(cable.destination, cable.type);
                     }
-                }
-
-                // check if not final destination (no head) and turn diode on
-                if (cable.destination.head && cable.destination.head.diode) {
-                    cable.destination.head.diode.classList.add("diode-on");
                 }
             });
 

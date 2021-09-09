@@ -22,7 +22,6 @@ export default class Module {
     get inputActivity() {
         // input should be module's input or module's parameter
         // check all incoming cables if there is anything activly talking to this module
-        // this function is used for diode
         let isActive = false;
         Object.values(cables).forEach((cable) => {
             if (cable.destination === this && cable.source.isTransmitting) {
@@ -86,7 +85,6 @@ export default class Module {
         let titleWrapper = document.createElement("div");
         let title = document.createElement("span");
         let close = document.createElement("a");
-        let diode = document.createElement("div");
         let content = document.createElement("div");
         let options = document.createElement("div");
         let controllers = document.createElement("div");
@@ -106,9 +104,6 @@ export default class Module {
             tempx = 50 + id;
         } else tempx += 300;
         if (tempy > window.innerHeight - 300) tempy = 100 + id;
-
-        // module.head.diode
-        diode.className = "diode";
 
         // module.head.title
         title.className = "title";
@@ -131,11 +126,9 @@ export default class Module {
 
         // moudule.head
         head.className = "head";
-        head.appendChild(diode);
         head.appendChild(titleWrapper);
         head.appendChild(close);
 
-        head.diode = diode;
         head.close = close;
 
         // module.content.options
@@ -398,17 +391,6 @@ export default class Module {
             cable.deleteCable();
         });
 
-        // recheck other modules if they are still receiving (change diode)
-        this.outcomingCables.forEach((cable) => {
-            if (cable.destination.head && cable.destination.head.diode) {
-                if (cable.destination.inputActivity) {
-                    cable.destination.head.diode.className = "diode diode-on";
-                } else {
-                    cable.destination.head.diode.className = "diode diode-ready";
-                }
-            }
-        });
-
         // execute any module-specific function if there is any
         this.onDeletion && this.onDeletion();
 
@@ -424,15 +406,6 @@ export default class Module {
 
         if (this.audioNode && destinationModule.audioNode) {
             this.audioNode.connect(destinationModule.audioNode);
-        }
-
-        // check if not final destination (no head) and turn diode on
-        if (destinationModule.head && destinationModule.head.diode) {
-            if (destinationModule.inputActivity) {
-                destinationModule.head.diode.className = "diode diode-on";
-            } else {
-                destinationModule.head.diode.className = "diode diode-ready";
-            }
         }
 
         // execute function if there is any hooked
@@ -482,7 +455,6 @@ export default class Module {
         } else {
             this.isTransmitting = true;
             playButton.isPlaying = true;
-            this.head.diode.className = "diode diode-on";
             playButton.classList.add("switch-on");
 
             // if there's already a note playing, cut it off
@@ -506,11 +478,6 @@ export default class Module {
                         this.connectToParameter(cable.destination, cable.type);
                     }
                 }
-
-                // check if not final destination (no head) and turn diode on
-                if (cable.destination.head && cable.destination.head.diode) {
-                    cable.destination.head.diode.className = "diode diode-on";
-                }
             });
 
             this.audioNode.start(audioContext.currentTime);
@@ -531,7 +498,6 @@ export default class Module {
 
         playButton.isPlaying = false;
         playButton.classList.remove("switch-on");
-        this.head.diode.className = "diode";
 
         if (this.audioNode.stopTimer) {
             window.clearTimeout(this.audioNode.stopTimer);
@@ -542,16 +508,6 @@ export default class Module {
             this.audioNode.loop = false;
             this.content.options.looper.checkbox.checked = false;
         }
-
-        this.outcomingCables.forEach((cable) => {
-            if (cable.destination.head && cable.destination.head.diode) {
-                if (cable.destination.inputActivity) {
-                    cable.destination.head.diode.className = "diode diode-on";
-                } else {
-                    cable.destination.head.diode.className = "diode diode-ready";
-                }
-            }
-        });
     }
     // create analyser on given module with given setting
     visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
