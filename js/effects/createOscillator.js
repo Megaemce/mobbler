@@ -1,5 +1,5 @@
 import Module from "../classes/Module.js";
-import { audioContext } from "../main.js";
+import { audioContext, cables } from "../main.js";
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
@@ -18,23 +18,24 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
         let type = module.content.options.select.value;
         let playButton = this;
 
-        if (playButton.isPlaying) {
+        if (module.isTransmitting) {
             //stop
-            playButton.isPlaying = false;
-            playButton.classList.remove("switch-on");
-
             module.isTransmitting = false;
+            playButton.classList.remove("switch-on");
 
             // if there is a sound installed
             if (module.audioNode) {
                 module.audioNode.disconnect();
                 module.audioNode = undefined;
             }
-        } else {
-            playButton.isPlaying = true;
-            playButton.classList.add("switch-on");
 
+            // all outocoming cables should be deactived now
+            module.outcomingCables.forEach((cable) => {
+                cable.makeDeactive();
+            });
+        } else {
             module.isTransmitting = true;
+            playButton.classList.add("switch-on");
 
             module.audioNode = audioContext.createOscillator();
             module.audioNode.frequency.value = frequency;
@@ -42,6 +43,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             module.audioNode.type = type;
 
             module.outcomingCables.forEach((cable) => {
+                cable.makeActive();
                 if (cable.destination && cable.destination.audioNode) {
                     if (cable.type === "input") {
                         module.connectToModule(cable.destination);

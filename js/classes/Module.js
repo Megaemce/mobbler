@@ -20,7 +20,6 @@ export default class Module {
         this.createModuleObject();
     }
     get inputActivity() {
-        // input should be module's input or module's parameter
         // check all incoming cables if there is anything activly talking to this module
         let isActive = false;
         Object.values(cables).forEach((cable) => {
@@ -358,11 +357,17 @@ export default class Module {
             // update any lines that point in here.
             this.incomingCables.forEach((cable) => {
                 cable.moveEndPoint(event.movementX, event.movementY);
+                if (cable.source.isTransmitting) {
+                    cable.makeActive();
+                }
             });
 
             // update any lines that point out of here.
             this.outcomingCables.forEach((cable) => {
                 cable.moveStartPoint(event.movementX, event.movementY);
+                if (this.isTransmitting) {
+                    cable.makeActive();
+                }
             });
         };
 
@@ -403,9 +408,9 @@ export default class Module {
     connectToModule(destinationModule) {
         // if the sourceModule has an audio node, connect them up.
         // AudioBufferSourceNodes may not have an audio node yet.
-
         if (this.audioNode && destinationModule.audioNode) {
             this.audioNode.connect(destinationModule.audioNode);
+            destinationModule.isTransmitting = true;
         }
 
         // execute function if there is any hooked
@@ -414,35 +419,39 @@ export default class Module {
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
 
-        if (slider) {
+        // make the slider disabled if the source is active
+        if (destinationModule.parametersActivity[parameterType]) {
             slider.classList.add("disabled");
-            if (this.audioNode) {
-                slider.audioNode = audioContext.createAnalyser();
+        } else {
+            slider.classList.remove("disabled");
+        }
 
-                this.audioNode.connect(slider.audioNode);
+        if (slider && this.audioNode) {
+            slider.audioNode = audioContext.createAnalyser();
 
-                // slider.audioNode.fftSize default vaue is 2048
-                let dataArray = new Uint8Array(slider.audioNode.fftSize);
+            this.audioNode.connect(slider.audioNode);
 
-                function connectToSlider() {
-                    slider.audioNode.getByteTimeDomainData(dataArray);
+            // slider.audioNode.fftSize default vaue is 2048
+            let dataArray = new Uint8Array(slider.audioNode.fftSize);
 
-                    // performance tweak - just get the max value of array instead of iterating
-                    let element = Math.max(...dataArray);
-                    let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
+            function connectToSlider() {
+                slider.audioNode.getByteTimeDomainData(dataArray);
 
-                    slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
+                // performance tweak - just get the max value of array instead of iterating
+                let element = Math.max(...dataArray);
+                let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
 
-                    if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
+                slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
 
-                    destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
+                if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
 
-                    //setTimeout(() => {
-                    requestAnimationFrame(connectToSlider);
-                    //}, 1000 / 60);
-                }
-                connectToSlider();
+                destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
+
+                //setTimeout(() => {
+                requestAnimationFrame(connectToSlider);
+                //}, 1000 / 60);
             }
+            connectToSlider();
         }
     }
     playSelectedSound() {
@@ -450,11 +459,10 @@ export default class Module {
         let selectedBufferName = this.content.options.select.value;
         let playButton = this.content.controllers.playButton;
 
-        if (playButton.isPlaying) {
+        if (this.isTransmitting) {
             this.stopSound(this, playButton);
         } else {
             this.isTransmitting = true;
-            playButton.isPlaying = true;
             playButton.classList.add("switch-on");
 
             // if there's already a note playing, cut it off
@@ -471,6 +479,7 @@ export default class Module {
 
             // play sound on all connected output
             this.outcomingCables.forEach((cable) => {
+                cable.makeActive();
                 if (cable.destination && cable.destination.audioNode) {
                     if (cable.type === "input") {
                         this.connectToModule(cable.destination);
@@ -496,7 +505,6 @@ export default class Module {
 
         this.isTransmitting = false;
 
-        playButton.isPlaying = false;
         playButton.classList.remove("switch-on");
 
         if (this.audioNode.stopTimer) {
@@ -508,6 +516,11 @@ export default class Module {
             this.audioNode.loop = false;
             this.content.options.looper.checkbox.checked = false;
         }
+
+        // mark outcoming cables as not active
+        this.outcomingCables.forEach((cable) => {
+            cable.makeDeactive();
+        });
     }
     // create analyser on given module with given setting
     visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
