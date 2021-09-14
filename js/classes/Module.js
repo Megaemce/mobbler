@@ -2,6 +2,19 @@ import Cable from "./Cable.js";
 import { audioContext, cables, modules } from "../main.js";
 import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers/math.js";
 
+/* ======TO DO========
+   
+[BUG] kiedy cabel do slidera jest wylaczony slider ciagle nie jest dostepny do uzycia
+najprawdopodobniej trzeba anulowac funkcje connectToSlider
+
+[BUG] po usunieciu emitujacego modulu a polaczeniu miedzy kolejnymi dwoma kabel miedzy
+nimi jest ciagle aktywny
+
+[BUG] gdy jest aktywne polaczenie A->B i robimy polaczenie do destination to cabel jest
+nieaktywny
+
+   ===================*/
+
 let tempx = 50,
     tempy = 100,
     id = 0;
@@ -16,7 +29,7 @@ export default class Module {
         this.position = undefined; // module's position
         this.html = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
-        this.isTransmitting = false; // sending audio pulses or not
+        this.isTransmitting = false;
         this.createModuleObject();
     }
     get inputActivity() {
@@ -46,35 +59,58 @@ export default class Module {
         return parametersWithStatus;
     }
     get relatedCables() {
-        let relCables = [];
-        Object.values(cables).forEach((cable) => {
-            if (cable.destination === this || cable.source === this) {
-                relCables.push(cable);
-            }
-        });
-        return relCables;
+        return Object.values(cables).filter((cable) => cable.destination === this || cable.source === this);
     }
     get incomingCables() {
-        let incCables = [];
-        Object.values(cables).forEach((cable) => {
-            if (cable.destination === this) {
-                incCables.push(cable);
-            }
-        });
-        return incCables;
+        return Object.values(cables).filter((cable) => cable.destination === this);
     }
     get outcomingCables() {
-        let outCables = [];
-        Object.values(cables).forEach((cable) => {
-            if (cable.source === this) {
-                outCables.push(cable);
-            }
-        });
-        return outCables;
+        return Object.values(cables).filter((cable) => cable.source === this);
     }
     get modulePosition() {
         this.position = this.html.getBoundingClientRect();
         return this.position;
+    }
+    // Depth first search all outcoming cables and mark as active or deactive
+    markAllLinkedCablesAs(status) {
+        let visited = {};
+        let currentCable = undefined;
+        let stack = this.outcomingCables;
+
+        while (stack.length) {
+            currentCable = stack.pop();
+
+            // while we are walking thru let's mark modules and cables correctly
+            if (status === "active") {
+                currentCable.makeActive();
+            }
+            if (status === "active" && currentCable.type === "input") {
+                currentCable.destination.isTransmitting = true;
+            }
+            if (status === "deactive") {
+                currentCable.makeDeactive();
+            }
+            // if there is no active module(s) talking to this module set is as not active transmitter
+            if (status === "deactive" && currentCable.type === "input" && !currentCable.destination.inputActivity) {
+                currentCable.destination.isTransmitting = false;
+            }
+            if (status === "deactive" && currentCable.type !== "input") {
+                currentCable.destination.content.controllers[currentCable.type].slider.classList.remove("disabled");
+            }
+
+            // dfs section
+            if (!visited[currentCable.id]) {
+                visited[currentCable.id] = true;
+                if (currentCable.destination.id !== "destination") {
+                    // no final destination
+                    currentCable.destination.outcomingCables.forEach((cable) => {
+                        if (!visited[cable.id]) {
+                            stack.push(cable);
+                        }
+                    });
+                }
+            }
+        }
     }
     createModuleObject() {
         let modulesDiv = document.getElementById("modules");
@@ -316,9 +352,9 @@ export default class Module {
         sliderDiv.slider = slider;
 
         this.content.controllers.appendChild(sliderDiv);
-        this.content.controllers[property] = sliderDiv;
-        this.content.controllers[property].value = value;
-        this.content.controllers[property].unit = unit;
+        this.content.controllers[propertyNoSpaces] = sliderDiv;
+        this.content.controllers[propertyNoSpaces].value = value;
+        this.content.controllers[propertyNoSpaces].unit = unit;
 
         // module.footer.$propertyNoSpaces
         audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
@@ -357,17 +393,11 @@ export default class Module {
             // update any lines that point in here.
             this.incomingCables.forEach((cable) => {
                 cable.moveEndPoint(event.movementX, event.movementY);
-                if (cable.source.isTransmitting) {
-                    cable.makeActive();
-                }
             });
 
             // update any lines that point out of here.
             this.outcomingCables.forEach((cable) => {
                 cable.moveStartPoint(event.movementX, event.movementY);
-                if (this.isTransmitting) {
-                    cable.makeActive();
-                }
             });
         };
 
@@ -410,17 +440,30 @@ export default class Module {
         // AudioBufferSourceNodes may not have an audio node yet.
         if (this.audioNode && destinationModule.audioNode) {
             this.audioNode.connect(destinationModule.audioNode);
-            destinationModule.isTransmitting = true;
+        }
+
+        // if this module is transmitting mark further cables as active
+        if (this.isTransmitting) {
+            this.markAllLinkedCablesAs("active");
         }
 
         // execute function if there is any hooked
-        if (destinationModule.onConnectInput) destinationModule.onConnectInput();
+        if (destinationModule.onConnectInput) {
+            destinationModule.onConnectInput();
+        }
     }
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
 
-        // make the slider disabled if the source is active
-        if (destinationModule.parametersActivity[parameterType]) {
+        // is source is active mark cable as active and slider as disabled
+        if (this.isTransmitting) {
+            // mark cable that is currently used as active
+            Object.values(cables)
+                .filter((cable) => {
+                    return cable.destination === destinationModule && cable.source === this && cable.type === parameterType;
+                })[0]
+                .makeActive();
+
             slider.classList.add("disabled");
         } else {
             slider.classList.remove("disabled");
@@ -479,17 +522,17 @@ export default class Module {
 
             // play sound on all connected output
             this.outcomingCables.forEach((cable) => {
-                cable.makeActive();
-                if (cable.destination && cable.destination.audioNode) {
-                    if (cable.type === "input") {
-                        this.connectToModule(cable.destination);
-                    } else {
-                        this.connectToParameter(cable.destination, cable.type);
-                    }
+                if (cable.destination && cable.destination.audioNode && cable.type === "input") {
+                    this.connectToModule(cable.destination);
+                }
+                if (cable.destination && cable.destination.audioNode && cable.type !== "input") {
+                    this.connectToParameter(cable.destination, cable.type);
                 }
             });
 
             this.audioNode.start(audioContext.currentTime);
+
+            this.markAllLinkedCablesAs("active");
 
             if (!this.audioNode.loop) {
                 let delay = Math.floor(this.buffer.duration * 1000) + 1;
@@ -517,10 +560,7 @@ export default class Module {
             this.content.options.looper.checkbox.checked = false;
         }
 
-        // mark outcoming cables as not active
-        this.outcomingCables.forEach((cable) => {
-            cable.makeDeactive();
-        });
+        this.markAllLinkedCablesAs("deactive");
     }
     // create analyser on given module with given setting
     visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {

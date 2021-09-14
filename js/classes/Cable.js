@@ -1,24 +1,26 @@
 import Point from "../classes/Point.js";
 import Line from "../classes/Line.js";
 import { cables } from "../main.js";
-import { whatDirection } from "../helpers/math.js";
+import { directionString } from "../helpers/math.js";
 
 let id = 0;
 
 // Cable is made out of multiply points connected with lines
 export default class Cable {
-    constructor(module, destination) {
-        this.source = module;
+    constructor(source, destination) {
+        this.source = source;
         this.destination = destination || undefined;
         this.animationID = undefined;
         this.type = undefined; // type of connection. Input or parameter type
         this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
         this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
-        this.svg = document.getElementById("svgCanvas");
         this.lines = [];
         this.id = `cable-${++id}`;
         this.points = [new Point(0.378, 1.056, 0.4, true), new Point(2.695, 2.016, 0.4), new Point(4.831, 3.454, 0.4), new Point(6.789, 5.335, 0.4), new Point(8.575, 7.623, 0.4), new Point(10.192, 10.284, 0.4), new Point(11.646, 13.281, 0.4), new Point(14.078, 20.143, 0.4), new Point(15.909, 27.926, 0.4), new Point(17.173, 36.348, 0.4), new Point(17.906, 45.122, 0.4, true), new Point(18.142, 53.97, 0.4, true)]; // inital hanging shape:
         this.createCableObject(); // create cable linked with module
+    }
+    get svg() {
+        return document.getElementById("svgCanvas");
     }
     get pointsToString() {
         let string = "";
@@ -30,11 +32,9 @@ export default class Cable {
     get startPositionString() {
         return `${this.points[0].x},${this.points[0].y} `.repeat(12);
     }
-    get direction() {
-        return whatDirection(this.points[0], this.points[11]);
-    }
     makeActive() {
-        this.shape.setAttribute("stroke", `url(#grad-${this.direction})`);
+        let direction = directionString(this.points[0], this.points[11]);
+        this.shape.setAttribute("stroke", `url(#grad-${direction})`);
     }
     makeDeactive() {
         this.shape.setAttribute("stroke", "black");
@@ -148,7 +148,13 @@ export default class Cable {
     }
     deleteCable() {
         this.foldCable();
+
         delete cables[this.id];
+
+        // unblock slider
+        if (this.type !== "input") {
+            this.destination.content.controllers[this.type].slider.classList.remove("disabled");
+        }
 
         // reconnect all the others nodes
         if (this.source.audioNode) {
@@ -180,41 +186,13 @@ export default class Cable {
 
         // stop moving cable - let's see where we are
         document.onmouseup = (event) => {
-            let choosenElement = event.toElement;
+            let element = event.toElement;
 
             this.stopAnimation();
 
-            // if we have good input (module or module's parameter - those two only have parentModule attribute)
-            if (choosenElement.parentModule) {
-                this.destination = choosenElement.parentModule;
-                this.type = choosenElement.type;
-
-                cables[this.id] = this;
-
-                // different action for input and audio parameter
-                if (choosenElement.type === "input") {
-                    this.source.connectToModule(this.destination);
-                } else {
-                    this.source.connectToParameter(this.destination, choosenElement.type);
-                }
-            } else if (choosenElement.classList && choosenElement.classList.contains("destination-input")) {
-                // final destination
-                this.destination = choosenElement.parentNode; // parentNode is built-in attribute
-                this.type = "input";
-                this.source.connectToModule(this.destination);
-
-                cables[this.id] = this;
-            } else {
-                // it's not final destination nor correct input thus cable has not been connected and can be fold
-                // without worrying about other connections (no need to this.deleteCable())
-                this.foldCable();
-            }
-
-            // make cable active if the source module is transmitting
-            if (this.source.isTransmitting) this.makeActive();
-
-            // cable connected or not it's not inital anymore
+            // remove inital cable and add new one
             this.source.initalCable = undefined;
+            this.source.addFirstCable();
 
             // only when shape is created enable removal
             this.shape.onclick = () => {
@@ -225,13 +203,41 @@ export default class Cable {
                 this.shape.style.cursor = "no-drop";
             };
 
+            // only module's inputs got parameter "parentModule"
+            if (element.parentModule) {
+                cables[this.id] = this;
+                this.destination = element.parentModule;
+                this.type = element.type;
+            }
+            // disabled option for self-loop
+            if (this.destination && this.destination === this.source) {
+                this.foldCable();
+            }
+            // module to input connection
+            if (this.destination && this.type === "input") {
+                this.source.connectToModule(this.destination);
+            }
+            // module to parameter connection
+            if (this.destination && this.type !== "input") {
+                this.source.connectToParameter(this.destination, this.type);
+            }
+            // module to final destination connection
+            if (!this.destination && element.classList && element.classList.contains("destination-input")) {
+                cables[this.id] = this; // needs to be before connectToModule as outcomingCables use cables array
+                this.destination = element.parentNode; // parentNode is built-in attribute
+                this.type = "input";
+                this.source.connectToModule(this.destination);
+            }
+            // something else thus fold the cable
+            if (!element.parentModule && (!element.classList || !element.classList.contains("destination-input"))) {
+                this.foldCable();
+            }
+
             // clear document and svg
             this.svg.style.cursor = "default";
             document.onmousedown = undefined;
             document.onmousemove = undefined;
             document.onmouseup = undefined;
-
-            this.source.addFirstCable();
         };
     }
     foldCable(duration) {

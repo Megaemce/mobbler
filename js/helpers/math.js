@@ -21,7 +21,7 @@ export function scaleBetween(givenNum, givenMin, givenMax, desirableMin, desirab
     return parseFloat(calculation.toFixed(digitsAfterDot));
 }
 
-export function whatDirection(pointA, pointB) {
+export function directionString(pointA, pointB) {
     let angle = (Math.atan2(pointB.y - pointA.y, pointB.x - pointA.x) * 180) / Math.PI;
     if (angle < 0) angle = 360 + angle; // changing range [-180,180] to [0, 360]
 

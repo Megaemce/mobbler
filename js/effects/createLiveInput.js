@@ -33,6 +33,7 @@ export default function createLiveInput(event) {
 
     module.content.controllers.appendChild(recordingImg);
     module.isTransmitting = true;
+    module.markAllLinkedCablesAs("active");
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.

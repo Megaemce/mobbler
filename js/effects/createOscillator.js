@@ -29,10 +29,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
                 module.audioNode = undefined;
             }
 
-            // all outocoming cables should be deactived now
-            module.outcomingCables.forEach((cable) => {
-                cable.makeDeactive();
-            });
+            module.markAllLinkedCablesAs("deactive");
         } else {
             module.isTransmitting = true;
             playButton.classList.add("switch-on");
@@ -43,17 +40,17 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             module.audioNode.type = type;
 
             module.outcomingCables.forEach((cable) => {
-                cable.makeActive();
-                if (cable.destination && cable.destination.audioNode) {
-                    if (cable.type === "input") {
-                        module.connectToModule(cable.destination);
-                    } else {
-                        module.connectToParameter(cable.destination, cable.type);
-                    }
+                if (cable.destination && cable.destination.audioNode && cable.type === "input") {
+                    module.connectToModule(cable.destination);
+                }
+                if (cable.destination && cable.destination.audioNode && cable.type !== "input") {
+                    module.connectToParameter(cable.destination, cable.type);
                 }
             });
 
             module.audioNode.start(0);
+
+            module.markAllLinkedCablesAs("active");
         }
     };
 
