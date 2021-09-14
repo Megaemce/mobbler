@@ -7,12 +7,6 @@ import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers
 [BUG] kiedy cabel do slidera jest wylaczony slider ciagle nie jest dostepny do uzycia
 najprawdopodobniej trzeba anulowac funkcje connectToSlider
 
-[BUG] po usunieciu emitujacego modulu a polaczeniu miedzy kolejnymi dwoma kabel miedzy
-nimi jest ciagle aktywny
-
-[BUG] gdy jest aktywne polaczenie A->B i robimy polaczenie do destination to cabel jest
-nieaktywny
-
    ===================*/
 
 let tempx = 50,
@@ -420,6 +414,9 @@ export default class Module {
     deleteModule() {
         // remove inital cable
         this.initalCable && this.initalCable.foldCable();
+
+        // mark all related cables as inactive
+        this.markAllLinkedCablesAs("deactive");
 
         // remove all related cables
         this.relatedCables.forEach((cable) => {
