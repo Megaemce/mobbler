@@ -1,17 +1,13 @@
 import Cable from "./Cable.js";
 import { audioContext, cables, modules } from "../main.js";
 import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers/math.js";
+import { buildModule, buildModuleSlider } from "../helpers/builders.js";
 
 /* ======TO DO========
-   
-[BUG] kiedy cabel do slidera jest wylaczony slider ciagle nie jest dostepny do uzycia
-najprawdopodobniej trzeba anulowac funkcje connectToSlider
 
    ===================*/
 
-let tempx = 50,
-    tempy = 100,
-    id = 0;
+let id = 0;
 
 export default class Module {
     constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect) {
@@ -24,18 +20,14 @@ export default class Module {
         this.html = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
         this.isTransmitting = false;
-        this.createModuleObject();
+        this.createModule(); // create html's object
+        modules[this.id] = this; // add moduleDiv to the dictionary
     }
     get inputActivity() {
-        // check all incoming cables if there is anything activly talking to this module
-        let isActive = false;
-        Object.values(cables).forEach((cable) => {
-            if (cable.destination === this && cable.source.isTransmitting) {
-                isActive = true;
-            }
-        });
-
-        return isActive; // input is receiving active impulse(s)
+        // check all incoming cables if there is anything activly talking to this module. Find return 1 or 0 elements
+        let check = Object.values(cables).find((cable) => cable.destination === this && cable.source.isTransmitting);
+        if (check) return true;
+        return false;
     }
     get parametersActivity() {
         let parametersWithStatus = new Object();
@@ -95,8 +87,8 @@ export default class Module {
             // dfs section
             if (!visited[currentCable.id]) {
                 visited[currentCable.id] = true;
+                // don't try to do dfs on final destination
                 if (currentCable.destination.id !== "destination") {
-                    // no final destination
                     currentCable.destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);
@@ -106,258 +98,52 @@ export default class Module {
             }
         }
     }
-    createModuleObject() {
-        let modulesDiv = document.getElementById("modules");
-        let mainWidth = modulesDiv.offsetWidth;
-        let module = document.createElement("div");
-        let head = document.createElement("div");
-        let titleWrapper = document.createElement("div");
-        let title = document.createElement("span");
-        let close = document.createElement("a");
-        let content = document.createElement("div");
-        let options = document.createElement("div");
-        let controllers = document.createElement("div");
-        let footer = document.createElement("footer");
+    createModule() {
+        let module = this;
 
-        this.html = module;
-        this.html.id = this.id; // just for logging
-        this.html.self = this; // just for logging
+        buildModule(module);
 
-        module.className = "module";
-
-        module.style.left = `${tempx}px`;
-        module.style.top = `${tempy}px`;
-
-        if (tempx > mainWidth - 450) {
-            tempy += 300;
-            tempx = 50 + id;
-        } else tempx += 300;
-        if (tempy > window.innerHeight - 300) tempy = 100 + id;
-
-        // module.head.title
-        title.className = "title";
-        title.appendChild(document.createTextNode(this.name));
-        title.name = this.name;
-
-        // module.head.title.wrapper
-        titleWrapper.className = "title-wrapper";
-        titleWrapper.appendChild(title);
-        titleWrapper.onmousedown = (event) => {
-            this.movingModule(event);
+        // when module is created add some hooks
+        // when title is grab move the module
+        module.head.titleWrapper.onmousedown = (event) => {
+            module.movingModule(event);
         };
 
-        // module.head.close
-        close.className = "close";
-        close.href = "#";
-        close.onclick = () => {
-            this.deleteModule();
+        // when close button is clicked delete the module
+        module.head.close.onclick = () => {
+            module.deleteModule();
         };
 
-        // moudule.head
-        head.className = "head";
-        head.appendChild(titleWrapper);
-        head.appendChild(close);
-
-        head.close = close;
-
-        // module.content.options
-        options.className = "options";
-
-        if (this.hasLooper || this.hasNormalizer || this.arrayForSelect) {
-            if (this.arrayForSelect) {
-                let select = document.createElement("select");
-
-                // module.content.options.select
-                select.className = "ab-source";
-
-                this.arrayForSelect.forEach((object) => {
-                    let option = document.createElement("option");
-                    option.appendChild(document.createTextNode(object));
-                    select.add(option);
-                });
-
-                options.appendChild(select);
-                options.select = select;
-            }
-            if (this.hasLooper || this.hasNormalizer) {
-                let checkbox = document.createElement("input");
-                let label = document.createElement("label");
-                let looper = document.createElement("div");
-                let normalizer = document.createElement("div");
-
-                // module.content.options.checkbox
-                checkbox.type = "checkbox";
-
-                if (this.hasLooper) {
-                    checkbox.onchange = function () {
-                        module.loop = this.checked;
-                    };
-
-                    // To associate label with an input element, you need to give the input an id attribute.
-                    label.htmlFor = `${this.id}-content-options-looper`;
-                    label.appendChild(document.createTextNode("Loop"));
-
-                    looper.className = "looper";
-                    looper.id = `${this.id}-content-options-looper`;
-                    looper.appendChild(checkbox);
-                    looper.appendChild(label);
-
-                    looper.checkbox = checkbox;
-                    looper.label = label;
-
-                    module.classList.add("has-looper");
-                    options.appendChild(looper);
-
-                    options.looper = looper;
-                }
-
-                if (this.hasNormalizer) {
-                    checkbox.onchange = () => {
-                        this.audioNode.normalize = this.checked;
-                    };
-
-                    label.htmlFor = `${this.id}-content-options-looper`;
-                    label.appendChild(document.createTextNode("Norm"));
-
-                    normalizer.className = "normalizer";
-                    normalizer.id = `${this.id}-content-options-normalizer`;
-                    normalizer.appendChild(checkbox);
-                    normalizer.appendChild(label);
-
-                    normalizer.checkbox = checkbox;
-                    normalizer.label = label;
-
-                    module.classList.add("has-normalizer");
-                    options.appendChild(normalizer);
-
-                    options.normalizer = normalizer;
-                }
-            }
-            content.appendChild(options);
-
-            content.options = options;
+        // when looper checkbox is changed play in a loop/stop the sound
+        if (module.hasLooper) {
+            module.content.options.looper.checkbox.onchange = () => {
+                module.playSelectedSound();
+            };
         }
 
-        // module.content.controllers
-        controllers.className = "controllers";
-
-        // module.content
-        content.className = "content";
-        content.appendChild(controllers);
-        content.controllers = controllers;
-
-        if (this.hasInput) {
-            // module.input
-            let input = document.createElement("div");
-            input.className = "input";
-            input.parentModule = this; // keep info about parent for movingCable
-            input.type = "input"; // keep info about type for movingCable
-            module.appendChild(input);
-            module.input = input;
+        // when normalizer is changed switch audioNode.normalize status
+        if (module.hasNormalizer) {
+            module.content.options.normalizer.checkbox.onchange = function () {
+                module.audioNode.normalize = this.checked;
+            };
         }
-
-        // module.footer
-        footer.className = "footer";
-
-        module.setAttribute("audioNodeType", this.name);
-        module.appendChild(head);
-        module.appendChild(content);
-        module.appendChild(footer);
-
-        this.head = head;
-        this.content = content;
-        this.footer = footer;
-
-        // add the node into the soundfield
-        modulesDiv.appendChild(module);
-
-        // add module to the dictionary
-        modules[this.id] = this;
     }
-    createModuleSlider(property, initialValue, min, max, stepUnits, units, scaleLog) {
+    createSlider(property, initialValue, min, max, stepUnits, units, scaleLog) {
+        let module = this;
         let propertyNoSpaces = property.split(" ").join("");
-        let sliderDiv = document.createElement("div");
-        let info = document.createElement("div");
-        let label = document.createElement("span");
-        let value = document.createElement("span");
-        let unit = document.createElement("span");
-        let valueUnit = document.createElement("div");
-        let slider = document.createElement("input");
-        let sliderWraper = document.createElement("div");
-        let audioParam = document.createElement("div");
 
-        // module.content.cotrollers.$propertyNoSpaces.info.property
-        label.className = "label";
-        label.appendChild(document.createTextNode(property));
+        buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog);
 
-        // module.content.cotrollers.$propertyNoSpaces.info.value
-        value.className = "value";
-        // there is a bug with range between 0-0.9: (0,0.5) = 0, [0.5,1) = 1
-        // thus showing buggy value before user interaction
-        if (initialValue >= 0 && initialValue < 0.5) initialValue = 0;
-        if (initialValue >= 0.5 && initialValue < 1) initialValue = 1;
-
-        value.appendChild(document.createTextNode(initialValue));
-
-        // module.content.cotrollers.$propertyNoSpaces.info.units
-        unit.className = "value";
-        unit.appendChild(document.createTextNode(units));
-
-        valueUnit.className = "value-unit";
-        valueUnit.appendChild(value);
-        valueUnit.appendChild(unit);
-        valueUnit.value = value;
-        valueUnit.unit = unit;
-
-        // module.content.cotrollers.$propertyNoSpaces.info
-        info.className = "slider-info";
-        info.appendChild(label);
-        info.appendChild(valueUnit);
-        info.label = label;
-
-        // module.content.controllers.$propertyNoSpaces.slider
-        slider.type = "range";
-        slider.scaleLog = scaleLog;
-        slider.min = min;
-        slider.max = max;
-        slider.minFloat = parseFloat(min);
-        slider.maxFloat = parseFloat(max);
-        // set inital value to the correct position before user starts to play
-        slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : initialValue;
-        slider.step = stepUnits;
-        let that = this;
-        slider.oninput = function () {
+        // when slider is moved (by user or by connected module)
+        module.content.controllers[propertyNoSpaces].slider.oninput = function () {
             let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
 
-            if (that.audioNode) that.audioNode[propertyNoSpaces].value = sliderValue;
+            // set value on the audiNode parametetr
+            if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
 
-            // in case user is just playing around without audio on
-            value.innerHTML = sliderValue;
+            // show new value above slider
+            module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
         };
-
-        sliderWraper.className = "input-wrapper";
-        sliderWraper.appendChild(slider);
-
-        // module.content.cotrollers.$propertyNoSpaces
-        sliderDiv.className = "slider";
-        sliderDiv.appendChild(info);
-        sliderDiv.appendChild(sliderWraper);
-        sliderDiv.info = info;
-        sliderDiv.slider = slider;
-
-        this.content.controllers.appendChild(sliderDiv);
-        this.content.controllers[propertyNoSpaces] = sliderDiv;
-        this.content.controllers[propertyNoSpaces].value = value;
-        this.content.controllers[propertyNoSpaces].unit = unit;
-
-        // module.footer.$propertyNoSpaces
-        audioParam.type = propertyNoSpaces; //keep it for stopMovingCable
-        audioParam.parentModule = this; // keep info about parent for stopMovingCable
-        audioParam.className = "audio-parameter";
-
-        this.footer.appendChild(audioParam);
-
-        this.footer[propertyNoSpaces] = audioParam;
     }
     addFirstCable() {
         new Cable(this);
@@ -449,6 +235,27 @@ export default class Module {
             destinationModule.onConnectInput();
         }
     }
+    connectToSlider(destinationModule, slider, parameterType) {
+        // slider.audioNode.fftSize default vaue is 2048
+        let dataArray = new Uint8Array(slider.audioNode.fftSize);
+
+        slider.audioNode.getByteTimeDomainData(dataArray);
+
+        // performance tweak - just get the max value of array instead of iterating
+        let element = Math.max(...dataArray);
+        let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
+
+        slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
+
+        if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
+
+        destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
+
+        // update the value inifinite
+        destinationModule[parameterType].animationID = requestAnimationFrame(() => {
+            this.connectToSlider(destinationModule, slider, parameterType);
+        });
+    }
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
 
@@ -466,32 +273,14 @@ export default class Module {
             slider.classList.remove("disabled");
         }
 
+        // not connecting directly source to parameter but to the destination parameter slider
         if (slider && this.audioNode) {
             slider.audioNode = audioContext.createAnalyser();
 
             this.audioNode.connect(slider.audioNode);
+            destinationModule[parameterType] = {};
 
-            // slider.audioNode.fftSize default vaue is 2048
-            let dataArray = new Uint8Array(slider.audioNode.fftSize);
-
-            function connectToSlider() {
-                slider.audioNode.getByteTimeDomainData(dataArray);
-
-                // performance tweak - just get the max value of array instead of iterating
-                let element = Math.max(...dataArray);
-                let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
-
-                slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
-
-                if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
-
-                destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
-
-                //setTimeout(() => {
-                requestAnimationFrame(connectToSlider);
-                //}, 1000 / 60);
-            }
-            connectToSlider();
+            this.connectToSlider(destinationModule, slider, parameterType);
         }
     }
     playSelectedSound() {

@@ -289,7 +289,9 @@ body {
 /* Modules */
 .module {
     border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(
+    2px 4px 8px hsl(0deg 0% 25%)
+  );
     display: inline-block;
     position: absolute;
     cursor: pointer;

@@ -6,11 +6,11 @@ export default function createDynamicsCompressor(event, initalThreshold, initalK
 
     module.audioNode = audioContext.createDynamicsCompressor();
 
-    module.createModuleSlider("threshold", initalThreshold, -36.0, 0.0, 0.01, "Db", false);
-    module.createModuleSlider("knee", initalKnee, 0.0, 40.0, 0.01, "Db", false);
-    module.createModuleSlider("ratio", initalRatio, 1.0, 20.0, 0.1, "", false);
-    module.createModuleSlider("attack", initalAttack, 0, 1.0, 0.001, "sec", false);
-    module.createModuleSlider("release", initalRelease, 0, 1.0, 0.05, "sec", false);
+    module.createSlider("threshold", initalThreshold, -36.0, 0.0, 0.01, "Db", false);
+    module.createSlider("knee", initalKnee, 0.0, 40.0, 0.01, "Db", false);
+    module.createSlider("ratio", initalRatio, 1.0, 20.0, 0.1, "", false);
+    module.createSlider("attack", initalAttack, 0, 1.0, 0.001, "sec", false);
+    module.createSlider("release", initalRelease, 0, 1.0, 0.05, "sec", false);
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.

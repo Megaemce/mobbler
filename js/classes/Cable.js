@@ -154,6 +154,7 @@ export default class Cable {
         // unblock slider
         if (this.type !== "input") {
             this.destination.content.controllers[this.type].slider.classList.remove("disabled");
+            window.cancelAnimationFrame(this.destination[this.type].animationID);
         }
 
         // reconnect all the others nodes

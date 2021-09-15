@@ -7,8 +7,8 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     let playButton = document.createElement("div");
     let module = new Module("oscillator", false, false, false, oscTypes);
 
-    module.createModuleSlider("frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true);
-    module.createModuleSlider("detune", initalDetune, -1200, 1200, 1, "cents", false);
+    module.createSlider("frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true);
+    module.createSlider("detune", initalDetune, -1200, 1200, 1, "cents", false);
 
     playButton.classList.add("switch");
     playButton.alt = "play";

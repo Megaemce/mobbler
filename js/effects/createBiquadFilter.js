@@ -11,9 +11,9 @@ export default function createBiquadFilter(event, initalFrequency, initalQ, init
     module.audioNode = audioContext.createBiquadFilter();
     module.audioNode.type = initalType;
 
-    module.createModuleSlider("frequency", initalFrequency, 0.1, 20000, 1, "Hz", true);
-    module.createModuleSlider("Q", initalQ, 1, 100, 0.1, "", false);
-    module.createModuleSlider("gain", initalGain, 0.0, 10.0, 0.01, "", false);
+    module.createSlider("frequency", initalFrequency, 0.1, 20000, 1, "Hz", true);
+    module.createSlider("Q", initalQ, 1, 100, 0.1, "", false);
+    module.createSlider("gain", initalGain, 0.0, 10.0, 0.01, "", false);
 
     module.content.options.select.onchange = function () {
         if (gainDisabled.includes(module.audioNode.type)) {
