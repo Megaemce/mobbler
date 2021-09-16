@@ -54,7 +54,6 @@ export function createSelectionRectangle(event) {
 
 export function buildModule(module) {
     let modulesDiv = document.getElementById("modules");
-    let mainWidth = modulesDiv.offsetWidth;
     let moduleDiv = document.createElement("div");
     let head = document.createElement("div");
     let titleWrapper = document.createElement("div");
@@ -65,16 +64,16 @@ export function buildModule(module) {
     let controllers = document.createElement("div");
     let footer = document.createElement("footer");
 
-    module.html = moduleDiv;
-    module.html.id = module.id; // just for logging
-    module.html.self = module; // just for logging
+    module.div = moduleDiv;
+    module.div.id = module.id;
+    module.div.self = module; // just for logging
 
     moduleDiv.className = "module";
 
     moduleDiv.style.left = `${tempx}px`;
     moduleDiv.style.top = `${tempy}px`;
 
-    if (tempx > mainWidth - 450) {
+    if (tempx > modulesDiv.offsetWidth - 450) {
         tempy += 300;
         tempx = 50 + id;
     } else tempx += 300;
@@ -284,18 +283,15 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 export function buildCable(cable) {
     let xPosition = cable.source.modulePosition.right;
     let yPosition = cable.source.modulePosition.top + 10;
-    let jackAnimationID = `${cable.source.id}-jack-animation`;
     let shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
     let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
     let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+    let svg = document.getElementById("svgCanvas");
 
     cable.jack.setAttribute("href", "./img/jack_cleared.svg");
     cable.jack.setAttribute("height", "9");
     cable.jack.setAttribute("y", "-4.5");
     cable.jack.setAttribute("id", `${cable.source.id}-jack`);
-
-    // first dinggling (not connected) cable is an inital cable
-    cable.source.initalCable = cable;
 
     // move original shape to the position on the right top of module
     cable.points.forEach((point, i) => {
@@ -316,8 +312,8 @@ export function buildCable(cable) {
     cable.shape.setAttribute("points", cable.pointsToString);
     cable.shape.setAttribute("stroke-dasharray", "60");
 
-    cable.svg.appendChild(cable.shape);
-    cable.svg.appendChild(cable.jack);
+    svg.appendChild(cable.shape);
+    svg.appendChild(cable.jack);
 
     // unfold cable from starting point
     shapeUnfoldAnimation.setAttribute("attributeName", "stroke-dashoffset");
@@ -339,7 +335,6 @@ export function buildCable(cable) {
     // rotate jack from starting point so it looks like it's attached to the cable
     jackRotateAnimation.setAttribute("path", `m ${0.378 + xPosition} ${1.056 + yPosition} c 13.622 3.944 18.622 34.944 17.622 52.944`);
     jackRotateAnimation.setAttribute("begin", "0s");
-    jackRotateAnimation.setAttribute("id", jackAnimationID);
     jackRotateAnimation.setAttribute("dur", "1s");
     jackRotateAnimation.setAttribute("rotate", "auto");
     jackRotateAnimation.setAttribute("fill", "freeze");

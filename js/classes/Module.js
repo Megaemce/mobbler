@@ -17,18 +17,19 @@ export default class Module {
         this.hasNormalizer = hasNormalizer;
         this.arrayForSelect = arrayForSelect;
         this.position = undefined; // module's position
-        this.html = undefined; // keeping link to HTML sctructure
+        this.div = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
         this.isTransmitting = false;
         this.createModule(); // create html's object
-        modules[this.id] = this; // add moduleDiv to the dictionary
     }
+    /* return true/false if there is anything activly talking to this module  */
     get inputActivity() {
-        // check all incoming cables if there is anything activly talking to this module. Find return 1 or 0 elements
-        let check = Object.values(cables).find((cable) => cable.destination === this && cable.source.isTransmitting);
-        if (check) return true;
+        if (Object.values(cables).find((cable) => cable.destination === this && cable.source.isTransmitting)) {
+            return true;
+        }
         return false;
     }
+    /* return parameters status dictionary with key: cable.type, value: true/false */
     get parametersActivity() {
         let parametersWithStatus = new Object();
 
@@ -44,20 +45,77 @@ export default class Module {
 
         return parametersWithStatus;
     }
+    /* return all incoming and outcoming cables linked with this module */
     get relatedCables() {
         return Object.values(cables).filter((cable) => cable.destination === this || cable.source === this);
     }
+    /* return all incoming cables linked with this module */
     get incomingCables() {
         return Object.values(cables).filter((cable) => cable.destination === this);
     }
+    /* return all outcoming cables linked with this module */
     get outcomingCables() {
         return Object.values(cables).filter((cable) => cable.source === this);
     }
+    /* save module position within class and return it */
     get modulePosition() {
-        this.position = this.html.getBoundingClientRect();
+        this.position = this.div.getBoundingClientRect();
         return this.position;
     }
-    // Depth first search all outcoming cables and mark as active or deactive
+    /* build module html object and attach all logic into it */
+    createModule() {
+        buildModule(this);
+
+        // when title is grabbed move the module
+        this.head.titleWrapper.onmousedown = (event) => {
+            this.movingModule(event);
+        };
+
+        // when close button is clicked delete the module
+        this.head.close.onclick = () => {
+            this.deleteModule();
+        };
+
+        // when looper checkbox is changed play in a loop/stop the sound
+        if (this.hasLooper) {
+            this.content.options.looper.checkbox.onchange = () => {
+                this.playButtonHandler();
+            };
+        }
+
+        // when normalizer is changed switch audioNode.normalize status
+        if (this.hasNormalizer) {
+            this.content.options.normalizer.checkbox.onchange = function () {
+                this.audioNode.normalize = this.checked;
+            };
+        }
+
+        // add module to the modules dictionary
+        modules[this.id] = this;
+    }
+    /* build module slider html object and attach all logic into it */
+    createSlider(property, initialValue, min, max, stepUnits, units, scaleLog) {
+        let propertyNoSpaces = property.split(" ").join("");
+        let module = this;
+
+        buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog);
+
+        // when slider is moved (by user or by connected module)
+        this.content.controllers[propertyNoSpaces].slider.oninput = function () {
+            let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
+
+            // set value on the audiNode parametetr
+            if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
+
+            // show new value above slider
+            module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
+        };
+    }
+    /* create new cable which is an inital cable */
+    addInitalCable() {
+        this.initalCable = new Cable(this);
+    }
+    /* depth first search all outcoming cables and mark them as active or deactive */
     markAllLinkedCablesAs(status) {
         let visited = {};
         let currentCable = undefined;
@@ -98,65 +156,16 @@ export default class Module {
             }
         }
     }
-    createModule() {
-        let module = this;
-
-        buildModule(module);
-
-        // when module is created add some hooks
-        // when title is grab move the module
-        module.head.titleWrapper.onmousedown = (event) => {
-            module.movingModule(event);
-        };
-
-        // when close button is clicked delete the module
-        module.head.close.onclick = () => {
-            module.deleteModule();
-        };
-
-        // when looper checkbox is changed play in a loop/stop the sound
-        if (module.hasLooper) {
-            module.content.options.looper.checkbox.onchange = () => {
-                module.playSelectedSound();
-            };
-        }
-
-        // when normalizer is changed switch audioNode.normalize status
-        if (module.hasNormalizer) {
-            module.content.options.normalizer.checkbox.onchange = function () {
-                module.audioNode.normalize = this.checked;
-            };
-        }
-    }
-    createSlider(property, initialValue, min, max, stepUnits, units, scaleLog) {
-        let module = this;
-        let propertyNoSpaces = property.split(" ").join("");
-
-        buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog);
-
-        // when slider is moved (by user or by connected module)
-        module.content.controllers[propertyNoSpaces].slider.oninput = function () {
-            let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
-
-            // set value on the audiNode parametetr
-            if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
-
-            // show new value above slider
-            module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
-        };
-    }
-    addFirstCable() {
-        new Cable(this);
-    }
+    /* all logic related to module movement event */
     movingModule(event) {
         let canvas = document.getElementById("svgCanvas");
-        // Keep module on front
-        ++this.html.style.zIndex;
+        // keep module on front
+        ++this.div.style.zIndex;
 
         // remove inital cable with time 0.1s
         this.initalCable.foldCable(0.1);
 
-        // Start physics on all cables
+        // start physics on all cables
         this.relatedCables.forEach((cable) => {
             cable.startAnimation();
         });
@@ -164,24 +173,26 @@ export default class Module {
         // Update module's position and its cables
         document.onmousemove = (event) => {
             // show cables on front while moving modules
-            canvas.style.zIndex = this.html.style.zIndex + 1;
+            canvas.style.zIndex = this.div.style.zIndex + 1;
 
-            // Move drag element by the same amount the cursor has moved.
-            this.html.style.left = parseInt(this.html.style.left) + event.movementX + "px";
-            this.html.style.top = parseInt(this.html.style.top) + event.movementY + "px";
+            // move drag element by the same amount the cursor has moved
+            this.div.style.left = parseInt(this.div.style.left) + event.movementX + "px";
+            this.div.style.top = parseInt(this.div.style.top) + event.movementY + "px";
 
-            // update any lines that point in here.
+            // update any lines that point in here
             this.incomingCables.forEach((cable) => {
                 cable.moveEndPoint(event.movementX, event.movementY);
+                this.isTransmitting && cable.makeActive();
             });
 
-            // update any lines that point out of here.
+            // update any lines that point out of here
             this.outcomingCables.forEach((cable) => {
                 cable.moveStartPoint(event.movementX, event.movementY);
+                this.isTransmitting && cable.makeActive();
             });
         };
 
-        // Remove listeners after module release
+        // remove listeners after module release
         document.onmouseup = () => {
             canvas.style.zIndex = 0;
 
@@ -190,13 +201,14 @@ export default class Module {
                 cable.stopAnimation();
             });
 
-            this.addFirstCable();
+            this.addInitalCable();
 
             document.onmousemove = undefined;
             document.onmouseup = undefined;
         };
         event.preventDefault();
     }
+    /* remove module and all related cables */
     deleteModule() {
         // remove inital cable
         this.initalCable && this.initalCable.foldCable();
@@ -210,14 +222,15 @@ export default class Module {
         });
 
         // execute any module-specific function if there is any
-        this.onDeletion && this.onDeletion();
+        this.onDeletion && this.onDeletion(); // currently not used
 
         // remove html object
-        this.html.parentNode.removeChild(this.html);
+        this.div.parentNode.removeChild(this.div);
 
         // remove module from modules
         delete modules[this.id];
     }
+    /* connect this module to destinationModule and send information further */
     connectToModule(destinationModule) {
         // if the sourceModule has an audio node, connect them up.
         // AudioBufferSourceNodes may not have an audio node yet.
@@ -235,6 +248,7 @@ export default class Module {
             destinationModule.onConnectInput();
         }
     }
+    /* connect this module to destinationModule's slider of parameterType */
     connectToSlider(destinationModule, slider, parameterType) {
         // slider.audioNode.fftSize default vaue is 2048
         let dataArray = new Uint8Array(slider.audioNode.fftSize);
@@ -256,6 +270,7 @@ export default class Module {
             this.connectToSlider(destinationModule, slider, parameterType);
         });
     }
+    /* connect this module into analyser and next to destinationModule's slider of parameterType */
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
 
@@ -273,7 +288,7 @@ export default class Module {
             slider.classList.remove("disabled");
         }
 
-        // not connecting directly source to parameter but to the destination parameter slider
+        // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
         if (slider && this.audioNode) {
             slider.audioNode = audioContext.createAnalyser();
 
@@ -283,30 +298,30 @@ export default class Module {
             this.connectToSlider(destinationModule, slider, parameterType);
         }
     }
-    playSelectedSound() {
-        let loop = this.content.options.looper.checkbox.checked;
+    /* function used by audio buffer source's playButton to play the sound */
+    playButtonHandler() {
         let selectedBufferName = this.content.options.select.value;
-        let playButton = this.content.controllers.playButton;
 
-        if (this.isTransmitting) {
-            this.stopSound(this, playButton);
+        // switched from on to off so stop the sound
+        if (this.isTransmitting === true) {
+            this.stopSound();
         } else {
             this.isTransmitting = true;
-            playButton.classList.add("switch-on");
+            this.content.controllers.playButton.classList.add("switch-on");
 
-            // if there's already a note playing, cut it off
+            // remove old audioNode (if there is any)
             if (this.audioNode) {
                 this.audioNode.stop(0);
                 this.audioNode.disconnect();
                 this.audioNode = undefined;
             }
 
-            // create a new BufferSource and connect it
+            //  create a new BufferSource with selected buffer and play it
             this.audioNode = audioContext.createBufferSource();
-            this.audioNode.loop = loop;
+            this.audioNode.loop = this.content.options.looper.checkbox.checked;
             this.audioNode.buffer = audioContext.nameSoundBuffer[selectedBufferName];
 
-            // play sound on all connected output
+            // send sound to all connected modules/modules' parameters
             this.outcomingCables.forEach((cable) => {
                 if (cable.destination && cable.destination.audioNode && cable.type === "input") {
                     this.connectToModule(cable.destination);
@@ -318,9 +333,8 @@ export default class Module {
 
             this.audioNode.start(audioContext.currentTime);
 
-            this.markAllLinkedCablesAs("active");
-
-            if (!this.audioNode.loop) {
+            // if there is loop disabled stop the sound after delay
+            if (this.audioNode.loop === false) {
                 let delay = Math.floor(this.buffer.duration * 1000) + 1;
 
                 this.audioNode.stopTimer = window.setTimeout(() => {
@@ -329,26 +343,27 @@ export default class Module {
             }
         }
     }
+    /* function used by playButtonHandler function to stop the sound */
     stopSound() {
-        let playButton = this.content.controllers.playButton;
-
         this.isTransmitting = false;
 
-        playButton.classList.remove("switch-on");
-
+        // clear stopTimer parameter (if there is any)
         if (this.audioNode.stopTimer) {
             window.clearTimeout(this.audioNode.stopTimer);
-            this.audioNode.stopTimer = 0;
+            this.audioNode.stopTimer = undefined;
         }
+
+        this.content.controllers.playButton.classList.remove("switch-on");
+
         // if loop is enabled sound will play even with switch-off thus kill it with fire
-        if (this.audioNode.loop) {
+        if (this.audioNode.loop === true) {
             this.audioNode.loop = false;
             this.content.options.looper.checkbox.checked = false;
         }
 
         this.markAllLinkedCablesAs("deactive");
     }
-    // create analyser on given module with given setting
+    /* create analyser on module with given setting */
     visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
         let animationID = undefined;
         let canvas = this.content.canvas;

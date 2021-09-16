@@ -65,7 +65,7 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before. GetBoundingClientRect related.
-    module.addFirstCable();
+    module.addInitalCable();
 
     event.preventDefault();
 }

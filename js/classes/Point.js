@@ -9,5 +9,6 @@ export default class Point {
     move(x, y) {
         this.x += x;
         this.y += y;
+        return { x: x, y: y };
     }
 }

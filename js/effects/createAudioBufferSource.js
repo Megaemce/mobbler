@@ -9,8 +9,8 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
     let playButton = document.createElement("div");
 
     playButton.classList.add("switch");
-    playButton.onclick = function () {
-        module.playSelectedSound();
+    playButton.onclick = () => {
+        module.playButtonHandler();
     };
 
     module.content.controllers.appendChild(playButton);
@@ -36,8 +36,8 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
     };
 
     // when changing looper settings reset the sound
-    module.content.options.looper.checkbox.onchange = function () {
-        module.playSelectedSound();
+    module.content.options.looper.checkbox.onchange = () => {
+        module.playButtonHandler();
     };
 
     module.loop = initalLoop;
@@ -45,7 +45,7 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
-    module.addFirstCable();
+    module.addInitalCable();
 
     event.preventDefault();
 }

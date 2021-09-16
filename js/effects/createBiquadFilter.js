@@ -35,7 +35,7 @@ export default function createBiquadFilter(event, initalFrequency, initalQ, init
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
-    module.addFirstCable();
+    module.addInitalCable();
 
     event.preventDefault();
 }
