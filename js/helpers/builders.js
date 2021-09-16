@@ -1,4 +1,5 @@
 import { valueToLogPosition } from "../helpers/math.js";
+import Line from "../classes/Line.js";
 
 let tempx = 50,
     tempy = 100;
@@ -278,4 +279,70 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 
     module.footer.appendChild(audioParam);
     module.footer[propertyNoSpaces] = audioParam;
+}
+
+export function buildCable(cable) {
+    let xPosition = cable.source.modulePosition.right;
+    let yPosition = cable.source.modulePosition.top + 10;
+    let jackAnimationID = `${cable.source.id}-jack-animation`;
+    let shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+
+    cable.jack.setAttribute("href", "./img/jack_cleared.svg");
+    cable.jack.setAttribute("height", "9");
+    cable.jack.setAttribute("y", "-4.5");
+    cable.jack.setAttribute("id", `${cable.source.id}-jack`);
+
+    // first dinggling (not connected) cable is an inital cable
+    cable.source.initalCable = cable;
+
+    // move original shape to the position on the right top of module
+    cable.points.forEach((point, i) => {
+        point.move(xPosition, yPosition);
+        if (i > 0) {
+            // newLine keeps the array with pointers linked to Points which is cool!
+            // by updating the line we update the points in the points array too
+            let newLine = new Line(cable.points[i - 1], cable.points[i], Math.log(point.x), 0.8);
+            cable.lines.push(newLine);
+        }
+    });
+
+    // translate points to actual svg shape (polyline)
+    cable.shape.setAttribute("stroke", "#040404");
+    cable.shape.setAttribute("fill", "none");
+    cable.shape.setAttribute("opacity", "0.9");
+    cable.shape.setAttribute("stroke-width", "2");
+    cable.shape.setAttribute("points", cable.pointsToString);
+    cable.shape.setAttribute("stroke-dasharray", "60");
+
+    cable.svg.appendChild(cable.shape);
+    cable.svg.appendChild(cable.jack);
+
+    // unfold cable from starting point
+    shapeUnfoldAnimation.setAttribute("attributeName", "stroke-dashoffset");
+    shapeUnfoldAnimation.setAttribute("from", "60");
+    shapeUnfoldAnimation.setAttribute("to", "0");
+    shapeUnfoldAnimation.setAttribute("dur", "1s");
+    shapeUnfoldAnimation.setAttribute("fill", "freeze");
+
+    cable.shape.unfoldAnimation = shapeUnfoldAnimation;
+
+    shapeFoldAnimation.setAttribute("attributeName", "points");
+    shapeFoldAnimation.setAttribute("from", cable.pointsToString);
+    shapeFoldAnimation.setAttribute("to", cable.startPositionString);
+    shapeFoldAnimation.setAttribute("dur", "0.5s");
+    shapeFoldAnimation.setAttribute("fill", "freeze");
+
+    cable.shape.foldAnimation = shapeFoldAnimation;
+
+    // rotate jack from starting point so it looks like it's attached to the cable
+    jackRotateAnimation.setAttribute("path", `m ${0.378 + xPosition} ${1.056 + yPosition} c 13.622 3.944 18.622 34.944 17.622 52.944`);
+    jackRotateAnimation.setAttribute("begin", "0s");
+    jackRotateAnimation.setAttribute("id", jackAnimationID);
+    jackRotateAnimation.setAttribute("dur", "1s");
+    jackRotateAnimation.setAttribute("rotate", "auto");
+    jackRotateAnimation.setAttribute("fill", "freeze");
+
+    cable.jack.rotateAnimation = jackRotateAnimation;
 }
