@@ -106,6 +106,9 @@ export default class Module {
 
             // set value on the audiNode parametetr
             if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
+            else if (module.audioNodes) module.audioNodes[propertyNoSpaces](sliderValue);
+
+            if (module.audioNodes) console.log(module.audioNodes[propertyNoSpaces]);
 
             // show new value above slider
             module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
@@ -232,14 +235,20 @@ export default class Module {
     }
     /* connect this module to destinationModule and send information further */
     connectToModule(destinationModule) {
-        // if the sourceModule has an audio node, connect them up.
-        // AudioBufferSourceNodes may not have an audio node yet.
-        if (this.audioNode && destinationModule.audioNode) {
-            this.audioNode.connect(destinationModule.audioNode);
-        }
+        let source = undefined;
+        let destination = undefined;
 
-        // if this module is transmitting mark further cables as active
+        // if source module is multi-node effect act differently
+        if (this.audioNodes) source = this.audioNodes.output;
+        else if (this.audioNode) source = this.audioNode;
+
+        // if destination module is multi-node effect act differently
+        if (destinationModule.audioNodes) destination = destinationModule.audioNodes.input;
+        else if (destinationModule.audioNode) destination = destinationModule.audioNode;
+
+        // if this module is transmitting make connection and mark further cables as active
         if (this.isTransmitting) {
+            source.connect(destination);
             this.markAllLinkedCablesAs("active");
         }
 
@@ -262,6 +271,7 @@ export default class Module {
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
 
         if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
+        else if (destinationModule.audioNodes) destinationModule.audioNodes[parameterType].value = slider.value;
 
         destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
 
@@ -289,10 +299,12 @@ export default class Module {
         }
 
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
-        if (slider && this.audioNode) {
+        if (slider && (this.audioNode || this.audioNodes)) {
             slider.audioNode = audioContext.createAnalyser();
 
-            this.audioNode.connect(slider.audioNode);
+            if (this.audioNode) this.audioNode.connect(slider.audioNode);
+            else if (this.audioNodes) this.audioNodes.output.connect(slider.audioNode);
+
             destinationModule[parameterType] = {};
 
             this.connectToSlider(destinationModule, slider, parameterType);
@@ -323,11 +335,9 @@ export default class Module {
 
             // send sound to all connected modules/modules' parameters
             this.outcomingCables.forEach((cable) => {
-                if (cable.destination && cable.destination.audioNode && cable.type === "input") {
-                    this.connectToModule(cable.destination);
-                }
-                if (cable.destination && cable.destination.audioNode && cable.type !== "input") {
-                    this.connectToParameter(cable.destination, cable.type);
+                if (cable.destination.audioNode || cable.destination.audioNodes) {
+                    if (cable.type === "input") this.connectToModule(cable.destination);
+                    if (cable.type !== "input") this.connectToParameter(cable.destination, cable.type);
                 }
             });
 

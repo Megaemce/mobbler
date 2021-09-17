@@ -36,6 +36,7 @@ export default class Cable {
     createCable() {
         buildCable(this);
 
+        // change cursor to grab when move over jack
         this.jack.onmouseover = () => {
             svg.style.cursor = "grab";
         };
@@ -43,6 +44,7 @@ export default class Cable {
             if (svg.style.cursor === "grab") svg.style = "cursor: default";
         };
 
+        // start shape unfolding animation
         this.shape.appendChild(this.shape.unfoldAnimation);
         this.shape.unfoldAnimation.beginElement();
         this.shape.unfoldAnimation.onend = () => {
@@ -50,7 +52,7 @@ export default class Cable {
             this.shape.unfoldAnimation = undefined;
         };
 
-        // stop acting like cable was moving. It was just stroke trick
+        // start jack rotating animation
         this.jack.appendChild(this.jack.rotateAnimation);
         this.jack.rotateAnimation.beginElement();
         this.jack.rotateAnimation.onend = () => {
@@ -92,7 +94,7 @@ export default class Cable {
     makeDeactive() {
         this.shape.setAttribute("stroke", "black");
     }
-    /* move cable.source location and update direction on active cable*/
+    /* move cable.source location */
     moveStartPoint(x, y) {
         this.points[0].move(x, y);
     }
@@ -123,8 +125,7 @@ export default class Cable {
 
             this.stopAnimation();
 
-            // remove inital cable and add new one
-            this.source.initalCable = undefined;
+            // replace inital cable with a new one
             this.source.addInitalCable();
 
             // only when shape is created enable removal
@@ -175,14 +176,16 @@ export default class Cable {
     }
     /* start folding animation and remove shape from svg */
     foldCable(duration) {
-        // set duration on shape fold animation if there is one provided
-        !duration && this.shape.foldAnimation.setAttribute("dur", `${duration}s`);
-
         // remove jack
-        this.jack && this.jack.parentNode === svg && svg.removeChild(this.jack);
+        svg.removeChild(this.jack);
 
         // fold the cable back to module's top right corner as remove it
         this.shape.appendChild(this.shape.foldAnimation);
+
+        // set duration on shape fold animation if there is one provided
+        duration && this.shape.foldAnimation.setAttribute("dur", `${duration}s`);
+        this.shape.foldAnimation.setAttribute("from", this.pointsToString);
+        this.shape.foldAnimation.setAttribute("to", this.startPositionString);
         this.shape.foldAnimation.beginElement();
         this.shape.foldAnimation.onend = () => {
             svg.removeChild(this.shape);

@@ -1,3 +1,4 @@
+import Cable from "../classes/Cable.js";
 import Module from "../classes/Module.js";
 import { audioContext, cables } from "../main.js";
 
@@ -40,11 +41,9 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             module.audioNode.type = type;
 
             module.outcomingCables.forEach((cable) => {
-                if (cable.destination && cable.destination.audioNode && cable.type === "input") {
-                    module.connectToModule(cable.destination);
-                }
-                if (cable.destination && cable.destination.audioNode && cable.type !== "input") {
-                    module.connectToParameter(cable.destination, cable.type);
+                if (cable.destination.audioNode || cable.destination.audioNodes) {
+                    if (cable.type === "input") module.connectToModule(cable.destination);
+                    if (cable.type !== "input") module.connectToParameter(cable.destination, cable.type);
                 }
             });
 

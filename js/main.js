@@ -9,6 +9,8 @@ import createAudioBufferSource from "./effects/createAudioBufferSource.js";
 import createLiveInput from "./effects/createLiveInput.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
+import createDistortion from "./effects/createDistortion.js";
+import createDelayEffect from "./effects/createDelayEffect.js";
 
 // set all the initial variables
 export let audioContext;
@@ -33,8 +35,14 @@ const initBiquadType = "peaking";
 const initConvolerBufferName = impulseResponses[0];
 const initConvolerNormalizer = "false";
 
-const initialDelayDelay = 0.2;
-const initialDelayMaxDelay = 5;
+const initDelayDelay = 0.2;
+const initDelayMaxDelay = 5;
+
+const initDelayEffectWetness = 1;
+const initDelayEffectSpeed = 0.5;
+const initDelayEffectDuration = 0.3;
+
+const initDistortionOversample = "4x";
 
 const initCompressorThreshold = -24.0;
 const initCompressorKnee = 20.0;
@@ -80,7 +88,7 @@ document.getElementById("svgCanvas").onclick = () => {
         createConvolver(event, initConvolerBufferName, initConvolerNormalizer);
     };
     document.getElementById("delayNode").onmousedown = (event) => {
-        createDelay(event, initialDelayDelay, initialDelayMaxDelay);
+        createDelay(event, initDelayDelay, initDelayMaxDelay);
     };
     document.getElementById("dynamicsCompressor").onmousedown = (event) => {
         createDynamicsCompressor(event, initCompressorThreshold, initCompressorKnee, initCompressorRatio, initCompressorAttack, initCompressorRelease);
@@ -93,6 +101,12 @@ document.getElementById("svgCanvas").onclick = () => {
     };
     document.getElementById("oscillator").onmousedown = (event) => {
         createOscillator(event, initOscillatorFrequency, initOscillatorDetune);
+    };
+    document.getElementById("distortion").onmousedown = (event) => {
+        createDistortion(event, initDistortionOversample);
+    };
+    document.getElementById("delayEffect").onmousedown = (event) => {
+        createDelayEffect(event, initDelayEffectWetness, initDelayEffectSpeed, initDelayEffectDuration);
     };
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;

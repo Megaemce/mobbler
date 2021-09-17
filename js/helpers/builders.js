@@ -75,9 +75,9 @@ export function buildModule(module) {
 
     if (tempx > modulesDiv.offsetWidth - 450) {
         tempy += 300;
-        tempx = 50 + id;
+        tempx = 50 + module.id;
     } else tempx += 300;
-    if (tempy > window.innerHeight - 300) tempy = 100 + id;
+    if (tempy > window.innerHeight - 300) tempy = 100 + module.id;
 
     // module.head.titleWrapper.title
     title.className = "title";
@@ -324,9 +324,8 @@ export function buildCable(cable) {
 
     cable.shape.unfoldAnimation = shapeUnfoldAnimation;
 
+    // "from" and "to" attribute will be added when cable is actually folding
     shapeFoldAnimation.setAttribute("attributeName", "points");
-    shapeFoldAnimation.setAttribute("from", cable.pointsToString);
-    shapeFoldAnimation.setAttribute("to", cable.startPositionString);
     shapeFoldAnimation.setAttribute("dur", "0.5s");
     shapeFoldAnimation.setAttribute("fill", "freeze");
 
