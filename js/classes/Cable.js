@@ -145,7 +145,7 @@ export default class Cable {
             }
             // disabled option for self-loop
             if (this.destination && this.destination === this.source) {
-                this.foldCable();
+                this.deleteCable();
             }
             // module-to-module connection
             if (this.destination && this.type === "input") {
@@ -164,12 +164,8 @@ export default class Cable {
             }
             // if this.destination was not populated till this point fold the cable
             if (!this.destination) {
-                this.foldCable();
+                this.deleteCable();
             }
-
-            // remove jack from the svg and cable
-            svg.removeChild(this.jack);
-            this.jack = undefined;
 
             // clear document and svg
             svg.style.cursor = "default";
@@ -180,9 +176,6 @@ export default class Cable {
     }
     /* start folding animation and remove shape from svg */
     foldCable(duration) {
-        // remove jack (if it's still exists)
-        this.jack && svg.removeChild(this.jack);
-
         // fold the cable back to module's top right corner as remove it
         this.shape.appendChild(this.shape.foldAnimation);
 
@@ -195,12 +188,15 @@ export default class Cable {
             svg.removeChild(this.shape);
         };
     }
-    /* remove cable from all related items */
+    /* remove cable from all related items. Check this.destination as initalCables get deleted too */
     deleteCable() {
         this.foldCable();
 
-        // send further info that this cable is deactived
-        if (this.destination.id !== "destination") {
+        // remove jack (if it's still exists)
+        this.jack && svg.removeChild(this.jack);
+
+        // send further info that this cable is deactived (if this is not an inital cable)
+        if (this.destination && this.destination.id !== "destination") {
             this.destination.markAllLinkedCablesAs("deactive");
         }
 
@@ -208,7 +204,7 @@ export default class Cable {
         delete cables[this.id];
 
         // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
-        if (this.type !== "input") {
+        if (this.destination && this.type !== "input") {
             this.destination.content.controllers[this.type].slider.classList.remove("disabled");
             window.cancelAnimationFrame(this.destination.animationID[this.type]);
         }

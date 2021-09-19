@@ -70,9 +70,9 @@ const initOscillatorFrequency = 440;
 const initOscillatorDetune = 0;
 
 // create selection rectangle
-document.onmousedown = (event) => {
-    createSelectionRectangle(event);
-};
+// document.onmousedown = (event) => {
+//     createSelectionRectangle(event);
+// };
 
 // start audio with user click on the canvas (chrome policy)
 document.getElementById("svgCanvas").onclick = () => {

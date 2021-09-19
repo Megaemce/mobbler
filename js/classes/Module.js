@@ -21,6 +21,7 @@ export default class Module {
         this.id = `module-${++id}`;
         this.zIndex = id;
         this.isTransmitting = false;
+        this.animationID = {}; // keep animationID of all parameters for Cable.deleteCable() function
         this.createModule(); // create html's object
     }
     /* return true/false if there is anything actively talking to this module  */
@@ -155,8 +156,6 @@ export default class Module {
                 currentCable.makeDeactive();
             }
 
-            console.log("currentCable.destination is:", currentCable.destination);
-            console.log("currentCable.destination inputActivity is:", currentCable.destination.inputActivity);
             // as this cable was module-to-module type and source module is not active anymore,
             // check if there is nothing more actively talking to this module and mark is as inactive
             if (status === "deactive" && currentCable.type === "input" && currentCable.destination.inputActivity === false) {
@@ -189,7 +188,7 @@ export default class Module {
 
         // remove all inital cables so the view stay tidy
         initalCableModules.forEach((module) => {
-            module.initalCable.foldCable(0.1);
+            module.initalCable.deleteCable();
         });
 
         // start physics on all cables
@@ -241,7 +240,7 @@ export default class Module {
     /* remove module and all related cables */
     deleteModule() {
         // remove inital cable
-        this.initalCable && this.initalCable.foldCable();
+        this.initalCable && this.initalCable.deleteCable();
 
         // mark this module as not active anymore
         this.isTransmitting = false;
@@ -338,9 +337,6 @@ export default class Module {
             if (this.audioNode) this.audioNode.connect(slider.audioNode);
             // if source is multi-node module connect via audioNodes.output parameter which links to output audioNode
             else if (this.audioNodes) this.audioNodes.output.connect(slider.audioNode);
-
-            // keep animationID of all parameters for Cable.deleteCable() function
-            destinationModule.animationID = {};
 
             this.connectToSlider(destinationModule, slider, parameterType);
         }
