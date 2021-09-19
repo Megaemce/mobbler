@@ -91,8 +91,8 @@ export default class Module {
 
         // when normalizer is changed switch audioNode.normalize status
         if (this.hasNormalizer) {
-            this.content.options.normalizer.checkbox.onchange = function () {
-                this.audioNode.normalize = this.checked;
+            this.content.options.normalizer.checkbox.onchange = () => {
+                this.audioNode.normalize = this.content.options.normalizer.checkbox.checked;
             };
         }
 
@@ -163,8 +163,8 @@ export default class Module {
             // dfs section
             if (!visited[currentCable.id]) {
                 visited[currentCable.id] = true;
-                // don't try to do dfs on final destination
-                if (currentCable.destination.id !== "destination") {
+                // don't try to do dfs on final destination nor connection that were from module to parameter
+                if (currentCable.destination.id !== "destination" && currentCable.type !== "input") {
                     currentCable.destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);

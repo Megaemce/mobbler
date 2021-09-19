@@ -11,6 +11,9 @@ import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
 import createDistortion from "./effects/createDistortion.js";
 import createDelayEffect from "./effects/createDelayEffect.js";
+import createFlanger from "./effects/createFlanger.js";
+import createReverb from "./effects/createReverb.js";
+import createTremolo from "./effects/createTremolo.js";
 
 // set all the initial variables
 export let audioContext;
@@ -44,13 +47,24 @@ const initDelayEffectDuration = 0.3;
 
 const initDistortionOversample = "4x";
 
+const initFlangerDelay = 0.005;
+const initFlangerDepth = 0.002;
+const initFlangerFeedback = 0.5;
+const initFlangerSpeed = 0.25;
+
+const initReverbDelay = 0.5;
+const initReverbLevel = 1;
+const initReverbBufferName = impulseResponses[1];
+
+const initTremoloSpeed = 15;
+
 const initCompressorThreshold = -24.0;
 const initCompressorKnee = 20.0;
 const initCompressorRatio = 12.0;
 const initCompressorAttack = 0.003;
 const initCompressorRelease = 0.25;
 
-const initialGainGain = 1.0;
+const initGainGain = 1.0;
 
 const initOscillatorFrequency = 440;
 const initOscillatorDetune = 0;
@@ -94,7 +108,7 @@ document.getElementById("svgCanvas").onclick = () => {
         createDynamicsCompressor(event, initCompressorThreshold, initCompressorKnee, initCompressorRatio, initCompressorAttack, initCompressorRelease);
     };
     document.getElementById("gainNode").onmousedown = (event) => {
-        createGain(event, initialGainGain);
+        createGain(event, initGainGain);
     };
     document.getElementById("liveInput").onmousedown = (event) => {
         createLiveInput(event);
@@ -107,6 +121,15 @@ document.getElementById("svgCanvas").onclick = () => {
     };
     document.getElementById("delayEffect").onmousedown = (event) => {
         createDelayEffect(event, initDelayEffectWetness, initDelayEffectSpeed, initDelayEffectDuration);
+    };
+    document.getElementById("flanger").onmousedown = (event) => {
+        createFlanger(event, initFlangerDelay, initFlangerDepth, initFlangerFeedback, initFlangerSpeed);
+    };
+    document.getElementById("reverb").onmousedown = (event) => {
+        createReverb(event, initReverbDelay, initReverbLevel, initReverbBufferName);
+    };
+    document.getElementById("tremolo").onmousedown = (event) => {
+        createTremolo(event, initTremoloSpeed);
     };
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;

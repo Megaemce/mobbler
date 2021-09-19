@@ -7,7 +7,7 @@ export default function createGain(event, initalGain) {
     module.audioNode = audioContext.createGain();
     module.audioNode.gain.value = initalGain;
 
-    module.createSlider("gain", initalGain, 0, 10, 0.1, "", false);
+    module.createSlider("gain", initalGain, 0, 5, 0.1, "", false);
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
