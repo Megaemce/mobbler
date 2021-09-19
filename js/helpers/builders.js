@@ -70,9 +70,6 @@ export function buildModule(module) {
     module.div.self = module; // just for logging
 
     moduleDiv.className = "module";
-
-    console.log(tempx, tempy);
-
     moduleDiv.style.left = `${tempx}px`;
     moduleDiv.style.top = `${tempy}px`;
 

@@ -209,8 +209,8 @@ export default class Cable {
             this.destination.stopSliderAnimation(this.type);
         }
 
-        // reconnect all others nodes
-        if (this.source.audioNode) {
+        // reconnect all others nodes. If module got deleted don't try to reconnect its outcoming cables
+        if (modules[this.source.id] && this.source.audioNode) {
             this.source.audioNode.disconnect();
 
             this.source.outcomingCables.forEach((cable) => {

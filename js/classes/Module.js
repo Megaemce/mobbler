@@ -121,7 +121,7 @@ export default class Module {
     }
     /* cancel slider movement animation on sliderType */
     stopSliderAnimation(sliderType) {
-        window.cancelAnimationFrame(currentCable.destination.animationID[sliderType]);
+        window.cancelAnimationFrame(this.animationID[sliderType]);
     }
 
     /* create new cable which is an inital cable */
