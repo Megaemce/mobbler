@@ -9,10 +9,10 @@ export default function createFlanger(event, initalDelay, initalDepth, initalFee
     module.createSlider("speed", initalSpeed, 0, 1, 0.01, "Hz", false);
 
     module.audioNodes = {
-        inputGainNode: { audioNode: audioContext.createGain() },
-        outputGainNode: { audioNode: audioContext.createGain() },
+        inputNode: { audioNode: audioContext.createGain() },
+        outputNode: { audioNode: audioContext.createGain() },
         gainNode: { audioNode: audioContext.createGain() },
-        feedbackGainNode: { audioNode: audioContext.createGain() },
+        feedbackNode: { audioNode: audioContext.createGain() },
         delayNode: { audioNode: audioContext.createDelay() },
         oscillatorNode: { audioNode: audioContext.createOscillator() },
         speed: (value) => {
@@ -22,7 +22,7 @@ export default function createFlanger(event, initalDelay, initalDepth, initalFee
             module.audioNodes.delayNode.audioNode.delayTime.value = value;
         },
         feedback: (value) => {
-            module.audioNodes.feedbackGainNode.audioNode.gain.value = value;
+            module.audioNodes.feedbackNode.audioNode.gain.value = value;
         },
         depth: (value) => {
             module.audioNodes.gainNode.audioNode.gain.value = value;
@@ -31,20 +31,20 @@ export default function createFlanger(event, initalDelay, initalDepth, initalFee
 
     module.audioNodes.oscillatorNode.audioNode.connect(module.audioNodes.gainNode.audioNode);
     module.audioNodes.gainNode.audioNode.connect(module.audioNodes.delayNode.audioNode.delayTime);
-    module.audioNodes.inputGainNode.audioNode.connect(module.audioNodes.outputGainNode.audioNode);
-    module.audioNodes.inputGainNode.audioNode.connect(module.audioNodes.delayNode.audioNode);
-    module.audioNodes.delayNode.audioNode.connect(module.audioNodes.outputGainNode.audioNode);
-    module.audioNodes.delayNode.audioNode.connect(module.audioNodes.feedbackGainNode.audioNode);
-    module.audioNodes.feedbackGainNode.audioNode.connect(module.audioNodes.inputGainNode.audioNode);
+    module.audioNodes.inputNode.audioNode.connect(module.audioNodes.outputNode.audioNode);
+    module.audioNodes.inputNode.audioNode.connect(module.audioNodes.delayNode.audioNode);
+    module.audioNodes.delayNode.audioNode.connect(module.audioNodes.outputNode.audioNode);
+    module.audioNodes.delayNode.audioNode.connect(module.audioNodes.feedbackNode.audioNode);
+    module.audioNodes.feedbackNode.audioNode.connect(module.audioNodes.inputNode.audioNode);
 
     module.audioNodes.oscillatorNode.audioNode.type = "sine";
     module.audioNodes.oscillatorNode.audioNode.start(0);
 
-    module.audioNodes.input = module.audioNodes.inputGainNode.audioNode;
-    module.audioNodes.output = module.audioNodes.outputGainNode.audioNode;
+    module.audioNodes.input = module.audioNodes.inputNode.audioNode;
+    module.audioNodes.output = module.audioNodes.outputNode.audioNode;
 
     module.audioNodes.delayNode.audioNode.delayTime.value = initalDelay;
-    module.audioNodes.feedbackGainNode.audioNode.gain.value = initalFeedback;
+    module.audioNodes.feedbackNode.audioNode.gain.value = initalFeedback;
     module.audioNodes.gainNode.audioNode.gain.value = initalDepth;
     module.audioNodes.oscillatorNode.audioNode.frequency.value = initalSpeed;
 

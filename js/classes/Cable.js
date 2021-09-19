@@ -137,7 +137,7 @@ export default class Cable {
                 this.shape.style.cursor = "no-drop";
             };
 
-            // only module's inputs got parameter "parentModule"
+            // only module's input got parameter "parentModule"
             if (element.parentModule) {
                 cables[this.id] = this;
                 this.destination = element.parentModule;
@@ -147,15 +147,15 @@ export default class Cable {
             if (this.destination && this.destination === this.source) {
                 this.foldCable();
             }
-            // module to input connection
+            // module-to-module connection
             if (this.destination && this.type === "input") {
                 this.source.connectToModule(this.destination);
             }
-            // module to parameter connection
+            // module-to-parameter connection
             if (this.destination && this.type !== "input") {
                 this.source.connectToParameter(this.destination, this.type);
             }
-            // module to final destination connection
+            // module-to-final output connection
             if (!this.destination && element.classList && element.classList.contains("destination-input")) {
                 cables[this.id] = this; // needs to be before connectToModule as outcomingCables use cables array
                 this.destination = element.parentNode; // parentNode is built-in attribute
@@ -167,6 +167,10 @@ export default class Cable {
                 this.foldCable();
             }
 
+            // remove jack from the svg and cable
+            svg.removeChild(this.jack);
+            this.jack = undefined;
+
             // clear document and svg
             svg.style.cursor = "default";
             document.onmousedown = undefined;
@@ -176,8 +180,8 @@ export default class Cable {
     }
     /* start folding animation and remove shape from svg */
     foldCable(duration) {
-        // remove jack
-        svg.removeChild(this.jack);
+        // remove jack (if it's still exists)
+        this.jack && svg.removeChild(this.jack);
 
         // fold the cable back to module's top right corner as remove it
         this.shape.appendChild(this.shape.foldAnimation);

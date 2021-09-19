@@ -23,7 +23,7 @@ export default class Module {
         this.isTransmitting = false;
         this.createModule(); // create html's object
     }
-    /* return true/false if there is anything activly talking to this module  */
+    /* return true/false if there is anything actively talking to this module  */
     get inputActivity() {
         if (Object.values(cables).find((cable) => cable.destination === this && cable.source.isTransmitting)) {
             return true;
@@ -137,34 +137,39 @@ export default class Module {
         let currentCable = undefined;
         let stack = this.outcomingCables;
 
+        // stack keeps a list of outcomingCables from this module
         while (stack.length) {
             currentCable = stack.pop();
 
-            // while we are walking thru let's mark modules and cables correctly
+            // simply make the cable active
             if (status === "active") {
                 currentCable.makeActive();
             }
+            // as the destination is receiving active signal (from this module) mark it as a transmitter too
+            // but only if cable is module-to-module not module-to-parameter type
             if (status === "active" && currentCable.type === "input") {
                 currentCable.destination.isTransmitting = true;
             }
+            // simply make the cable deactive
             if (status === "deactive") {
                 currentCable.makeDeactive();
             }
-            // if there is no active module(s) talking to this module set is as not active transmitter
-            if (status === "deactive" && currentCable.type === "input" && !currentCable.destination.inputActivity) {
+            // as this cable was module-to-module type and source module is not active anymore,
+            // check if there is nothing more actively talking to this module and mark is as inactive
+            if (status === "deactive" && currentCable.type === "input" && currentCable.destination.inputActivity === false) {
                 currentCable.destination.isTransmitting = false;
             }
-            // unlock slider
+            // module-to-parameter cable thus just unlock the slider
             if (status === "deactive" && currentCable.type !== "input") {
                 window.cancelAnimationFrame(currentCable.destination.animationID[currentCable.type]);
                 currentCable.destination.content.controllers[currentCable.type].slider.classList.remove("disabled");
             }
 
-            // dfs section
+            // depth first search section
             if (!visited[currentCable.id]) {
                 visited[currentCable.id] = true;
-                // don't try to do dfs on final destination nor connection that were from module to parameter
-                if (currentCable.destination.id !== "destination" && currentCable.type !== "input") {
+                // don't try to do dfs on final destination nor module-to-parameter cable
+                if (currentCable.destination.id !== "destination" && currentCable.type === "input") {
                     currentCable.destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);
@@ -177,9 +182,12 @@ export default class Module {
     /* all logic related to module movement event */
     movingModule(event) {
         let canvas = document.getElementById("svgCanvas");
+        let initalCableModules = Object.values(modules).filter((module) => module.initalCable);
 
-        // remove inital cable with time 0.1s
-        this.initalCable.foldCable(0.1);
+        // remove all inital cables so the view stay tidy
+        initalCableModules.forEach((module) => {
+            module.initalCable.foldCable(0.1);
+        });
 
         // start physics on all cables
         this.relatedCables.forEach((cable) => {
@@ -192,8 +200,8 @@ export default class Module {
             canvas.style.zIndex = this.zIndex + 1;
 
             // move drag element by the same amount the cursor has moved
-            this.div.style.left = parseInt(this.div.style.left) + event.movementX + "px";
-            this.div.style.top = parseInt(this.div.style.top) + event.movementY + "px";
+            this.div.style.left = parseInt(this.div.style.left || 0) + event.movementX + "px";
+            this.div.style.top = parseInt(this.div.style.top || 0) + event.movementY + "px";
 
             // update any lines that point in here
             this.incomingCables.forEach((cable) => {
@@ -217,7 +225,10 @@ export default class Module {
                 cable.stopAnimation();
             });
 
-            this.addInitalCable();
+            // recreate all inital cables
+            initalCableModules.forEach((module) => {
+                module.addInitalCable();
+            });
 
             document.onmousemove = undefined;
             document.onmouseup = undefined;
