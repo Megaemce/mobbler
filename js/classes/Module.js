@@ -154,6 +154,9 @@ export default class Module {
             if (status === "deactive") {
                 currentCable.makeDeactive();
             }
+
+            console.log("currentCable.destination is:", currentCable.destination);
+            console.log("currentCable.destination inputActivity is:", currentCable.destination.inputActivity);
             // as this cable was module-to-module type and source module is not active anymore,
             // check if there is nothing more actively talking to this module and mark is as inactive
             if (status === "deactive" && currentCable.type === "input" && currentCable.destination.inputActivity === false) {
@@ -239,6 +242,9 @@ export default class Module {
     deleteModule() {
         // remove inital cable
         this.initalCable && this.initalCable.foldCable();
+
+        // mark this module as not active anymore
+        this.isTransmitting = false;
 
         // mark all related cables as inactive
         this.markAllLinkedCablesAs("deactive");
