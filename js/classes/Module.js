@@ -119,6 +119,11 @@ export default class Module {
             module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
         };
     }
+    /* cancel slider movement animation on sliderType */
+    stopSliderAnimation(sliderType) {
+        window.cancelAnimationFrame(currentCable.destination.animationID[sliderType]);
+    }
+
     /* create new cable which is an inital cable */
     addInitalCable() {
         this.initalCable = new Cable(this);
@@ -163,7 +168,7 @@ export default class Module {
             }
             // module-to-parameter cable thus just unlock the slider
             if (status === "deactive" && currentCable.type !== "input") {
-                window.cancelAnimationFrame(currentCable.destination.animationID[currentCable.type]);
+                currentCable.destination.stopSliderAnimation(currentCable.type);
                 currentCable.destination.content.controllers[currentCable.type].slider.classList.remove("disabled");
             }
 
@@ -196,7 +201,7 @@ export default class Module {
 
         // start physics on all cables
         this.relatedCables.forEach((cable) => {
-            cable.startAnimation();
+            cable.startPhysicsAnimation();
         });
 
         // Update module's position and its cables
@@ -227,7 +232,7 @@ export default class Module {
 
             // cancel physic animation on all cables
             this.relatedCables.forEach((cable) => {
-                cable.stopAnimation();
+                cable.stopPhysicsAnimation();
             });
 
             // unhide all inital cables

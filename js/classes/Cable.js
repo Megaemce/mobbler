@@ -67,7 +67,7 @@ export default class Cable {
         };
     }
     /* compute physics on cable  */
-    startAnimation() {
+    startPhysicsAnimation() {
         this.lines.forEach((line) => {
             line.gravity = true;
             line.update();
@@ -76,11 +76,11 @@ export default class Cable {
         this.shape.setAttribute("points", this.pointsToString);
 
         this.animationID = requestAnimationFrame(() => {
-            this.startAnimation();
+            this.startPhysicsAnimation();
         });
     }
     /* cancel physics computation */
-    stopAnimation() {
+    stopPhysicsAnimation() {
         setTimeout(() => {
             window.cancelAnimationFrame(this.animationID);
         }, 100);
@@ -113,7 +113,7 @@ export default class Cable {
         this.points[10].x = event.offsetX - 3;
         this.points[10].y = event.offsetY + 4.75;
 
-        this.startAnimation();
+        this.startPhysicsAnimation();
 
         document.onmousemove = (event) => {
             this.moveEndPoint(event.movementX, event.movementY);
@@ -123,7 +123,7 @@ export default class Cable {
         document.onmouseup = (event) => {
             let element = event.toElement;
 
-            this.stopAnimation();
+            this.stopPhysicsAnimation();
 
             // replace inital cable with a new one
             this.source.addInitalCable();
@@ -206,7 +206,7 @@ export default class Cable {
         // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
         if (this.destination && this.type !== "input") {
             this.destination.content.controllers[this.type].slider.classList.remove("disabled");
-            window.cancelAnimationFrame(this.destination.animationID[this.type]);
+            this.destination.stopSliderAnimation(this.type);
         }
 
         // reconnect all others nodes
