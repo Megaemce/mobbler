@@ -63,6 +63,7 @@ export function buildModule(module) {
     let options = document.createElement("div");
     let controllers = document.createElement("div");
     let footer = document.createElement("footer");
+    let moduleNumber = parseInt(module.id.slice(7, module.id.length));
 
     module.div = moduleDiv;
     module.div.id = module.id;
@@ -70,14 +71,16 @@ export function buildModule(module) {
 
     moduleDiv.className = "module";
 
+    console.log(tempx, tempy);
+
     moduleDiv.style.left = `${tempx}px`;
     moduleDiv.style.top = `${tempy}px`;
 
     if (tempx > modulesDiv.offsetWidth - 450) {
         tempy += 300;
-        tempx = 50 + module.id;
+        tempx = 50 + moduleNumber;
     } else tempx += 300;
-    if (tempy > window.innerHeight - 300) tempy = 100 + module.id;
+    if (tempy > window.innerHeight - 300) tempy = 100 + moduleNumber;
 
     // module.head.titleWrapper.title
     title.className = "title";

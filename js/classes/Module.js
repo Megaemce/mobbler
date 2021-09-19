@@ -186,9 +186,12 @@ export default class Module {
         let canvas = document.getElementById("svgCanvas");
         let initalCableModules = Object.values(modules).filter((module) => module.initalCable);
 
-        // remove all inital cables so the view stay tidy
+        this.initalCable.deleteCable();
+
+        // hide all other inital cables so the view stay tidy
         initalCableModules.forEach((module) => {
-            module.initalCable.deleteCable();
+            module.initalCable.jack.setAttribute("opacity", "0");
+            module.initalCable.shape.setAttribute("opacity", "0");
         });
 
         // start physics on all cables
@@ -202,8 +205,8 @@ export default class Module {
             canvas.style.zIndex = this.zIndex + 1;
 
             // move drag element by the same amount the cursor has moved
-            this.div.style.left = parseInt(this.div.style.left || 0) + event.movementX + "px";
-            this.div.style.top = parseInt(this.div.style.top || 0) + event.movementY + "px";
+            this.div.style.left = parseInt(this.div.style.left) + event.movementX + "px";
+            this.div.style.top = parseInt(this.div.style.top) + event.movementY + "px";
 
             // update any lines that point in here
             this.incomingCables.forEach((cable) => {
@@ -227,10 +230,14 @@ export default class Module {
                 cable.stopAnimation();
             });
 
-            // recreate all inital cables
+            // unhide all inital cables
             initalCableModules.forEach((module) => {
-                module.addInitalCable();
+                module.initalCable.jack.setAttribute("opacity", "1");
+                module.initalCable.shape.setAttribute("opacity", "1");
             });
+
+            // create new inital cable (just for animation purpose)
+            this.addInitalCable();
 
             document.onmousemove = undefined;
             document.onmouseup = undefined;
