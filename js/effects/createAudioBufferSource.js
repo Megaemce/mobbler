@@ -33,11 +33,13 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
         } else {
             module.buffer = audioContext.nameSoundBuffer[this.value];
         }
+        // if something is playing stop it
+        module.audioNode && module.stopSound();
     };
 
     // when changing looper settings reset the sound
-    module.content.options.looper.checkbox.onchange = () => {
-        module.playButtonHandler();
+    module.content.options.looper.checkbox.onchange = function () {
+        if (module.audioNode) module.audioNode.loop = this.checked;
     };
 
     module.loop = initalLoop;

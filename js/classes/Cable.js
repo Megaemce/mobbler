@@ -203,10 +203,10 @@ export default class Cable {
         // remove from cables dictionary (this needs to be after markAllLinkedCablesAs)
         delete cables[this.id];
 
-        // unblock slider (if there is any connected)
+        // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
         if (this.type !== "input") {
             this.destination.content.controllers[this.type].slider.classList.remove("disabled");
-            window.cancelAnimationFrame(this.destination[this.type].animationID);
+            window.cancelAnimationFrame(this.destination.animationID[this.type]);
         }
 
         // reconnect all others nodes

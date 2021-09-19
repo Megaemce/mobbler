@@ -19,6 +19,7 @@ export default class Module {
         this.position = undefined; // module's position
         this.div = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
+        this.zIndex = id;
         this.isTransmitting = false;
         this.createModule(); // create html's object
     }
@@ -66,6 +67,11 @@ export default class Module {
     createModule() {
         buildModule(this);
 
+        // set choosen module upfront
+        this.div.onmousedown = () => {
+            this.bringToFront();
+        };
+
         // when title is grabbed move the module
         this.head.titleWrapper.onmousedown = (event) => {
             this.movingModule(event);
@@ -108,8 +114,6 @@ export default class Module {
             if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
             else if (module.audioNodes) module.audioNodes[propertyNoSpaces](sliderValue);
 
-            if (module.audioNodes) console.log(module.audioNodes[propertyNoSpaces]);
-
             // show new value above slider
             module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
         };
@@ -117,6 +121,15 @@ export default class Module {
     /* create new cable which is an inital cable */
     addInitalCable() {
         this.initalCable = new Cable(this);
+    }
+    /* check highest zIndex within modules and make choosen module higher */
+    bringToFront() {
+        let biggestIndex = 0;
+        Object.values(modules).forEach((module) => {
+            if (module.zIndex >= biggestIndex) biggestIndex = module.zIndex + 1;
+        });
+        this.zIndex = biggestIndex;
+        this.div.style.zIndex = biggestIndex;
     }
     /* depth first search all outcoming cables and mark them as active or deactive */
     markAllLinkedCablesAs(status) {
@@ -141,7 +154,9 @@ export default class Module {
             if (status === "deactive" && currentCable.type === "input" && !currentCable.destination.inputActivity) {
                 currentCable.destination.isTransmitting = false;
             }
+            // unlock slider
             if (status === "deactive" && currentCable.type !== "input") {
+                window.cancelAnimationFrame(currentCable.destination.animationID[currentCable.type]);
                 currentCable.destination.content.controllers[currentCable.type].slider.classList.remove("disabled");
             }
 
@@ -162,8 +177,6 @@ export default class Module {
     /* all logic related to module movement event */
     movingModule(event) {
         let canvas = document.getElementById("svgCanvas");
-        // keep module on front
-        ++this.div.style.zIndex;
 
         // remove inital cable with time 0.1s
         this.initalCable.foldCable(0.1);
@@ -176,7 +189,7 @@ export default class Module {
         // Update module's position and its cables
         document.onmousemove = (event) => {
             // show cables on front while moving modules
-            canvas.style.zIndex = this.div.style.zIndex + 1;
+            canvas.style.zIndex = this.zIndex + 1;
 
             // move drag element by the same amount the cursor has moved
             this.div.style.left = parseInt(this.div.style.left) + event.movementX + "px";
@@ -270,13 +283,15 @@ export default class Module {
 
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
 
+        // if destination is regular module get parameter via audioNode[type]
         if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
+        // if destination is multi-node module get parameter value differently via audioNodes[type]
         else if (destinationModule.audioNodes) destinationModule.audioNodes[parameterType].value = slider.value;
 
         destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
 
         // update the value inifinite
-        destinationModule[parameterType].animationID = requestAnimationFrame(() => {
+        destinationModule.animationID[parameterType] = requestAnimationFrame(() => {
             this.connectToSlider(destinationModule, slider, parameterType);
         });
     }
@@ -302,10 +317,13 @@ export default class Module {
         if (slider && (this.audioNode || this.audioNodes)) {
             slider.audioNode = audioContext.createAnalyser();
 
+            // if source is regular node connect using audioNode
             if (this.audioNode) this.audioNode.connect(slider.audioNode);
+            // if source is multi-node module connect via audioNodes.output parameter which links to output audioNode
             else if (this.audioNodes) this.audioNodes.output.connect(slider.audioNode);
 
-            destinationModule[parameterType] = {};
+            // keep animationID of all parameters for Cable.deleteCable() function
+            destinationModule.animationID = {};
 
             this.connectToSlider(destinationModule, slider, parameterType);
         }
@@ -356,6 +374,7 @@ export default class Module {
     /* function used by playButtonHandler function to stop the sound */
     stopSound() {
         this.isTransmitting = false;
+        this.audioNode.stop(0);
 
         // clear stopTimer parameter (if there is any)
         if (this.audioNode.stopTimer) {
