@@ -175,8 +175,8 @@ export default class Module {
             // depth first search section
             if (!visited[currentCable.id]) {
                 visited[currentCable.id] = true;
-                // don't try to do dfs on final destination nor module-to-parameter cable
-                if (currentCable.destination.id !== "destination" && currentCable.type === "input") {
+                // don't try to do dfs on output nor module-to-parameter cable
+                if (currentCable.destination.name !== "output" && currentCable.type === "input") {
                     currentCable.destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);
@@ -191,7 +191,8 @@ export default class Module {
         let canvas = document.getElementById("svgCanvas");
         let initalCableModules = Object.values(modules).filter((module) => module.initalCable);
 
-        this.initalCable.deleteCable();
+        // output module doesn't have initalCable
+        this.initalCable && this.initalCable.deleteCable();
 
         // hide all other inital cables so the view stay tidy
         initalCableModules.forEach((module) => {
@@ -273,6 +274,15 @@ export default class Module {
 
         // remove module from modules
         delete modules[this.id];
+
+        // disconnect audioNode
+        this.audioNode.disconnect();
+
+        // remove audioNode
+        this.audioNode = undefined;
+
+        // remove object
+        delete this;
     }
     /* connect this module to destinationModule and send information further */
     connectToModule(destinationModule) {

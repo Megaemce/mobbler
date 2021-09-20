@@ -155,13 +155,6 @@ export default class Cable {
             if (this.destination && this.type !== "input") {
                 this.source.connectToParameter(this.destination, this.type);
             }
-            // module-to-final output connection
-            if (!this.destination && element.classList && element.classList.contains("destination-input")) {
-                cables[this.id] = this; // needs to be before connectToModule as outcomingCables use cables array
-                this.destination = element.parentNode; // parentNode is built-in attribute
-                this.type = "input";
-                this.source.connectToModule(this.destination);
-            }
             // if this.destination was not populated till this point fold the cable
             if (!this.destination) {
                 this.deleteCable();
@@ -195,8 +188,11 @@ export default class Cable {
         // remove jack (if it's still exists)
         this.jack && svg.removeChild(this.jack);
 
+        // disconnect source and destination
+        this.destination && this.source.audioNode.disconnect(this.destination.audioNode);
+
         // send further info that this cable is deactived (if this is not an inital cable)
-        if (this.destination && this.destination.id !== "destination") {
+        if (this.destination && this.destination.name !== "output") {
             this.destination.markAllLinkedCablesAs("deactive");
         }
 

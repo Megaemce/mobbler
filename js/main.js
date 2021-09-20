@@ -7,13 +7,14 @@ import createOscillator from "./effects/createOscillator.js";
 import createDelay from "./effects/createDelay.js";
 import createAudioBufferSource from "./effects/createAudioBufferSource.js";
 import createLiveInput from "./effects/createLiveInput.js";
-import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
-import { createSelectionRectangle } from "./helpers/builders.js";
 import createDistortion from "./effects/createDistortion.js";
 import createDelayEffect from "./effects/createDelayEffect.js";
 import createFlanger from "./effects/createFlanger.js";
 import createReverb from "./effects/createReverb.js";
 import createTremolo from "./effects/createTremolo.js";
+import createOutput from "./effects/createOutput.js";
+import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
+import { createSelectionRectangle } from "./helpers/builders.js";
 
 // set all the initial variables
 export let audioContext;
@@ -70,9 +71,9 @@ const initOscillatorFrequency = 440;
 const initOscillatorDetune = 0;
 
 // create selection rectangle
-// document.onmousedown = (event) => {
-//     createSelectionRectangle(event);
-// };
+document.onmousedown = (event) => {
+    createSelectionRectangle(event);
+};
 
 // start audio with user click on the canvas (chrome policy)
 document.getElementById("svgCanvas").onclick = () => {
@@ -84,10 +85,6 @@ document.getElementById("svgCanvas").onclick = () => {
 
     loadFilesIntoAudioContext(sounds, true);
     loadFilesIntoAudioContext(impulseResponses, false);
-
-    // hook audioContent final destination only to destination element.
-    document.getElementById("destination").audioNode = audioContext.destination;
-    document.getElementById("destination-input").type = "input"; // Keep type info for stopMovingCable
 
     document.getElementById("analyser").onmousedown = (event) => {
         createAnalyser(event, initAnalyserSmoothingTimeConstant, initAnalyserMaxDecibles, initAnalyserType);
@@ -130,6 +127,9 @@ document.getElementById("svgCanvas").onclick = () => {
     };
     document.getElementById("tremolo").onmousedown = (event) => {
         createTremolo(event, initTremoloSpeed);
+    };
+    document.getElementById("output").onmousedown = (event) => {
+        createOutput(event);
     };
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;
