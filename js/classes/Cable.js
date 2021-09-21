@@ -143,6 +143,7 @@ export default class Cable {
         // stop moving cable - let's see where we are
         document.onmouseup = (event) => {
             let element = event.toElement;
+            let duplicated = false; // checking if cable is not duplicated
 
             this.stopPhysicsAnimation();
 
@@ -160,9 +161,18 @@ export default class Cable {
 
             // only module's input got parameter "parentModule"
             if (element.parentModule) {
-                cables[this.id] = this;
-                this.destination = element.parentModule;
-                this.type = element.type;
+                // check if there is no connection like this added before
+                Object.values(cables).forEach((cable) => {
+                    if (cable.source === this.source && cable.destination === element.parentModule) duplicated = true;
+                });
+
+                if (duplicated === false) {
+                    cables[this.id] = this;
+                    this.destination = element.parentModule;
+                    this.type = element.type;
+                } else {
+                    console.log("Cable duplicated. Removing");
+                }
             }
             // disabled option for self-loop
             if (this.destination && this.destination === this.source) {
