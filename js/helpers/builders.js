@@ -179,12 +179,15 @@ export function buildModule(module) {
 
     if (module.hasInput) {
         // module.input
-        let input = document.createElement("div");
-        input.className = "input";
-        input.parentModule = module; // keep info about parent for movingCable
-        input.type = "input"; // keep info about type for movingCable
-        moduleDiv.appendChild(input);
-        moduleDiv.input = input;
+        let socket = document.createElement("div");
+        let img = document.createElement("img");
+        socket.className = "socketWrapper";
+        img.src = "../img/cinch_in_side.svg";
+        socket.parentModule = module; // keep info about parent for movingCable
+        socket.type = "input"; // keep info about type for movingCable
+        socket.appendChild(img);
+        moduleDiv.appendChild(socket);
+        moduleDiv.input = img;
     }
 
     // module.footer
@@ -288,10 +291,10 @@ export function buildCable(cable) {
     let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
     let svg = document.getElementById("svgCanvas");
 
-    cable.jack.setAttribute("href", "./img/jack_cleared.svg");
+    cable.jack.setAttribute("href", "./img/jack_cleared_nocable.svg");
     cable.jack.setAttribute("height", "9");
-    cable.jack.setAttribute("y", "-4.5");
     cable.jack.setAttribute("id", `${cable.source.id}-jack`);
+    cable.jack.style.cursor = "grab";
 
     // move original shape to the position on the right top of module
     cable.points.forEach((point, i) => {
@@ -331,8 +334,8 @@ export function buildCable(cable) {
 
     cable.shape.foldAnimation = shapeFoldAnimation;
 
-    // rotate jack from starting point so it looks like it's attached to the cable
-    jackRotateAnimation.setAttribute("path", `m ${0.378 + xPosition} ${1.056 + yPosition} c 13.622 3.944 18.622 34.944 17.622 52.944`);
+    // rotate jack from starting point so it looks like it's attached to the cable (jack.width/2 = 4.5)
+    jackRotateAnimation.setAttribute("path", `m ${0.378 + xPosition + 4.5} ${1.056 + yPosition} c 13.622 3.944 18.622 34.944 17.622 52.944`);
     jackRotateAnimation.setAttribute("begin", "0s");
     jackRotateAnimation.setAttribute("dur", "1s");
     jackRotateAnimation.setAttribute("rotate", "auto");

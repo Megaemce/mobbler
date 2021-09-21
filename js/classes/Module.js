@@ -243,7 +243,7 @@ export default class Module {
             });
 
             // create new inital cable (just for animation purpose)
-            this.addInitalCable();
+            this.name !== "output" && this.addInitalCable();
 
             document.onmousemove = undefined;
             document.onmouseup = undefined;

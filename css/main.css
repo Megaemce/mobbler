@@ -302,41 +302,21 @@ body {
     opacity: .8
 }
 
-/* Module nodes */
-
-.module .input {
-
-    cursor: default;
-    position: absolute;
-    top: 0%;
-    left: 0;
-    right: 0;
-}
-
-/* .module .nodes .module-output {
-    background-image: url('../img/jack_hanging.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    width: 23px;
-    height: 106px;
-    right: -23px;
-    position: absolute;
-} */
-
-.module .imput .imput.hidden {
-    opacity: 0;
-}
-
-.module .input {
-    background-image: url('../img/jack_in.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    width: 30px;
+/* Module socket */
+.module .socketWrapper {
     height: 30px;
-    left: -30px;
+    width: 30px;
+    left: -18px;
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: crosshair;
+}
+
+.module .socketWrapper img{
+    height: 20px;
+    object-fit: contain;
 }
 
 /* Module content */

@@ -36,14 +36,6 @@ export default class Cable {
     createCable() {
         buildCable(this);
 
-        // change cursor to grab when move over jack
-        this.jack.onmouseover = () => {
-            svg.style.cursor = "grab";
-        };
-        this.jack.onmouseout = () => {
-            if (svg.style.cursor === "grab") svg.style = "cursor: default";
-        };
-
         // start shape unfolding animation
         this.shape.appendChild(this.shape.unfoldAnimation);
         this.shape.unfoldAnimation.beginElement();
@@ -57,12 +49,16 @@ export default class Cable {
         this.jack.rotateAnimation.beginElement();
         this.jack.rotateAnimation.onend = () => {
             this.shape.removeAttribute("stroke-dasharray");
-            this.jack.rotateAnimation = undefined;
+
+            // remove original animateMotion and rotate original jack to the final destination
+            this.jack.removeChild(this.jack.rotateAnimation);
+            this.jack.setAttribute("x", this.points[11].x);
+            this.jack.setAttribute("y", this.points[11].y - 4.5); // jack.width/2 = 4.5
+            this.jack.setAttribute("transform", `rotate(94,${this.points[11].x},${this.points[11].y})`);
         };
 
         // when jack is clicked start cable moving function
         this.jack.onmousedown = (event) => {
-            this.jack.style.opacity = "0";
             this.movingCable(event);
         };
     }
@@ -102,10 +98,15 @@ export default class Cable {
     moveEndPoint(x, y) {
         this.points[10].move(x, y);
         this.points[11].move(x, y);
+        // move jack as well
+        if (this.jack) {
+            this.jack.setAttribute("x", parseInt(this.jack.getAttribute("x")) + x);
+            this.jack.setAttribute("y", parseInt(this.jack.getAttribute("y")) + y);
+        }
     }
     /* all logic related to cable movement event */
     movingCable(event) {
-        svg.style = "cursor: url('./img/jack_cleared.svg'), auto;";
+        svg.style.cursor = "grab";
 
         // two last points of the cable are set like this, so cable is in a middle of jack image
         this.points[11].x = event.offsetX + 2.5;
@@ -113,10 +114,30 @@ export default class Cable {
         this.points[10].x = event.offsetX - 3;
         this.points[10].y = event.offsetY + 4.75;
 
+        // in case just clicked and not moved, set x and y
+        this.jack.removeAttribute("transform");
+        this.jack.setAttribute("x", event.offsetX);
+        this.jack.setAttribute("y", event.offsetY); // jack.width/2 = 4.5
+
         this.startPhysicsAnimation();
 
+        // moving cable around logic
         document.onmousemove = (event) => {
             this.moveEndPoint(event.movementX, event.movementY);
+
+            // if flying around the input try to dock Cooper
+            if (event.toElement.type === "input") {
+                let inputDockLocationX = event.toElement.getBoundingClientRect().x - 5;
+                let inputDockLocationY = event.toElement.getBoundingClientRect().y + 10;
+
+                this.points[11].x = inputDockLocationX + 2.5;
+                this.points[11].y = inputDockLocationY + 4.75;
+                this.points[10].x = inputDockLocationX - 3;
+                this.points[10].y = inputDockLocationY + 4.75;
+
+                this.jack.setAttribute("x", inputDockLocationX);
+                this.jack.setAttribute("y", inputDockLocationY);
+            }
         };
 
         // stop moving cable - let's see where we are
@@ -126,7 +147,7 @@ export default class Cable {
             this.stopPhysicsAnimation();
 
             // replace inital cable with a new one
-            this.source.addInitalCable();
+            this.source.name !== "output" && this.source.addInitalCable();
 
             // only when shape is created enable removal
             this.shape.onclick = () => {
@@ -162,6 +183,7 @@ export default class Cable {
 
             // clear document and svg
             svg.style.cursor = "default";
+            this.jack.onmousedown = undefined;
             document.onmousedown = undefined;
             document.onmousemove = undefined;
             document.onmouseup = undefined;
@@ -189,7 +211,7 @@ export default class Cable {
         this.jack && svg.removeChild(this.jack);
 
         // disconnect source and destination
-        this.destination && this.source.audioNode.disconnect(this.destination.audioNode);
+        this.destination && this.source.audioNode && this.source.audioNode.disconnect(this.destination.audioNode);
 
         // send further info that this cable is deactived (if this is not an inital cable)
         if (this.destination && this.destination.name !== "output") {
