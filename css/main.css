@@ -308,10 +308,11 @@ body {
 .module .socket-wrapper {
     height: 30px;
     width: 30px;
-    left: -18px;
+    left: -27px;
+    top: 6px;
     position: absolute;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     cursor: crosshair;
 }

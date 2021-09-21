@@ -129,8 +129,8 @@ export default class Cable {
 
             // if flying around the input try to dock Cooper
             if (event.toElement.type === "input") {
-                let inputDockLocationX = event.toElement.getBoundingClientRect().x - 5;
-                let inputDockLocationY = event.toElement.getBoundingClientRect().y + 10;
+                let inputDockLocationX = event.toElement.getBoundingClientRect().x + 8;
+                let inputDockLocationY = event.toElement.getBoundingClientRect().y + 9;
 
                 this.points[11].x = inputDockLocationX + 2.5;
                 this.points[11].y = inputDockLocationY + 4.75;
