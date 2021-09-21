@@ -258,15 +258,18 @@ body {
   );
     display: inline-block;
     position: absolute;
-    background: linear-gradient(45deg, rgba(255, 255, 255, 1) 25%, rgba(204, 204, 204, 1) 100%);
+    background: linear-gradient(124deg, transparent 6px, rgb(206 206 206) 6.5px, transparent 51%), linear-gradient(124deg, transparent 0%, rgb(93 93 93) 96%, transparent 96.5%)
 }
 
 
 .module .head {
     display: flex;
+    background-color: beige;
     justify-content: space-between;
+    border-radius: 5px 5px 0 0;
     align-items: center;
-    padding: 5px 5px;
+    padding: 5px 0px;
+    margin-left: 5px
 }
 .module .head .title {
     font-size: .75em;
@@ -302,7 +305,7 @@ body {
 }
 
 /* Module socket */
-.module .socketWrapper {
+.module .socket-wrapper {
     height: 30px;
     width: 30px;
     left: -18px;
@@ -310,19 +313,20 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: crosshair;
 }
 
-.module .socketWrapper img{
+.module .socket-wrapper img{
     height: 20px;
     object-fit: contain;
 }
 
 /* Module content */
 .module .content {
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
     background: #fff;
     overflow: hidden;
-    margin: 0 5px;
+    margin-left: 5px;
     box-sizing: border-box;
     padding: 5px;
     position: relative;
@@ -334,6 +338,7 @@ body {
 
 .module .content .options {
     padding: 0em .4em .1em;
+    margin-left: 5px;
     display: flex;
     min-height: 30px;
     width: 100%;
@@ -413,11 +418,11 @@ body {
 .module footer {
     border-radius: 0 0 5px 5px;
     overflow: hidden;
-    padding: 5px 10px;
+    padding: 0px 10px;
     display: flex;
     flex-direction: row;
     min-width: 120px;
-    cursor: auto;
+    justify-content: space-around;
 }
 
 .module footer.move-by-switch {
@@ -425,19 +430,23 @@ body {
     padding-right: 50px;
 }
 
-.module footer .audio-parameter {
-    background-image: url('../img/jack_in_2.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    width: 100%;
+.module footer .parameter-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    width: 30px;
     height: 20px;
-    filter: grayscale(100%);
+    cursor: crosshair;
 }
 
-.module footer .audio-parameter.disabled {
+.module footer .parameter-wrapper.disabled {
     opacity: 50%;
     pointer-events: none;
+}
+
+.module footer .parameter-wrapper img {
+    width: 20px;
+    object-fit: contain;
 }
 
 /* Control group */
