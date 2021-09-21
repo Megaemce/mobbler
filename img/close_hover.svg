@@ -14,6 +14,6 @@
         fill-rule: evenodd;
       }</style>
  </defs>
- <path d="m0.70186 0.71232 8.8304 8.7008" fill="none" stroke="#999" stroke-width="2"/>
- <path d="m9.5322 0.71232-8.8304 8.7008" fill="none" stroke="#999" stroke-width="2"/>
+ <path d="m0.70186 0.71232 8.8304 8.7008" fill="none" stroke="#a00" stroke-width="2"/>
+ <path d="m9.5322 0.71232-8.8304 8.7008" fill="none" stroke="#a00" stroke-width="2"/>
 </svg>

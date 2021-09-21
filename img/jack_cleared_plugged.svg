@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="43.847" height="9.8085" version="1.1" viewBox="0 0 65.045 14.553" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <linearGradient id="d">
+   <stop offset="0"/>
+   <stop stop-color="#3f3f3f" offset="1"/>
+  </linearGradient>
+  <linearGradient id="p" x1="27.619" x2="27.895" y1=".104" y2="14.598" gradientTransform="matrix(.99999 0 0 .99999 -13.422 0)" gradientUnits="userSpaceOnUse" xlink:href="#d"/>
+  <linearGradient id="f" x1="11.649" x2="7.929" y1="2.503" y2="11.095" gradientTransform="translate(-13.422)" gradientUnits="userSpaceOnUse" xlink:href="#d"/>
+ </defs>
+ <path d="m1.386 2.436c-0.772 0-1.393 2.096-1.393 4.7 0 2.602 0.621 4.698 1.393 4.698h3.46c-0.383-1.246-0.613-2.829-0.613-4.558 0-1.864 0.268-3.555 0.707-4.84z" fill="url(#f)" fill-rule="evenodd" style="paint-order:markers stroke fill"/>
+ <path d="m6.492 0c-1.5444 0-2.7879 3.2451-2.7879 7.276s1.2435 7.276 2.7879 7.276h0.28786l0.0053 5.29e-4h22.569v-5.29e-4l-0.0048-14.551h-0.10239l-0.0061-5.2916e-4z" fill="url(#p)" fill-rule="evenodd" stroke-width=".26458" style="paint-order:markers stroke fill"/>
+</svg>

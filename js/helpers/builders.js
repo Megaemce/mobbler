@@ -94,6 +94,7 @@ export function buildModule(module) {
 
     // moudule.head
     head.className = "head";
+    head.style.cursor = "grab";
     head.appendChild(titleWrapper);
     head.appendChild(close);
     head.close = close;
@@ -181,8 +182,11 @@ export function buildModule(module) {
         // module.input
         let socket = document.createElement("div");
         let img = document.createElement("img");
-        socket.className = "socketWrapper";
+
         img.src = "../img/cinch_in_side.svg";
+
+        socket.className = "socketWrapper";
+        socket.style.cursor = "crosshair";
         socket.parentModule = module; // keep info about parent for movingCable
         socket.type = "input"; // keep info about type for movingCable
         socket.appendChild(img);

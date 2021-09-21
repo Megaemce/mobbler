@@ -3,10 +3,6 @@ import { audioContext, cables, modules } from "../main.js";
 import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers/math.js";
 import { buildModule, buildModuleSlider } from "../helpers/builders.js";
 
-/* ======TO DO========
-
-   ===================*/
-
 let id = 0;
 
 export default class Module {
@@ -160,7 +156,6 @@ export default class Module {
             if (status === "deactive") {
                 currentCable.makeDeactive();
             }
-
             // as this cable was module-to-module type and source module is not active anymore,
             // check if there is nothing more actively talking to this module and mark is as inactive
             if (status === "deactive" && currentCable.type === "input" && currentCable.destination.inputActivity === false) {
@@ -210,6 +205,9 @@ export default class Module {
             // show cables on front while moving modules
             canvas.style.zIndex = this.zIndex + 1;
 
+            // update cursor
+            canvas.style.cursor = "grabbing";
+
             // move drag element by the same amount the cursor has moved
             this.div.style.left = parseInt(this.div.style.left) + event.movementX + "px";
             this.div.style.top = parseInt(this.div.style.top) + event.movementY + "px";
@@ -245,6 +243,7 @@ export default class Module {
             // create new inital cable (just for animation purpose)
             this.name !== "output" && this.addInitalCable();
 
+            canvas.style.cursor = "default";
             document.onmousemove = undefined;
             document.onmouseup = undefined;
         };
@@ -275,8 +274,8 @@ export default class Module {
         // remove module from modules
         delete modules[this.id];
 
-        // disconnect audioNode
-        this.audioNode.disconnect();
+        // disconnect audioNode (if there is any active)
+        this.audioNode && this.audioNode.disconnect();
 
         // remove audioNode
         this.audioNode = undefined;

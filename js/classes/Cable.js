@@ -50,7 +50,7 @@ export default class Cable {
         this.jack.rotateAnimation.onend = () => {
             this.shape.removeAttribute("stroke-dasharray");
 
-            // remove original animateMotion and rotate original jack to the final destination
+            // remove animateMotion and rotate original jack to the final destination
             this.jack.removeChild(this.jack.rotateAnimation);
             this.jack.setAttribute("x", this.points[11].x);
             this.jack.setAttribute("y", this.points[11].y - 4.5); // jack.width/2 = 4.5
@@ -106,7 +106,9 @@ export default class Cable {
     }
     /* all logic related to cable movement event */
     movingCable(event) {
-        svg.style.cursor = "grab";
+        // default jack style is grab
+        this.jack.style = undefined;
+        svg.style.cursor = "grabbing";
 
         // two last points of the cable are set like this, so cable is in a middle of jack image
         this.points[11].x = event.offsetX + 2.5;
@@ -180,6 +182,7 @@ export default class Cable {
             }
             // module-to-module connection
             if (this.destination && this.type === "input") {
+                this.jack.setAttribute("href", "./img/jack_cleared_plugged.svg");
                 this.source.connectToModule(this.destination);
             }
             // module-to-parameter connection
