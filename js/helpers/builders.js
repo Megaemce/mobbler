@@ -62,6 +62,10 @@ export function buildModule(module) {
     let content = document.createElement("div");
     let options = document.createElement("div");
     let controllers = document.createElement("div");
+    let leftSide = document.createElement("div");
+    let frontSide = document.createElement("div");
+    let leftAndFrontSide = document.createElement("div");
+    let bottomSide = document.createElement("div");
     let footer = document.createElement("footer");
     let moduleNumber = parseInt(module.id.slice(7, module.id.length));
 
@@ -94,7 +98,6 @@ export function buildModule(module) {
 
     // moudule.head
     head.className = "head";
-    head.style.cursor = "grab";
     head.appendChild(titleWrapper);
     head.appendChild(close);
     head.close = close;
@@ -189,16 +192,26 @@ export function buildModule(module) {
         socket.parentModule = module; // keep info about parent for movingCable
         socket.type = "input"; // keep info about type for movingCable
         socket.appendChild(img);
-        moduleDiv.appendChild(socket);
+
+        leftSide.appendChild(socket);
+
         moduleDiv.input = img;
     }
+    leftSide.className = "left-side";
+    frontSide.className = "front-side";
+    leftAndFrontSide.className = "left-and-front-side";
+
+    frontSide.appendChild(head);
+    frontSide.appendChild(content);
+
+    leftAndFrontSide.appendChild(leftSide);
+    leftAndFrontSide.appendChild(frontSide);
 
     // module.footer
     footer.className = "footer";
 
     moduleDiv.setAttribute("audioNodeType", module.name);
-    moduleDiv.appendChild(head);
-    moduleDiv.appendChild(content);
+    moduleDiv.appendChild(leftAndFrontSide);
     moduleDiv.appendChild(footer);
 
     module.head = head;

@@ -254,22 +254,35 @@ body {
 .module {
     border-radius: 5px;
     filter: drop-shadow(
-    2px 4px 8px hsl(0deg 0% 25%)
+    10px 8px 4px hsl(0deg 0% 25%)
   );
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     position: absolute;
-    background: linear-gradient(124deg, transparent 6px, rgb(206 206 206) 6.5px, transparent 51%), linear-gradient(124deg, transparent 0%, rgb(93 93 93) 96%, transparent 96.5%)
+}
+/* brzeg lewy dolny linear-gradient(244deg, rgb(204 200 200) 98px, transparent 99px) */
+.module .left-and-front-side {
+    display: flex;
+
 }
 
+.module .front-side {
+    background: linear-gradient(96deg, transparent 8px, #f7f7f7 8.5px, transparent, transparent calc(100% - 23px), #717070 calc(100% - 3px), transparent);
+}
+
+.module .left-side {
+    width: 7px;
+    background: linear-gradient(105deg, transparent 7.5px, rgb(247 247 247) 8.5px, #ececec 50px);
+}
 
 .module .head {
     display: flex;
-    background-color: beige;
+    background: #bbbbbb;
     justify-content: space-between;
-    border-radius: 5px 5px 0 0;
     align-items: center;
-    padding: 5px 0px;
-    margin-left: 5px
+    padding: 5px 10px;
+    border-radius: 7px 5px 0 0;
+    
 }
 .module .head .title {
     font-size: .75em;
@@ -284,6 +297,8 @@ body {
 
 .module .head .title-wrapper {
     width: 100%;
+    cursor: grab;
+    padding: 0px 5px;
 }
 
 
@@ -294,7 +309,6 @@ body {
     background-position: center;
     background-size: contain;
     height: 10px;
-    margin-right: 5px;
     width: 10px;
 
 }
@@ -308,13 +322,14 @@ body {
 .module .socket-wrapper {
     height: 30px;
     width: 30px;
-    left: -27px;
-    top: 6px;
+    left: -25px;
+    top: 12px;
     position: absolute;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     cursor: crosshair;
+    z-index: 1;
 }
 
 .module .socket-wrapper img{
@@ -324,10 +339,8 @@ body {
 
 /* Module content */
 .module .content {
-    border-radius: 0 0 5px 5px;
-    background: #fff;
+    background: #f1f1f1;
     overflow: hidden;
-    margin-left: 5px;
     box-sizing: border-box;
     padding: 5px;
     position: relative;
@@ -335,11 +348,13 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    border-radius: 0 0 10px 10px;
+
 }
 
 .module .content .options {
     padding: 0em .4em .1em;
-    margin-left: 5px;
+    margin-left: 15px;
     display: flex;
     min-height: 30px;
     width: 100%;
@@ -417,13 +432,13 @@ body {
 
 /* Module footer */
 .module footer {
-    border-radius: 0 0 5px 5px;
-    overflow: hidden;
+background: linear-gradient(105deg, #ededed  7px, #bbbaba 7.5px, rgb(113 112 112) calc(100% - 7.5px), transparent calc(100% - 6.5px));
+overflow: hidden;
     padding: 0px 10px;
     display: flex;
     flex-direction: row;
-    min-width: 120px;
     justify-content: space-around;
+    border-radius: 0 0 17px 10px;
 }
 
 .module footer.move-by-switch {
@@ -595,7 +610,7 @@ input[type="range"].disabled {
 }
 
 input[type="range"].disabled::-webkit-slider-thumb {
-    background-image: url(../img/suwak_off.png);
+    background-image: url(../img/suwak.svg);
 
 }
 
@@ -607,7 +622,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 32px;
     height: 32px;
     cursor: pointer;
-    background-image: url(../img/suwak.png);
+    background-image: url(../img/suwak.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size:contain;
