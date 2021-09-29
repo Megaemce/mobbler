@@ -161,12 +161,23 @@ export default class Cable {
                 this.shape.style.cursor = "no-drop";
             };
 
+            console.log(element);
+
             // only module's input got parameter "parentModule"
             if (element.parentModule) {
                 // check if there is no connection like this added before
                 Object.values(cables).forEach((cable) => {
-                    if (cable.source === this.source && cable.destination === element.parentModule) duplicated = true;
+                    if (cable.source === this.source) {
+                        if (cable.destination === element.parentModule) {
+                            if (cable.type === element.type) {
+                                duplicated = true;
+                            }
+                        }
+                    }
                 });
+
+                console.log(element.type);
+                console.log(duplicated);
 
                 if (duplicated === false) {
                     cables[this.id] = this;
@@ -187,6 +198,7 @@ export default class Cable {
             }
             // module-to-parameter connection
             if (this.destination && this.type !== "input") {
+                console.log("laczenie do parameteru");
                 this.source.connectToParameter(this.destination, this.type);
             }
             // if this.destination was not populated till this point fold the cable
@@ -224,7 +236,7 @@ export default class Cable {
         this.jack && svg.removeChild(this.jack);
 
         // disconnect source and destination
-        this.destination && this.source.audioNode && this.source.audioNode.disconnect(this.destination.audioNode);
+        //this.destination && this.source.audioNode && this.source.audioNode.disconnect(this.destination.audioNode);
 
         // send further info that this cable is deactived (if this is not an inital cable)
         if (this.destination && this.destination.name !== "output") {
