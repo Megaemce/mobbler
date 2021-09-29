@@ -186,7 +186,7 @@ export function buildModule(module) {
         let socket = document.createElement("div");
         let img = document.createElement("img");
 
-        img.src = "../img/cinch_in_side.svg";
+        img.src = "../img/input.svg";
 
         socket.className = "socket-wrapper";
         socket.parentModule = module; // keep info about parent for movingCable
@@ -254,7 +254,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 
     valueUnit.className = "value-unit";
     valueUnit.appendChild(value);
-    valueUnit.appendChild(unit);
+    units && valueUnit.appendChild(unit); // sometimes there is no unit
     valueUnit.value = value;
     valueUnit.unit = unit;
 

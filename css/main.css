@@ -10,7 +10,7 @@
 
 
 :root {
-    --sliderWidth: 135px;
+    --sliderWidth: 110px;
     user-select: none
 }
 
@@ -253,9 +253,7 @@ body {
 /* Modules */
 .module {
     border-radius: 5px;
-    filter: drop-shadow(
-    10px 8px 4px hsl(0deg 0% 25%)
-  );
+    filter: drop-shadow(10px 10px 1px rgba(0,0,0,0.2));
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -267,17 +265,17 @@ body {
 }
 
 .module .front-side {
-    background: linear-gradient(96deg, transparent 8px, #f7f7f7 8.5px, transparent, transparent calc(100% - 23px), #717070 calc(100% - 3px), transparent);
+    background: linear-gradient(95deg, transparent 3%, #9a9a9a 5px,#9a9a9a 20%, transparent 72% ), linear-gradient(105deg, transparent 44%, transparent calc(100% - 10px), #545252 calc(100% - 4px), transparent);
 }
 
 .module .left-side {
     width: 7px;
-    background: linear-gradient(105deg, transparent 7.5px, rgb(247 247 247) 8.5px, #ececec 50px);
+    background: linear-gradient(103deg, transparent 7.5px, #cacaca 8.5px, #9a9a9a 80%);
 }
 
 .module .head {
     display: flex;
-    background: #bbbbbb;
+    background: #f1f1f1;
     justify-content: space-between;
     align-items: center;
     padding: 5px 10px;
@@ -285,11 +283,15 @@ body {
     
 }
 .module .head .title {
-    font-size: .75em;
-    margin: 0 10px;
+     font-size: 0.7em;
+    background-color: #666666;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
     font-weight: bold;
-    pointer-events: none;
+    color: transparent;
     text-transform: uppercase;
+    text-shadow: rgba(245,245,245,0.5) 1px 1px 1px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -310,7 +312,6 @@ body {
     background-size: contain;
     height: 10px;
     width: 10px;
-
 }
 
 .module .head .close:hover {
@@ -322,8 +323,8 @@ body {
 .module .socket-wrapper {
     height: 30px;
     width: 30px;
-    left: -25px;
-    top: 12px;
+    left: -24px;
+    top: 22px;
     position: absolute;
     display: flex;
     justify-content: flex-end;
@@ -333,7 +334,7 @@ body {
 }
 
 .module .socket-wrapper img{
-    height: 20px;
+    height: 22px;
     object-fit: contain;
 }
 
@@ -353,8 +354,6 @@ body {
 }
 
 .module .content .options {
-    padding: 0em .4em .1em;
-    margin-left: 15px;
     display: flex;
     min-height: 30px;
     width: 100%;
@@ -432,13 +431,14 @@ body {
 
 /* Module footer */
 .module footer {
-background: linear-gradient(105deg, #ededed  7px, #bbbaba 7.5px, rgb(113 112 112) calc(100% - 7.5px), transparent calc(100% - 6.5px));
-overflow: hidden;
-    padding: 0px 10px;
+    background: linear-gradient(105deg, #9a9a9a 8px, #797575 12px, #797878, transparent calc(100% - 30px)), linear-gradient(105deg,transparent 30%, #545252 31%,  #545252 calc(100% - 7.5px), transparent calc(100% - 6.5px));
+    overflow: hidden;
+    padding: 0px 8px 0px 11px;
     display: flex;
+    height: 20px;
     flex-direction: row;
     justify-content: space-around;
-    border-radius: 0 0 17px 10px;
+    border-radius: 0 0 16px 10px;
 }
 
 .module footer.move-by-switch {
@@ -447,6 +447,7 @@ overflow: hidden;
 }
 
 .module footer .parameter-wrapper {
+    padding-top: 1.5px;
     display: flex;
     justify-content: center;
     align-items: center;    
@@ -498,7 +499,6 @@ overflow: hidden;
 
 .slider-info {
     font-size: .625em;
-    /* 10 / 16 */
     margin-bottom: 1em;
     overflow: hidden;
     padding-bottom: .4em;
@@ -509,20 +509,20 @@ overflow: hidden;
 }
 
 .slider-info .label {
-    /* float: left; */
+    background-color: #666666;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: rgba(245,245,245,0.5) 1px 1px 1px;
     text-transform: uppercase;
-    /* width: 49%; */
     display: block;
 }
 
 .slider-info .value {
-    /* float: right; */
     font-weight: bold;
-    /* text-align: right; */
     text-transform: uppercase;
-    /* width: 49%; */
     display: block;
-    /* min-width: 59px; */
     text-align: center;
     margin: 0 2px;
 }
@@ -629,6 +629,6 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .input-wrapper {
-    height: 135px;
+    height: 110px;
     position: relative;
 }

@@ -64,6 +64,9 @@ export default class Module {
     createModule() {
         buildModule(this);
 
+        // put it on front
+        this.bringToFront();
+
         // set choosen module upfront
         this.div.onmousedown = () => {
             this.bringToFront();
