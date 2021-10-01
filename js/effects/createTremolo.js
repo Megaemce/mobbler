@@ -2,10 +2,11 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createTremolo(event, initalSpeed) {
+    const speed = initalSpeed | 15
     const speedInfo = "Frequency of oscillator that makes trembling effect";
 
     let module = new Module("tremolo", true, false, false, undefined);
-    module.createSlider("speed", initalSpeed, 0, 20, 0.1, "Hz", false, speedInfo);
+    module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
@@ -23,7 +24,7 @@ export default function createTremolo(event, initalSpeed) {
     module.audioNodes.input = module.audioNodes.inputNode.audioNode;
     module.audioNodes.output = module.audioNodes.inputNode.audioNode;
 
-    module.audioNodes.oscillatorNode.audioNode.frequency.value = initalSpeed;
+    module.audioNodes.oscillatorNode.audioNode.frequency.value = speed;
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.

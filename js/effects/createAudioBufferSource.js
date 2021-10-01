@@ -5,6 +5,10 @@ import { addOpenFileButtonTo } from "../helpers/builders.js";
 
 export default function createAudioBufferSource(event, initalLoop, initalBufferName) {
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
+
+    const loop = initalLoop || "false"
+    const bufferName = initalBufferName || soundNames[0]
+    
     let module = new Module("audio buffer source", false, true, false, soundNames);
     let playButton = document.createElement("div");
 
@@ -42,8 +46,8 @@ export default function createAudioBufferSource(event, initalLoop, initalBufferN
         if (module.audioNode) module.audioNode.loop = this.checked;
     };
 
-    module.loop = initalLoop;
-    module.buffer = audioContext.nameSoundBuffer[initalBufferName];
+    module.loop = loop;
+    module.buffer = audioContext.nameSoundBuffer[bufferName];
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.

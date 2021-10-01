@@ -3,6 +3,8 @@ import Module from "../classes/Module.js";
 import { audioContext, cables } from "../main.js";
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
+    const frequecy = initalFrequency || 440
+    const detune = initalDetune || 0
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
     const frequencyInfo = "Number of complete cycles a waveform makes in a second";
     const detuneInfo = "Determine how much signal will be played out of tune";
@@ -10,8 +12,8 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
     let playButton = document.createElement("div");
     let module = new Module("oscillator", false, false, false, oscTypes);
 
-    module.createSlider("frequency", initalFrequency, 0.1, 2000, 0.01, "Hz", true, frequencyInfo);
-    module.createSlider("detune", initalDetune, -1200, 1200, 1, "cents", false, detuneInfo);
+    module.createSlider("frequency", frequecy, 0.1, 2000, 0.01, "Hz", true, frequencyInfo);
+    module.createSlider("detune", detune, -1200, 1200, 1, "cents", false, detuneInfo);
 
     playButton.classList.add("switch");
     playButton.alt = "play";

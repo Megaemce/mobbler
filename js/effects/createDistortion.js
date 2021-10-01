@@ -2,6 +2,7 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createDistortion(event, initalOversample) {
+    const oversample = initalOversample || "4x";
     const oversampleValues = ["none", "2x", "4x"];
     let module = new Module("distortion", true, false, false, oversampleValues);
 
@@ -18,10 +19,10 @@ export default function createDistortion(event, initalOversample) {
     }
 
     module.audioNode = audioContext.createWaveShaper();
-    module.audioNode.oversample = initalOversample;
+    module.audioNode.oversample = oversample;
     module.audioNode.curve = makeDistortionCurve();
 
-    module.content.options.select.value = initalOversample;
+    module.content.options.select.value = oversample;
 
     module.content.options.select.onchange = function () {
         module.audioNode.oversample = this.value;

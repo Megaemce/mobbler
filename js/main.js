@@ -24,52 +24,6 @@ export let modules = new Object(); // keep all modules
 const sounds = ["glass-hit.ogg", "drums.ogg", "noise.ogg", "voice.ogg", "bass.ogg", "guitar.ogg", "stringbass.wav"];
 const impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "concert_voices.ogg"];
 
-const initAnalyserSmoothingTimeConstant = "0.25";
-const initAnalyserMaxDecibles = "0";
-const initAnalyserType = "sine wave";
-
-const initAudioBufferSourceLoop = "false";
-const initAudioBufferSourceBufferName = sounds[0];
-
-const initBiquadFrequency = 440.0;
-const initBiquadQ = 1.0;
-const initBiquadGain = 1.0;
-const initBiquadType = "peaking";
-
-const initConvolerBufferName = impulseResponses[0];
-const initConvolerNormalizer = "false";
-
-const initDelayDelay = 0.2;
-const initDelayMaxDelay = 5;
-
-const initDelayEffectWetness = 1;
-const initDelayEffectSpeed = 0.5;
-const initDelayEffectDuration = 0.3;
-
-const initDistortionOversample = "4x";
-
-const initFlangerDelay = 0.005;
-const initFlangerDepth = 0.002;
-const initFlangerFeedback = 0.5;
-const initFlangerSpeed = 0.25;
-
-const initReverbDelay = 0.5;
-const initReverbLevel = 1;
-const initReverbBufferName = impulseResponses[1];
-
-const initTremoloSpeed = 15;
-
-const initCompressorThreshold = -24.0;
-const initCompressorKnee = 20.0;
-const initCompressorRatio = 12.0;
-const initCompressorAttack = 0.003;
-const initCompressorRelease = 0.25;
-
-const initGainGain = 1.0;
-
-const initOscillatorFrequency = 440;
-const initOscillatorDetune = 0;
-
 // create selection rectangle
 // document.onmousedown = (event) => {
 //     createSelectionRectangle(event);
@@ -87,46 +41,46 @@ document.getElementById("svgCanvas").onclick = () => {
     loadFilesIntoAudioContext(impulseResponses, false);
 
     document.getElementById("analyser").onmousedown = (event) => {
-        createAnalyser(event, initAnalyserSmoothingTimeConstant, initAnalyserMaxDecibles, initAnalyserType);
+        createAnalyser(event);
     };
     document.getElementById("audioBufferSource").onmousedown = (event) => {
-        createAudioBufferSource(event, initAudioBufferSourceLoop, initAudioBufferSourceBufferName);
+        createAudioBufferSource(event);
     };
     document.getElementById("biquadFilter").onmousedown = (event) => {
-        createBiquadFilter(event, initBiquadFrequency, initBiquadQ, initBiquadGain, initBiquadType);
+        createBiquadFilter(event);
     };
     document.getElementById("convolver").onmousedown = (event) => {
-        createConvolver(event, initConvolerBufferName, initConvolerNormalizer);
+        createConvolver(event);
     };
     document.getElementById("delayNode").onmousedown = (event) => {
-        createDelay(event, initDelayDelay, initDelayMaxDelay);
+        createDelay(event);
     };
     document.getElementById("dynamicsCompressor").onmousedown = (event) => {
-        createDynamicsCompressor(event, initCompressorThreshold, initCompressorKnee, initCompressorRatio, initCompressorAttack, initCompressorRelease);
+        createDynamicsCompressor(event);
     };
     document.getElementById("gainNode").onmousedown = (event) => {
-        createGain(event, initGainGain);
+        createGain(event);
     };
     document.getElementById("liveInput").onmousedown = (event) => {
         createLiveInput(event);
     };
     document.getElementById("oscillator").onmousedown = (event) => {
-        createOscillator(event, initOscillatorFrequency, initOscillatorDetune);
+        createOscillator(event);
     };
     document.getElementById("distortion").onmousedown = (event) => {
-        createDistortion(event, initDistortionOversample);
+        createDistortion(event);
     };
     document.getElementById("delayEffect").onmousedown = (event) => {
-        createDelayEffect(event, initDelayEffectWetness, initDelayEffectSpeed, initDelayEffectDuration);
+        createDelayEffect(event);
     };
     document.getElementById("flanger").onmousedown = (event) => {
-        createFlanger(event, initFlangerDelay, initFlangerDepth, initFlangerFeedback, initFlangerSpeed);
+        createFlanger(event);
     };
     document.getElementById("reverb").onmousedown = (event) => {
-        createReverb(event, initReverbDelay, initReverbLevel, initReverbBufferName);
+        createReverb(event);
     };
     document.getElementById("tremolo").onmousedown = (event) => {
-        createTremolo(event, initTremoloSpeed);
+        createTremolo(event);
     };
     document.getElementById("output").onmousedown = (event) => {
         document.getElementById("output").parentNode.removeChild(document.getElementById("output"));

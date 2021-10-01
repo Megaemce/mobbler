@@ -2,16 +2,21 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createFlanger(event, initalDelay, initalDepth, initalFeedback, initalSpeed) {
+    const delay = initalDelay || 0.005
+    const depth = initalDepth || 0.002
+    const feedback = initalFeedback || 0.5
+    const speed = initalSpeed || 0.25
+    
     const delayInfo = "Number of seconds from input signal to be storage and play back";
     const depthInfo = "Length of the effect";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
     const speedInfo = "Frequency of oscillator that makes swirling sounds";
 
     let module = new Module("flanger", true, false, false, undefined);
-    module.createSlider("delay time", initalDelay, 0, 0.01, 0.001, "sec", false, delayInfo);
-    module.createSlider("depth", initalDepth, 0, 0.01, 0.001, "", false, depthInfo);
-    module.createSlider("feedback", initalFeedback, 0, 1, 0.1, "sec", false, feedbackInfo);
-    module.createSlider("speed", initalSpeed, 0, 1, 0.01, "Hz", false, speedInfo);
+    module.createSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
+    module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
+    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
+    module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
@@ -48,10 +53,10 @@ export default function createFlanger(event, initalDelay, initalDepth, initalFee
     module.audioNodes.input = module.audioNodes.inputNode.audioNode;
     module.audioNodes.output = module.audioNodes.outputNode.audioNode;
 
-    module.audioNodes.delayNode.audioNode.delayTime.value = initalDelay;
-    module.audioNodes.feedbackNode.audioNode.gain.value = initalFeedback;
-    module.audioNodes.gainNode.audioNode.gain.value = initalDepth;
-    module.audioNodes.oscillatorNode.audioNode.frequency.value = initalSpeed;
+    module.audioNodes.delayNode.audioNode.delayTime.value = delay;
+    module.audioNodes.feedbackNode.audioNode.gain.value = feedback;
+    module.audioNodes.gainNode.audioNode.gain.value = depth;
+    module.audioNodes.oscillatorNode.audioNode.frequency.value = speed;
 
     // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.

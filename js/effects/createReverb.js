@@ -2,14 +2,19 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createReverb(event, initalDelay, initalLevel, initalBufferName) {
+    let irNames = Object.keys(audioContext.nameIRBuffer);
+
+    const delay = initalDelay || 0.5
+    const level = initalLevel || 1
+    const bufferName = initalBufferName || irNames[1]
+    
     const drynessInfo = "Loudness of signal without any signal processing";
     const levelInfo = "Loudness of signal with full amount of an effect";
 
-    let irNames = Object.keys(audioContext.nameIRBuffer);
     let module = new Module("reverb", true, false, false, irNames);
 
-    module.createSlider("dryness", initalDelay, 0, 5, 0.1, "sec", false, drynessInfo);
-    module.createSlider("level", initalLevel, 0, 5, 0.1, "", false, levelInfo);
+    module.createSlider("dryness", delay, 0, 5, 0.1, "sec", false, drynessInfo);
+    module.createSlider("level", level, 0, 5, 0.1, "", false, levelInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
@@ -34,9 +39,9 @@ export default function createReverb(event, initalDelay, initalLevel, initalBuff
     module.audioNodes.input = module.audioNodes.inputNode.audioNode;
     module.audioNodes.output = module.audioNodes.outputNode.audioNode;
 
-    module.audioNodes.convolerNode.audioNode.buffer = audioContext.nameIRBuffer[initalBufferName];
-    module.audioNodes.delayNode.audioNode.gain.value = initalDelay;
-    module.audioNodes.levelNode.audioNode.gain.value = initalLevel;
+    module.audioNodes.convolerNode.audioNode.buffer = audioContext.nameIRBuffer[bufferName];
+    module.audioNodes.delayNode.audioNode.gain.value = delay;
+    module.audioNodes.levelNode.audioNode.gain.value = level;
 
     module.content.options.select.onchange = function () {
         module.audioNodes.convolerNode.audioNode.buffer = audioContext.nameIRBuffer[this.value];

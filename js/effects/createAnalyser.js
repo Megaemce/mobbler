@@ -7,6 +7,9 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
     const canvasWidth = 240;
     const fftSizeFrequencyBars = 512;
     const fftSizeSineWave = 2048;
+    const smoothingTimeConstant = initalSmoothingTimeConstant || 0.25
+    const maxDecibels = initalMaxDecibels || 0
+    const type = initalType || "sine wave"
     let animationID;
 
     let module = new Module("analyser", true, false, false, visualSettings);
@@ -18,8 +21,8 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
     };
 
     module.audioNode = audioContext.createAnalyser();
-    module.audioNode.smoothingTimeConstant = initalSmoothingTimeConstant;
-    module.audioNode.maxDecibels = initalMaxDecibels;
+    module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
+    module.audioNode.maxDecibels = maxDecibels;
 
     module.content.drawingContext = canvas.getContext("2d");
     module.content.appendChild(canvas);
