@@ -128,7 +128,7 @@ export default class Cable {
             this.moveEndPoint(event.movementX, event.movementY);
 
             // if flying around the input try to dock Cooper
-            if (event.toElement.type === "input") {
+            if (event.toElement.type && event.toElement.type === "input") {
                 let inputDockLocationX = event.toElement.getBoundingClientRect().x + 8;
                 let inputDockLocationY = event.toElement.getBoundingClientRect().y + 9;
 
@@ -139,6 +139,20 @@ export default class Cable {
 
                 this.jack.setAttribute("x", inputDockLocationX);
                 this.jack.setAttribute("y", inputDockLocationY);
+            }
+            // parameter input
+            if (event.toElement.type && event.toElement.type !== "input") {
+                let inputDockLocationX = event.toElement.getBoundingClientRect().x + (event.toElement.getBoundingClientRect().width)/2 + 2;
+                let inputDockLocationY = event.toElement.getBoundingClientRect().y + event.toElement.getBoundingClientRect().height - 2;
+
+                this.points[11].x = inputDockLocationX;
+                this.points[11].y = inputDockLocationY + 4.75;
+                this.points[10].x = inputDockLocationX;
+                this.points[10].y = inputDockLocationY + 10.75;
+
+                this.jack.setAttribute("x", inputDockLocationX);
+                this.jack.setAttribute("y", inputDockLocationY);
+                this.jack.setAttribute("transform", `rotate(-92,${this.points[11].x},${this.points[11].y})`);
             }
         };
 
