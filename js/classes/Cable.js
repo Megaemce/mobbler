@@ -161,8 +161,6 @@ export default class Cable {
                 this.shape.style.cursor = "no-drop";
             };
 
-            console.log(element);
-
             // only module's input got parameter "parentModule"
             if (element.parentModule) {
                 // check if there is no connection like this added before
@@ -175,9 +173,6 @@ export default class Cable {
                         }
                     }
                 });
-
-                console.log(element.type);
-                console.log(duplicated);
 
                 if (duplicated === false) {
                     cables[this.id] = this;
@@ -198,7 +193,6 @@ export default class Cable {
             }
             // module-to-parameter connection
             if (this.destination && this.type !== "input") {
-                console.log("laczenie do parameteru");
                 this.source.connectToParameter(this.destination, this.type);
             }
             // if this.destination was not populated till this point fold the cable

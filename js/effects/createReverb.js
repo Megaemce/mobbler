@@ -2,10 +2,14 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createReverb(event, initalDelay, initalLevel, initalBufferName) {
+    const drynessInfo = "Loudness of signal without any signal processing";
+    const levelInfo = "Loudness of signal with full amount of an effect";
+
     let irNames = Object.keys(audioContext.nameIRBuffer);
     let module = new Module("reverb", true, false, false, irNames);
-    module.createSlider("delay time", initalDelay, 0, 5, 0.1, "sec", false);
-    module.createSlider("level", initalLevel, 0, 5, 0.1, "", false);
+
+    module.createSlider("dryness", initalDelay, 0, 5, 0.1, "sec", false, drynessInfo);
+    module.createSlider("level", initalLevel, 0, 5, 0.1, "", false, levelInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
@@ -13,7 +17,7 @@ export default function createReverb(event, initalDelay, initalLevel, initalBuff
         convolerNode: { audioNode: audioContext.createConvolver() },
         levelNode: { audioNode: audioContext.createGain() },
         delayNode: { audioNode: audioContext.createGain() },
-        delaytime: (value) => {
+        dryness: (value) => {
             module.audioNodes.delayNode.audioNode.gain.value = value;
         },
         level: (value) => {

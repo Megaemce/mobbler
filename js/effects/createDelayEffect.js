@@ -2,10 +2,15 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createDelayEffect(event, initalWetness, initalDelay, initalFeedback) {
+    const wetnessInfo = "Loudness of signal with full amount of an effect";
+    const delayInfo = "Number of seconds from input signal to be storage and play back";
+    const feedbackInfo = "The return of a portion of the output signal back into delay loop";
+
     let module = new Module("delay effect", true, false, false, undefined);
-    module.createSlider("wetness", initalWetness, 0, 5, 0.1, "", false);
-    module.createSlider("delay time", initalDelay, 0, 1, 0.1, "sec", false);
-    module.createSlider("feedback", initalFeedback, 0, 1, 0.1, "sec", false);
+
+    module.createSlider("wetness", initalWetness, 0, 5, 0.1, "", false, wetnessInfo);
+    module.createSlider("delay time", initalDelay, 0, 1, 0.1, "sec", false, delayInfo);
+    module.createSlider("feedback", initalFeedback, 0, 1, 0.1, "sec", false, feedbackInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },

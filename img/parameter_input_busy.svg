@@ -30,6 +30,12 @@
    <feOffset dx="1.1" dy="1.3" result="offset"/>
    <feComposite in="offset" in2="SourceGraphic" operator="out" result="composite2"/>
   </filter>
+  <linearGradient id="p" x1="27.619" x2="27.895" y1=".104" y2="14.598" gradientTransform="matrix(-.017548 -.52252 -.52252 .017548 16.935 35.935)" gradientUnits="userSpaceOnUse" xlink:href="#d"/>
+  <linearGradient id="d">
+   <stop offset="0"/>
+   <stop stop-color="#3f3f3f" offset="1"/>
+  </linearGradient>
+  <linearGradient id="f" x1="18.363" x2="13.393" y1="2.4359" y2="14.948" gradientTransform="matrix(-.017549 -.52252 -.52252 .017549 16.983 34.348)" gradientUnits="userSpaceOnUse" xlink:href="#d"/>
  </defs>
  <metadata>
   <rdf:RDF>
@@ -54,4 +60,6 @@
   <ellipse transform="rotate(-11.358)" cx="9.0978" cy="13.288" rx="4.3091" ry="2.9127" fill="#555753" fill-opacity=".5735"/>
   <ellipse transform="rotate(-15.715)" cx="7.8745" cy="13.332" rx="3.8846" ry="2.3182" fill="url(#radialGradient18194)"/>
  </g>
+ <path d="m15.45 26.653c0.01354 0.40339-1.0708 0.76466-2.4314 0.81036-1.3596 0.04566-2.4657-0.24204-2.4792-0.64543l-0.06072-1.8079c0.65778 0.17826 1.4889 0.27066 2.3924 0.24032 0.97399-0.03271 1.8528-0.20242 2.5167-0.45436z" fill="url(#f)" fill-rule="evenodd" stroke-width=".52282" style="paint-order:markers stroke fill"/>
+ <path d="m16.634 23.943c0.0271 0.80698-1.6467 1.5137-3.753 1.5844-2.1062 0.07074-3.8237-0.52207-3.8508-1.329l-0.00505-0.15041-3.695e-4 -0.0028-0.51024-12.144 2.762e-4 -9e-6c-0.083269-1.2083 2.258-2.3293 3.7322-2.3774 1.4712-0.048024 3.345-0.089033 3.8714 2.1245l0.0018 0.05351 3.83e-4 0.0032z" fill="url(#p)" fill-rule="evenodd" stroke-width=".13833" style="paint-order:markers stroke fill"/>
 </svg>

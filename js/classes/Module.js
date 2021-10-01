@@ -64,10 +64,10 @@ export default class Module {
     createModule() {
         buildModule(this);
 
-        // put it on front
+        // put it on front as a first action
         this.bringToFront();
 
-        // set choosen module upfront
+        // set module upfront when choosen
         this.div.onmousedown = () => {
             this.bringToFront();
         };
@@ -100,11 +100,11 @@ export default class Module {
         modules[this.id] = this;
     }
     /* build module slider html object and attach all logic into it */
-    createSlider(property, initialValue, min, max, stepUnits, units, scaleLog) {
+    createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
         let propertyNoSpaces = property.split(" ").join("");
         let module = this;
 
-        buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog);
+        buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
 
         // when slider is moved (by user or by connected module)
         this.content.controllers[propertyNoSpaces].slider.oninput = function () {
@@ -167,6 +167,8 @@ export default class Module {
             // module-to-parameter cable thus just unlock the slider
             if (status === "deactive" && currentCable.type !== "input") {
                 currentCable.destination.stopSliderAnimation(currentCable.type);
+                currentCable.destination.footer[currentCable.type].img.classList.remove("busy");
+                currentCable.destination.footer[currentCable.type].img.setAttribute("src", "./img/parameter_input.svg");
                 currentCable.destination.content.controllers[currentCable.type].slider.classList.remove("disabled");
             }
 
@@ -189,6 +191,9 @@ export default class Module {
         let canvas = document.getElementById("svgCanvas");
         let initalCableModules = Object.values(modules).filter((module) => module.initalCable);
 
+        // update cursor
+        canvas.style.cursor = "grabbing";
+
         // output module doesn't have initalCable
         this.initalCable && this.initalCable.deleteCable();
 
@@ -207,9 +212,6 @@ export default class Module {
         document.onmousemove = (event) => {
             // show cables on front while moving modules
             canvas.style.zIndex = this.zIndex + 1;
-
-            // update cursor
-            canvas.style.cursor = "grabbing";
 
             // move drag element by the same amount the cursor has moved
             this.div.style.left = parseInt(this.div.style.left) + event.movementX + "px";
@@ -338,6 +340,10 @@ export default class Module {
     /* connect this module into analyser and next to destinationModule's slider of parameterType */
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
+        let parameterInputImg = destinationModule.footer[parameterType].img;
+
+        parameterInputImg.classList.add("busy");
+        parameterInputImg.setAttribute("src", "./img/parameter_input_busy.svg");
 
         // is source is active mark cable as active and slider as disabled
         if (this.isTransmitting) {
@@ -347,7 +353,6 @@ export default class Module {
                     return cable.destination === destinationModule && cable.source === this && cable.type === parameterType;
                 })[0]
                 .makeActive();
-
             slider.classList.add("disabled");
         } else {
             slider.classList.remove("disabled");

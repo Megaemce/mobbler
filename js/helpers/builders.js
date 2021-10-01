@@ -225,11 +225,12 @@ export function buildModule(module) {
     modulesDiv.appendChild(moduleDiv);
 }
 
-export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog) {
+export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
     let propertyNoSpaces = property.split(" ").join("");
     let sliderDiv = document.createElement("div");
     let info = document.createElement("div");
-    let label = document.createElement("span");
+    let label = document.createElement("div");
+    let labelInfo = document.createElement("span");
     let value = document.createElement("span");
     let unit = document.createElement("span");
     let valueUnit = document.createElement("div");
@@ -240,7 +241,12 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 
     // module.content.cotrollers.$propertyNoSpaces.info.property
     label.className = "label";
-    label.appendChild(document.createTextNode(property));
+
+    // tooltip info on label's text
+    labelInfo.className = "tooltip";
+    labelInfo.innerHTML = propertyInfo;
+
+    label.innerHTML = property + labelInfo.outerHTML;
 
     // module.content.cotrollers.$propertyNoSpaces.info.valueUnit.value
     value.className = "value";

@@ -2,11 +2,16 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createFlanger(event, initalDelay, initalDepth, initalFeedback, initalSpeed) {
+    const delayInfo = "Number of seconds from input signal to be storage and play back";
+    const depthInfo = "Length of the effect";
+    const feedbackInfo = "The return of a portion of the output signal back into delay loop";
+    const speedInfo = "Frequency of oscillator that makes swirling sounds";
+
     let module = new Module("flanger", true, false, false, undefined);
-    module.createSlider("delay time", initalDelay, 0, 0.01, 0.001, "sec", false);
-    module.createSlider("depth", initalDepth, 0, 0.01, 0.001, "", false);
-    module.createSlider("feedback", initalFeedback, 0, 1, 0.1, "sec", false);
-    module.createSlider("speed", initalSpeed, 0, 1, 0.01, "Hz", false);
+    module.createSlider("delay time", initalDelay, 0, 0.01, 0.001, "sec", false, delayInfo);
+    module.createSlider("depth", initalDepth, 0, 0.01, 0.001, "", false, depthInfo);
+    module.createSlider("feedback", initalFeedback, 0, 1, 0.1, "sec", false, feedbackInfo);
+    module.createSlider("speed", initalSpeed, 0, 1, 0.01, "Hz", false, speedInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
