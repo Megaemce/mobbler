@@ -2,8 +2,10 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createTremolo(event, initalSpeed) {
+    const speedInfo = "Frequency of oscillator that makes trembling effect";
+
     let module = new Module("tremolo", true, false, false, undefined);
-    module.createSlider("speed", initalSpeed, 0, 20, 0.1, "Hz", false);
+    module.createSlider("speed", initalSpeed, 0, 20, 0.1, "Hz", false, speedInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
