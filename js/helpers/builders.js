@@ -23,6 +23,21 @@ export function addOpenFileButtonTo(element) {
     element.appendChild(option);
 }
 
+export function displayAlertOnElement(message, element) {
+    let span = document.createElement("span");
+
+    span.className = "alertText"
+    span.innerHTML = message
+
+    element.classList.add("alert");
+    element.appendChild(span);
+
+    setTimeout(() => {
+        span.style.visibility = "hidden";
+        span.style.opacity = "0"
+      }, 1000)
+}
+
 export function createSelectionRectangle(event) {
     let div = document.getElementById("selection-rect");
     let x1 = event.clientX;

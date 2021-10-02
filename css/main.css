@@ -247,17 +247,18 @@ body {
     border: 1px dotted #000;
     position: absolute;
     background: #1c94c44b;
-  }
+}
 
 
 /* Modules */
 .module {
     border-radius: 5px;
-    filter: drop-shadow(10px 10px 1px rgba(0,0,0,0.2));
+    filter: drop-shadow(10px 10px 1px rgba(0, 0, 0, 0.2));
     display: flex;
     flex-direction: column;
     position: absolute;
 }
+
 /* brzeg lewy dolny linear-gradient(244deg, rgb(204 200 200) 98px, transparent 99px) */
 .module .left-and-front-side {
     display: flex;
@@ -265,7 +266,7 @@ body {
 }
 
 .module .front-side {
-    background: linear-gradient(95deg, transparent 3%, #9a9a9a 5px,#9a9a9a 20%, transparent 72% ), linear-gradient(105deg, transparent 44%, transparent calc(100% - 10px), #545252 calc(100% - 4px), transparent);
+    background: linear-gradient(95deg, transparent 3%, #9a9a9a 5px, #9a9a9a 20%, transparent 72%), linear-gradient(105deg, transparent 44%, transparent calc(100% - 10px), #545252 calc(100% - 4px), transparent);
 }
 
 .module .left-side {
@@ -280,10 +281,11 @@ body {
     align-items: center;
     padding: 5px 10px;
     border-radius: 7px 5px 0 0;
-    
+
 }
+
 .module .head .title {
-     font-size: 0.7em;
+    font-size: 0.7em;
     background-color: #666666;
     -webkit-background-clip: text;
     -moz-background-clip: text;
@@ -291,7 +293,7 @@ body {
     font-weight: bold;
     color: transparent;
     text-transform: uppercase;
-    text-shadow: rgba(245,245,245,0.5) 1px 1px 1px;
+    text-shadow: rgba(245, 245, 245, 0.5) 1px 1px 1px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -333,7 +335,7 @@ body {
     z-index: 1;
 }
 
-.module .socket-wrapper img{
+.module .socket-wrapper img {
     height: 22px;
     object-fit: contain;
 }
@@ -430,7 +432,7 @@ body {
 
 /* Module footer */
 .module footer {
-    background: linear-gradient(105deg, #9a9a9a 8px, #797575 12px, #797878, transparent calc(100% - 30px)), linear-gradient(105deg,transparent 30%, #545252 31%,  #545252 calc(100% - 7.5px), transparent calc(100% - 6.5px));
+    background: linear-gradient(105deg, #9a9a9a 8px, #797575 12px, #797878, transparent calc(100% - 30px)), linear-gradient(105deg, transparent 30%, #545252 31%, #545252 calc(100% - 7.5px), transparent calc(100% - 6.5px));
     overflow: hidden;
     padding: 0px 8px 0px 11px;
     display: flex;
@@ -449,7 +451,7 @@ body {
     padding-top: 3.5px;
     display: flex;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
     width: 30px;
     height: 20px;
     cursor: crosshair;
@@ -518,7 +520,7 @@ body {
     background-clip: text;
     color: transparent;
     position: relative;
-    text-shadow: rgba(245,245,245,0.5) 1px 1px 1px;
+    text-shadow: rgba(245, 245, 245, 0.5) 1px 1px 1px;
     text-transform: uppercase;
     display: inline-block;
     cursor: help;
@@ -536,24 +538,25 @@ body {
     z-index: 1;
     top: 150%;
     left: 50%;
-    margin-left: -85px; /* (width+padding*2)/2 */
+    margin-left: -85px;
+    /* (width+padding*2)/2 */
     text-transform: none;
-      }
-      
-      .slider-info .label .tooltip::after {
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: transparent transparent black transparent;
-      }
-      
-      .slider-info .label:hover .tooltip {
-        visibility: visible;
-      }
+}
+
+.slider-info .label .tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+.slider-info .label:hover .tooltip {
+    visibility: visible;
+}
 
 .slider-info .value {
     font-weight: bold;
@@ -625,7 +628,7 @@ input[type="range"] {
     background: black;
     height: 2px;
     outline: none;
-    width: var(--sliderWidth);	
+    width: var(--sliderWidth);
     position: absolute;
     right: -1px;
     /* minus range height to position to center */
@@ -633,13 +636,21 @@ input[type="range"] {
     bottom: 0;
 }
 
-@keyframes gradient{0%{background-position:150% 150%}to{background-position:-150% -150%}}
+@keyframes gradient {
+    0% {
+        background-position: 150% 150%
+    }
+
+    to {
+        background-position: -150% -150%
+    }
+}
 
 
 input[type="range"].disabled {
     pointer-events: none;
     /* opacity: 50%; */
-    background: linear-gradient(90deg,black,#FFD700,black);
+    background: linear-gradient(90deg, black, #FFD700, black);
     background-size: 300%;
     opacity: 70%;
     animation: gradient 3s linear infinite;
@@ -661,10 +672,42 @@ input[type="range"]::-webkit-slider-thumb {
     background-image: url(../img/suwak.svg);
     background-repeat: no-repeat;
     background-position: center;
-    background-size:contain;
+    background-size: contain;
 }
 
 .input-wrapper {
     height: 110px;
     position: relative;
+}
+
+
+.alertText {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0.5s linear, opacity 0.5s linear;
+    width: 160px;
+    background-color: rgb(100, 43, 43);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -85px;
+    /* (width+padding*2)/2 */
+    text-transform: none;
+}
+
+.alert .alertText::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    opacity: 1;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgb(100, 43, 43) transparent;
 }

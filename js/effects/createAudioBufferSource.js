@@ -6,9 +6,9 @@ import { addOpenFileButtonTo } from "../helpers/builders.js";
 export default function createAudioBufferSource(event, initalLoop, initalBufferName) {
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
 
-    const loop = initalLoop || "false"
-    const bufferName = initalBufferName || soundNames[0]
-    
+    const loop = initalLoop || "false";
+    const bufferName = initalBufferName || soundNames[0];
+
     let module = new Module("audio buffer source", false, true, false, soundNames);
     let playButton = document.createElement("div");
 

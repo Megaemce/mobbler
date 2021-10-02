@@ -1,7 +1,7 @@
 import Point from "../classes/Point.js";
 import { cables } from "../main.js";
 import { directionString } from "../helpers/math.js";
-import { buildCable } from "../helpers/builders.js";
+import { buildCable,displayAlertOnElement } from "../helpers/builders.js";
 
 let id = 0;
 let svg = document.getElementById("svgCanvas");
@@ -119,7 +119,7 @@ export default class Cable {
         // in case just clicked and not moved, set x and y
         this.jack.removeAttribute("transform");
         this.jack.setAttribute("x", event.offsetX);
-        this.jack.setAttribute("y", event.offsetY); // jack.width/2 = 4.5
+        this.jack.setAttribute("y", event.offsetY);
 
         this.startPhysicsAnimation();
 
@@ -145,21 +145,22 @@ export default class Cable {
 
                 this.jack.setAttribute("x", inputDockLocationX);
                 this.jack.setAttribute("y", inputDockLocationY);
+                //this.jack.style.opacity = "0";
+
             }
             // parameter input
             if (element.inputType && element.inputType !== "input") {
-                console.log(element.inputType)
-                let inputDockLocationX = element.getBoundingClientRect().x + (element.getBoundingClientRect().width)/2 + 2;
-                let inputDockLocationY = element.getBoundingClientRect().y + element.getBoundingClientRect().height - 2;
+                let inputDockLocationX = element.getBoundingClientRect().x + 16.5;
+                let inputDockLocationY = element.getBoundingClientRect().y + 20;
 
-                this.points[11].x = inputDockLocationX;
+                this.points[11].x = inputDockLocationX - 0.5;
                 this.points[11].y = inputDockLocationY + 4.75;
                 this.points[10].x = inputDockLocationX;
                 this.points[10].y = inputDockLocationY + 10.75;
 
                 this.jack.setAttribute("x", inputDockLocationX);
                 this.jack.setAttribute("y", inputDockLocationY);
-                this.jack.setAttribute("transform", `rotate(-92,${this.points[11].x},${this.points[11].y})`);
+                this.jack.style.opacity = "0";
             }
         };
 
@@ -200,7 +201,7 @@ export default class Cable {
                     this.destination = element.parentModule;
                     this.inputType = element.inputType;
                 } else {
-                    console.log("Cable duplicated. Removing");
+                    displayAlertOnElement("Cable duplicated", element)
                 }
             }
             // disabled option for self-loop
@@ -209,7 +210,6 @@ export default class Cable {
             }
             // module-to-module connection
             if (this.destination && this.inputType === "input") {
-                this.jack.setAttribute("href", "./img/jack_cleared_plugged.svg");
                 this.source.connectToModule(this.destination);
             }
             // module-to-parameter connection
