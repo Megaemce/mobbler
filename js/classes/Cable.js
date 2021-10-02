@@ -12,7 +12,7 @@ export default class Cable {
         this.source = source;
         this.destination = destination || undefined;
         this.animationID = undefined; // keep reference to the physics animation function
-        this.type = undefined; // type of connection. Input or parameter type
+        this.inputType = undefined; // type of connection. Input or parameter type
         this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
         this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this.lines = [];
@@ -125,12 +125,18 @@ export default class Cable {
 
         // moving cable around logic
         document.onmousemove = (event) => {
+            let element = event.toElement;
             this.moveEndPoint(event.movementX, event.movementY);
 
+            // if it's an input's image go up to the wrapper
+            if (element.inputType && element.nodeName === "IMG") {
+                element = element.parentNode
+            }
+
             // if flying around the input try to dock Cooper
-            if (event.toElement.type && event.toElement.type === "input") {
-                let inputDockLocationX = event.toElement.getBoundingClientRect().x + 8;
-                let inputDockLocationY = event.toElement.getBoundingClientRect().y + 9;
+            if (element.inputType && element.inputType === "input") {
+                let inputDockLocationX = element.getBoundingClientRect().x + 8;
+                let inputDockLocationY = element.getBoundingClientRect().y + 9;
 
                 this.points[11].x = inputDockLocationX + 2.5;
                 this.points[11].y = inputDockLocationY + 4.75;
@@ -141,9 +147,10 @@ export default class Cable {
                 this.jack.setAttribute("y", inputDockLocationY);
             }
             // parameter input
-            if (event.toElement.type && event.toElement.type !== "input") {
-                let inputDockLocationX = event.toElement.getBoundingClientRect().x + (event.toElement.getBoundingClientRect().width)/2 + 2;
-                let inputDockLocationY = event.toElement.getBoundingClientRect().y + event.toElement.getBoundingClientRect().height - 2;
+            if (element.inputType && element.inputType !== "input") {
+                console.log(element.inputType)
+                let inputDockLocationX = element.getBoundingClientRect().x + (element.getBoundingClientRect().width)/2 + 2;
+                let inputDockLocationY = element.getBoundingClientRect().y + element.getBoundingClientRect().height - 2;
 
                 this.points[11].x = inputDockLocationX;
                 this.points[11].y = inputDockLocationY + 4.75;
@@ -181,7 +188,7 @@ export default class Cable {
                 Object.values(cables).forEach((cable) => {
                     if (cable.source === this.source) {
                         if (cable.destination === element.parentModule) {
-                            if (cable.type === element.type) {
+                            if (cable.inputType === element.inputType) {
                                 duplicated = true;
                             }
                         }
@@ -191,7 +198,7 @@ export default class Cable {
                 if (duplicated === false) {
                     cables[this.id] = this;
                     this.destination = element.parentModule;
-                    this.type = element.type;
+                    this.inputType = element.inputType;
                 } else {
                     console.log("Cable duplicated. Removing");
                 }
@@ -201,13 +208,13 @@ export default class Cable {
                 this.deleteCable();
             }
             // module-to-module connection
-            if (this.destination && this.type === "input") {
+            if (this.destination && this.inputType === "input") {
                 this.jack.setAttribute("href", "./img/jack_cleared_plugged.svg");
                 this.source.connectToModule(this.destination);
             }
             // module-to-parameter connection
-            if (this.destination && this.type !== "input") {
-                this.source.connectToParameter(this.destination, this.type);
+            if (this.destination && this.inputType !== "input") {
+                this.source.connectToParameter(this.destination, this.inputType);
             }
             // if this.destination was not populated till this point fold the cable
             if (!this.destination) {
@@ -255,9 +262,9 @@ export default class Cable {
         delete cables[this.id];
 
         // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
-        if (this.destination && this.type !== "input") {
-            this.destination.content.controllers[this.type].slider.classList.remove("disabled");
-            this.destination.stopSliderAnimation(this.type);
+        if (this.destination && this.inputType !== "input") {
+            this.destination.content.controllers[this.inputType].slider.classList.remove("disabled");
+            this.destination.stopSliderAnimation(this.inputType);
         }
 
         // reconnect all others nodes. If module got deleted don't try to reconnect its outcoming cables
@@ -265,10 +272,10 @@ export default class Cable {
             this.source.audioNode.disconnect();
 
             this.source.outcomingCables.forEach((cable) => {
-                if (cable.type === "input") {
+                if (cable.inputType === "input") {
                     this.source.connectToModule(cable.destination);
                 } else {
-                    this.source.connectToParameter(cable.destination, cable.type);
+                    this.source.connectToParameter(cable.destination, cable.inputType);
                 }
             });
         }

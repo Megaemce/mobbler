@@ -46,8 +46,8 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
             module.outcomingCables.forEach((cable) => {
                 if (cable.destination.audioNode || cable.destination.audioNodes) {
-                    if (cable.type === "input") module.connectToModule(cable.destination);
-                    if (cable.type !== "input") module.connectToParameter(cable.destination, cable.type);
+                    if (cable.inputType === "input") module.connectToModule(cable.destination);
+                    if (cable.inputType !== "input") module.connectToParameter(cable.destination, cable.inputType);
                 }
             });
 

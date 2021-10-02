@@ -27,16 +27,16 @@ export default class Module {
         }
         return false;
     }
-    /* return parameters status dictionary with key: cable.type, value: true/false */
+    /* return parameters status dictionary with key: cable.inputType, value: true/false */
     get parametersActivity() {
         let parametersWithStatus = new Object();
 
         Object.values(cables).forEach((cable) => {
-            if (cable.destination === this && cable.type !== "input") {
+            if (cable.destination === this && cable.inputType !== "input") {
                 if (cable.source.isTransmitting) {
-                    parametersWithStatus[cable.type] = true;
+                    parametersWithStatus[cable.inputType] = true;
                 } else {
-                    parametersWithStatus[cable.type] = false;
+                    parametersWithStatus[cable.inputType] = false;
                 }
             }
         });
@@ -152,7 +152,7 @@ export default class Module {
             }
             // as the destination is receiving active signal (from this module) mark it as a transmitter too
             // but only if cable is module-to-module not module-to-parameter type
-            if (status === "active" && currentCable.type === "input") {
+            if (status === "active" && currentCable.inputType === "input") {
                 currentCable.destination.isTransmitting = true;
             }
             // simply make the cable deactive
@@ -161,22 +161,22 @@ export default class Module {
             }
             // as this cable was module-to-module type and source module is not active anymore,
             // check if there is nothing more actively talking to this module and mark is as inactive
-            if (status === "deactive" && currentCable.type === "input" && currentCable.destination.inputActivity === false) {
+            if (status === "deactive" && currentCable.inputType === "input" && currentCable.destination.inputActivity === false) {
                 currentCable.destination.isTransmitting = false;
             }
             // module-to-parameter cable thus just unlock the slider
-            if (status === "deactive" && currentCable.type !== "input") {
-                currentCable.destination.stopSliderAnimation(currentCable.type);
-                currentCable.destination.footer[currentCable.type].img.classList.remove("busy");
-                currentCable.destination.footer[currentCable.type].img.setAttribute("src", "./img/parameter_input.svg");
-                currentCable.destination.content.controllers[currentCable.type].slider.classList.remove("disabled");
+            if (status === "deactive" && currentCable.inputType !== "input") {
+                currentCable.destination.stopSliderAnimation(currentCable.inputType);
+                currentCable.destination.footer[currentCable.inputType].img.classList.remove("busy");
+                currentCable.destination.footer[currentCable.inputType].img.setAttribute("src", "./img/parameter_input.svg");
+                currentCable.destination.content.controllers[currentCable.inputType].slider.classList.remove("disabled");
             }
 
             // depth first search section
             if (!visited[currentCable.id]) {
                 visited[currentCable.id] = true;
                 // don't try to do dfs on output nor module-to-parameter cable
-                if (currentCable.destination.name !== "output" && currentCable.type === "input") {
+                if (currentCable.destination.name !== "output" && currentCable.inputType === "input") {
                     currentCable.destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);
@@ -350,7 +350,7 @@ export default class Module {
             // mark cable that is currently used as active
             Object.values(cables)
                 .filter((cable) => {
-                    return cable.destination === destinationModule && cable.source === this && cable.type === parameterType;
+                    return cable.destination === destinationModule && cable.source === this && cable.inputType === parameterType;
                 })[0]
                 .makeActive();
             slider.classList.add("disabled");
@@ -396,8 +396,8 @@ export default class Module {
             // send sound to all connected modules/modules' parameters
             this.outcomingCables.forEach((cable) => {
                 if (cable.destination.audioNode || cable.destination.audioNodes) {
-                    if (cable.type === "input") this.connectToModule(cable.destination);
-                    if (cable.type !== "input") this.connectToParameter(cable.destination, cable.type);
+                    if (cable.inputType === "input") this.connectToModule(cable.destination);
+                    if (cable.inputType !== "input") this.connectToParameter(cable.destination, cable.inputType);
                 }
             });
 
