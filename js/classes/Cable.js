@@ -1,7 +1,7 @@
 import Point from "../classes/Point.js";
 import { cables } from "../main.js";
 import { directionString } from "../helpers/math.js";
-import { buildCable,displayAlertOnElement } from "../helpers/builders.js";
+import { buildCable, displayAlertOnElement } from "../helpers/builders.js";
 
 let id = 0;
 let svg = document.getElementById("svgCanvas");
@@ -111,26 +111,25 @@ export default class Cable {
         svg.style.cursor = "grabbing";
 
         // two last points of the cable are set like this, so cable is in a middle of jack image
-        this.points[11].x = event.offsetX + 2.5;
-        this.points[11].y = event.offsetY + 4.75;
-        this.points[10].x = event.offsetX - 3;
-        this.points[10].y = event.offsetY + 4.75;
+        this.points[11].x = event.pageX + 2.5;
+        this.points[11].y = event.pageY + 4.75;
+        this.points[10].x = event.pageX - 3;
+        this.points[10].y = event.pageY + 4.75;
 
         // in case just clicked and not moved, set x and y
         this.jack.removeAttribute("transform");
-        this.jack.setAttribute("x", event.offsetX);
-        this.jack.setAttribute("y", event.offsetY);
+        this.jack.setAttribute("x", event.pageX);
+        this.jack.setAttribute("y", event.pageY);
 
         this.startPhysicsAnimation();
 
         // moving cable around logic
         document.onmousemove = (event) => {
             let element = event.toElement;
-            this.moveEndPoint(event.movementX, event.movementY);
 
             // if it's an input's image go up to the wrapper
             if (element.inputType && element.nodeName === "IMG") {
-                element = element.parentNode
+                element = element.parentNode;
             }
 
             // if flying around the input try to dock Cooper
@@ -145,8 +144,7 @@ export default class Cable {
 
                 this.jack.setAttribute("x", inputDockLocationX);
                 this.jack.setAttribute("y", inputDockLocationY);
-                //this.jack.style.opacity = "0";
-
+                this.jack.style.opacity = "0";
             }
             // parameter input
             if (element.inputType && element.inputType !== "input") {
@@ -161,6 +159,20 @@ export default class Cable {
                 this.jack.setAttribute("x", inputDockLocationX);
                 this.jack.setAttribute("y", inputDockLocationY);
                 this.jack.style.opacity = "0";
+            }
+
+            // something else thus return to regular shape (following the cursor)
+            if (!element.inputType) {
+                this.points[11].x = event.pageX + 2.5;
+                this.points[11].y = event.pageY + 4.75;
+                this.points[10].x = event.pageX - 3;
+                this.points[10].y = event.pageY + 4.75;
+
+                this.jack.setAttribute("x", event.pageX);
+                this.jack.setAttribute("y", event.pageY);
+                this.jack.style.opacity = "1";
+
+                this.moveEndPoint(event.movementX, event.movementY);
             }
         };
 
@@ -183,6 +195,11 @@ export default class Cable {
                 this.shape.style.cursor = "no-drop";
             };
 
+            // if it's an input's image go up to the wrapper
+            if (element.inputType && element.nodeName === "IMG") {
+                element = element.parentNode;
+            }
+
             // only module's input got parameter "parentModule"
             if (element.parentModule) {
                 // check if there is no connection like this added before
@@ -201,11 +218,13 @@ export default class Cable {
                     this.destination = element.parentModule;
                     this.inputType = element.inputType;
                 } else {
-                    displayAlertOnElement("Cable duplicated", element)
+                    displayAlertOnElement("Cable duplicated", element);
+                    this.deleteCable();
                 }
             }
             // disabled option for self-loop
             if (this.destination && this.destination === this.source) {
+                displayAlertOnElement("Self-loop disabled", element);
                 this.deleteCable();
             }
             // module-to-module connection

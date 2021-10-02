@@ -433,7 +433,6 @@ body {
 /* Module footer */
 .module footer {
     background: linear-gradient(105deg, #9a9a9a 8px, #797575 12px, #797878, transparent calc(100% - 30px)), linear-gradient(105deg, transparent 30%, #545252 31%, #545252 calc(100% - 7.5px), transparent calc(100% - 6.5px));
-    overflow: hidden;
     padding: 0px 8px 0px 11px;
     display: flex;
     height: 20px;
@@ -451,6 +450,7 @@ body {
     padding-top: 3.5px;
     display: flex;
     justify-content: center;
+    position: relative;
     align-items: center;
     width: 30px;
     height: 20px;
@@ -469,7 +469,7 @@ body {
 
 .module footer .parameter-wrapper img.busy {
     position: absolute;
-    bottom: -7px;
+    bottom: -3px;
 }
 
 /* Control group */
@@ -539,6 +539,8 @@ body {
     top: 150%;
     left: 50%;
     margin-left: -85px;
+    opacity: 0;
+    transition: opacity 1s;
     /* (width+padding*2)/2 */
     text-transform: none;
 }
@@ -556,6 +558,7 @@ body {
 
 .slider-info .label:hover .tooltip {
     visibility: visible;
+    opacity: 1;
 }
 
 .slider-info .value {
@@ -693,21 +696,19 @@ input[type="range"]::-webkit-slider-thumb {
     padding: 5px;
     position: absolute;
     z-index: 1;
-    top: 100%;
-    left: 50%;
-    margin-left: -85px;
-    /* (width+padding*2)/2 */
+    top: -7%;
+    right: 65%;
     text-transform: none;
 }
 
 .alert .alertText::after {
     content: "";
     position: absolute;
-    bottom: 100%;
-    left: 50%;
+    top: 50%;
+    left: 100%;
     opacity: 1;
-    margin-left: -5px;
+    margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent rgb(100, 43, 43) transparent;
+    border-color: transparent transparent transparent rgb(100, 43, 43) ;
 }
