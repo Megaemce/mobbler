@@ -257,11 +257,6 @@ export default class Module {
     }
     /* remove module and all related cables */
     deleteModule() {
-        // if this was an output make button visibile again
-        if (this.name === "output") {
-            document.getElementById("output").style.visibility = "visible";
-        }
-
         // remove inital cable
         this.initalCable && this.initalCable.deleteCable();
 
@@ -277,7 +272,7 @@ export default class Module {
         });
 
         // execute any module-specific function if there is any
-        this.onDeletion && this.onDeletion(); // currently not used
+        this.onDeletion && this.onDeletion();
 
         // remove html object
         this.div.parentNode.removeChild(this.div);
@@ -287,9 +282,6 @@ export default class Module {
 
         // disconnect audioNode (if there is any active)
         this.audioNode && this.audioNode.disconnect();
-
-        // remove audioNode
-        this.audioNode = undefined;
 
         // remove object
         delete this;

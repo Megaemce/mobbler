@@ -10,5 +10,9 @@ export default function createOutput(event) {
 
     module.audioNode = audioContext.destination;
 
+    module.onDeletion = () => {
+        document.getElementById("output").style.visibility = "visible";
+    };
+
     event.preventDefault();
 }

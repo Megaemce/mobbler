@@ -2,9 +2,9 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function createDelayEffect(event, initalWetness, initalDelay, initalFeedback) {
-    const wetness = initalWetness || 1
-    const delay = initalDelay || 0.5
-    const feedback = initalFeedback || 0.3 
+    const wetness = initalWetness || 0.3;
+    const delay = initalDelay || 0.1;
+    const feedback = initalFeedback || 0.8;
     const wetnessInfo = "Loudness of signal with full amount of an effect";
     const delayInfo = "Number of seconds from input signal to be storage and play back";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";

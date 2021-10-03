@@ -277,9 +277,7 @@ export default class Cable {
         this.jack && svg.removeChild(this.jack);
 
         // disconnect source and destination
-        // there is no way to check if source is really connected before disconnecting it thus apply ugly breakfix
         if (this.destination && this.source.audioNode) {
-            this.source.audioNode.connect(this.destination.audioNode);
             this.source.audioNode.disconnect(this.destination.audioNode);
         }
 
