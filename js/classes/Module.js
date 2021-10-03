@@ -257,6 +257,11 @@ export default class Module {
     }
     /* remove module and all related cables */
     deleteModule() {
+        // if this was an output make button visibile again
+        if (this.name === "output") {
+            document.getElementById("output").style.visibility = "visible";
+        }
+
         // remove inital cable
         this.initalCable && this.initalCable.deleteCable();
 

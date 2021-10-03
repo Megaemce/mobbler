@@ -83,7 +83,7 @@ document.getElementById("svgCanvas").onclick = () => {
         createTremolo(event);
     };
     document.getElementById("output").onmousedown = (event) => {
-        document.getElementById("output").parentNode.removeChild(document.getElementById("output"));
+        document.getElementById("output").style.visibility = "hidden";
         createOutput(event);
     };
     // remove hook from svg
