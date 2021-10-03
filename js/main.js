@@ -5,7 +5,7 @@ import createDynamicsCompressor from "./effects/createDynamicsCompressor.js";
 import createGain from "./effects/createGain.js";
 import createOscillator from "./effects/createOscillator.js";
 import createDelay from "./effects/createDelay.js";
-import createAudioBufferSource from "./effects/createAudioBufferSource.js";
+import createAudioSource from "./effects/createAudioSource.js";
 import createLiveInput from "./effects/createLiveInput.js";
 import createDistortion from "./effects/createDistortion.js";
 import createDelayEffect from "./effects/createDelayEffect.js";
@@ -43,8 +43,8 @@ document.getElementById("svgCanvas").onclick = () => {
     document.getElementById("analyser").onmousedown = (event) => {
         createAnalyser(event);
     };
-    document.getElementById("audioBufferSource").onmousedown = (event) => {
-        createAudioBufferSource(event);
+    document.getElementById("audioSource").onmousedown = (event) => {
+        createAudioSource(event);
     };
     document.getElementById("biquadFilter").onmousedown = (event) => {
         createBiquadFilter(event);

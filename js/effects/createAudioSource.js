@@ -3,13 +3,13 @@ import { audioContext } from "../main.js";
 import { openFileHandler } from "../helpers/loaders.js";
 import { addOpenFileButtonTo } from "../helpers/builders.js";
 
-export default function createAudioBufferSource(event, initalLoop, initalBufferName) {
+export default function createAudioSource(event, initalLoop, initalBufferName) {
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
 
     const loop = initalLoop || "false";
     const bufferName = initalBufferName || soundNames[0];
 
-    let module = new Module("audio buffer source", false, true, false, soundNames);
+    let module = new Module("audio source", false, true, false, soundNames);
     let playButton = document.createElement("div");
 
     playButton.classList.add("switch");
