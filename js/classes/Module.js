@@ -20,12 +20,16 @@ export default class Module {
         this.animationID = {}; // keep animationID of all parameters for Cable.deleteCable() function
         this.createModule(); // create html's object
     }
-    /* return true/false if there is anything actively talking to this module  */
+    /* return true/false if there is anything actively talking to this module's input  */
     get inputActivity() {
-        if (Object.values(cables).find((cable) => cable.destination === this && cable.source.isTransmitting)) {
+        if (Object.values(cables).find((cable) => cable.destination === this && cable.inputType === "input" && cable.source.isTransmitting)) {
             return true;
         }
         return false;
+    }
+    /* return number of incoming cables to the input (not nessesary active). Used by deleteCable() */
+    get inputCount() {
+        return Object.values(cables).filter((cable) => cable.destination === this && cable.inputType === "input").length;
     }
     /* return parameters status dictionary with key: cable.inputType, value: true/false */
     get parametersActivity() {
@@ -167,8 +171,6 @@ export default class Module {
             // module-to-parameter cable thus just unlock the slider
             if (status === "deactive" && currentCable.inputType !== "input") {
                 currentCable.destination.stopSliderAnimation(currentCable.inputType);
-                currentCable.destination.footer[currentCable.inputType].img.classList.remove("busy");
-                currentCable.destination.footer[currentCable.inputType].img.setAttribute("src", "./img/parameter_input.svg");
                 currentCable.destination.content.controllers[currentCable.inputType].slider.classList.remove("disabled");
             }
 
@@ -301,6 +303,9 @@ export default class Module {
         if (destinationModule.audioNodes) destination = destinationModule.audioNodes.input;
         else if (destinationModule.audioNode) destination = destinationModule.audioNode;
 
+        // change input picture to busy version
+        destinationModule.div.input.setAttribute("src", "./img/input_busy.svg");
+
         // if this module is transmitting make connection and mark further cables as active
         if (this.isTransmitting) {
             source.connect(destination);
@@ -340,23 +345,22 @@ export default class Module {
     /* connect this module into analyser and next to destinationModule's slider of parameterType */
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
-        let parameterInputImg = destinationModule.footer[parameterType].img;
-
-        parameterInputImg.classList.add("busy");
-        parameterInputImg.setAttribute("src", "./img/parameter_input_busy.svg");
 
         // is source is active mark cable as active and slider as disabled
         if (this.isTransmitting) {
             // mark cable that is currently used as active
             Object.values(cables)
-                .filter((cable) => {
+                .find((cable) => {
                     return cable.destination === destinationModule && cable.source === this && cable.inputType === parameterType;
-                })[0]
+                })
                 .makeActive();
             slider.classList.add("disabled");
         } else {
             slider.classList.remove("disabled");
         }
+
+        // change input picture to busy version
+        destinationModule.footer[parameterType].img.setAttribute("src", "./img/parameter_input_busy.svg");
 
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
         if (slider && (this.audioNode || this.audioNodes)) {
@@ -488,7 +492,7 @@ export default class Module {
             let drawWave = () => {
                 animationID = requestAnimationFrame(drawWave);
 
-                this.audioNode.getByteTimeDomainData(dataArray);
+                this.audioNode && this.audioNode.getByteTimeDomainData(dataArray);
                 // data returned in dataArray will be in range [0-255]
 
                 ctx.fillStyle = "white";

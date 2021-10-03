@@ -463,13 +463,8 @@ body {
 }
 
 .module footer .parameter-wrapper img {
-    width: 23px;
+    width: 25px;
     object-fit: contain;
-}
-
-.module footer .parameter-wrapper img.busy {
-    position: absolute;
-    bottom: -3px;
 }
 
 /* Control group */

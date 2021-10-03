@@ -23,10 +23,6 @@
    <stop stop-color="#c6c6bf" offset="0"/>
    <stop stop-color="#eeeeec" stop-opacity=".81341" offset="1"/>
   </linearGradient>
-  <radialGradient id="radialGradient18194" cx="33.578" cy="28.395" r="3.8846" gradientTransform="matrix(1.5755 .53713 -2.0906 .21357 14.115 -26.489)" gradientUnits="userSpaceOnUse">
-   <stop offset="0"/>
-   <stop stop-opacity="0" offset="1"/>
-  </radialGradient>
   <linearGradient id="linearGradient21260" x1="35.222" x2="35.178" y1="22.432" y2="19.918" gradientTransform="matrix(-.12456 .98706 -.67486 -.15886 24.751 -20.78)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient8826"/>
   <linearGradient id="linearGradient21262" x1="40.907" x2="43.343" y1="27.204" y2="26.645" gradientTransform="matrix(-.096074 .98796 -.43355 -.14055 18.521 -21.203)" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient9234"/>
   <radialGradient id="radialGradient36469" cx="18.653" cy="-3.1473" r="8.0971" gradientTransform="matrix(.263 -.078515 .062183 .15914 2.0011 -1.44)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient15646"/>
@@ -55,7 +51,16 @@
    <feOffset dx="0.8" dy="0.4" result="offset"/>
    <feComposite in="offset" in2="SourceGraphic" operator="out" result="composite2"/>
   </filter>
-  <radialGradient id="radialGradient2728" cx="33.578" cy="28.395" r="3.8846" gradientTransform="matrix(1.5755 .53713 -2.0906 .21357 14.115 -26.489)" gradientUnits="userSpaceOnUse" xlink:href="#radialGradient18194"/>
+  <linearGradient id="f" x1="18.363" x2="13.393" y1="2.4359" y2="14.948" gradientTransform="matrix(.67152 .017738 .020491 -.5813 -8.6859 12.496)" gradientUnits="userSpaceOnUse" xlink:href="#d"/>
+  <linearGradient id="d">
+   <stop offset="0"/>
+   <stop stop-color="#3f3f3f" offset="1"/>
+  </linearGradient>
+  <linearGradient id="p" x1="27.619" x2="27.895" y1=".104" y2="14.598" gradientTransform="matrix(.67152 .01774 .020493 -.5813 -10.717 12.329)" gradientUnits="userSpaceOnUse" xlink:href="#d"/>
+  <radialGradient id="radialGradient2728" cx="33.578" cy="28.395" r="3.8846" gradientTransform="matrix(1.5755 .53713 -2.0906 .21357 14.115 -26.489)" gradientUnits="userSpaceOnUse">
+   <stop offset="0"/>
+   <stop stop-opacity="0" offset="1"/>
+  </radialGradient>
  </defs>
  <metadata>
   <rdf:RDF>
@@ -109,5 +114,9 @@
   <ellipse transform="matrix(-.049094 .99879 -.9785 -.20623 0 0)" cx="8.8487" cy="-2.2008" rx="5.1032" ry=".7341" fill="#d3d7cf" stroke-width=".49887"/>
   <ellipse transform="matrix(-.035188 .99938 -.99232 .12366 0 0)" cx="9.4191" cy="-1.9652" rx="4.8914" ry=".5938" fill="#555753" fill-opacity=".5735" stroke-width=".48106"/>
   <ellipse transform="matrix(-.025807 .99967 -.99372 .11186 0 0)" cx="9.0622" cy="-1.9381" rx="4.5648" ry=".52305" fill="url(#radialGradient2728)" stroke-width=".51491"/>
+ </g>
+ <g transform="matrix(1 0 0 .94389 2.1167 .4466)" fill-rule="evenodd">
+  <path d="m1.3082 11.342c-0.51842-0.0137-0.89248-1.2432-0.83913-2.7568 0.05333-1.5125 0.51328-2.72 1.0317-2.7062l2.3234 0.061374c-0.28272 0.7175-0.46961 1.6336-0.50505 2.6387-0.0382 1.0835 0.10712 2.0712 0.37558 2.8262z" fill="url(#f)" stroke-width=".62508" style="paint-order:markers stroke fill"/>
+  <path d="m4.686 12.849c-1.0371-0.0274-1.8057-1.9358-1.723-4.2791 0.0826-2.3431 0.98413-4.2075 2.0212-4.1801l0.1933 0.00511 0.0036-2.107e-4 13.498 0.29861-1.1e-5 3.073e-4c0.47964 1.47 0.26258 8.1077-0.47872 8.4571z" fill="url(#p)" stroke-width=".16539" style="paint-order:markers stroke fill"/>
  </g>
 </svg>

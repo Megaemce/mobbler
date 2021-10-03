@@ -26,16 +26,16 @@ export function addOpenFileButtonTo(element) {
 export function displayAlertOnElement(message, element) {
     let span = document.createElement("span");
 
-    span.className = "alertText"
-    span.innerHTML = message
+    span.className = "alertText";
+    span.innerHTML = message;
 
     element.classList.add("alert");
     element.appendChild(span);
 
     setTimeout(() => {
         span.style.visibility = "hidden";
-        span.style.opacity = "0"
-      }, 1000)
+        span.style.opacity = "0";
+    }, 1000);
 }
 
 export function createSelectionRectangle(event) {
@@ -343,7 +343,6 @@ export function buildCable(cable) {
     cable.jack.setAttribute("href", "./img/jack_cleared_nocable.svg");
     cable.jack.setAttribute("height", "9");
     cable.jack.setAttribute("id", `${cable.source.id}-jack`);
-    cable.jack.style.cursor = "grab";
 
     // move original shape to the position on the right top of module
     cable.points.forEach((point, i) => {

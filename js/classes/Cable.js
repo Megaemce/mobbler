@@ -55,12 +55,29 @@ export default class Cable {
             this.jack.setAttribute("x", this.points[11].x);
             this.jack.setAttribute("y", this.points[11].y - 4.5); // jack.width/2 = 4.5
             this.jack.setAttribute("transform", `rotate(94,${this.points[11].x},${this.points[11].y})`);
-        };
 
-        // when jack is clicked start cable moving function
-        this.jack.onmousedown = (event) => {
-            this.movingCable(event);
+            // add handler only when cable is fully transformed
+            this.jack.style.cursor = "grab";
+
+            // when jack is clicked start cable moving function
+            this.jack.onmousedown = (event) => {
+                this.movingCable(event);
+            };
         };
+    }
+    /* check if this cable is not duplicated with any other cable */
+    connectionUniqueness(element) {
+        let unique = true;
+        Object.values(cables).forEach((cable) => {
+            if (cable.source === this.source) {
+                if (cable.destination === element.parentModule) {
+                    if (cable.inputType === element.inputType) {
+                        unique = false;
+                    }
+                }
+            }
+        });
+        return unique;
     }
     /* compute physics on cable  */
     startPhysicsAnimation() {
@@ -179,7 +196,6 @@ export default class Cable {
         // stop moving cable - let's see where we are
         document.onmouseup = (event) => {
             let element = event.toElement;
-            let duplicated = false; // checking if cable is not duplicated
 
             this.stopPhysicsAnimation();
 
@@ -201,43 +217,44 @@ export default class Cable {
             }
 
             // only module's input got parameter "parentModule"
-            if (element.parentModule) {
-                // check if there is no connection like this added before
-                Object.values(cables).forEach((cable) => {
-                    if (cable.source === this.source) {
-                        if (cable.destination === element.parentModule) {
-                            if (cable.inputType === element.inputType) {
-                                duplicated = true;
-                            }
-                        }
-                    }
-                });
-
-                if (duplicated === false) {
+            if (!element.parentModule) {
+                displayAlertOnElement("Not connected", this.source.head);
+                this.deleteCable();
+            } // check if not duplicated
+            else if (this.connectionUniqueness(element) === false) {
+                displayAlertOnElement("Cable duplicated", element);
+                this.deleteCable();
+            } // disabled option for self-loop
+            else if (element.parentModule === this.source) {
+                displayAlertOnElement("Self-loop disabled", element);
+                this.deleteCable();
+            } else {
+                // module-to-module connection
+                if (element.inputType === "input") {
                     cables[this.id] = this;
                     this.destination = element.parentModule;
                     this.inputType = element.inputType;
-                } else {
-                    displayAlertOnElement("Cable duplicated", element);
-                    this.deleteCable();
+                    this.source.connectToModule(this.destination);
                 }
-            }
-            // disabled option for self-loop
-            if (this.destination && this.destination === this.source) {
-                displayAlertOnElement("Self-loop disabled", element);
-                this.deleteCable();
-            }
-            // module-to-module connection
-            if (this.destination && this.inputType === "input") {
-                this.source.connectToModule(this.destination);
-            }
-            // module-to-parameter connection
-            if (this.destination && this.inputType !== "input") {
-                this.source.connectToParameter(this.destination, this.inputType);
-            }
-            // if this.destination was not populated till this point fold the cable
-            if (!this.destination) {
-                this.deleteCable();
+                // module-to-parameter connection
+                if (element.inputType !== "input") {
+                    // check if some other cable is connected to this parameter
+                    let parameterOccupant = Object.values(cables).find((cable) => {
+                        return cable.destination === element.parentModule && cable.inputType !== "input" && cable.inputType === element.inputType && cable.source !== this.source;
+                    });
+
+                    if (parameterOccupant) {
+                        let typeWithCase = element.inputType.charAt(0).toUpperCase() + element.inputType.substr(1);
+                        displayAlertOnElement("Only one input per parameter", element);
+                        displayAlertOnElement(`${typeWithCase} parameter's occupant`, parameterOccupant.source.div);
+                        this.deleteCable();
+                    } else {
+                        cables[this.id] = this;
+                        this.destination = element.parentModule;
+                        this.inputType = element.inputType;
+                        this.source.connectToParameter(this.destination, this.inputType);
+                    }
+                }
             }
 
             // clear document and svg
@@ -248,29 +265,29 @@ export default class Cable {
             document.onmouseup = undefined;
         };
     }
-    /* start folding animation and remove shape from svg */
-    foldCable(duration) {
-        // fold the cable back to module's top right corner as remove it
+    /* remove cable from all related items. Check this.destination as initalCables get deleted too */
+    deleteCable() {
+        // fold the cable back to module's top right corner and remove it
         this.shape.appendChild(this.shape.foldAnimation);
 
         // set duration on shape fold animation if there is one provided
-        duration && this.shape.foldAnimation.setAttribute("dur", `${duration}s`);
+        this.shape.foldAnimation.setAttribute("dur", "0.5s");
         this.shape.foldAnimation.setAttribute("from", this.pointsToString);
         this.shape.foldAnimation.setAttribute("to", this.startPositionString);
         this.shape.foldAnimation.beginElement();
         this.shape.foldAnimation.onend = () => {
             svg.removeChild(this.shape);
         };
-    }
-    /* remove cable from all related items. Check this.destination as initalCables get deleted too */
-    deleteCable() {
-        this.foldCable();
 
         // remove jack (if it's still exists)
         this.jack && svg.removeChild(this.jack);
 
         // disconnect source and destination
-        //this.destination && this.source.audioNode && this.source.audioNode.disconnect(this.destination.audioNode);
+        // there is no way to check if source is really connected before disconnecting it thus apply ugly breakfix
+        if (this.destination && this.source.audioNode) {
+            this.source.audioNode.connect(this.destination.audioNode);
+            this.source.audioNode.disconnect(this.destination.audioNode);
+        }
 
         // send further info that this cable is deactived (if this is not an inital cable)
         if (this.destination && this.destination.name !== "output") {
@@ -284,6 +301,14 @@ export default class Cable {
         if (this.destination && this.inputType !== "input") {
             this.destination.content.controllers[this.inputType].slider.classList.remove("disabled");
             this.destination.stopSliderAnimation(this.inputType);
+
+            // un-busy'd input picture
+            this.destination.footer[this.inputType].img.setAttribute("src", "./img/parameter_input.svg");
+        }
+
+        // un-busy'd input picture but only if there is no other things talking
+        if (this.destination && this.inputType === "input" && this.destination.inputCount === 0) {
+            this.destination.div.input.setAttribute("src", "./img/input.svg");
         }
 
         // reconnect all others nodes. If module got deleted don't try to reconnect its outcoming cables
