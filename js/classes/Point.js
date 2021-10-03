@@ -6,7 +6,11 @@ export default class Point {
         this.massInv = 1.0 / this.mass;
         this.fixed = fixed || false;
     }
-    move(x, y) {
+    moveTo(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    moveBy(x, y) {
         this.x += x;
         this.y += y;
         return { x: x, y: y };

@@ -108,13 +108,13 @@ export default class Cable {
         this.shape.setAttribute("stroke", "black");
     }
     /* move cable.source location */
-    moveStartPoint(x, y) {
-        this.points[0].move(x, y);
+    moveStartPointBy(x, y) {
+        this.points[0].moveBy(x, y);
     }
     /* move cable.destination location  */
-    moveEndPoint(x, y) {
-        this.points[10].move(x, y);
-        this.points[11].move(x, y);
+    moveEndPointBy(x, y) {
+        this.points[10].moveBy(x, y);
+        this.points[11].moveBy(x, y);
         // move jack as well
         if (this.jack) {
             this.jack.setAttribute("x", parseInt(this.jack.getAttribute("x")) + x);
@@ -128,10 +128,8 @@ export default class Cable {
         svg.style.cursor = "grabbing";
 
         // two last points of the cable are set like this, so cable is in a middle of jack image
-        this.points[11].x = event.pageX + 2.5;
-        this.points[11].y = event.pageY + 4.75;
-        this.points[10].x = event.pageX - 3;
-        this.points[10].y = event.pageY + 4.75;
+        this.points[11].moveTo(event.pageX + 2.5, event.pageY + 4.75);
+        this.points[10].moveTo(event.pageX - 3, event.pageY + 4.75);
 
         // in case just clicked and not moved, set x and y
         this.jack.removeAttribute("transform");
@@ -154,10 +152,8 @@ export default class Cable {
                 let inputDockLocationX = element.getBoundingClientRect().x + 8;
                 let inputDockLocationY = element.getBoundingClientRect().y + 9;
 
-                this.points[11].x = inputDockLocationX + 2.5;
-                this.points[11].y = inputDockLocationY + 4.75;
-                this.points[10].x = inputDockLocationX - 3;
-                this.points[10].y = inputDockLocationY + 4.75;
+                this.points[11].moveTo(inputDockLocationX + 2.5, inputDockLocationY + 4.75);
+                this.points[10].moveTo(inputDockLocationX - 3, inputDockLocationY + 4.75);
 
                 this.jack.setAttribute("x", inputDockLocationX);
                 this.jack.setAttribute("y", inputDockLocationY);
@@ -168,10 +164,8 @@ export default class Cable {
                 let inputDockLocationX = element.getBoundingClientRect().x + 16.5;
                 let inputDockLocationY = element.getBoundingClientRect().y + 20;
 
-                this.points[11].x = inputDockLocationX - 0.5;
-                this.points[11].y = inputDockLocationY + 4.75;
-                this.points[10].x = inputDockLocationX;
-                this.points[10].y = inputDockLocationY + 10.75;
+                this.points[11].moveTo(inputDockLocationX - 0.5, inputDockLocationY + 4.75);
+                this.points[10].moveTo(inputDockLocationX, inputDockLocationY + 10.75);
 
                 this.jack.setAttribute("x", inputDockLocationX);
                 this.jack.setAttribute("y", inputDockLocationY);
@@ -189,7 +183,7 @@ export default class Cable {
                 this.jack.setAttribute("y", event.pageY);
                 this.jack.style.opacity = "1";
 
-                this.moveEndPoint(event.movementX, event.movementY);
+                this.moveEndPointBy(event.movementX, event.movementY);
             }
         };
 

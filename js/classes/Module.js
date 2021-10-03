@@ -126,7 +126,6 @@ export default class Module {
     stopSliderAnimation(sliderType) {
         window.cancelAnimationFrame(this.animationID[sliderType]);
     }
-
     /* create new cable which is an inital cable */
     addInitalCable() {
         this.initalCable = new Cable(this);
@@ -221,13 +220,13 @@ export default class Module {
 
             // update any lines that point in here
             this.incomingCables.forEach((cable) => {
-                cable.moveEndPoint(event.movementX, event.movementY);
+                cable.moveEndPointBy(event.movementX, event.movementY);
                 this.isTransmitting && cable.makeActive();
             });
 
             // update any lines that point out of here
             this.outcomingCables.forEach((cable) => {
-                cable.moveStartPoint(event.movementX, event.movementY);
+                cable.moveStartPointBy(event.movementX, event.movementY);
                 this.isTransmitting && cable.makeActive();
             });
         };
@@ -303,14 +302,15 @@ export default class Module {
         if (destinationModule.audioNodes) destination = destinationModule.audioNodes.input;
         else if (destinationModule.audioNode) destination = destinationModule.audioNode;
 
-        // change input picture to busy version
-        destinationModule.div.input.setAttribute("src", "./img/input_busy.svg");
-
         // if this module is transmitting make connection and mark further cables as active
+        source && destination && source.connect(destination);
+
         if (this.isTransmitting) {
-            source.connect(destination);
             this.markAllLinkedCablesAs("active");
         }
+
+        // change input picture to busy version
+        destinationModule.div.input.setAttribute("src", "./img/input_busy.svg");
 
         // execute function if there is any hooked
         if (destinationModule.onConnectInput) {

@@ -3,8 +3,8 @@ import Module from "../classes/Module.js";
 import { audioContext, cables } from "../main.js";
 
 export default function createOscillator(event, initalFrequency, initalDetune) {
-    const frequecy = initalFrequency || 440
-    const detune = initalDetune || 0
+    const frequecy = initalFrequency || 440;
+    const detune = initalDetune || 0;
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
     const frequencyInfo = "Number of complete cycles a waveform makes in a second";
     const detuneInfo = "Determine how much signal will be played out of tune";
@@ -52,8 +52,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
             });
 
             module.audioNode.start(0);
-
-            module.markAllLinkedCablesAs("active");
         }
     };
 

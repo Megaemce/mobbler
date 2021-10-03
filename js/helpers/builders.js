@@ -346,7 +346,7 @@ export function buildCable(cable) {
 
     // move original shape to the position on the right top of module
     cable.points.forEach((point, i) => {
-        point.move(xPosition, yPosition);
+        point.moveBy(xPosition, yPosition);
         if (i > 0) {
             // newLine keeps the array with pointers linked to Points which is cool!
             // by updating the line we update the points in the points array too
