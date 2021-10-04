@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createBiquadFilter(initalFrequency, initalQ, initalGain, initalType) {
+export default function createBiquadFilter(event, initalFrequency, initalQ, initalGain, initalType) {
     const filterTypes = ["peaking", "lowshelf", "highshelf", "lowpass", "highpass", "bandpass", "notch", "allpass"];
     const gainDisabled = ["lowpass", "highpass", "bandpass", "notch", "allpass"];
     const qDisabled = ["lowshelf", "highshelf"];

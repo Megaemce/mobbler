@@ -54,10 +54,7 @@ document.getElementById("svgCanvas").onclick = () => {
     document.getElementById("flanger").addEventListener("mousedown", createFlanger);
     document.getElementById("reverb").addEventListener("mousedown", createReverb);
     document.getElementById("tremolo").addEventListener("mousedown", createTremolo);
-    document.getElementById("output").onmousedown = () => {
-        document.getElementById("output").style.visibility = "hidden";
-        createOutput;
-    };
+    document.getElementById("output").addEventListener("mousedown", createOutput);
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;
 };

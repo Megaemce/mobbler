@@ -10,6 +10,9 @@ export default function createOutput(event) {
 
     module.audioNode = audioContext.destination;
 
+    // only one output possible thus hide output button
+    document.getElementById("output").style.visibility = "hidden";
+
     module.onDeletion = () => {
         document.getElementById("output").style.visibility = "visible";
     };

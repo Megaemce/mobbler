@@ -3,7 +3,7 @@ import { audioContext } from "../main.js";
 import { openFileHandler } from "../helpers/loaders.js";
 import { addOpenFileButtonTo } from "../helpers/builders.js";
 
-export default function createAudioSource(initalLoop, initalBufferName) {
+export default function createAudioSource(event, initalLoop, initalBufferName) {
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
 
     const loop = initalLoop || "false";

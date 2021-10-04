@@ -1,8 +1,7 @@
-import Cable from "../classes/Cable.js";
 import Module from "../classes/Module.js";
-import { audioContext, cables } from "../main.js";
+import { audioContext } from "../main.js";
 
-export default function createOscillator(initalFrequency, initalDetune) {
+export default function createOscillator(event, initalFrequency, initalDetune) {
     const frequecy = initalFrequency || 440;
     const detune = initalDetune || 0;
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];

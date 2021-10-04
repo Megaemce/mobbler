@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createDistortion(initalOversample) {
+export default function createDistortion(event, initalOversample) {
     const oversample = initalOversample || "4x";
     const oversampleValues = ["none", "2x", "4x"];
     let module = new Module("distortion", true, false, false, oversampleValues);

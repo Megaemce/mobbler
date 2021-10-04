@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createDynamicsCompressor(initalThreshold, initalKnee, initalRatio, initalAttack, initalRelease) {
+export default function createDynamicsCompressor(event, initalThreshold, initalKnee, initalRatio, initalAttack, initalRelease) {
     const threshold = initalThreshold || -24.0;
     const knee = initalKnee || 20.0;
     const ratio = initalRatio || 12.0;

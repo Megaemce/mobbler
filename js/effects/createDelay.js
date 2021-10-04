@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createDelay(initialDelay, maxDelay) {
+export default function createDelay(event, initialDelay, maxDelay) {
     const delay = initialDelay || 0.2;
     const max = maxDelay || 5;
     let module = new Module("delay", true, false, false, undefined);
