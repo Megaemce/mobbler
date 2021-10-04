@@ -1,12 +1,12 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createFlanger(event, initalDelay, initalDepth, initalFeedback, initalSpeed) {
-    const delay = initalDelay || 0.005
-    const depth = initalDepth || 0.002
-    const feedback = initalFeedback || 0.5
-    const speed = initalSpeed || 0.25
-    
+export default function createFlanger(initalDelay, initalDepth, initalFeedback, initalSpeed) {
+    const delay = initalDelay || 0.005;
+    const depth = initalDepth || 0.002;
+    const feedback = initalFeedback || 0.5;
+    const speed = initalSpeed || 0.25;
+
     const delayInfo = "Number of seconds from input signal to be storage and play back";
     const depthInfo = "Length of the effect";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
@@ -58,9 +58,6 @@ export default function createFlanger(event, initalDelay, initalDepth, initalFee
     module.audioNodes.gainNode.audioNode.gain.value = depth;
     module.audioNodes.oscillatorNode.audioNode.frequency.value = speed;
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

@@ -40,51 +40,23 @@ document.getElementById("svgCanvas").onclick = () => {
     loadFilesIntoAudioContext(sounds, true);
     loadFilesIntoAudioContext(impulseResponses, false);
 
-    document.getElementById("analyser").onmousedown = (event) => {
-        createAnalyser(event);
-    };
-    document.getElementById("audioSource").onmousedown = (event) => {
-        createAudioSource(event);
-    };
-    document.getElementById("biquadFilter").onmousedown = (event) => {
-        createBiquadFilter(event);
-    };
-    document.getElementById("convolver").onmousedown = (event) => {
-        createConvolver(event);
-    };
-    document.getElementById("delayNode").onmousedown = (event) => {
-        createDelay(event);
-    };
-    document.getElementById("dynamicsCompressor").onmousedown = (event) => {
-        createDynamicsCompressor(event);
-    };
-    document.getElementById("gainNode").onmousedown = (event) => {
-        createGain(event);
-    };
-    document.getElementById("liveInput").onmousedown = (event) => {
-        createLiveInput(event);
-    };
-    document.getElementById("oscillator").onmousedown = (event) => {
-        createOscillator(event);
-    };
-    document.getElementById("distortion").onmousedown = (event) => {
-        createDistortion(event);
-    };
-    document.getElementById("delayEffect").onmousedown = (event) => {
-        createDelayEffect(event);
-    };
-    document.getElementById("flanger").onmousedown = (event) => {
-        createFlanger(event);
-    };
-    document.getElementById("reverb").onmousedown = (event) => {
-        createReverb(event);
-    };
-    document.getElementById("tremolo").onmousedown = (event) => {
-        createTremolo(event);
-    };
-    document.getElementById("output").onmousedown = (event) => {
+    document.getElementById("analyser").addEventListener("mousedown", createAnalyser);
+    document.getElementById("audioSource").addEventListener("mousedown", createAudioSource);
+    document.getElementById("biquadFilter").addEventListener("mousedown", createBiquadFilter);
+    document.getElementById("convolver").addEventListener("mousedown", createConvolver);
+    document.getElementById("delayNode").addEventListener("mousedown", createDelay);
+    document.getElementById("dynamicsCompressor").addEventListener("mousedown", createDynamicsCompressor);
+    document.getElementById("gainNode").addEventListener("mousedown", createGain);
+    document.getElementById("liveInput").addEventListener("mousedown", createLiveInput);
+    document.getElementById("oscillator").addEventListener("mousedown", createOscillator);
+    document.getElementById("distortion").addEventListener("mousedown", createDistortion);
+    document.getElementById("delayEffect").addEventListener("mousedown", createDelayEffect);
+    document.getElementById("flanger").addEventListener("mousedown", createFlanger);
+    document.getElementById("reverb").addEventListener("mousedown", createReverb);
+    document.getElementById("tremolo").addEventListener("mousedown", createTremolo);
+    document.getElementById("output").onmousedown = () => {
         document.getElementById("output").style.visibility = "hidden";
-        createOutput(event);
+        createOutput;
     };
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;

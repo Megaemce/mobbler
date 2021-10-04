@@ -1,15 +1,15 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createAnalyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
+export default function createAnalyser(initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
     const visualSettings = ["sine wave", "frequency bars"];
     const canvasHeight = 140;
     const canvasWidth = 240;
     const fftSizeFrequencyBars = 512;
     const fftSizeSineWave = 2048;
-    const smoothingTimeConstant = initalSmoothingTimeConstant || 0.25
-    const maxDecibels = initalMaxDecibels || 0
-    const type = initalType || "sine wave"
+    const smoothingTimeConstant = initalSmoothingTimeConstant || 0.25;
+    const maxDecibels = initalMaxDecibels || 0;
+    const type = initalType || "sine wave";
     let animationID;
 
     let module = new Module("analyser", true, false, false, visualSettings);
@@ -37,9 +37,6 @@ export default function createAnalyser(event, initalSmoothingTimeConstant, inita
         animationID = module.visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, module.content.options.select.value);
     };
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

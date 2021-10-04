@@ -3,7 +3,7 @@ import { audioContext } from "../main.js";
 import { openFileHandler } from "../helpers/loaders.js";
 import { addOpenFileButtonTo } from "../helpers/builders.js";
 
-export default function createAudioSource(event, initalLoop, initalBufferName) {
+export default function createAudioSource(initalLoop, initalBufferName) {
     let soundNames = Object.keys(audioContext.nameSoundBuffer);
 
     const loop = initalLoop || "false";
@@ -49,9 +49,6 @@ export default function createAudioSource(event, initalLoop, initalBufferName) {
     module.loop = loop;
     module.buffer = audioContext.nameSoundBuffer[bufferName];
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

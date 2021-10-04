@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createBiquadFilter(event, initalFrequency, initalQ, initalGain, initalType) {
+export default function createBiquadFilter(initalFrequency, initalQ, initalGain, initalType) {
     const filterTypes = ["peaking", "lowshelf", "highshelf", "lowpass", "highpass", "bandpass", "notch", "allpass"];
     const gainDisabled = ["lowpass", "highpass", "bandpass", "notch", "allpass"];
     const qDisabled = ["lowshelf", "highshelf"];
@@ -40,9 +40,6 @@ export default function createBiquadFilter(event, initalFrequency, initalQ, init
         module.audioNode.type = this.value;
     };
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

@@ -13,6 +13,4 @@ export default function createOutput(event) {
     module.onDeletion = () => {
         document.getElementById("output").style.visibility = "visible";
     };
-
-    event.preventDefault();
 }

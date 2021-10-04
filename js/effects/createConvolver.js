@@ -1,10 +1,10 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createConvolver(event, initalBufferName, initalNormalizer) {
+export default function createConvolver(initalBufferName, initalNormalizer) {
     let irNames = Object.keys(audioContext.nameIRBuffer);
-const bufferName = initalBufferName || irNames[0]
-const normalizer = initalNormalizer || "false"
+    const bufferName = initalBufferName || irNames[0];
+    const normalizer = initalNormalizer || "false";
 
     let module = new Module("convolver", true, false, true, irNames);
 
@@ -16,9 +16,6 @@ const normalizer = initalNormalizer || "false"
         module.audioNode.buffer = audioContext.nameIRBuffer[this.value];
     };
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

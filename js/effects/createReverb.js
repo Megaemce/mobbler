@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createReverb(event, initalDryness, initalWetness, initalBufferName) {
+export default function createReverb(initalDryness, initalWetness, initalBufferName) {
     let irNames = Object.keys(audioContext.nameIRBuffer);
 
     const dryness = initalDryness || 0.5;
@@ -47,9 +47,6 @@ export default function createReverb(event, initalDryness, initalWetness, inital
         module.audioNodes.convolerNode.audioNode.buffer = audioContext.nameIRBuffer[this.value];
     };
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

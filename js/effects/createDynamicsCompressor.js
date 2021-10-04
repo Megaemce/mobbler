@@ -1,13 +1,13 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createDynamicsCompressor(event, initalThreshold, initalKnee, initalRatio, initalAttack, initalRelease) {
-    const threshold = initalThreshold || -24.0
-    const knee = initalKnee || 20.0
-    const ratio = initalRatio || 12.0
-    const attack = initalAttack || 0.003
-    const release = initalRelease || 0.25
-    
+export default function createDynamicsCompressor(initalThreshold, initalKnee, initalRatio, initalAttack, initalRelease) {
+    const threshold = initalThreshold || -24.0;
+    const knee = initalKnee || 20.0;
+    const ratio = initalRatio || 12.0;
+    const attack = initalAttack || 0.003;
+    const release = initalRelease || 0.25;
+
     const thresholdInfo = "The level at which a dynamics processing unit will begin to change the gain of the incoming signal";
     const kneeInfo = "Determines how abruptly or gradually compression begins once the sound level crosses the threshold";
     const ratioInfo = "The amount of gain reduction. Input level over this amount dB will be reduced by 1dB over the threshold";
@@ -24,9 +24,6 @@ export default function createDynamicsCompressor(event, initalThreshold, initalK
     module.createSlider("attack", attack, 0, 1.0, 0.001, "sec", false, attackInfo);
     module.createSlider("release", release, 0, 1.0, 0.05, "sec", false, releaseInfo);
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

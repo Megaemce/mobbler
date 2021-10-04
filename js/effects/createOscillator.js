@@ -2,7 +2,7 @@ import Cable from "../classes/Cable.js";
 import Module from "../classes/Module.js";
 import { audioContext, cables } from "../main.js";
 
-export default function createOscillator(event, initalFrequency, initalDetune) {
+export default function createOscillator(initalFrequency, initalDetune) {
     const frequecy = initalFrequency || 440;
     const detune = initalDetune || 0;
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
@@ -64,9 +64,6 @@ export default function createOscillator(event, initalFrequency, initalDetune) {
 
     module.content.controllers.appendChild(playButton);
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before. GetBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

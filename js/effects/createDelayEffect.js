@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createDelayEffect(event, initalWetness, initalDelay, initalFeedback) {
+export default function createDelayEffect(initalWetness, initalDelay, initalFeedback) {
     const wetness = initalWetness || 0.3;
     const delay = initalDelay || 0.1;
     const feedback = initalFeedback || 0.8;
@@ -46,9 +46,6 @@ export default function createDelayEffect(event, initalWetness, initalDelay, ini
     module.audioNodes.delayNode.audioNode.delayTime.value = delay;
     module.audioNodes.durationNode.audioNode.gain.value = feedback;
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }

@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createDistortion(event, initalOversample) {
+export default function createDistortion(initalOversample) {
     const oversample = initalOversample || "4x";
     const oversampleValues = ["none", "2x", "4x"];
     let module = new Module("distortion", true, false, false, oversampleValues);
@@ -28,9 +28,6 @@ export default function createDistortion(event, initalOversample) {
         module.audioNode.oversample = this.value;
     };
 
-    // create new cable linked with this module. It's done here as the module html
     // structure needs to be fully build before - getBoundingClientRect related.
     module.addInitalCable();
-
-    event.preventDefault();
 }
