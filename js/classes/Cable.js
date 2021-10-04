@@ -278,7 +278,11 @@ export default class Cable {
 
         // disconnect source and destination
         if (this.destination && this.source.audioNode) {
-            this.source.audioNode.disconnect(this.destination.audioNode);
+            try {
+                this.source.audioNode.disconnect(this.destination.audioNode);
+            } catch (error) {
+                console.log(`Cannot disconnect ${this.source.name} and ${this.destination.name} as they are not connected anymore`);
+            }
         }
 
         // send further info that this cable is deactived (if this is not an inital cable)
