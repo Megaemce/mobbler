@@ -23,8 +23,9 @@ export function addOpenFileButtonTo(element) {
     element.appendChild(option);
 }
 
-export function displayAlertOnElement(message, element) {
+export function displayAlertOnElement(message, element, timeInSec) {
     let span = document.createElement("span");
+    let time = timeInSec * 1000 || 1000;
 
     span.className = "alertText";
     span.innerHTML = message;
@@ -35,7 +36,7 @@ export function displayAlertOnElement(message, element) {
     setTimeout(() => {
         span.style.visibility = "hidden";
         span.style.opacity = "0";
-    }, 1000);
+    }, time);
 }
 
 export function createSelectionRectangle(event) {
@@ -80,7 +81,6 @@ export function buildModule(module) {
     let leftSide = document.createElement("div");
     let frontSide = document.createElement("div");
     let leftAndFrontSide = document.createElement("div");
-    let bottomSide = document.createElement("div");
     let footer = document.createElement("footer");
     let moduleNumber = parseInt(module.id.slice(7, module.id.length));
 
@@ -254,14 +254,15 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     let audioParam = document.createElement("div");
     let parameterImg = document.createElement("img");
 
-    // module.content.cotrollers.$propertyNoSpaces.info.property
-    label.className = "label";
-
-    // tooltip info on label's text
+    // module.content.cotrollers.$propertyNoSpaces.info.label.tooltip
     labelInfo.className = "tooltip";
     labelInfo.innerHTML = propertyInfo;
 
-    label.innerHTML = property + labelInfo.outerHTML;
+    // module.content.cotrollers.$propertyNoSpaces.info.label
+    label.className = "label";
+    label.innerHTML = property;
+    label.appendChild(labelInfo);
+    label.tooltip = labelInfo;
 
     // module.content.cotrollers.$propertyNoSpaces.info.valueUnit.value
     value.className = "value";

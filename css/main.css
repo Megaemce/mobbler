@@ -649,11 +649,17 @@ input[type="range"] {
 
 input[type="range"].disabled {
     pointer-events: none;
-    /* opacity: 50%; */
     background: linear-gradient(90deg, black, #FFD700, black);
     background-size: 300%;
     opacity: 70%;
     animation: gradient 3s linear infinite;
+}
+
+input[type="range"].not_used {
+    pointer-events: none;
+    background: black;
+    background-size: 300%;
+    opacity: 50%;
 }
 
 input[type="range"].disabled::-webkit-slider-thumb {
