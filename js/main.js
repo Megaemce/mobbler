@@ -20,6 +20,7 @@ import { createSelectionRectangle } from "./helpers/builders.js";
 export let audioContext;
 export let cables = new Object(); // keep all cables
 export let modules = new Object(); // keep all modules
+export { createAudioSource as createAudioSource };
 
 const sounds = ["glass-hit.ogg", "drums.ogg", "noise.ogg", "voice.ogg", "bass.ogg", "guitar.ogg", "stringbass.wav"];
 const impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "concert_voices.ogg"];

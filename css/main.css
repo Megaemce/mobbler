@@ -381,6 +381,7 @@ body {
     font-style: italic;
     outline: none;
     white-space: pre;
+    min-width: 100px;
     width: 100%;
     -webkit-appearance: none;
     -webkit-box-align: center;
