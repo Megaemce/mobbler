@@ -438,7 +438,9 @@ export default class Module {
     /* create analyser on module with given setting */
     visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
         let animationID = undefined;
-        let canvas = this.content.canvas;
+        let canvas = this.content.controllers.canvas;
+        let img = new Image();
+        img.src = "./img/pattern.svg";
 
         if (canvas) canvas.remove();
 
@@ -448,10 +450,10 @@ export default class Module {
         canvas.width = canvasWidth;
         canvas.className = "analyserCanvas";
 
-        this.content.appendChild(canvas);
-        this.content.canvas = canvas;
+        this.content.controllers.appendChild(canvas);
+        this.content.controllers.canvas = canvas;
 
-        let ctx = (this.content.drawingContext = canvas.getContext("2d"));
+        let ctx = (this.content.controllers.drawingContext = canvas.getContext("2d"));
 
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -466,14 +468,15 @@ export default class Module {
                 this.audioNode.getByteFrequencyData(dataArrayAlt);
                 // data returned in dataArrayAlt array will in range [0-255]
 
-                ctx.fillStyle = "white";
+                let pattern = ctx.createPattern(img, "repeat");
+                ctx.fillStyle = pattern;
                 ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
                 let barWidth = (canvasWidth / bufferLengthAlt) * 2.5;
                 let x = 0;
 
                 dataArrayAlt.forEach((barHeight) => {
-                    ctx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
+                    ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
                     // contex grid is upside down so we substract from y value
                     ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
 
@@ -492,10 +495,11 @@ export default class Module {
                 this.audioNode && this.audioNode.getByteTimeDomainData(dataArray);
                 // data returned in dataArray will be in range [0-255]
 
-                ctx.fillStyle = "white";
+                let pattern = ctx.createPattern(img, "repeat");
+                ctx.fillStyle = pattern;
                 ctx.fillRect(0, 0, canvasWidth, canvasHeight);
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = "rgb(0, 0, 0)";
+                ctx.strokeStyle = "rgb(98, 255, 0)";
                 ctx.beginPath();
 
                 dataArray.forEach((element, index) => {

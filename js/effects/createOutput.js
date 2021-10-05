@@ -5,7 +5,7 @@ export default function createOutput(event) {
     let module = new Module("output", true, false, false, undefined);
     let speakerImg = document.createElement("img");
 
-    speakerImg.src = "./img/ico-speaker.png";
+    speakerImg.src = "./img/speaker.svg";
     module.content.controllers.appendChild(speakerImg);
 
     module.audioNode = audioContext.destination;

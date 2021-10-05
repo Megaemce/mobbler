@@ -372,18 +372,25 @@ body {
     padding-top: .25em;
 }
 
+.module .content .controllers.analyser {
+    background-image: url('../img/background_2.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    margin: 5px;
+}
+
 .module .content select {
     background: url('../img/ico-arrow.png') 95% 50% no-repeat;
     border: none;
     box-sizing: border-box;
     cursor: pointer;
-    font-family: 'Droid Serif', Georgia, serif;
     font-size: .625em;
-    font-style: italic;
     outline: none;
     white-space: pre;
     min-width: 100px;
     width: 100%;
+    margin-left: 5px;
     -webkit-appearance: none;
     -webkit-box-align: center;
 }
@@ -402,7 +409,6 @@ body {
 
 .module .content .looper label,
 .module .content .normalizer label {
-    cursor: pointer;
     width: 100%;
     align-self: center;
 }
@@ -427,8 +433,8 @@ body {
 }
 
 .module .analyserCanvas {
-    margin: 10px;
-    background-image: url('../img/analyser-bg.png');
+    margin: 1px 5px 0px 0px;
+    padding: 0px 0px 5px 5px;
 }
 
 
@@ -620,6 +626,7 @@ body {
 }
 
 input[type="checkbox"] {
+    cursor: pointer;
     margin-right: 7px;
 }
 

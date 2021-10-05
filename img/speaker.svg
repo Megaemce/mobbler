@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="90" height="89.93" version="1.1" viewBox="0 0 90 89.93" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient17191">
+   <stop stop-color="#a5a9a1" stop-opacity=".94022" offset="0"/>
+   <stop stop-color="#eef3e8" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linearGradient16857">
+   <stop stop-color="#888a85" offset="0"/>
+   <stop stop-color="#e7eae2" offset="1"/>
+  </linearGradient>
+  <pattern id="pattern3907" patternTransform="matrix(.99461 0 0 .99461 17.737 36.766)" xlink:href="#Packedcircles"/>
+  <pattern id="Packedcircles" width="1" height="1.73205080756" patternTransform="translate(0) scale(10)" patternUnits="userSpaceOnUse">
+   <g>
+    <circle cy=".5" r=".5"/>
+    <circle cx="1" cy=".5" r=".5"/>
+    <circle cx=".5" cy="1.366" r=".5"/>
+    <circle cx=".5" cy="-.36603" r=".5"/>
+   </g>
+  </pattern>
+  <filter id="filter7613" x="-.16806" y="-.16702" width="1.3335" height="1.3325" color-interpolation-filters="sRGB">
+   <feOffset dx="3" dy="3"/>
+   <feGaussianBlur result="blur" stdDeviation="3"/>
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite"/>
+   <feBlend in="blur" in2="composite" result="fbSourceGraphic"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feFlood flood-color="rgb(0,0,0)" in="fbSourceGraphic" result="flood"/>
+   <feComposite in="flood" in2="fbSourceGraphic" operator="out" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="8.98204"/>
+   <feOffset dx="-3.5" dy="-3.3" result="offset"/>
+   <feComposite in="offset" in2="fbSourceGraphic" operator="in" result="fbSourceGraphic"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feColorMatrix in="fbSourceGraphic" values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter8733" x="-.066272" y="-.066272" width="1.1742" height="1.1742" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(255,255,255)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="out" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="5.3000004"/>
+   <feOffset dx="8" dy="8" result="offset"/>
+   <feComposite in="offset" in2="SourceGraphic" operator="in" result="fbSourceGraphic"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feColorMatrix in="fbSourceGraphic" values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <radialGradient id="radialGradient11389-4" cx="157.04" cy="350.91" r="20.68" gradientTransform="matrix(.91818 0 0 .91818 -104.12 -266.44)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#343434" offset="0"/>
+   <stop stop-color="#373737" stop-opacity="0" offset="1"/>
+  </radialGradient>
+  <filter id="filter12096" x="-.21874" y="-.21874" width="1.4375" height="1.4375" color-interpolation-filters="sRGB">
+   <feGaussianBlur result="fbSourceGraphic" stdDeviation="6.5185026"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feColorMatrix in="fbSourceGraphic" values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter16562-4" x="-.18339" y="-.18339" width="1.3668" height="1.3668" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <filter id="filter16442-1" x="-.38513" y="-.38513" width="1.7703" height="1.7703" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.2"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="fbSourceGraphic"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feFlood flood-color="rgb(0,0,0)" flood-opacity=".46274" in="fbSourceGraphic" result="flood"/>
+   <feComposite in="flood" in2="fbSourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="fbSourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <linearGradient id="linearGradient17565" x1="-80.223" x2="-82.312" y1="-49.677" y2="-47.411" gradientTransform="translate(216.41 71.665)" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient16857"/>
+  <linearGradient id="linearGradient17567" x1="-81.226" x2="-82.597" y1="-48.667" y2="-47.296" gradientTransform="translate(216.41 71.665)" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient17191"/>
+  <filter id="filter16562-2" x="-.18339" y="-.18339" width="1.3668" height="1.3668" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <filter id="filter16442-5" x="-.38513" y="-.38513" width="1.7703" height="1.7703" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.2"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="fbSourceGraphic"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feFlood flood-color="rgb(0,0,0)" flood-opacity=".46274" in="fbSourceGraphic" result="flood"/>
+   <feComposite in="flood" in2="fbSourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="fbSourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <linearGradient id="linearGradient17671" x1="-80.223" x2="-82.312" y1="-49.677" y2="-47.411" gradientTransform="translate(324.86 201.67)" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient16857"/>
+  <linearGradient id="linearGradient17673" x1="-81.226" x2="-82.597" y1="-48.667" y2="-47.296" gradientTransform="translate(324.86 201.67)" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient17191"/>
+  <filter id="filter16562-2-8" x="-.18339" y="-.18339" width="1.3668" height="1.3668" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <filter id="filter16442-5-5" x="-.38513" y="-.38513" width="1.7703" height="1.7703" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.2"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="fbSourceGraphic"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feFlood flood-color="rgb(0,0,0)" flood-opacity=".46274" in="fbSourceGraphic" result="flood"/>
+   <feComposite in="flood" in2="fbSourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="fbSourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <filter id="filter16562-2-9" x="-.18339" y="-.18339" width="1.3668" height="1.3668" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <filter id="filter16442-5-2" x="-.38513" y="-.38513" width="1.7703" height="1.7703" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.2"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="SourceGraphic" in2="offset" result="fbSourceGraphic"/>
+   <feColorMatrix in="fbSourceGraphic" result="fbSourceGraphicAlpha" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"/>
+   <feFlood flood-color="rgb(0,0,0)" flood-opacity=".46274" in="fbSourceGraphic" result="flood"/>
+   <feComposite in="flood" in2="fbSourceGraphic" operator="in" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.5"/>
+   <feOffset dx="-2.77556e-17" dy="-2.77556e-17" result="offset"/>
+   <feComposite in="fbSourceGraphic" in2="offset" result="composite2"/>
+  </filter>
+  <linearGradient id="linearGradient19017" x1="90.314" x2="71.895" y1="12.602" y2="-1.4541" gradientTransform="translate(-47.09 40.008)" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
+   <stop stop-color="#989b95" offset="0"/>
+   <stop stop-color="#bcbcbc" offset="1"/>
+  </linearGradient>
+  <filter id="filter21111" x="-53.408" y="-32.668" width="54.488" height="33.742" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter21115" x="-53.408" y="-32.668" width="54.488" height="33.742" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter21119" x="-53.408" y="-32.668" width="54.488" height="33.742" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter21123" x="-29.284" y="-4.7456" width="30.363" height="5.8198" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter21131" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter21143" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter21147" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+  <filter id="filter21151" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+   <feColorMatrix values="1.67485 0 0 0 -0.337423 0 1.67485 0 0 -0.337423 0 0 1.67485 0 -0.337423 0 0 0 1 0"/>
+  </filter>
+ </defs>
+ <g transform="translate(-10.073 -25.783)">
+  <g transform="matrix(1.5 0 0 1.5 -5.0365 -12.892)">
+   <path d="m40.074 30.457a25.302 25.302 0 0 0-25.303 25.303 25.302 25.302 0 0 0 25.303 25.303 25.302 25.302 0 0 0 25.301-25.303 25.302 25.302 0 0 0-25.301-25.303zm0 3.1172a22.187 22.187 0 0 1 22.186 22.186 22.187 22.187 0 0 1-22.186 22.188 22.187 22.187 0 0 1-22.188-22.188 22.187 22.187 0 0 1 22.188-22.186z" fill="url(#linearGradient19017)" filter="url(#filter21151)"/>
+   <circle cx="40.073" cy="55.76" r="22.497" fill="#babdb6" filter="url(#filter21147)" stroke-linejoin="round" stroke-width="9.1687"/>
+   <g>
+    <g stroke-linejoin="round">
+     <circle cx="40.073" cy="55.76" r="22.497" fill="url(#pattern3907)" filter="url(#filter21143)" opacity=".34091" stroke-width="9.1687"/>
+     <circle transform="matrix(.23442 0 0 .23442 7.7117 19.739)" cx="138.3" cy="153.81" r="95.968" filter="url(#filter7613)" stroke-width="39.112"/>
+     <circle transform="matrix(.23442 0 0 .23442 7.7117 19.739)" cx="138.05" cy="153.66" r="95.968" filter="url(#filter8733)" opacity=".34091" stroke-width="39.112" style="mix-blend-mode:normal"/>
+    </g>
+    <circle cx="40.073" cy="55.76" r="18.988" fill="url(#radialGradient11389-4)" filter="url(#filter21131)" style="mix-blend-mode:hue"/>
+   </g>
+   <circle transform="matrix(.17843 0 0 .17843 15.523 28.098)" cx="137.59" cy="155.03" r="35.76" fill="#5b5b5b" fill-opacity=".5942" filter="url(#filter12096)" style="mix-blend-mode:overlay"/>
+   <g transform="matrix(.23442 0 0 .23442 8.5504 26.091)" filter="url(#filter21123)">
+    <circle cx="133.89" cy="24.448" r="3.2716" fill="url(#linearGradient17565)" filter="url(#filter16562-4)"/>
+    <circle cx="133.89" cy="24.448" r="2.1811" fill="url(#linearGradient17567)" filter="url(#filter16442-1)"/>
+    <path d="m131.64 26.752 4.4955-4.656" fill="none" stroke="#555753" stroke-width=".99375px" style="mix-blend-mode:normal"/>
+   </g>
+   <g transform="matrix(.1224 .19993 -.19993 .1224 65.165 -11.41)" filter="url(#filter21119)">
+    <circle cx="242.34" cy="154.45" r="3.2716" fill="url(#linearGradient17671)" filter="url(#filter16562-2)"/>
+    <circle cx="242.34" cy="154.45" r="2.1811" fill="url(#linearGradient17673)" filter="url(#filter16442-5)"/>
+    <path d="m240.1 156.76 4.4955-4.656" fill="none" stroke="#555753" stroke-width=".99375px" style="mix-blend-mode:normal"/>
+   </g>
+   <g transform="matrix(.1224 .19993 -.19993 .1224 41.548 12.394)" filter="url(#filter21115)">
+    <circle cx="242.34" cy="154.45" r="3.2716" fill="url(#linearGradient17671)" filter="url(#filter16562-2-8)"/>
+    <circle cx="242.34" cy="154.45" r="2.1811" fill="url(#linearGradient17673)" filter="url(#filter16442-5-5)"/>
+    <path d="m240.1 156.76 4.4955-4.656" fill="none" stroke="#555753" stroke-width=".99375px" style="mix-blend-mode:normal"/>
+   </g>
+   <g transform="matrix(.016468 .23384 -.23384 .016468 48.384 -3.5897)" filter="url(#filter21111)">
+    <circle cx="242.34" cy="154.45" r="3.2716" fill="url(#linearGradient17671)" filter="url(#filter16562-2-9)"/>
+    <circle cx="242.34" cy="154.45" r="2.1811" fill="url(#linearGradient17673)" filter="url(#filter16442-5-2)"/>
+    <path d="m240.1 156.76 4.4955-4.656" fill="none" stroke="#555753" stroke-width=".99375px" style="mix-blend-mode:normal"/>
+   </g>
+  </g>
+ </g>
+</svg>
