@@ -1,18 +1,18 @@
-import createAnalyser from "./effects/createAnalyser.js";
-import createBiquadFilter from "./effects/createBiquadFilter.js";
-import createConvolver from "./effects/createConvolver.js";
-import createDynamicsCompressor from "./effects/createDynamicsCompressor.js";
-import createGain from "./effects/createGain.js";
-import createOscillator from "./effects/createOscillator.js";
-import createDelay from "./effects/createDelay.js";
-import createAudioSource from "./effects/createAudioSource.js";
-import createLiveInput from "./effects/createLiveInput.js";
-import createDistortion from "./effects/createDistortion.js";
-import createDelayEffect from "./effects/createDelayEffect.js";
-import createFlanger from "./effects/createFlanger.js";
-import createReverb from "./effects/createReverb.js";
-import createTremolo from "./effects/createTremolo.js";
-import createOutput from "./effects/createOutput.js";
+import analyser from "./effects/analyser.js";
+import biquadFilter from "./effects/biquadFilter.js";
+import convolver from "./effects/convolver.js";
+import dynamicsCompressor from "./effects/dynamicsCompressor.js";
+import gain from "./effects/gain.js";
+import oscillator from "./effects/oscillator.js";
+import delay from "./effects/delay.js";
+import audioSource from "./effects/audioSource.js";
+import liveInput from "./effects/liveInput.js";
+import distortion from "./effects/distortion.js";
+import delayEffect from "./effects/delayEffect.js";
+import flanger from "./effects/flanger.js";
+import reverb from "./effects/reverb.js";
+import tremolo from "./effects/tremolo.js";
+import output from "./effects/output.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
 
@@ -20,7 +20,7 @@ import { createSelectionRectangle } from "./helpers/builders.js";
 export let audioContext;
 export let cables = new Object(); // keep all cables
 export let modules = new Object(); // keep all modules
-export { createAudioSource as createAudioSource };
+export { audioSource as audioSource };
 
 const sounds = ["glass-hit.ogg", "drums.ogg", "noise.ogg", "voice.ogg", "bass.ogg", "guitar.ogg", "stringbass.wav"];
 const impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "concert_voices.ogg"];
@@ -41,21 +41,21 @@ document.getElementById("svgCanvas").onclick = () => {
     loadFilesIntoAudioContext(sounds, true);
     loadFilesIntoAudioContext(impulseResponses, false);
 
-    document.getElementById("analyser").addEventListener("mousedown", createAnalyser);
-    document.getElementById("audioSource").addEventListener("mousedown", createAudioSource);
-    document.getElementById("biquadFilter").addEventListener("mousedown", createBiquadFilter);
-    document.getElementById("convolver").addEventListener("mousedown", createConvolver);
-    document.getElementById("delayNode").addEventListener("mousedown", createDelay);
-    document.getElementById("dynamicsCompressor").addEventListener("mousedown", createDynamicsCompressor);
-    document.getElementById("gainNode").addEventListener("mousedown", createGain);
-    document.getElementById("liveInput").addEventListener("mousedown", createLiveInput);
-    document.getElementById("oscillator").addEventListener("mousedown", createOscillator);
-    document.getElementById("distortion").addEventListener("mousedown", createDistortion);
-    document.getElementById("delayEffect").addEventListener("mousedown", createDelayEffect);
-    document.getElementById("flanger").addEventListener("mousedown", createFlanger);
-    document.getElementById("reverb").addEventListener("mousedown", createReverb);
-    document.getElementById("tremolo").addEventListener("mousedown", createTremolo);
-    document.getElementById("output").addEventListener("mousedown", createOutput);
+    document.getElementById("analyser").addEventListener("mousedown", analyser);
+    document.getElementById("audioSource").addEventListener("mousedown", audioSource);
+    document.getElementById("biquadFilter").addEventListener("mousedown", biquadFilter);
+    document.getElementById("convolver").addEventListener("mousedown", convolver);
+    document.getElementById("delayNode").addEventListener("mousedown", delay);
+    document.getElementById("dynamicsCompressor").addEventListener("mousedown", dynamicsCompressor);
+    document.getElementById("gainNode").addEventListener("mousedown", gain);
+    document.getElementById("liveInput").addEventListener("mousedown", liveInput);
+    document.getElementById("oscillator").addEventListener("mousedown", oscillator);
+    document.getElementById("distortion").addEventListener("mousedown", distortion);
+    document.getElementById("delayEffect").addEventListener("mousedown", delayEffect);
+    document.getElementById("flanger").addEventListener("mousedown", flanger);
+    document.getElementById("reverb").addEventListener("mousedown", reverb);
+    document.getElementById("tremolo").addEventListener("mousedown", tremolo);
+    document.getElementById("output").addEventListener("mousedown", output);
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;
 };

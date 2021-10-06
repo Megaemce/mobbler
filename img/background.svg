@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg width="234.68" height="140" version="1.1" viewBox="0 0 62.092 37.042" xmlns="http://www.w3.org/2000/svg">
+<svg width="222.54" height="130.66" version="1.1" viewBox="0 0 58.879 34.572" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
-  <filter id="filter1566" x="-.015755" y="-.027045" width="1.0347" height="1.0595" color-interpolation-filters="sRGB">
+  <filter id="filter1566" x="-.015756" y="-.027046" width="1.0347" height="1.0595" color-interpolation-filters="sRGB">
    <feFlood flood-color="rgb(0,0,0)" flood-opacity=".59216" result="flood"/>
    <feComposite in="flood" in2="SourceGraphic" operator="out" result="composite1"/>
    <feGaussianBlur in="composite1" result="blur" stdDeviation="0.4"/>
@@ -10,5 +10,91 @@
    <feComposite in="offset" in2="SourceGraphic" operator="atop" result="composite2"/>
   </filter>
  </defs>
- <rect transform="matrix(.94587 0 0 .94587 -4.9918 -7.6391)" x="6.2763" y="9.076" width="63.448" height="36.963" fill="#fff" filter="url(#filter1566)" stroke="#efefef" stroke-linejoin="round" stroke-width=".079294"/>
+ <rect transform="matrix(.89692 0 0 .88279 -4.7334 -7.1297)" x="6.2763" y="9.076" width="63.448" height="36.963" fill="#425127" filter="url(#filter1566)" stroke="#efefef" stroke-linejoin="round" stroke-width=".079391"/>
+ <g fill="none" stroke="#000">
+  <g transform="matrix(1.0001 0 0 .92308 -2.3961 .089872)" opacity=".35227" stroke-width=".13229">
+   <path d="m3.968 1.3229v34.396"/>
+   <path d="m6.6139 1.3229v34.396"/>
+   <path d="m9.2597 1.3229v34.396"/>
+   <path d="m11.906 1.3229v34.396"/>
+   <path d="m14.551 1.3229v34.396"/>
+   <path d="m17.197 1.3229v34.396"/>
+   <path d="m19.843 1.3229v34.396"/>
+   <path d="m22.489 1.3229v34.396"/>
+   <path d="m25.135 1.3229v34.396"/>
+   <path d="m27.781 1.3229v34.396"/>
+   <path d="m30.427 1.3229v34.396"/>
+   <path d="m33.072 1.3229v34.396"/>
+   <path d="m35.718 1.3229v34.396"/>
+   <path d="m38.364 1.3229v34.396"/>
+   <path d="m41.01 1.3229v34.396"/>
+   <path d="m43.656 1.3229v34.396"/>
+   <path d="m46.302 1.3229v34.396"/>
+   <path d="m48.948 1.3229v34.396"/>
+   <path d="m51.593 1.3229v34.396"/>
+   <path d="m54.239 1.3229v34.396"/>
+   <path d="m56.885 1.3229v34.396"/>
+   <path d="m59.531 1.3229v34.396"/>
+  </g>
+  <g>
+   <g stroke-width=".12782">
+    <path d="m1.5749 3.9549h55.563" opacity=".35227"/>
+    <path d="m1.5749 1.3095h55.563" opacity=".35227"/>
+    <path d="m1.5749 6.6011h55.563" opacity=".35227"/>
+    <path d="m1.5749 9.2474h55.563" opacity=".35227"/>
+    <path d="m1.5749 11.894h55.563" opacity=".35227"/>
+    <path d="m1.5749 14.54h55.563" opacity=".35227"/>
+   </g>
+   <path d="m1.5749 17.186h55.563" opacity=".35227" stroke-width=".13229"/>
+   <path d="m1.5749 19.832h55.563" opacity=".35227" stroke-width=".13229"/>
+   <g stroke-width=".12782">
+    <path d="m1.5749 22.479h55.563" opacity=".35227"/>
+    <path d="m1.5749 25.125h55.563" opacity=".35227"/>
+    <path d="m1.5749 27.771h55.563" opacity=".35227"/>
+    <path d="m1.5749 30.417h55.563" opacity=".35227"/>
+    <path d="m1.5749 33.063h55.563" opacity=".35227"/>
+   </g>
+   <g stroke-width=".10464">
+    <path d="m2.9647 16.523v1.3229" opacity=".35"/>
+    <path d="m5.6133 16.523v1.3229" opacity=".35"/>
+    <path d="m8.2619 16.523v1.3229" opacity=".35"/>
+    <path d="m10.911 16.523v1.3229" opacity=".35"/>
+    <path d="m13.559 16.523v1.3229" opacity=".35"/>
+    <path d="m16.208 16.523v1.3229" opacity=".35"/>
+    <path d="m18.856 16.523v1.3229" opacity=".35"/>
+    <path d="m21.505 16.523v1.3229" opacity=".35"/>
+    <path d="m24.154 16.523v1.3229" opacity=".35"/>
+    <path d="m26.802 16.523v1.3229" opacity=".35"/>
+    <path d="m29.451 16.523v1.3229" opacity=".35"/>
+   </g>
+   <g stroke-width=".10465">
+    <path d="m32.069 16.523v1.3229" opacity=".35"/>
+    <path d="m34.718 16.523v1.3229" opacity=".35"/>
+    <path d="m37.367 16.523v1.3229" opacity=".35"/>
+    <path d="m40.016 16.523v1.3229" opacity=".35"/>
+    <path d="m42.665 16.523v1.3229" opacity=".35"/>
+    <path d="m45.314 16.523v1.3229" opacity=".35"/>
+    <path d="m47.963 16.523v1.3229" opacity=".35"/>
+    <path d="m50.612 16.523v1.3229" opacity=".35"/>
+    <path d="m53.26 16.523v1.3229" opacity=".35"/>
+    <path d="m55.909 16.523v1.3229" opacity=".35"/>
+   </g>
+   <g stroke-width=".10455">
+    <path d="m31.342 2.7113-1.322-5.93e-5" opacity=".35"/>
+    <path d="m31.342 5.3571-1.322-5.93e-5" opacity=".35"/>
+    <path d="m31.342 8.003-1.322-5.93e-5" opacity=".35"/>
+    <path d="m31.342 10.649-1.322-6e-5" opacity=".35"/>
+    <path d="m31.342 13.295-1.322-6e-5" opacity=".35"/>
+   </g>
+   <path d="m31.342 15.941-1.322-6e-5" opacity=".35" stroke-width=".13229"/>
+   <g stroke-width=".10455">
+    <path d="m31.342 18.586-1.322-6e-5" opacity=".35"/>
+    <path d="m31.342 21.232-1.322-6e-5" opacity=".35"/>
+    <path d="m31.342 23.878-1.322-6e-5" opacity=".35"/>
+    <path d="m31.342 26.524-1.322-6e-5" opacity=".35"/>
+    <path d="m31.342 29.17-1.322-6e-5" opacity=".35"/>
+    <path d="m31.342 31.816-1.322-6e-5" opacity=".35"/>
+   </g>
+  </g>
+ </g>
 </svg>

@@ -341,7 +341,7 @@ export function buildCable(cable) {
     let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
     let svg = document.getElementById("svgCanvas");
 
-    cable.jack.setAttribute("href", "./img/jack_cleared_nocable.svg");
+    cable.jack.setAttribute("href", "./img/jack.svg");
     cable.jack.setAttribute("height", "9");
     cable.jack.setAttribute("id", `${cable.source.id}-jack`);
 

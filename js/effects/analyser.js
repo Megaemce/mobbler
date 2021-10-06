@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createAnalyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
+export default function analyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
     const visualSettings = ["sine wave", "frequency bars"];
     const canvasHeight = 101;
     const canvasWidth = 180;

@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createConvolver(event, initalBufferName, initalNormalizer) {
+export default function convolver(event, initalBufferName, initalNormalizer) {
     let irNames = Object.keys(audioContext.nameIRBuffer);
     const bufferName = initalBufferName || irNames[0];
     const normalizer = initalNormalizer || "false";

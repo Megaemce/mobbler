@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createGain(event, initalGain) {
+export default function gain(event, initalGain) {
     const gain = initalGain || 1.0;
     let module = new Module("gain", true, false, false, undefined);
 

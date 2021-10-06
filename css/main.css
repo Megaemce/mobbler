@@ -10,7 +10,7 @@
 
 
 :root {
-    --sliderWidth: 110px;
+    --sliderWidth: 90px;
     user-select: none
 }
 
@@ -372,8 +372,13 @@ body {
     padding-top: .25em;
 }
 
+.module .content .controllers img{
+    width: 70px;
+}
+
+
 .module .content .controllers.analyser {
-    background-image: url('../img/background_2.svg');
+    background-image: url('../img/background.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -414,7 +419,7 @@ body {
 }
 
 .module .content .switch {
-    background-image: url('../img/switch_off_new.svg');
+    background-image: url('../img/switch_off.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -423,7 +428,7 @@ body {
 }
 
 .module .content .switch-on {
-    background-image: url('../img/switch_on_new.svg');
+    background-image: url('../img/switch_on.svg');
 }
 
 .module .content .slider .slider-info .value-unit {
@@ -503,7 +508,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    min-width: 78px;
+    min-width: 68px;
 }
 
 .slider-info {
@@ -670,7 +675,7 @@ input[type="range"].not_used {
 }
 
 input[type="range"].disabled::-webkit-slider-thumb {
-    background-image: url(../img/suwak.svg);
+    background-image: url(../img/slider.svg);
 
 }
 
@@ -682,14 +687,14 @@ input[type="range"]::-webkit-slider-thumb {
     width: 32px;
     height: 32px;
     cursor: pointer;
-    background-image: url(../img/suwak.svg);
+    background-image: url(../img/slider.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
 }
 
 .input-wrapper {
-    height: 110px;
+    height: var(--sliderWidth);
     position: relative;
 }
 

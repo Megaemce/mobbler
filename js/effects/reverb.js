@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function createReverb(event, initalDryness, initalWetness, initalBufferName) {
+export default function reverb(event, initalDryness, initalWetness, initalBufferName) {
     let irNames = Object.keys(audioContext.nameIRBuffer);
 
     const dryness = initalDryness || 0.5;

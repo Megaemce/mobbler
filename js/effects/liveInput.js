@@ -4,7 +4,7 @@ import { audioContext } from "../main.js";
 function gotStream(stream) {
     this.audioNode = audioContext.createMediaStreamSource(stream);
 }
-export default function createLiveInput(event) {
+export default function liveInput(event) {
     let module = new Module("live input", false, false, false, undefined);
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
