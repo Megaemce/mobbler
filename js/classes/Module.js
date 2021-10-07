@@ -448,10 +448,11 @@ export default class Module {
         canvas.id = `${this.id}-content-controllers-canvas`;
         canvas.height = canvasHeight;
         canvas.width = canvasWidth;
-        canvas.className = "analyserCanvas";
+        canvas.className = "canvas";
 
         this.content.controllers.appendChild(canvas);
         this.content.controllers.canvas = canvas;
+        this.content.controllers.classList.add("analyser");
 
         let ctx = (this.content.controllers.drawingContext = canvas.getContext("2d"));
 
