@@ -1,7 +1,7 @@
 import Cable from "./Cable.js";
 import { audioContext, cables, modules } from "../main.js";
 import { valueToLogPosition, scaleBetween, logPositionToValue } from "../helpers/math.js";
-import { buildModule, buildModuleSlider } from "../helpers/builders.js";
+import { buildModule, buildModuleSlider, addOpenFileButtonTo } from "../helpers/builders.js";
 
 let id = 0;
 
@@ -121,6 +121,10 @@ export default class Module {
             // show new value above slider
             module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
         };
+    }
+    /* add "open file..." option to select div */
+    addOpenFileTo(selectDiv) {
+        addOpenFileButtonTo(selectDiv, this);
     }
     /* cancel slider movement animation on sliderType */
     stopSliderAnimation(sliderType) {
@@ -370,70 +374,6 @@ export default class Module {
 
             this.connectToSlider(destinationModule, slider, parameterType);
         }
-    }
-    /* function used by audio buffer source's playButton to play the sound */
-    playButtonHandler() {
-        let selectedBufferName = this.content.options.select.value;
-
-        // switched from on to off so stop the sound
-        if (this.isTransmitting === true) {
-            this.stopSound();
-        } else {
-            this.isTransmitting = true;
-            this.content.controllers.playButton.classList.add("switch-on");
-
-            // remove old audioNode (if there is any)
-            if (this.audioNode) {
-                this.audioNode.stop(0);
-                this.audioNode.disconnect();
-                this.audioNode = undefined;
-            }
-
-            //  create a new BufferSource with selected buffer and play it
-            this.audioNode = audioContext.createBufferSource();
-            this.audioNode.loop = this.content.options.looper.checkbox.checked;
-            this.audioNode.buffer = audioContext.nameSoundBuffer[selectedBufferName];
-
-            // send sound to all connected modules/modules' parameters
-            this.outcomingCables.forEach((cable) => {
-                if (cable.destination.audioNode || cable.destination.audioNodes) {
-                    if (cable.inputType === "input") this.connectToModule(cable.destination);
-                    if (cable.inputType !== "input") this.connectToParameter(cable.destination, cable.inputType);
-                }
-            });
-
-            this.audioNode.start(audioContext.currentTime);
-
-            // if there is loop disabled stop the sound after delay
-            if (this.audioNode.loop === false) {
-                let delay = Math.floor(this.buffer.duration * 1000) + 1;
-
-                this.audioNode.stopTimer = window.setTimeout(() => {
-                    this.stopSound();
-                }, delay);
-            }
-        }
-    }
-    /* function used by playButtonHandler function to stop the sound */
-    stopSound() {
-        this.isTransmitting = false;
-        this.audioNode.stop(0);
-
-        // clear stopTimer parameter (if there is any)
-        if (this.audioNode.stopTimer) {
-            window.clearTimeout(this.audioNode.stopTimer);
-            this.audioNode.stopTimer = undefined;
-        }
-
-        this.content.controllers.playButton.classList.remove("switch-on");
-
-        // if loop is enabled sound will play even with switch-off thus kill it with fire
-        if (this.audioNode.loop === true) {
-            this.audioNode.loop = false;
-            this.content.options.looper.checkbox.checked = false;
-        }
-
-        this.markAllLinkedCablesAs("deactive");
     }
     /* create analyser on module with given setting */
     createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {

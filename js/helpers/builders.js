@@ -1,26 +1,35 @@
 import { valueToLogPosition } from "../helpers/math.js";
+import { openFileHandler } from "../helpers/loaders.js";
 import Line from "../classes/Line.js";
 
 let tempx = 50,
     tempy = 100;
 
-export function addOpenFileButtonTo(element) {
+export function addOpenFileButtonTo(selectDiv, module) {
     let input = document.createElement("input");
     let button = document.createElement("button");
-    let option = document.createElement("option");
+    let fileButton = document.createElement("option");
 
     input.style = "display: none;";
     input.type = "file";
     input.id = "file-input";
 
+    input.onchange = function () {
+        openFileHandler(input, module);
+    };
+
     button.innerText = "Open file...";
     button.id = "button";
 
-    option.id = "file button";
-    option.appendChild(button);
-    option.appendChild(input);
+    fileButton.id = "file button";
+    fileButton.appendChild(button);
+    fileButton.appendChild(input);
+    // module.content.options.select.fileButton.input
+    fileButton.input = input;
 
-    element.appendChild(option);
+    // module.content.options.select.fileButton
+    selectDiv.appendChild(fileButton);
+    selectDiv.fileButton = fileButton;
 }
 
 export function displayAlertOnElement(message, element, timeInSec) {
