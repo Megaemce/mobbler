@@ -1,25 +1,26 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function analyser(event, initalSmoothingTimeConstant, initalMaxDecibels, initalType) {
+export default function analyser(event, smoothingTimeConstant, maxDecibels, type) {
     const canvasWidth = 180;
     const canvasHeight = 100;
     const fftSizeSineWave = 2048;
     const fftSizeFrequencyBars = 512;
-    const type = initalType || "sine wave";
-    const maxDecibels = initalMaxDecibels || 0;
-    const smoothingTimeConstant = initalSmoothingTimeConstant || 0.25;
-    const visualSettings = ["sine wave", "frequency bars"];
+    const initalType = type || "sine wave";
+    const initalMaxDecibels = maxDecibels || 0;
+    const initalSmoothing = smoothingTimeConstant || 0.25;
+    const analyserTypes = ["sine wave", "frequency bars"];
 
     let animationID;
-    let module = new Module("analyser", true, false, false, visualSettings);
+    let module = new Module("analyser", true, false, false, analyserTypes);
 
+    // set audioNode
     module.audioNode = audioContext.createAnalyser();
-    module.audioNode.maxDecibels = maxDecibels;
-    module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
+    module.audioNode.maxDecibels = initalMaxDecibels;
+    module.audioNode.smoothingTimeConstant = initalSmoothing;
 
     // start inital analyser
-    module.visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, type);
+    module.visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, initalType);
 
     // on type change switch animation's style
     module.content.options.select.onchange = function () {
