@@ -436,7 +436,7 @@ export default class Module {
         this.markAllLinkedCablesAs("deactive");
     }
     /* create analyser on module with given setting */
-    visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
+    createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
         let animationID = undefined;
         let canvas = this.content.controllers.canvas;
         let img = new Image();

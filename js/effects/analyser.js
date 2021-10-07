@@ -20,12 +20,12 @@ export default function analyser(event, smoothingTimeConstant, maxDecibels, type
     module.audioNode.smoothingTimeConstant = initalSmoothing;
 
     // start inital analyser
-    module.visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, initalType);
+    module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, initalType);
 
     // on type change switch animation's style
     module.content.options.select.onchange = function () {
         window.cancelAnimationFrame(animationID);
-        module.visualizeOn(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, this.value);
+        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, this.value);
     };
 
     // add inital cable when structure is fully build - getBoundingClientRect related
