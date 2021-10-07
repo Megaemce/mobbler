@@ -124,7 +124,7 @@ export default class Module {
     }
     /* add "open file..." option to select div */
     addOpenFileTo(selectDiv) {
-        addOpenFileButtonTo(selectDiv, this);
+        addOpenFileButtonTo(selectDiv);
     }
     /* cancel slider movement animation on sliderType */
     stopSliderAnimation(sliderType) {

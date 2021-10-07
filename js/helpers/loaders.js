@@ -18,11 +18,12 @@ export function loadFilesIntoAudioContext(soundArray, isSound) {
     isSound ? (audioContext.nameSoundBuffer = nameBufferDictonary) : (audioContext.nameIRBuffer = nameBufferDictonary);
 }
 
-export function openFileHandler(input, module) {
+export function openFileHandler(module) {
+    let reader = new FileReader();
     let select = module.content.options.select;
     let fileButton = module.content.options.select.fileButton;
-    let fileLoaded = input.files[0];
-    let reader = new FileReader();
+    let fileLoaded = module.content.options.select.fileButton.input.files[0];
+
     // when file is loaded as array buffer
     reader.onload = function () {
         let fileAsArrayBuffer = this.result;
@@ -38,7 +39,7 @@ export function openFileHandler(input, module) {
                 fileButton.removeAttribute("id"); // not button anymore
 
                 // add another "open file..." button
-                addOpenFileButtonTo(fileButton.parentNode, module);
+                addOpenFileButtonTo(select);
             })
             .catch((error) => {
                 select.value = select.options[0].text;

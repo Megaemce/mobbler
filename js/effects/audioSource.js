@@ -1,5 +1,6 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
+import { openFileHandler } from "../helpers/loaders.js";
 
 /* function used by audio buffer source's playButton to play the sound */
 Module.prototype.playButtonHandler = function () {
@@ -88,6 +89,11 @@ export default function audioSource(event, loop, bufferName) {
 
     // after this openFile will be accessible via module.content.options.select.fileButton
     module.addOpenFileTo(module.content.options.select);
+
+    // add openfilehandler to hidden input button
+    module.content.options.select.fileButton.input.onchange = () => {
+        openFileHandler(module);
+    };
 
     module.content.options.select.value = initalBufferName;
 
