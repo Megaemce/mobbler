@@ -67,17 +67,21 @@ Module.prototype.stopSound = function () {
     this.markAllLinkedCablesAs("deactive");
 };
 
-export default function audioSource(event, loop, bufferName) {
-    const initalLoop = loop || false;
-    const initalBufferName = bufferName || "guitar.ogg";
+export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
+    const loop = initalLoop || false;
+    const bufferName = initalBufferName || "guitar.ogg";
+    const playbackRate = initalPlaybackRate || 1;
+    const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
 
-    let module = new Module("audio source", false, true, false, soundNames);
     let playButton = document.createElement("div");
+    let module = new Module("audio source", false, true, false, soundNames);
+
+    module.createSlider("playback rate", playbackRate, 0, 5, 0.1, "x", false, playbackRateInfo);
 
     // set module with inital values
-    module.loop = initalLoop;
-    module.buffer = audioContext.nameSoundBuffer[initalBufferName];
+    module.loop = loop;
+    module.buffer = audioContext.nameSoundBuffer[bufferName];
 
     // add play button and it's handler
     module.content.controllers.appendChild(playButton);
@@ -95,7 +99,7 @@ export default function audioSource(event, loop, bufferName) {
         openFileHandler(module);
     };
 
-    module.content.options.select.value = initalBufferName;
+    module.content.options.select.value = bufferName;
 
     // when select changes
     module.content.options.select.onchange = function () {

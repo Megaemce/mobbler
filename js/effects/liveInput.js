@@ -35,6 +35,6 @@ export default function liveInput(event) {
     module.isTransmitting = true;
     module.markAllLinkedCablesAs("active");
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

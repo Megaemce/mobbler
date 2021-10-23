@@ -443,9 +443,12 @@ export default class Module {
                 ctx.strokeStyle = "rgb(98, 255, 0)";
                 ctx.beginPath();
 
+                let x = 0;
+
+                // element range: [0, 255], index range: [0, bufferLength]
                 dataArray.forEach((element, index) => {
                     let x = (canvasWidth / bufferLength) * index; // sliceWidth * index
-                    let y = (element * canvasHeight) / 256; // 256 comes from dataArray max value;
+                    let y = canvasHeight * (element / 256); // 256 comes from dataArray max value;
                     if (!index === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 });

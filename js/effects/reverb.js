@@ -47,6 +47,6 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
         module.audioNodes.convolerNode.audioNode.buffer = audioContext.nameIRBuffer[this.value];
     };
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

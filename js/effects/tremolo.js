@@ -26,6 +26,6 @@ export default function tremolo(event, initalSpeed) {
 
     module.audioNodes.oscillatorNode.audioNode.frequency.value = speed;
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

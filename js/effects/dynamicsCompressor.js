@@ -24,6 +24,6 @@ export default function dynamicsCompressor(event, initalThreshold, initalKnee, i
     module.createSlider("attack", attack, 0, 1.0, 0.001, "sec", false, attackInfo);
     module.createSlider("release", release, 0, 1.0, 0.05, "sec", false, releaseInfo);
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

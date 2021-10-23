@@ -11,6 +11,6 @@ export default function delay(event, initialDelay, maxDelay) {
 
     module.createSlider("delay Time", delay, 0.0, max, 0.01, "sec", false);
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

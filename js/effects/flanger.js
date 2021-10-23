@@ -18,6 +18,8 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
+    module.prototype.connect;
+
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
         outputNode: { audioNode: audioContext.createGain() },
@@ -58,6 +60,6 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.audioNodes.gainNode.audioNode.gain.value = depth;
     module.audioNodes.oscillatorNode.audioNode.frequency.value = speed;
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

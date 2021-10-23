@@ -28,6 +28,6 @@ export default function distortion(event, initalOversample) {
         module.audioNode.oversample = this.value;
     };
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

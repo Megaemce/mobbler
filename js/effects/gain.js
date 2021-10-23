@@ -10,6 +10,6 @@ export default function gain(event, initalGain) {
 
     module.createSlider("gain", gain, 0, 5, 0.1, "", false);
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

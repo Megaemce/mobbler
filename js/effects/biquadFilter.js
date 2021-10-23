@@ -2,7 +2,7 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 import { displayAlertOnElement } from "../helpers/builders.js";
 
-export default function biquadFilter(event, initalFrequency, initalQ, initalGain, initalType) {
+export default function biquadFilter(event, frequency, q, gain, type) {
     const filters = {
         peaking: { info: "Frequencies inside the range get a boost or an attenuation. Frequencies outside it are unchanged", frequency: { info: "The middle of the frequency range getting a boost or an attenuation" }, q: { enabled: true, info: "Controls the width of the frequency band. The greater the Q value, the larger the frequency band" }, gain: { enabled: true, info: "The boost to be applied. If negative it will be an attenuation" } },
         lowshelf: { info: "Frequencies lower than the frequency get a boost or an attenuation. Frequencies over it are unchanged", frequency: { info: "The upper limit of the frequencies getting a boost or an attenuation" }, q: { enabled: false, info: "Not used for this type of filter" }, gain: { enabled: true, info: "The boost to be applied. If negative it will be an attenuation" } },
@@ -13,19 +13,20 @@ export default function biquadFilter(event, initalFrequency, initalQ, initalGain
         notch: { info: "It is the opposite of a bandpass filter: frequencies outside the give range of frequencies pass through. Frequencies inside it are attenuated", frequency: { info: "The center of the range of frequencies" }, q: { enabled: true, info: "Controls the width of the frequency band. The greater the Q value, the larger the frequency band" }, gain: { enabled: false, info: "Not used for this type of filter" } },
         allpass: { info: "It lets all frequencies through, but changes the phase-relationship between the various frequencies", frequency: { info: "The frequency with the maximal group delay, that is, the frequency where the center of the phase transition occurs" }, q: { enabled: true, info: "Controls how sharp the transition is at the medium frequency. The larger this parameter is, the sharper and larger the transition will be" }, gain: { enabled: false, info: "Not used for this type of filter" } },
     };
-    const firstFrequency = initalFrequency || 440.0;
-    const firstQ = initalQ || 1.0;
-    const firstGain = initalGain || 1.0;
-    const firstType = initalType || "peaking";
+    const initalFrequency = frequency || 440.0;
+    const initalQ = q || 1.0;
+    const initalGain = gain || 1.0;
+    const initalType = type || "peaking";
 
     let module = new Module("biquad filter", true, false, false, Object.keys(filters));
 
+    // set audioNode with inital values
     module.audioNode = audioContext.createBiquadFilter();
-    module.audioNode.type = firstType;
+    module.audioNode.type = initalType;
 
-    module.createSlider("frequency", firstFrequency, 0.1, 20000, 1, "Hz", true, filters[firstType].frequency.info);
-    module.createSlider("Q", firstQ, 1, 100, 0.1, "", false, filters[firstType].q.info);
-    module.createSlider("gain", firstGain, -10, 10.0, 0.01, "", false, filters[firstType].gain.info);
+    module.createSlider("frequency", initalFrequency, 0.1, 20000, 1, "Hz", true, filters[initalType].frequency.info);
+    module.createSlider("Q", initalQ, 1, 100, 0.1, "", false, filters[initalType].q.info);
+    module.createSlider("gain", initalGain, -10, 10.0, 0.01, "", false, filters[initalType].gain.info);
 
     module.content.options.select.onchange = function () {
         // set tooltips according to selected filter
@@ -55,6 +56,6 @@ export default function biquadFilter(event, initalFrequency, initalQ, initalGain
         module.audioNode.type = this.value;
     };
 
-    // structure needs to be fully build before - getBoundingClientRect related.
+    // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }
