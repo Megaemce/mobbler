@@ -6,7 +6,6 @@ export default function tremolo(event, initalSpeed) {
     const speedInfo = "Frequency of oscillator that makes trembling effect";
 
     let module = new Module("tremolo", true, false, false, undefined);
-    module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
@@ -16,15 +15,15 @@ export default function tremolo(event, initalSpeed) {
         },
     };
 
-    module.audioNodes.oscillatorNode.audioNode.connect(module.audioNodes.inputNode.audioNode.gain);
+    module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
     module.audioNodes.oscillatorNode.audioNode.type = "sine";
     module.audioNodes.oscillatorNode.audioNode.start(0);
 
+    module.audioNodes.oscillatorNode.audioNode.connect(module.audioNodes.inputNode.audioNode.gain);
+
     module.audioNodes.input = module.audioNodes.inputNode.audioNode;
     module.audioNodes.output = module.audioNodes.inputNode.audioNode;
-
-    module.audioNodes.oscillatorNode.audioNode.frequency.value = speed;
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

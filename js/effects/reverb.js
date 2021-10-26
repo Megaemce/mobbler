@@ -11,9 +11,6 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
 
     let module = new Module("reverb", true, false, false, irNames);
 
-    module.createSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
-    module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
-
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
         outputNode: { audioNode: audioContext.createGain() },
@@ -28,6 +25,9 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
         },
     };
 
+    module.createSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
+    module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
+
     module.audioNodes.inputNode.audioNode.connect(module.audioNodes.convolerNode.audioNode);
     module.audioNodes.inputNode.audioNode.connect(module.audioNodes.drynessNode.audioNode);
     module.audioNodes.convolerNode.audioNode.connect(module.audioNodes.wetnessNode.audioNode);
@@ -38,8 +38,6 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     module.audioNodes.output = module.audioNodes.outputNode.audioNode;
 
     module.audioNodes.convolerNode.audioNode.buffer = audioContext.nameIRBuffer[bufferName];
-    module.audioNodes.drynessNode.audioNode.gain.value = dryness;
-    module.audioNodes.wetnessNode.audioNode.gain.value = wetness;
 
     module.content.options.select.onchange = function () {
         module.audioNodes.convolerNode.audioNode.buffer = audioContext.nameIRBuffer[this.value];

@@ -13,11 +13,6 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
 
     let module = new Module("flanger", true, false, false, undefined);
 
-    module.createSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
-    module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
-    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
-    module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
-
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
         outputNode: { audioNode: audioContext.createGain() },
@@ -39,6 +34,11 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
         },
     };
 
+    module.createSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
+    module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
+    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
+    module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
+
     module.audioNodes.oscillatorNode.audioNode.connect(module.audioNodes.gainNode.audioNode);
     module.audioNodes.gainNode.audioNode.connect(module.audioNodes.delayNode.audioNode.delayTime);
     module.audioNodes.inputNode.audioNode.connect(module.audioNodes.outputNode.audioNode);
@@ -52,11 +52,6 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
 
     module.audioNodes.input = module.audioNodes.inputNode.audioNode;
     module.audioNodes.output = module.audioNodes.outputNode.audioNode;
-
-    module.audioNodes.delayNode.audioNode.delayTime.value = delay;
-    module.audioNodes.feedbackNode.audioNode.gain.value = feedback;
-    module.audioNodes.gainNode.audioNode.gain.value = depth;
-    module.audioNodes.oscillatorNode.audioNode.frequency.value = speed;
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

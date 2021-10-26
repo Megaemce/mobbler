@@ -71,7 +71,7 @@ Module.prototype.stopSound = function () {
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
     const loop = initalLoop || false;
     const bufferName = initalBufferName || "guitar.ogg";
-    const playbackRate = initalPlaybackRate || 1.5;
+    const playbackRate = initalPlaybackRate || 1;
     const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
 

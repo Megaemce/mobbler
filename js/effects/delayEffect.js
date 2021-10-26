@@ -11,10 +11,6 @@ export default function delayEffect(event, initalWetness, initalDelay, initalFee
 
     let module = new Module("delay effect", true, false, false, undefined);
 
-    module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
-    module.createSlider("delay time", delay, 0, 1, 0.1, "sec", false, delayInfo);
-    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
-
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
         outputNode: { audioNode: audioContext.createGain() },
@@ -32,6 +28,10 @@ export default function delayEffect(event, initalWetness, initalDelay, initalFee
         },
     };
 
+    module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
+    module.createSlider("delay time", delay, 0, 1, 0.1, "sec", false, delayInfo);
+    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
+
     module.audioNodes.inputNode.audioNode.connect(module.audioNodes.wetNode.audioNode);
     module.audioNodes.wetNode.audioNode.connect(module.audioNodes.outputNode.audioNode);
     module.audioNodes.inputNode.audioNode.connect(module.audioNodes.delayNode.audioNode);
@@ -41,10 +41,6 @@ export default function delayEffect(event, initalWetness, initalDelay, initalFee
 
     module.audioNodes.input = module.audioNodes.inputNode.audioNode;
     module.audioNodes.output = module.audioNodes.outputNode.audioNode;
-
-    module.audioNodes.wetNode.audioNode.gain.value = wetness;
-    module.audioNodes.delayNode.audioNode.delayTime.value = delay;
-    module.audioNodes.durationNode.audioNode.gain.value = feedback;
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
