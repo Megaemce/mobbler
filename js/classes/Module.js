@@ -365,7 +365,7 @@ export default class Module {
 
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
         if (slider && (this.audioNode || this.audioNodes)) {
-            slider.audioNode = audioContext.analyser();
+            slider.audioNode = audioContext.createAnalyser();
 
             // if source is regular node connect using audioNode
             if (this.audioNode) this.audioNode.connect(slider.audioNode);
