@@ -18,8 +18,6 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
-    module.prototype.connect;
-
     module.audioNodes = {
         inputNode: { audioNode: audioContext.createGain() },
         outputNode: { audioNode: audioContext.createGain() },
