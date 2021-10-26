@@ -2,12 +2,10 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function reverb(event, initalDryness, initalWetness, initalBufferName) {
-    let irNames = Object.keys(audioContext.nameIRBuffer);
-
+    const irNames = Object.keys(audioContext.nameIRBuffer);
     const dryness = initalDryness || 0.5;
     const wetness = initalWetness || 1;
     const bufferName = initalBufferName || irNames[1];
-
     const drynessInfo = "Loudness of signal without any signal processing";
     const wetnessInfo = "Loudness of signal with full amount of an effect";
 

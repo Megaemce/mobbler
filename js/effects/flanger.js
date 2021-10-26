@@ -4,15 +4,15 @@ import { audioContext } from "../main.js";
 export default function flanger(event, initalDelay, initalDepth, initalFeedback, initalSpeed) {
     const delay = initalDelay || 0.005;
     const depth = initalDepth || 0.002;
-    const feedback = initalFeedback || 0.5;
     const speed = initalSpeed || 0.25;
-
+    const feedback = initalFeedback || 0.5;
     const delayInfo = "Number of seconds from input signal to be storage and play back";
     const depthInfo = "Length of the effect";
-    const feedbackInfo = "The return of a portion of the output signal back into delay loop";
     const speedInfo = "Frequency of oscillator that makes swirling sounds";
+    const feedbackInfo = "The return of a portion of the output signal back into delay loop";
 
     let module = new Module("flanger", true, false, false, undefined);
+
     module.createSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
     module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);

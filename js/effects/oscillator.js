@@ -2,11 +2,11 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function oscillator(event, initalFrequency, initalDetune) {
-    const frequecy = initalFrequency || 440;
     const detune = initalDetune || 0;
+    const frequecy = initalFrequency || 440;
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
-    const frequencyInfo = "Number of complete cycles a waveform makes in a second";
     const detuneInfo = "Determine how much signal will be played out of tune";
+    const frequencyInfo = "Number of complete cycles a waveform makes in a second";
 
     let playButton = document.createElement("div");
     let module = new Module("oscillator", false, false, false, oscTypes);

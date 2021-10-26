@@ -7,6 +7,7 @@ export default function distortion(event, initalOversample) {
 
     let module = new Module("distortion", true, false, false, oversampleValues);
 
+    // taken from https://stackoverflow.com/a/52472603
     function makeDistortionCurve() {
         let n_samples = 256;
         let curve = new Float32Array(n_samples);
@@ -21,10 +22,7 @@ export default function distortion(event, initalOversample) {
 
     module.audioNode = audioContext.createWaveShaper();
     module.audioNode.oversample = oversample;
-    module.audioNode.curve = function dupa() {
-        let curve = new Float32Array(30);
-        return curve;
-    };
+    module.audioNode.curve = makeDistortionCurve();
 
     module.content.options.select.value = oversample;
 
