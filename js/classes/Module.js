@@ -110,7 +110,6 @@ export default class Module {
 
         buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
 
-        console.log("nadawanie kluczowi,", propertyNoSpaces, "wartosci:", initialValue);
         // set inital values on audioNode
         if (module.audioNode) module.audioNode[propertyNoSpaces].value = initialValue;
         else if (module.audioNodes) module.audioNodes[propertyNoSpaces](initialValue);

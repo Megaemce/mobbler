@@ -276,8 +276,8 @@ export default class Cable {
         // remove jack (if it's still exists)
         this.jack && svg.removeChild(this.jack);
 
-        // disconnect source and destination
-        if (this.destination && this.source.audioNode) {
+        // disconnect source and destination (if this is a module-module connection)
+        if (this.destination && this.source.audioNode && this.inputType === "input") {
             try {
                 this.source.audioNode.disconnect(this.destination.audioNode);
             } catch (error) {
