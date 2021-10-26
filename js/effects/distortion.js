@@ -4,6 +4,7 @@ import { audioContext } from "../main.js";
 export default function distortion(event, initalOversample) {
     const oversample = initalOversample || "4x";
     const oversampleValues = ["none", "2x", "4x"];
+
     let module = new Module("distortion", true, false, false, oversampleValues);
 
     function makeDistortionCurve() {
@@ -20,7 +21,10 @@ export default function distortion(event, initalOversample) {
 
     module.audioNode = audioContext.createWaveShaper();
     module.audioNode.oversample = oversample;
-    module.audioNode.curve = makeDistortionCurve();
+    module.audioNode.curve = function dupa() {
+        let curve = new Float32Array(30);
+        return curve;
+    };
 
     module.content.options.select.value = oversample;
 
