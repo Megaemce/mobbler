@@ -258,17 +258,17 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     let audioParam = document.createElement("div");
     let parameterImg = document.createElement("img");
 
-    // module.content.cotrollers.$propertyNoSpaces.info.label.tooltip
+    // module.content.controllers.$propertyNoSpaces.info.label.tooltip
     labelInfo.className = "tooltip";
     labelInfo.innerHTML = propertyInfo;
 
-    // module.content.cotrollers.$propertyNoSpaces.info.label
+    // module.content.controllers.$propertyNoSpaces.info.label
     label.className = "label";
     label.innerHTML = property;
     label.appendChild(labelInfo);
     label.tooltip = labelInfo;
 
-    // module.content.cotrollers.$propertyNoSpaces.info.valueUnit.value
+    // module.content.controllers.$propertyNoSpaces.info.valueUnit.value
     value.className = "value";
     // there is a bug with range between 0-0.9: (0,0.5) = 0, [0.5,1) = 1
     // thus showing buggy value before user interaction
@@ -277,7 +277,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 
     value.appendChild(document.createTextNode(initialValue));
 
-    // module.content.cotrollers.$propertyNoSpaces.info.units
+    // module.content.controllers.$propertyNoSpaces.info.units
     unit.className = "value";
     unit.appendChild(document.createTextNode(units));
 
@@ -287,7 +287,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     valueUnit.value = value;
     valueUnit.unit = unit;
 
-    // module.content.cotrollers.$propertyNoSpaces.info
+    // module.content.controllers.$propertyNoSpaces.info
     info.className = "slider-info";
     info.appendChild(label);
     info.appendChild(valueUnit);
@@ -308,7 +308,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     sliderWraper.className = "input-wrapper";
     sliderWraper.appendChild(slider);
 
-    // module.content.cotrollers.$propertyNoSpaces
+    // module.content.controllers.$propertyNoSpaces
     sliderDiv.className = "slider";
     sliderDiv.appendChild(info);
     sliderDiv.appendChild(sliderWraper);
