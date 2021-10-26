@@ -7,7 +7,6 @@ export default function gain(event, initalGain) {
     let module = new Module("gain", true, false, false, undefined);
 
     module.audioNode = audioContext.createGain();
-    module.audioNode.gain.value = gain;
 
     module.createSlider("gain", gain, 0, 5, 0.1, "", false);
 

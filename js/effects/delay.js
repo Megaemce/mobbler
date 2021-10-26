@@ -8,7 +8,6 @@ export default function delay(event, initialDelay, initalMaxDelay) {
     let module = new Module("delay", true, false, false, undefined);
 
     module.audioNode = audioContext.createDelay(maxDelay);
-    module.audioNode.delayTime.value = delay;
 
     module.createSlider("delay Time", delay, 0.0, maxDelay, 0.01, "sec", false);
 
