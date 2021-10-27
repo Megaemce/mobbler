@@ -14,23 +14,23 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     let module = new Module("flanger", true, false, false, undefined);
 
     module.audioNodes = {
-        inputNode: { audioNode: audioContext.createGain() },
-        outputNode: { audioNode: audioContext.createGain() },
-        gainNode: { audioNode: audioContext.createGain() },
-        feedbackNode: { audioNode: audioContext.createGain() },
-        delayNode: { audioNode: audioContext.createDelay() },
-        oscillatorNode: { audioNode: audioContext.createOscillator() },
+        inputNode: audioContext.createGain(),
+        outputNode: audioContext.createGain(),
+        gainNode: audioContext.createGain(),
+        feedbackNode: audioContext.createGain(),
+        delayNode: audioContext.createDelay(),
+        oscillatorNode: audioContext.createOscillator(),
         speed: (value) => {
-            module.audioNodes.oscillatorNode.audioNode.frequency.value = value;
+            module.audioNodes.oscillatorNode.frequency.value = value;
         },
         delaytime: (value) => {
-            module.audioNodes.delayNode.audioNode.delayTime.value = value;
+            module.audioNodes.delayNode.delayTime.value = value;
         },
         feedback: (value) => {
-            module.audioNodes.feedbackNode.audioNode.gain.value = value;
+            module.audioNodes.feedbackNode.gain.value = value;
         },
         depth: (value) => {
-            module.audioNodes.gainNode.audioNode.gain.value = value;
+            module.audioNodes.gainNode.gain.value = value;
         },
     };
 
@@ -39,19 +39,16 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
-    module.audioNodes.oscillatorNode.audioNode.connect(module.audioNodes.gainNode.audioNode);
-    module.audioNodes.gainNode.audioNode.connect(module.audioNodes.delayNode.audioNode.delayTime);
-    module.audioNodes.inputNode.audioNode.connect(module.audioNodes.outputNode.audioNode);
-    module.audioNodes.inputNode.audioNode.connect(module.audioNodes.delayNode.audioNode);
-    module.audioNodes.delayNode.audioNode.connect(module.audioNodes.outputNode.audioNode);
-    module.audioNodes.delayNode.audioNode.connect(module.audioNodes.feedbackNode.audioNode);
-    module.audioNodes.feedbackNode.audioNode.connect(module.audioNodes.inputNode.audioNode);
+    module.audioNodes.oscillatorNode.connect(module.audioNodes.gainNode);
+    module.audioNodes.gainNode.connect(module.audioNodes.delayNode.delayTime);
+    module.audioNodes.inputNode.connect(module.audioNodes.outputNode);
+    module.audioNodes.inputNode.connect(module.audioNodes.delayNode);
+    module.audioNodes.delayNode.connect(module.audioNodes.outputNode);
+    module.audioNodes.delayNode.connect(module.audioNodes.feedbackNode);
+    module.audioNodes.feedbackNode.connect(module.audioNodes.inputNode);
 
-    module.audioNodes.oscillatorNode.audioNode.type = "sine";
-    module.audioNodes.oscillatorNode.audioNode.start(0);
-
-    module.audioNodes.input = module.audioNodes.inputNode.audioNode;
-    module.audioNodes.output = module.audioNodes.outputNode.audioNode;
+    module.audioNodes.oscillatorNode.type = "sine";
+    module.audioNodes.oscillatorNode.start(0);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

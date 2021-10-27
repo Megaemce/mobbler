@@ -300,11 +300,11 @@ export default class Module {
         let destination = undefined;
 
         // if source module is multi-node effect act differently
-        if (this.audioNodes) source = this.audioNodes.output;
+        if (this.audioNodes) source = this.audioNodes.outputNode;
         else if (this.audioNode) source = this.audioNode;
 
         // if destination module is multi-node effect act differently
-        if (destinationModule.audioNodes) destination = destinationModule.audioNodes.input;
+        if (destinationModule.audioNodes) destination = destinationModule.audioNodes.inputNode;
         else if (destinationModule.audioNode) destination = destinationModule.audioNode;
 
         // if this module is transmitting make connection and mark further cables as active
@@ -373,8 +373,8 @@ export default class Module {
 
             // if source is regular node connect using audioNode
             if (this.audioNode) this.audioNode.connect(slider.audioNode);
-            // if source is multi-node module connect via audioNodes.output parameter which links to output audioNode
-            else if (this.audioNodes) this.audioNodes.output.connect(slider.audioNode);
+            // if source is multi-node module connect via audioNodes.outputNode audioNode
+            else if (this.audioNodes) this.audioNodes.outputNode.connect(slider.audioNode);
 
             this.connectToSlider(destinationModule, slider, parameterType);
         }

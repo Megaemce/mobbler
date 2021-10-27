@@ -3,10 +3,10 @@ import { audioContext } from "../main.js";
 import { displayAlertOnElement } from "../helpers/builders.js";
 
 export default function biquadFilter(event, initalFrequency, initalQ, initalGain, initalType) {
-    const frequency = initalFrequency || 440.0;
     const q = initalQ || 1.0;
     const gain = initalGain || 1.0;
     const type = initalType || "peaking";
+    const frequency = initalFrequency || 440.0;
     const filters = {
         peaking: { info: "Frequencies inside the range get a boost or an attenuation. Frequencies outside it are unchanged", frequency: { info: "The middle of the frequency range getting a boost or an attenuation" }, q: { enabled: true, info: "Controls the width of the frequency band. The greater the Q value, the larger the frequency band" }, gain: { enabled: true, info: "The boost to be applied. If negative it will be an attenuation" } },
         lowshelf: { info: "Frequencies lower than the frequency get a boost or an attenuation. Frequencies over it are unchanged", frequency: { info: "The upper limit of the frequencies getting a boost or an attenuation" }, q: { enabled: false, info: "Not used for this type of filter" }, gain: { enabled: true, info: "The boost to be applied. If negative it will be an attenuation" } },
