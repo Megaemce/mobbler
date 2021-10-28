@@ -17,11 +17,11 @@ export default function dynamicsCompressor(event, initalThreshold, initalKnee, i
 
     module.audioNode = audioContext.createDynamicsCompressor();
 
-    module.createSlider("threshold", threshold, -36.0, 0.0, 0.01, "Db", false, thresholdInfo);
-    module.createSlider("knee", knee, 0.0, 40.0, 0.01, "Db", false, kneeInfo);
-    module.createSlider("ratio", ratio, 1.0, 20.0, 0.1, "", false, ratioInfo);
-    module.createSlider("attack", attack, 0, 1.0, 0.001, "sec", false, attackInfo);
-    module.createSlider("release", release, 0, 1.0, 0.05, "sec", false, releaseInfo);
+    module.createAudioSlider("threshold", threshold, -36.0, 0.0, 0.01, "Db", false, thresholdInfo);
+    module.createAudioSlider("knee", knee, 0.0, 40.0, 0.01, "Db", false, kneeInfo);
+    module.createAudioSlider("ratio", ratio, 1.0, 20.0, 0.1, "", false, ratioInfo);
+    module.createAudioSlider("attack", attack, 0, 1.0, 0.001, "sec", false, attackInfo);
+    module.createAudioSlider("release", release, 0, 1.0, 0.05, "sec", false, releaseInfo);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

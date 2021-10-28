@@ -20,7 +20,7 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
     module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
 
     // start inital analyser
-    module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, type);
+    animationID = module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, type);
 
     // on type change switch animation's style
     module.content.options.select.onchange = function () {

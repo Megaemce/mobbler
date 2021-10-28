@@ -34,10 +34,10 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
         },
     };
 
-    module.createSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
-    module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
-    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
-    module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
+    module.createAudioSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
+    module.createAudioSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
+    module.createAudioSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
+    module.createAudioSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
     module.audioNodes.oscillatorNode.connect(module.audioNodes.gainNode);
     module.audioNodes.gainNode.connect(module.audioNodes.delayNode.delayTime);

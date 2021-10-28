@@ -315,7 +315,16 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     sliderDiv.info = info;
     sliderDiv.slider = slider;
 
-    module.content.controllers.appendChild(sliderDiv);
+    // if sliders div have not been created yet do it
+    if (!module.content.controllers.sliders) {
+        let sliders = document.createElement("div");
+        sliders.className = "sliders";
+
+        module.content.controllers.appendChild(sliders);
+        module.content.controllers.sliders = sliders;
+    }
+
+    module.content.controllers.sliders.appendChild(sliderDiv);
     module.content.controllers[propertyNoSpaces] = sliderDiv;
     module.content.controllers[propertyNoSpaces].value = value;
     module.content.controllers[propertyNoSpaces].unit = unit;

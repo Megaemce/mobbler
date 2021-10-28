@@ -28,9 +28,9 @@ export default function delayEffect(event, initalWetness, initalDelay, initalFee
         },
     };
 
-    module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
-    module.createSlider("delay time", delay, 0, 1, 0.1, "sec", false, delayInfo);
-    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
+    module.createAudioSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
+    module.createAudioSlider("delay time", delay, 0, 1, 0.1, "sec", false, delayInfo);
+    module.createAudioSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
 
     module.audioNodes.inputNode.connect(module.audioNodes.wetNode);
     module.audioNodes.wetNode.connect(module.audioNodes.outputNode);

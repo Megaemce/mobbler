@@ -372,22 +372,33 @@ body {
     padding-top: .25em;
 }
 
-.module .content .controllers canvas {
-    margin: 1px 5px 0px 0px;
-    padding: 0px 0px 5px 5px;
+.module .content .controllers.visualisation {
+    flex-direction: column-reverse;
 }
 
 .module .content .controllers img{
     width: 70px;
 }
 
+.module .content .sliders {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
 
-.module .content .controllers.analyser {
+
+.module .content .controllers .analyser {
     background-image: url('../img/background.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
     margin: 5px;
+}
+
+.module .content .controllers .analyser canvas {
+    margin: 5px 5px 0px 0px;
+    padding: 0px 0px 0px 5px;
 }
 
 .module .content select {
@@ -458,6 +469,7 @@ body {
     /* move by switch width (40px) + last footer padding-right (10px) */
     padding-right: 50px;
 }
+
 
 .module footer .parameter-wrapper {
     padding-top: 3.5px;

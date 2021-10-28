@@ -110,6 +110,25 @@ export default class Module {
 
         buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
 
+        module[propertyNoSpaces] = initialValue;
+
+        this.content.controllers[propertyNoSpaces].slider.oninput = function () {
+            let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
+
+            module[propertyNoSpaces] = sliderValue;
+
+            // show new value above slider
+            module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
+        };
+    }
+
+    /* build module audio slider html object and attach all logic into it */
+    createAudioSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
+        let propertyNoSpaces = property.split(" ").join("");
+        let module = this;
+
+        buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
+
         // set inital values on audioNode
         if (module.audioNode) module.audioNode[propertyNoSpaces].value = initialValue;
         else if (module.audioNodes) module.audioNodes[propertyNoSpaces](initialValue);
@@ -255,7 +274,9 @@ export default class Module {
             });
 
             // create new inital cable (just for animation purpose)
-            this.name !== "output" && this.addInitalCable();
+            if (this.name !== "output" && this.name !== "visualisation") {
+                this.addInitalCable();
+            }
 
             canvas.style.cursor = "default";
             document.onmousemove = undefined;
@@ -381,24 +402,27 @@ export default class Module {
     }
     /* create analyser on module with given setting */
     createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
+        let canvasDiv = document.createElement("div");
+        let canvas = document.createElement("canvas");
         let animationID = undefined;
-        let canvas = this.content.controllers.canvas;
         let img = new Image();
         img.src = "./img/pattern.svg";
 
-        if (canvas) canvas.remove();
+        if (this.content.controllers.canvasDiv) this.content.controllers.canvasDiv.canvas.remove();
 
-        canvas = document.createElement("canvas");
         canvas.id = `${this.id}-content-controllers-canvas`;
         canvas.height = canvasHeight;
         canvas.width = canvasWidth;
         canvas.className = "canvas";
 
-        this.content.controllers.appendChild(canvas);
-        this.content.controllers.canvas = canvas;
-        this.content.controllers.classList.add("analyser");
+        this.content.controllers.appendChild(canvasDiv);
+        this.content.controllers.canvasDiv = canvasDiv;
 
-        let ctx = (this.content.controllers.drawingContext = canvas.getContext("2d"));
+        this.content.controllers.canvasDiv.appendChild(canvas);
+        this.content.controllers.canvasDiv.canvas = canvas;
+        this.content.controllers.canvasDiv.className = "analyser";
+
+        let ctx = (this.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d"));
 
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 

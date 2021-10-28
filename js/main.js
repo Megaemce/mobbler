@@ -13,6 +13,7 @@ import flanger from "./effects/flanger.js";
 import reverb from "./effects/reverb.js";
 import tremolo from "./effects/tremolo.js";
 import output from "./effects/output.js";
+import visualisation from "./effects/visualisation.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
 
@@ -56,6 +57,7 @@ document.getElementById("svgCanvas").onclick = () => {
     document.getElementById("reverb").addEventListener("mousedown", reverb);
     document.getElementById("tremolo").addEventListener("mousedown", tremolo);
     document.getElementById("output").addEventListener("mousedown", output);
+    document.getElementById("visualisation").addEventListener("mousedown", visualisation);
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;
 };
