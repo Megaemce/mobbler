@@ -476,13 +476,22 @@ export default class Module {
         if (style === "free") {
             let amount = 8;
 
-            canvas.onclick = () => {
+            this.head.buttonsWrapper.maximize.onclick = () => {
                 if (canvas.requestFullScreen) canvas.requestFullScreen();
                 else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
                 else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
+            };
 
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+            canvas.onclick = () => {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
             };
 
             // source: http://paperjs.org/examples/satie-liked-to-draw/

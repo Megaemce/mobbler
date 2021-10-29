@@ -8,6 +8,12 @@ export default function visualisation(event, initalSmoothing) {
     const smoothingTimeConstant = initalSmoothing || 0.25;
 
     let module = new Module("visualisation", true, false, false, undefined);
+    let maximizeButton = document.createElement("a");
+
+    maximizeButton.className = "maximize";
+    maximizeButton.id = "maximize";
+    module.head.buttonsWrapper.appendChild(maximizeButton);
+    module.head.buttonsWrapper.maximize = maximizeButton;
 
     module.audioNode = audioContext.createAnalyser();
     module.audioNode.smoothingTimeConstant = smoothingTimeConstant;

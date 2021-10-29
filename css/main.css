@@ -306,6 +306,12 @@ body {
     padding: 0px 5px;
 }
 
+.module .head .buttons-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row-reverse;
+}
 
 /* Module close */
 .module .head .close {
@@ -321,6 +327,16 @@ body {
     background-image: url('../img/close_hover.svg');
     opacity: .8
 }
+
+.module .head .maximize {
+    background-image: url('../img/maximize.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 10px;
+    width: 10px;
+}
+
 
 /* Module socket */
 .module .socket-wrapper {

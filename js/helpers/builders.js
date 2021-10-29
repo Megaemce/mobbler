@@ -78,6 +78,7 @@ export function buildModule(module) {
     let head = document.createElement("div");
     let titleWrapper = document.createElement("div");
     let title = document.createElement("span");
+    let buttons = document.createElement("div");
     let close = document.createElement("a");
     let content = document.createElement("div");
     let options = document.createElement("div");
@@ -115,11 +116,16 @@ export function buildModule(module) {
     close.className = "close";
     close.href = "#";
 
+    // buttons' wrapper
+    buttons.className = "buttons-wrapper";
+    buttons.appendChild(close);
+
     // moudule.head
     head.className = "head";
     head.appendChild(titleWrapper);
-    head.appendChild(close);
+    head.appendChild(buttons);
     head.close = close;
+    head.buttonsWrapper = buttons;
     head.titleWrapper = titleWrapper;
 
     // module.content.options
