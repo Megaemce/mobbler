@@ -405,10 +405,11 @@ export default class Module {
         let canvasDiv = document.createElement("div");
         let canvas = document.createElement("canvas");
         let animationID = undefined;
-        let img = new Image();
-        img.src = "./img/pattern.svg";
 
-        if (this.content.controllers.canvasDiv) this.content.controllers.canvasDiv.canvas.remove();
+        if (this.content.controllers.canvasDiv) {
+            this.content.controllers.removeChild(this.content.controllers.canvasDiv);
+            this.content.controllers.canvasDiv.canvas.remove();
+        }
 
         canvas.id = `${this.id}-content-controllers-canvas`;
         canvas.height = canvasHeight;
@@ -428,23 +429,26 @@ export default class Module {
 
         if (style === "frequency bars") {
             this.audioNode.fftSize = fftSizeFrequencyBars;
-            let bufferLengthAlt = this.audioNode.frequencyBinCount; //it's always half of fftSize
-            let dataArrayAlt = new Uint8Array(bufferLengthAlt);
+            let bufferLength = this.audioNode.frequencyBinCount; //it's always half of fftSize
+            let dataArray = new Uint8Array(bufferLength);
+            let img = new Image();
+            img.src = "./img/pattern.svg";
 
             let drawBar = () => {
                 animationID = requestAnimationFrame(drawBar);
 
-                this.audioNode.getByteFrequencyData(dataArrayAlt);
-                // data returned in dataArrayAlt array will in range [0-255]
+                this.audioNode.getByteFrequencyData(dataArray);
+
+                // data returned in dataArray array will in range [0-255]
 
                 let pattern = ctx.createPattern(img, "repeat");
                 ctx.fillStyle = pattern;
                 ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-                let barWidth = (canvasWidth / bufferLengthAlt) * 2.5;
+                let barWidth = (canvasWidth / bufferLength) * 2.5;
                 let x = 0;
 
-                dataArrayAlt.forEach((barHeight) => {
+                dataArray.forEach((barHeight) => {
                     ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
                     // contex grid is upside down so we substract from y value
                     ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
@@ -457,6 +461,8 @@ export default class Module {
         if (style === "sine wave") {
             let bufferLength = (this.audioNode.fftSize = fftSizeSineWave);
             let dataArray = new Uint8Array(bufferLength);
+            let img = new Image();
+            img.src = "./img/pattern.svg";
 
             let drawWave = () => {
                 animationID = requestAnimationFrame(drawWave);
@@ -484,6 +490,103 @@ export default class Module {
                 ctx.stroke();
             };
             drawWave();
+        }
+        if (style === "free") {
+            let parameterBarWidth = 1.2; // 1-6 range
+            let parameterScaleDivider = 5; // 1-25 range
+            let parameterSymmetries = 5; //  2-inifity range
+
+            let amount = 8;
+            let symmetry = parameterSymmetries;
+            let angle = 360 / symmetry;
+            let angleRad = (angle * Math.PI) / 180;
+
+            // source: http://paperjs.org/examples/satie-liked-to-draw/
+            function getEqualizerBands(data) {
+                var bands = [];
+                var amount = Math.sqrt(data.length) / 2;
+                for (var i = 0; i < amount; i++) {
+                    var start = Math.pow(2, i) - 1;
+                    var end = start * 2 + 1;
+                    var sum = 0;
+                    for (var j = start; j < end; j++) {
+                        sum += data[j];
+                    }
+                    var avg = sum / (255 * (end - start));
+                    bands[i] = Math.sqrt(avg / Math.sqrt(2));
+                }
+                return bands;
+            }
+
+            this.audioNode.fftSize = Math.pow(2, amount) * 2;
+            let bufferLength = this.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**(amount-1)
+            let dataArray = new Uint8Array(bufferLength);
+
+            let drawFreely = () => {
+                animationID = requestAnimationFrame(drawFreely);
+
+                // data returned in dataArray will be in range [0-255]
+                this.audioNode && this.audioNode.getByteFrequencyData(dataArray);
+                let bands = getEqualizerBands(dataArray, true);
+
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgb(98, 255, 0)";
+
+                let barWidth = parameterBarWidth;
+                let scale = canvasHeight / parameterScaleDivider;
+
+                ctx.translate(canvasWidth / 2, canvasHeight / 2);
+
+                for (let k = 0; k < symmetry; k++) {
+                    ctx.rotate(angleRad);
+                    ctx.beginPath();
+                    for (var i = 1; i <= amount; i++) {
+                        let x1 = barWidth * i;
+                        let y1 = -bands[i - 1] * scale;
+
+                        let x2 = barWidth * (i + 1);
+                        let y2 = -bands[i] * scale;
+
+                        // source: https://stackoverflow.com/a/40978275
+                        var x_mid = (x1 + x2) / 2;
+                        var y_mid = (y1 + y2) / 2;
+                        var cp_x1 = (x_mid + x1) / 2;
+                        var cp_x2 = (x_mid + x2) / 2;
+
+                        if (i === 0) ctx.moveTo(x1, y1);
+                        else {
+                            ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
+                            ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
+                        }
+                    }
+                    ctx.stroke();
+                    ctx.beginPath();
+                    for (var i = 1; i <= amount; i++) {
+                        let x1 = barWidth * i;
+                        let y1 = bands[i - 1] * scale;
+
+                        let x2 = barWidth * (i + 1);
+                        let y2 = bands[i] * scale;
+
+                        // source: https://stackoverflow.com/a/40978275
+                        var x_mid = (x1 + x2) / 2;
+                        var y_mid = (y1 + y2) / 2;
+                        var cp_x1 = (x_mid + x1) / 2;
+                        var cp_x2 = (x_mid + x2) / 2;
+
+                        if (i === 0) ctx.moveTo(x1, y1);
+                        else {
+                            ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
+                            ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
+                        }
+                    }
+                    ctx.stroke();
+                }
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            };
+            drawFreely();
         }
 
         return animationID;

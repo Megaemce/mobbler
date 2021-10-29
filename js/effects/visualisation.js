@@ -1,10 +1,10 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function visualisation(event, initalMaxDecibels, initalSmoothing) {
+export default function visualisation(event, initalSmoothing) {
     const canvasWidth = 180;
     const canvasHeight = 100;
-    const fftSizeSineWave = 512;
+    const fftSizeSineWave = 128;
     const smoothingTimeConstant = initalSmoothing || 0.25;
 
     let module = new Module("visualisation", true, false, false, undefined);
@@ -16,7 +16,7 @@ export default function visualisation(event, initalMaxDecibels, initalSmoothing)
     module.audioNode = audioContext.createAnalyser();
     module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
 
-    module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "sine wave");
+    module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
 
     module.content.controllers.classList.add("visualisation");
 
