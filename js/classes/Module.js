@@ -103,27 +103,9 @@ export default class Module {
         // add module to the modules dictionary
         modules[this.id] = this;
     }
-    /* build module slider html object and attach all logic into it */
-    createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
-        let propertyNoSpaces = property.split(" ").join("");
-        let module = this;
-
-        buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
-
-        module[propertyNoSpaces] = initialValue;
-
-        this.content.controllers[propertyNoSpaces].slider.oninput = function () {
-            let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
-
-            module[propertyNoSpaces] = sliderValue;
-
-            // show new value above slider
-            module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
-        };
-    }
 
     /* build module audio slider html object and attach all logic into it */
-    createAudioSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
+    createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
         let propertyNoSpaces = property.split(" ").join("");
         let module = this;
 
@@ -492,14 +474,16 @@ export default class Module {
             drawWave();
         }
         if (style === "free") {
-            let parameterBarWidth = 1.2; // 1-6 range
-            let parameterScaleDivider = 5; // 1-25 range
-            let parameterSymmetries = 5; //  2-inifity range
-
             let amount = 8;
-            let symmetry = parameterSymmetries;
-            let angle = 360 / symmetry;
-            let angleRad = (angle * Math.PI) / 180;
+
+            canvas.onclick = () => {
+                if (canvas.requestFullScreen) canvas.requestFullScreen();
+                else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
+                else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
+
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
 
             // source: http://paperjs.org/examples/satie-liked-to-draw/
             function getEqualizerBands(data) {
@@ -523,23 +507,26 @@ export default class Module {
             let dataArray = new Uint8Array(bufferLength);
 
             let drawFreely = () => {
+                let angle = 360 / this.audioNode.parameterSymmetries.value;
+                let angleRad = (angle * Math.PI) / 180;
+
                 animationID = requestAnimationFrame(drawFreely);
 
                 // data returned in dataArray will be in range [0-255]
                 this.audioNode && this.audioNode.getByteFrequencyData(dataArray);
                 let bands = getEqualizerBands(dataArray, true);
 
-                ctx.fillStyle = "white";
-                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                //ctx.fillStyle = "white";
+                //ctx.fillRect(0, 0, canvasWidth, canvasHeight);
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = "rgb(98, 255, 0)";
+                ctx.strokeStyle = `hsl(${this.audioNode.parameterColor.value}, 100%, 50%)`;
 
-                let barWidth = parameterBarWidth;
-                let scale = canvasHeight / parameterScaleDivider;
+                let barWidth = this.audioNode.parameterBarWidth.value;
+                let scale = canvas.height / this.audioNode.parameterScaleDivider.value;
 
-                ctx.translate(canvasWidth / 2, canvasHeight / 2);
+                ctx.translate(canvas.width / 2, canvas.height / 2);
 
-                for (let k = 0; k < symmetry; k++) {
+                for (let k = 0; k < this.audioNode.parameterSymmetries.value; k++) {
                     ctx.rotate(angleRad);
                     ctx.beginPath();
                     for (var i = 1; i <= amount; i++) {
@@ -570,7 +557,6 @@ export default class Module {
                         let x2 = barWidth * (i + 1);
                         let y2 = bands[i] * scale;
 
-                        // source: https://stackoverflow.com/a/40978275
                         var x_mid = (x1 + x2) / 2;
                         var y_mid = (y1 + y2) / 2;
                         var cp_x1 = (x_mid + x1) / 2;

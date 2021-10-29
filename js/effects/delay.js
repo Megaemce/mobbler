@@ -9,7 +9,7 @@ export default function delay(event, initialDelay, initalMaxDelay) {
 
     module.audioNode = audioContext.createDelay(maxDelay);
 
-    module.createAudioSlider("delay Time", delay, 0.0, maxDelay, 0.01, "sec", false);
+    module.createSlider("delay Time", delay, 0.0, maxDelay, 0.01, "sec", false);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

@@ -78,7 +78,7 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     let playButton = document.createElement("div");
     let module = new Module("audio source", false, true, false, soundNames);
 
-    module.createAudioSlider("playback Rate", playbackRate, 0.1, 5, 0.1, "x", false, playbackRateInfo);
+    module.createSlider("playback Rate", playbackRate, 0.1, 5, 0.1, "x", false, playbackRateInfo);
 
     // set module with inital values
     module.loop = loop;

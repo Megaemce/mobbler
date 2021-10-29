@@ -9,12 +9,18 @@ export default function visualisation(event, initalSmoothing) {
 
     let module = new Module("visualisation", true, false, false, undefined);
 
-    module.createSlider("option1", 1, 0, 100, 1, "", true, "option 1");
-    module.createSlider("option2", 1, 0, 100, 1, "", true, "option 2");
-    module.createSlider("option3", 1, 0, 100, 1, "", true, "option 3");
-
     module.audioNode = audioContext.createAnalyser();
     module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
+
+    module.audioNode.parameterBarWidth = { value: undefined };
+    module.audioNode.parameterScaleDivider = { value: undefined };
+    module.audioNode.parameterSymmetries = { value: undefined };
+    module.audioNode.parameterColor = { value: undefined };
+
+    module.createSlider("parameterBarWidth", 1, 1, 6, 0.1, "", false, "option 1");
+    module.createSlider("parameterScaleDivider", 1, 1, 10, 0.1, "", false, "option 2");
+    module.createSlider("parameterSymmetries", 8, 2, 10, 1, "", false, "option 3");
+    module.createSlider("parameterColor", 1, 1, 360, 1, "", false, "option 3");
 
     module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
 

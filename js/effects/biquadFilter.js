@@ -24,9 +24,9 @@ export default function biquadFilter(event, initalFrequency, initalQ, initalGain
     module.audioNode = audioContext.createBiquadFilter();
     module.audioNode.type = type;
 
-    module.createAudioSlider("frequency", frequency, 0.1, 20000, 1, "Hz", true, filters[type].frequency.info);
-    module.createAudioSlider("Q", q, 1, 100, 0.1, "", false, filters[type].q.info);
-    module.createAudioSlider("gain", gain, -10, 10.0, 0.01, "", false, filters[type].gain.info);
+    module.createSlider("frequency", frequency, 0.1, 20000, 1, "Hz", true, filters[type].frequency.info);
+    module.createSlider("Q", q, 1, 100, 0.1, "", false, filters[type].q.info);
+    module.createSlider("gain", gain, -10, 10.0, 0.01, "", false, filters[type].gain.info);
 
     module.content.options.select.onchange = function () {
         // set tooltips according to selected filter

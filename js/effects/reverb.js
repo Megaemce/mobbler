@@ -25,8 +25,8 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
         },
     };
 
-    module.createAudioSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
-    module.createAudioSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
+    module.createSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
+    module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
 
     module.audioNodes.inputNode.connect(module.audioNodes.convolerNode);
     module.audioNodes.inputNode.connect(module.audioNodes.drynessNode);

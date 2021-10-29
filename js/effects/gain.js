@@ -8,7 +8,7 @@ export default function gain(event, initalGain) {
 
     module.audioNode = audioContext.createGain();
 
-    module.createAudioSlider("gain", gain, 0, 5, 0.1, "", false);
+    module.createSlider("gain", gain, 0, 5, 0.1, "", false);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

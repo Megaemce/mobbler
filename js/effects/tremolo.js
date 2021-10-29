@@ -15,7 +15,7 @@ export default function tremolo(event, initalSpeed) {
         },
     };
 
-    module.createAudioSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
+    module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
     module.audioNodes.oscillatorNode.type = "sine";
     module.audioNodes.oscillatorNode.start(0);
