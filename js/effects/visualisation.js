@@ -18,15 +18,19 @@ export default function visualisation(event, initalSmoothing) {
     module.audioNode = audioContext.createAnalyser();
     module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
 
-    module.audioNode.parameterBarWidth = { value: undefined };
-    module.audioNode.parameterScaleDivider = { value: undefined };
-    module.audioNode.parameterSymmetries = { value: undefined };
-    module.audioNode.parameterColor = { value: undefined };
+    module.audioNode.barWidth = { value: undefined };
+    module.audioNode.scaleDivider = { value: undefined };
+    module.audioNode.symmetries = { value: undefined };
+    module.audioNode.color = { value: undefined };
+    module.audioNode.lineWidth = { value: undefined };
+    module.audioNode.zoom = { value: undefined };
 
-    module.createSlider("parameterBarWidth", 1, 1, 6, 0.1, "", false, "option 1");
-    module.createSlider("parameterScaleDivider", 1, 1, 10, 0.1, "", false, "option 2");
-    module.createSlider("parameterSymmetries", 8, 2, 10, 1, "", false, "option 3");
-    module.createSlider("parameterColor", 1, 1, 360, 1, "", false, "option 3");
+    module.createSlider("bar Width", 1, 1, 6, 0.1, "", false, "option 1");
+    module.createSlider("scale Divider", 1, 1, 10, 0.1, "", false, "option 2");
+    module.createSlider("symmetries", 8, 2, 10, 1, "", false, "option 3");
+    module.createSlider("color", 1, 1, 360, 1, "", false, "option 4");
+    module.createSlider("line Width", 1, 1, 100, 1, "", false, "option 5");
+    module.createSlider("zoom", 0.1, 0.1, 10, 0.1, "", false, "option 6");
 
     module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
 

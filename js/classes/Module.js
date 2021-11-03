@@ -476,22 +476,25 @@ export default class Module {
         if (style === "free") {
             let amount = 8;
 
+            document.addEventListener("fullscreenchange", exitHandler);
+            document.addEventListener("webkitfullscreenchange", exitHandler);
+            document.addEventListener("mozfullscreenchange", exitHandler);
+            document.addEventListener("MSFullscreenChange", exitHandler);
+
+            function exitHandler() {
+                if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+                    canvas.width = canvasWidth;
+                    canvas.height = canvasHeight;
+                }
+            }
+
             this.head.buttonsWrapper.maximize.onclick = () => {
                 if (canvas.requestFullScreen) canvas.requestFullScreen();
                 else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
                 else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
-            };
 
-            canvas.onclick = () => {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-                canvas.width = canvasWidth;
-                canvas.height = canvasHeight;
+                canvas.width = window.screen.width;
+                canvas.height = window.screen.height;
             };
 
             // source: http://paperjs.org/examples/satie-liked-to-draw/
@@ -514,28 +517,33 @@ export default class Module {
             this.audioNode.fftSize = Math.pow(2, amount) * 2;
             let bufferLength = this.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**(amount-1)
             let dataArray = new Uint8Array(bufferLength);
+            let zoom = 1;
 
             let drawFreely = () => {
-                let angle = 360 / this.audioNode.parameterSymmetries.value;
+                let angle = 360 / this.audioNode.symmetries.value;
                 let angleRad = (angle * Math.PI) / 180;
 
                 animationID = requestAnimationFrame(drawFreely);
 
                 // data returned in dataArray will be in range [0-255]
                 this.audioNode && this.audioNode.getByteFrequencyData(dataArray);
-                let bands = getEqualizerBands(dataArray, true);
+                //let bands = getEqualizerBands(dataArray, true);
+
+                let bands = [0.7428462735333892, 0.8284380018543059, 0.8098190399425083, 0.6943700532837644, 0.5807428044739681, 0.46785803754320265, 0.30620413567006494, 0.10015160684296728, 0.46785803754320265];
 
                 //ctx.fillStyle = "white";
-                //ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                //tx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = `hsl(${this.audioNode.parameterColor.value}, 100%, 50%)`;
+                ctx.strokeStyle = `hsl(${this.audioNode.color.value}, 100%, 50%)`;
 
-                let barWidth = this.audioNode.parameterBarWidth.value;
-                let scale = canvas.height / this.audioNode.parameterScaleDivider.value;
+                let barWidth = this.audioNode.barWidth.value;
+                let scale = canvas.height / this.audioNode.scaleDivider.value;
 
+                ctx.save();
                 ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.scale(this.audioNode.zoom.value, this.audioNode.zoom.value);
 
-                for (let k = 0; k < this.audioNode.parameterSymmetries.value; k++) {
+                for (let k = 0; k < this.audioNode.symmetries.value; k++) {
                     ctx.rotate(angleRad);
                     ctx.beginPath();
                     for (var i = 1; i <= amount; i++) {
@@ -566,6 +574,7 @@ export default class Module {
                         let x2 = barWidth * (i + 1);
                         let y2 = bands[i] * scale;
 
+                        // source: https://stackoverflow.com/a/40978275
                         var x_mid = (x1 + x2) / 2;
                         var y_mid = (y1 + y2) / 2;
                         var cp_x1 = (x_mid + x1) / 2;
@@ -579,7 +588,7 @@ export default class Module {
                     }
                     ctx.stroke();
                 }
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.restore();
             };
             drawFreely();
         }
