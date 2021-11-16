@@ -10,7 +10,9 @@ export default function visualisation(event, initalSmoothing) {
     let module = new Module("visualisation", true, false, false, undefined);
     let maximizeButton = document.createElement("a");
 
-    maximizeButton.className = "maximize";
+    maximizeButton.classList.add("maximize");
+    maximizeButton.classList.add("button");
+
     maximizeButton.id = "maximize";
     module.head.buttonsWrapper.appendChild(maximizeButton);
     module.head.buttonsWrapper.maximize = maximizeButton;
@@ -37,9 +39,9 @@ export default function visualisation(event, initalSmoothing) {
     module.content.controllers.classList.add("visualisation");
 
     // only one visual possible thus hide output button
-    document.getElementById("visualisation").style.visibility = "hidden";
+    document.getElementById("visualisation").style.display = "none";
 
     module.onDeletion = () => {
-        document.getElementById("visualisation").style.visibility = "visible";
+        document.getElementById("visualisation").style.display = "block";
     };
 }

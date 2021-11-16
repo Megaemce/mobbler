@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="10.234" height="10.125" version="1.1" viewBox="0 0 10.234 10.125" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<svg width="9.9996" height="10.001" version="1.1" viewBox="0 0 9.9996 10.001" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
  <metadata>
   <rdf:RDF>
    <cc:Work rdf:about="">
@@ -14,6 +14,8 @@
         fill-rule: evenodd;
       }</style>
  </defs>
- <path d="m0.70186 0.71232 8.8304 8.7008" fill="none" stroke="#999" stroke-width="2"/>
- <path d="m9.5322 0.71232-8.8304 8.7008" fill="none" stroke="#999" stroke-width="2"/>
+ <g transform="matrix(.97708 0 0 .98771 5.891e-5 -5.3051e-6)" fill="none" stroke="#999" stroke-width="2">
+  <path d="m0.70186 0.71232 8.8304 8.7008"/>
+  <path d="m9.5322 0.71232-8.8304 8.7008"/>
+ </g>
 </svg>

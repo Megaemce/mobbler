@@ -540,8 +540,10 @@ export default class Module {
                 let scale = canvas.height / this.audioNode.scaleDivider.value;
 
                 ctx.save();
+
                 ctx.translate(canvas.width / 2, canvas.height / 2);
                 ctx.scale(this.audioNode.zoom.value, this.audioNode.zoom.value);
+                ctx.lineWidth = this.audioNode.lineWidth.value;
 
                 for (let k = 0; k < this.audioNode.symmetries.value; k++) {
                     ctx.rotate(angleRad);
@@ -588,6 +590,7 @@ export default class Module {
                     }
                     ctx.stroke();
                 }
+
                 ctx.restore();
             };
             drawFreely();

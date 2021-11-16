@@ -113,8 +113,8 @@ export function buildModule(module) {
     titleWrapper.appendChild(title);
 
     // module.head.close
-    close.className = "close";
-    close.href = "#";
+    close.classList.add("close");
+    close.classList.add("button");
 
     // buttons' wrapper
     buttons.className = "buttons-wrapper";
@@ -276,11 +276,6 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 
     // module.content.controllers.$propertyNoSpaces.info.valueUnit.value
     value.className = "value";
-    // there is a bug with range between 0-0.9: (0,0.5) = 0, [0.5,1) = 1
-    // thus showing buggy value before user interaction
-    if (initialValue >= 0 && initialValue < 0.5) initialValue = 0;
-    if (initialValue >= 0.5 && initialValue < 1) initialValue = 1;
-
     value.appendChild(document.createTextNode(initialValue));
 
     // module.content.controllers.$propertyNoSpaces.info.units
@@ -305,11 +300,11 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     slider.scaleLog = scaleLog;
     slider.min = min;
     slider.max = max;
+    slider.step = stepUnits;
     slider.minFloat = parseFloat(min);
     slider.maxFloat = parseFloat(max);
     // set inital value to the correct position before user starts to play
-    slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : initialValue;
-    slider.step = stepUnits;
+    slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : parseFloat(initialValue);
 
     sliderWraper.className = "input-wrapper";
     sliderWraper.appendChild(slider);

@@ -74,7 +74,8 @@ a:hover {
  *	:: Raw elements
  *	-------------------------------------------------------------------------*/
 body {
-    background: url('../img/body-bkg.gif');
+    background: url('../img/body-bkg.gif')
+
 }
 
 
@@ -114,6 +115,7 @@ body {
 #nav {
     margin: 0 0 1.3em;
     padding: 1.3em 0 0 2em;
+    filter: drop-shadow(3px 3px 1px rgba(0, 0, 0, 0.2));
 }
 
 /* Controls */
@@ -130,17 +132,22 @@ body {
 }
 
 #controls a {
-    background: url('../img/ico-plus.png') .9em 50% no-repeat #fff;
+    background: url('../img/add.svg') 10px 50% no-repeat #fff;
     border-radius: 5px;
     color: #4c4c4c;
     display: block;
     font-size: .625em;
-    /* 11 / 16 */
     padding: .5em 1em .4em 2.6em;
     text-transform: uppercase;
     -webkit-transition: background-color 0.1s linear;
     transition: background-color 0.1s linear;
 }
+
+#controls a:hover {
+    background: url('../img/add_hover.svg') 10px 50% no-repeat #fff;
+}
+
+
 
 /* Dropdown */
 #controls .sub-menu {
@@ -151,11 +158,12 @@ body {
     z-index: 1000;
 }
 
+
+
 #controls ul {
     background-color: #fff;
     border: 1px solid #aaa;
     border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     list-style: none;
     margin: 0;
     padding: .2em 0;
@@ -298,6 +306,7 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin-top: 1px
 }
 
 .module .head .title-wrapper {
@@ -311,6 +320,12 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-direction: row-reverse;
+    margin: 0 -2.5px;
+}
+
+.module .head .button {
+    margin: 0 2.5px;
+    cursor: pointer;
 }
 
 /* Module close */
@@ -329,7 +344,7 @@ body {
 }
 
 .module .head .maximize {
-    background-image: url('../img/maximize.png');
+    background-image: url('../img/maximize.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -337,6 +352,9 @@ body {
     width: 10px;
 }
 
+.module .head .maximize:hover {
+    opacity: .6
+}
 
 /* Module socket */
 .module .socket-wrapper {
