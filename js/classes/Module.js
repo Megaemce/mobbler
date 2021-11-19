@@ -31,22 +31,6 @@ export default class Module {
     get inputCount() {
         return Object.values(cables).filter((cable) => cable.destination === this && cable.inputType === "input").length;
     }
-    /* return parameters status dictionary with key: cable.inputType, value: true/false */
-    get parametersActivity() {
-        let parametersWithStatus = new Object();
-
-        Object.values(cables).forEach((cable) => {
-            if (cable.destination === this && cable.inputType !== "input") {
-                if (cable.source.isTransmitting) {
-                    parametersWithStatus[cable.inputType] = true;
-                } else {
-                    parametersWithStatus[cable.inputType] = false;
-                }
-            }
-        });
-
-        return parametersWithStatus;
-    }
     /* return all incoming and outcoming cables linked with this module */
     get relatedCables() {
         return Object.values(cables).filter((cable) => cable.destination === this || cable.source === this);
@@ -527,9 +511,7 @@ export default class Module {
 
                 // data returned in dataArray will be in range [0-255]
                 this.audioNode && this.audioNode.getByteFrequencyData(dataArray);
-                //let bands = getEqualizerBands(dataArray, true);
-
-                let bands = [0.7428462735333892, 0.8284380018543059, 0.8098190399425083, 0.6943700532837644, 0.5807428044739681, 0.46785803754320265, 0.30620413567006494, 0.10015160684296728, 0.46785803754320265];
+                let bands = getEqualizerBands(dataArray, true);
 
                 //ctx.fillStyle = "white";
                 //tx.fillRect(0, 0, canvas.width, canvas.height);
