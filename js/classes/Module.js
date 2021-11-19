@@ -306,6 +306,16 @@ export default class Module {
         let element = Math.max(...dataArray);
         let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
 
+        // scaledValue may have more digits after dot than in slider.step thus extending "value" width in slider-info
+        // if step has any digits after dot, like 0.1 or 0.02
+        if (slider.step.toString().split(".")[1]) {
+            let digitsAfterDot = slider.step.toString().split(".")[1].length;
+            scaledValue = parseFloat(scaledValue.toFixed(digitsAfterDot));
+        } // step like 1 or 2
+        else {
+            scaledValue = parseFloat(scaledValue.toFixed(0));
+        }
+
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
 
         // if destination is regular module get parameter via audioNode[type]
