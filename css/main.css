@@ -1,104 +1,4 @@
-/* main.css */
-
-
-/* PROBABLY TO BE REMOVED */
-
-/* Control group */
-/* .control-group {
-    margin: 0 0 1.2em;
-}
-
-.control-group.last {
-    margin: 0;
-}
-
-.control-group:last-of-type {
-    margin: 0;
-}
-
-
-.control-group.disabled .slider-info {
-    color: #e0e0e0;
-} */
-
-/* 
-
-.container:before,
-.container:after {
-    content: "";
-    display: table;
-}
-
-.container:after {
-    clear: both;
-} */
-
-/* div.link {
-    position: fixed;
-    font-style: italic;
-    color: lightgrey;
-    bottom: 0px;
-    right: 120px;
-}
-
-div.link a {
-    color: white;
-    font: inherit;
-    text-decoration: underline;
-} */
-
-/* .ui-slider {
-    background: url('../img/slider-bkg.gif') 0 0 repeat-x;
-    border: 0 none;
-    color: #fff;
-    height: 11px;
-    position: relative;
-    text-align: left;
-}
-
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
-    border: 1px solid #cccccc;
-    background: #f6f6f6;
-    font-weight: bold;
-    color: #1c94c4;
-}
-
-.ui-slider .ui-slider-handle {
-    background: url('../img/slider.svg') 0 1px no-repeat;
-    border: 0 none;
-    cursor: default;
-    height: 18px;
-    margin-left: -.6em;
-    position: absolute;
-    top: -.3em;
-    width: 16px;
-    z-index: 2;
-}
-
-.ui-slider .ui-slider-range {
-    background-position: 0 0;
-    border: 0;
-    display: block;
-    font-size: .7em;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    z-index: 1;
-}
-
-.ui-slider .ui-slider-range-min {
-    left: 0;
-}
-
-.ui-slider .ui-slider-range-max {
-    right: 0;
-} */
-
-
 #main {
-    padding-right: 106px;
     position: relative;
     z-index: 1;
 }
@@ -149,7 +49,7 @@ body {
  *	:: Raw elements
  *	-------------------------------------------------------------------------*/
 body {
-    background: url('../img/body-bkg.gif')
+    background: url('../img/background_main.svg')
 
 }
 
@@ -497,7 +397,7 @@ body {
 }
 
 .module .content select {
-    background: url('../img/ico-arrow.png') 95% 50% no-repeat;
+    background: url('../img/arrow_down.svg') 95% 50% no-repeat;
     border: none;
     box-sizing: border-box;
     cursor: pointer;
