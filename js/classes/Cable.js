@@ -61,6 +61,7 @@ export default class Cable {
 
             // when jack is clicked start cable moving function
             this.jack.onmousedown = (event) => {
+                event.preventDefault(); // removing default Firefox drag/drop handler from SVG file
                 this.movingCable(event);
             };
         };
@@ -125,6 +126,7 @@ export default class Cable {
     movingCable(event) {
         // default jack style is grab
         this.jack.style = undefined;
+
         svg.style.cursor = "grabbing";
 
         // two last points of the cable are set like this, so cable is in a middle of jack image
@@ -140,7 +142,7 @@ export default class Cable {
 
         // moving cable around logic
         document.onmousemove = (event) => {
-            let element = event.toElement;
+            let element = event.target;
 
             // if it's an input's image go up to the wrapper
             if (element.inputType && element.nodeName === "IMG") {
@@ -189,7 +191,7 @@ export default class Cable {
 
         // stop moving cable - let's see where we are
         document.onmouseup = (event) => {
-            let element = event.toElement;
+            let element = event.target;
 
             this.stopPhysicsAnimation();
 

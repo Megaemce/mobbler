@@ -10,55 +10,56 @@
 	</head>
 	<body>
 		<div id="main" class="container">
-			<nav id="nav">
+
+			<section id="modules" class="container">
+				<div class="selection-rect" id="selection-rect" hidden></div>
+			</section>
+            <nav id="nav">
 				<ul id="controls" class="container">
 					<li>
-						<a href="#">Audio sources</a>
+						<button class="menu">Audio sources</button>
 						<div class="sub-menu">
 							<ul>
-								<li><a href="#" id="audioSource">Audio Source</a></li>
-								<li><a href="#" id="oscillator">Oscillator</a></li>
-								<li><a href="#" id="liveInput">Live Input</a></li>
+								<li><button id="audioSource">Audio Source</button></li>
+								<li><button id="oscillator">Oscillator</button></li>
+								<li><button id="liveInput">Live Input</button></li>
 							</ul>
 						</div>
 					</li>
 					<li>
-						<a href="#">Basic modules</a>
+						<button class="menu">Basic modules</button>
 						<div class="sub-menu">
 							<ul>
-								<li><a href="#" id="analyser">Analyser</a></li>
-								<li><a href="#" id="biquadFilter">Biquad Filter</a></li>
-								<li><a href="#" id="convolver">Convolver</a></li>
-								<li><a href="#" id="delayNode">Delay</a></li>
-								<li><a href="#" id="dynamicsCompressor">Dynamics Compressor</a></li>
-								<li><a href="#" id="gainNode">Gain</a></li>
+								<li><button id="analyser">Analyser</button></li>
+								<li><button id="biquadFilter">Biquad Filter</button></li>
+								<li><button id="convolver">Convolver</button></li>
+								<li><button id="delayNode">Delay</button></li>
+								<li><button id="dynamicsCompressor">Dynamics Compressor</button></li>
+								<li><button id="gainNode">Gain</button></li>
 							</ul>
 						</div>
 					</li>
                     <li>
-						<a href="#">Effects</a>
+						<button class="menu">Effects</button>
 						<div class="sub-menu">
 							<ul> 
-								<li><a href="#" id="distortion">Distortion</a></li>
-								<li><a href="#" id="delayEffect">Delay effect</a></li>
-								<li><a href="#" id="flanger">Flanger</a></li>
-								<li><a href="#" id="reverb">Reverb</a></li>
-								<li><a href="#" id="tremolo">Tremolo</a></li>
+								<li><button id="distortion">Distortion</button></li>
+								<li><button id="delayEffect">Delay effect</button></li>
+								<li><button id="flanger">Flanger</button></li>
+								<li><button id="reverb">Reverb</button></li>
+								<li><button id="tremolo">Tremolo</button></li>
 							</ul>
 						</div>
 					</li>
                     <li>
-						<a href="#" id="output">Output</a>
+						<button class="menu" id="output">Output</button>
 					</li>
                     <li>
-						<a href="#" id="visualisation">Visualisation</a>
+						<button class="menu" id="visualisation">Visualisation</button>
 					</li>
 
 				</ul>
 			</nav>
-			<section id="modules" class="container">
-				<div class="selection-rect" id="selection-rect" hidden></div>
-			</section>
 		</div>
 		<svg id=svgCanvas xmlns="http://www.w3.org/2000/svg" version="1.1">
 			<defs>
