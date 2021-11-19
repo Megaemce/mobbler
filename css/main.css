@@ -18,6 +18,11 @@
     position: relative;
     z-index: 1 
 }
+button {
+    background-color: transparent;
+    border: none;
+}
+
 html, button, input, select, textarea {
     font-family: 'ProximaNovaRgRegular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #4c4c4c 
@@ -48,64 +53,24 @@ body {
     margin: 0;
     padding: 0 
 }
-#controls li {
-    float: left;
-    margin-right: .8em;
-    position: relative 
-}
-#controls .menu {
-    background: url('../img/add_hover.svg') 10px 50% no-repeat rgb(233, 233, 233);
-    border-radius: 5px;
-    display: block;
-    font-size: .625em;
-    padding: .5em 1em .4em 2.6em;
-    text-transform: uppercase;
-    cursor: pointer;
-    -webkit-transition: background-color 0.1s linear;
-    -moz-transition: background-color 0.1s linear;
-    -o-transition: background-color 0.1s linear;
-    transition: background-color 0.1s linear 
-}
-#controls .menu:hover {
-    background: url('../img/add.svg') 10px 50% no-repeat rgb(255, 255, 255) 
-}
-#controls button {
-    border: none;
-    border-width: 0;
-    border-style: none 
-}
-#controls .sub-menu {
-    display: none;
-    left: 0;
-    padding-top: 8px;
-    position: absolute 
-}
-#controls .sub-menu button {
-    border: none;
-    background: #fff;
-    font-size: .625em;
-    text-transform: uppercase;
-    text-align: left;
-    width: 100%;
-    padding: 0.5em;
-    cursor: pointer 
-}
-#controls .sub-menu button:hover {
-    background: rgb(219, 219, 219) 
-}
 #controls ul {
     background-color: #fff;
     border: 1px solid #aaa;
     border-radius: 5px;
     list-style: none;
-    margin: 0;
     padding: .2em 0;
     position: relative 
 }
+#controls li {
+    float: left;
+    margin-right: .8em;
+    position: relative 
+}
+#controls .sub-menu li {
+    margin: 0;
+}
 #controls ul li {
     float: none;
-    margin: 0;
-    padding: 0 
 }
 #controls li:hover .sub-menu {
     display: block 
@@ -131,9 +96,61 @@ body {
     left: 20%;
     margin-left: -9px 
 }
-#modules {
-    padding-left: 2em 
+
+#controls button.menu  {
+    background:  rgb(224, 224, 224);
+    border-radius: 5px;
+    display: block;
+    font-size: .625em;
+    padding: .5em 1em ;
+    text-transform: uppercase;
+    cursor: pointer;
+    -webkit-transition: background-color 0.2s;
+    -moz-transition: background-color 0.2s;
+    -o-transition: background-color 0.2s;
+    transition: background-color 0.2s; 
 }
+#controls button.menu:hover {
+    background:  rgb(240, 240, 240);
+}
+#controls button.menu::before  {
+    content: url('../img/add.svg');
+    display:inline-block;
+    filter: brightness(0) contrast(0.1);
+    width: 10px;
+    height: 10px;
+    margin-right: 7px;
+    position: relative;
+    top: 1px;
+    -webkit-transition: filter 0.2s;
+    -moz-transition: filter 0.2s;
+    -o-transition: filter 0.2s;
+    transition: filter 0.2s;
+}
+#controls button.menu:hover::before  {
+    filter: none
+}
+
+
+#controls .sub-menu {
+    display: none;
+    padding-top: 8px;
+    position: absolute 
+}
+#controls .sub-menu button {
+    background: #fff;
+    font-size: .625em;
+    text-transform: uppercase;
+    text-align: left;
+    width: 100%;
+    white-space: nowrap;
+    padding: 0.8em;
+    cursor: pointer 
+}
+#controls .sub-menu button:hover {
+    background: rgb(219, 219, 219) 
+}
+
 .selection-rect {
     border: 1px dotted #000;
     position: absolute;
@@ -191,7 +208,7 @@ body {
     flex-direction: row-reverse;
     margin: 0 -2.5px 
 }
-.module .head .button {
+.module .head button {
     margin: 0 2.5px;
     cursor: pointer 
 }
@@ -199,24 +216,25 @@ body {
     background-image: url('../img/close.svg');
     background-repeat: no-repeat;
     background-position: center;
+    filter: brightness(0) contrast(0.1);
     background-size: contain;
     height: 10px;
     width: 10px 
 }
 .module .head .close:hover {
-    background-image: url('../img/close_hover.svg');
-    opacity: 0.8 
+    filter: none;
 }
 .module .head .maximize {
     background-image: url('../img/maximize.svg');
     background-repeat: no-repeat;
     background-position: center;
+    filter: brightness(0) contrast(0.1);
     background-size: contain;
     height: 10px;
     width: 10px 
 }
 .module .head .maximize:hover {
-    opacity: 0.6 
+    filter: none
 }
 .module .socket-wrapper {
     height: 30px;

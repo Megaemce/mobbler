@@ -75,7 +75,7 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
 
-    let playButton = document.createElement("div");
+    let playButton = document.createElement("button");
     let module = new Module("audio source", false, true, false, soundNames);
 
     module.createSlider("playback Rate", playbackRate, 0.1, 5, 0.1, "x", false, playbackRateInfo);

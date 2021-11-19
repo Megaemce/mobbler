@@ -14,8 +14,6 @@
         fill-rule: evenodd;
       }</style>
  </defs>
- <g transform="matrix(.97708 0 0 .98771 5.891e-5 -5.3051e-6)" fill="none" stroke="#999" stroke-width="2">
-  <path d="m0.70186 0.71232 8.8304 8.7008"/>
-  <path d="m9.5322 0.71232-8.8304 8.7008"/>
- </g>
+ <path d="m0.68583 0.70356 8.628 8.5939" fill="none" stroke="#a40000" stroke-width="1.9648"/>
+ <path d="m9.3138 0.70356-8.628 8.5939" fill="none" stroke="#a40000" stroke-width="1.9648"/>
 </svg>

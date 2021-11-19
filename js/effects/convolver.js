@@ -18,7 +18,7 @@ export default function convolver(event, initalBufferName, initalNormalizer) {
     };
 
     // when normalizer is changed switch audioNode.normalize status
-    module.content.options.select.checkbox.onchange = () => {
+    module.content.options.normalizer.checkbox.onchange = () => {
         module.audioNode.normalize = module.content.options.normalizer.checkbox.checked;
     };
 

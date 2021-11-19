@@ -79,7 +79,7 @@ export function buildModule(module) {
     let titleWrapper = document.createElement("div");
     let title = document.createElement("span");
     let buttons = document.createElement("div");
-    let close = document.createElement("a");
+    let close = document.createElement("button");
     let content = document.createElement("div");
     let options = document.createElement("div");
     let controllers = document.createElement("div");
