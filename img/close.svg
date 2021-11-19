@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="9.9996" height="10.001" version="1.1" viewBox="0 0 9.9996 10.001" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
- <metadata>
-  <rdf:RDF>
-   <cc:Work rdf:about="">
-    <dc:format>image/svg+xml</dc:format>
-    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-   </cc:Work>
-  </rdf:RDF>
- </metadata>
- <defs>
-  <style>.cls-1 {
-        fill: #699f4c;
-        fill-rule: evenodd;
-      }</style>
- </defs>
  <path d="m0.68583 0.70356 8.628 8.5939" fill="none" stroke="#a40000" stroke-width="1.9648"/>
  <path d="m9.3138 0.70356-8.628 8.5939" fill="none" stroke="#a40000" stroke-width="1.9648"/>
 </svg>
