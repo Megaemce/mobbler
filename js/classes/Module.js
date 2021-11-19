@@ -86,10 +86,10 @@ export default class Module {
         else if (module.audioNodes) module.audioNodes[propertyNoSpaces](initialValue);
 
         // when slider is moved (by user or by connected module)
-        this.content.controllers[propertyNoSpaces].slider.oninput = function () {
+        module.content.controllers[propertyNoSpaces].slider.oninput = function () {
             let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
 
-            // set value on the audiNode parametetr
+            // set value on the audiNode parameter
             if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
             else if (module.audioNodes) module.audioNodes[propertyNoSpaces](sliderValue);
 
