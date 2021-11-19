@@ -8,13 +8,13 @@ export default function oscillator(event, initalFrequency, initalDetune) {
     const detuneInfo = "Determine how much signal will be played out of tune";
     const frequencyInfo = "Number of complete cycles a waveform makes in a second";
 
-    let playButton = document.createElement("div");
+    let playButton = document.createElement("button");
+    let switchDiv = document.createElement("div");
     let module = new Module("oscillator", false, false, false, oscTypes);
 
     module.createSlider("frequency", frequecy, 0.1, 2000, 0.01, "Hz", true, frequencyInfo);
     module.createSlider("detune", detune, -1200, 1200, 1, "cents", false, detuneInfo);
 
-    playButton.classList.add("switch");
     playButton.alt = "play";
     playButton.onclick = function () {
         let frequency = module.content.controllers.frequency.value.innerText; //.value is a pointer not returner
@@ -61,7 +61,12 @@ export default function oscillator(event, initalFrequency, initalDetune) {
         if (module.audioNode) module.audioNode.type = this.value;
     };
 
-    module.content.controllers.appendChild(playButton);
+    switchDiv.appendChild(document.createTextNode("ON"));
+    switchDiv.appendChild(playButton);
+    switchDiv.appendChild(document.createTextNode("OFF"));
+    switchDiv.classList.add("switch");
+
+    module.content.controllers.appendChild(switchDiv);
 
     // structure needs to be fully build before. GetBoundingClientRect related.
     module.addInitalCable();

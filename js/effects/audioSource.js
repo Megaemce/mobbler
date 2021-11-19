@@ -76,6 +76,8 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
 
     let playButton = document.createElement("button");
+    let switchDiv = document.createElement("div");
+
     let module = new Module("audio source", false, true, false, soundNames);
 
     module.createSlider("playback Rate", playbackRate, 0.1, 5, 0.1, "x", false, playbackRateInfo);
@@ -85,9 +87,13 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     module.buffer = audioContext.nameSoundBuffer[bufferName];
 
     // add play button and it's handler
-    module.content.controllers.appendChild(playButton);
+    switchDiv.appendChild(document.createTextNode("ON"));
+    switchDiv.appendChild(playButton);
+    switchDiv.appendChild(document.createTextNode("OFF"));
+    switchDiv.classList.add("switch");
+
+    module.content.controllers.appendChild(switchDiv);
     module.content.controllers.playButton = playButton;
-    module.content.controllers.playButton.classList.add("switch");
     module.content.controllers.playButton.onclick = () => {
         module.playButtonHandler();
     };
