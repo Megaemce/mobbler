@@ -70,20 +70,6 @@ export default class Module {
             this.deleteModule();
         };
 
-        // when looper checkbox is changed play in a loop/stop the sound
-        if (this.hasLooper) {
-            this.content.options.looper.checkbox.onchange = () => {
-                this.playButtonHandler();
-            };
-        }
-
-        // when normalizer is changed switch audioNode.normalize status
-        if (this.hasNormalizer) {
-            this.content.options.normalizer.checkbox.onchange = () => {
-                this.audioNode.normalize = this.content.options.normalizer.checkbox.checked;
-            };
-        }
-
         // add module to the modules dictionary
         modules[this.id] = this;
     }

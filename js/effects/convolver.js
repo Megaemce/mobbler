@@ -17,6 +17,11 @@ export default function convolver(event, initalBufferName, initalNormalizer) {
         module.audioNode.buffer = audioContext.nameIRBuffer[this.value];
     };
 
+    // when normalizer is changed switch audioNode.normalize status
+    module.content.options.select.checkbox.onchange = () => {
+        module.audioNode.normalize = module.content.options.normalizer.checkbox.checked;
+    };
+
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
 }

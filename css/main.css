@@ -427,9 +427,7 @@ body {
     text-align: center;
     margin: 0 2px 
 }
-.module .slider-info:last-child {
-    margin-bottom: 0 
-}
+
 input[type="checkbox"] {
     cursor: pointer;
     margin-right: 7px 
