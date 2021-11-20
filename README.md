@@ -36,7 +36,7 @@ Module is a single audio node with/without parameters. Most of modules are input
 
 | Input-only module  | Input-output module | Output-only module |
 | ------------- | ------------- | ------------- |
-| <p align="center"><img src="https://user-images.githubusercontent.com/1651451/142731494-aaa5d07e-0ce8-4fae-9fa1-a3a4d31a5829.png" width="135px"/></p> | <p align="center"><img src="https://user-images.githubusercontent.com/1651451/142731530-db56d58f-0e66-4fbb-8f1a-a2674b49f513.png" width="320px"/></p> | <p align="center"><img src="https://user-images.githubusercontent.com/1651451/142731517-2b826777-637e-4695-a4e5-3f4a19e09d7d.png" width="300px"></p>|
+| <p align="center"><img src="https://user-images.githubusercontent.com/1651451/142731494-aaa5d07e-0ce8-4fae-9fa1-a3a4d31a5829.png" width="125px"/></p> | <p align="center"><img src="https://user-images.githubusercontent.com/1651451/142731530-db56d58f-0e66-4fbb-8f1a-a2674b49f513.png" width="310px"/></p> | <p align="center"><img src="https://user-images.githubusercontent.com/1651451/142731517-2b826777-637e-4695-a4e5-3f4a19e09d7d.png" width="300px"></p>|
 | "_Output_" module with audio input (on the top left) and without any output cable nor parameters' input | "_Delay Effect_" module with audio input, output cable (on the right) and three parameter's inputs (_wetness_, _delay time_ and _feedback_ in the bottom) | "_Oscillator_" module without audio input and with output cable and two parameter's input (_frequency_ and _detune_) |
 ## Types
 ### Inputs:
@@ -44,14 +44,14 @@ Module is a single audio node with/without parameters. Most of modules are input
   
 | Image | Description | I/O type | Options | Parameters |   
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| ![image](https://user-images.githubusercontent.com/1651451/142734061-f2f0391c-80cd-4536-8c9c-25a873a0f1c8.png) | Play any modern audio file or choose from already provided | Output only | **Loop**: enable sound looping | **Playback rate**: increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency |
+| ![image](https://user-images.githubusercontent.com/1651451/142734061-f2f0391c-80cd-4536-8c9c-25a873a0f1c8.png) | Play any modern audio file or choose from already provided | Output only | **Loop**: enable sound looping <br> **Source**: loaded sounds | **Playback rate**: increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency |
     
 </details>
 <details><summary>Oscillator</summary>
   
 | Image | Description | I/O type | Options | Parameters |   
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| | | |     
+| ![image](https://user-images.githubusercontent.com/1651451/142731517-2b826777-637e-4695-a4e5-3f4a19e09d7d.png) | Outputs a periodic waveform, such as a sine wave | Output only | **Wave**: types of periodic wave | **Frequency**: Number of complete cycles a waveform makes in a second <br> **Detune**: Determine how much signal will be played out of tune |     
 </details>
 <details><summary>Live input</summary>
   
