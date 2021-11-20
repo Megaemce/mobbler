@@ -1,20 +1,34 @@
 <p align="center">
-  <img src="/img/mobbler.svg" width="300px" />
+  <img src="/img/mobbler_animated.svg" width="300px" />
 </p>
 
 # Introduction
-Mobbler is an open source browser tool for analog-like music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing)ᵇᵉᵗᵃ.
+Are you tired of your old and dirty analog music hardware? <br>
+Tired of connecting modular synthesizers with actual cables? <br>
+Tired of acting like we are still in 60s?<br>
+<div align="center">
+ <img src="https://i.imgur.com/uripicq.jpg" height="250px"/>
+ <img src="https://user-images.githubusercontent.com/1651451/142727918-165abe31-0d78-4c62-9a68-370ad509c238.png" height="250px"/>
+</div>
+<br/>
 
-> <i>Turn your old clumsy analog nightmare into modern world luxury browser-based dreamᵀᴹ</i>
+**Say no more!** Turn those clumsy analog nightmares into modern world luxury browser-based dreamsᵀᴹ.<br>
+Introducing <img src="/img/mobbler_word.svg" height="14px"/> - an revolutionary browser tool for analog-like music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing)ᵇᵉᵗᵃ.
+<div align="center">
+<img src="https://user-images.githubusercontent.com/1651451/142727254-c605e95b-abd8-4084-aa79-d2510d038e0b.png" height="300px" />
+</div>
+  
 
-<p align="center">
-  <img src="https://live.staticflickr.com/7622/17016562038_748ce7f2a4_o.jpg" height="300px" />
-  <img src="https://user-images.githubusercontent.com/1651451/142723543-7d896885-5441-489a-9774-fe7386e0e4a9.png" height="300px" />
-</p>
+
+<div align="center">
+  
+🎙️ [Play with it now!](https://en.wikipedia.org/wiki/VJing)
+  
+</div>
 
 
 # Motive
-It was build as a complex extension of [Web Audio Playground](https://github.com/cwilso/WebAudio). Mobbler allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. In mobbler user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program itself already contains few popular effects and tutorials on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
+<img src="/img/mobbler_word.svg" height="14px"/> was build as a complex extension of [Web Audio Playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few popular effects and tutorials on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
 
 # Modules
 Module is a single audio node with/without parameters. Most of modules are input-output enabled thus could be used in a middle connection between other modules. However there are also input-only and output-only modules as well.
