@@ -1,7 +1,4 @@
 <p align="center">
-  <img src="https://github.com/Megaemce/mobbler/blob/main/img/mobbler_animated.svg" width="300px"/>
-</p>
-<p align="center">
   <img src="https://github.com/Megaemce/mobbler/blob/main/img/mobbler.svg" width="300px" />
 </p>
 
