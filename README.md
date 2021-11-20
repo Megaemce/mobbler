@@ -14,7 +14,7 @@ Tired of acting like we are still in 60s?<br>
 </div>
 <br/>
 
-**Say no more!** Turn those clumsy analog nightmares into modern world luxury browser-based dreamsᵀᴹ.<br>
+**Say no more!** Turn those clumsy analog nightmares into modern world browser-based dreamsᵀᴹ.<br>
 Introducing <img src="/img/mobbler_word.svg" height="14px"/> - an revolutionary browser tool for analog-like music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing)ᵇᵉᵗᵃ.
 <div align="center">
 <img src="https://user-images.githubusercontent.com/1651451/142727254-c605e95b-abd8-4084-aa79-d2510d038e0b.png" height="300px" />
@@ -146,7 +146,8 @@ Create kaleidoscope-like visualisation controlled by other modules.
 
 
 # Technology & limitation
-Made in vanilla JavaScript as an learning exercise. Due to its nature and complexity solution doesn't work properly on mobile device. <br>
+Made in vanilla JavaScript as an learning exercise. <Br>
+Due to the mouse-related handlers solution doesn't work properly on mobile device. <br>
 It was developed for Chrome browser however seems to be working fine on Firefox and Egde too.  
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
