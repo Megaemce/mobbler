@@ -1,0 +1,856 @@
+<svg width="49.781" height="10.812" version="1.1" viewBox="0 0 49.781 10.812" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(-76.007 -98.955)" fill="#4e9a06" stroke-linecap="round" stroke-linejoin="round" stroke-width=".26458">
+  <path class="ZzndMDsr_0 svg-elem-1" d="m83.528 105.18q0-0.46566-0.53622-0.46566-0.36689 0-0.81844 0.71966-0.45156 0.70556-0.64911 1.524v0.0282q0 0.47978 0.14111 0.98778 0.15522 0.508 0.15522 0.70556 0 0.47977-1.1994 0.94544-0.18344 0.0705-0.32456 0.0705-0.35278 0-0.49389-0.36688-0.127-0.36689-0.127-0.98778 0-0.635 0.02822-1.1853 0.04233-0.56445 0.07056-1.0301 0.04233-0.47978 0.07056-0.83256 0.04233-0.36689 0.04233-0.59266 0-0.47978-0.43744-0.47978t-1.016 1.0301q-0.57856 1.016-0.57856 1.6228 0 0.59267 0.14111 1.1007 0.15522 0.508 0.15522 0.70556 0 0.47977-1.1994 0.94544-0.18344 0.0705-0.32456 0.0705-0.35278 0-0.49389-0.36688-0.127-0.36689-0.127-1.1289 0-2.0038 0.15522-2.8928 0.21167-1.3123 0.95955-2.4836 0.254-0.39511 0.55033-0.39511 0.46567 0 0.86078 0.762 0.11289 0.19755 0.16933 0.36689 0.67733-0.84667 1.5946-0.84667 0.60678 0 1.0866 0.40922 0.47978 0.39511 0.47978 1.0019v0.15522q0.86078-1.0724 2.1026-1.0724 0.762 0 1.1571 0.39511t0.39511 0.97367q0 0.57855-0.08467 1.0442-0.08467 0.46566-0.19756 0.87488-0.09878 0.40923-0.18344 0.73378-0.08467 0.31045-0.08467 0.49389 0 0.16933 0.11289 0.16933 0.21167 0 0.52211-0.26811t0.62089-0.57855q0.31044-0.32456 0.56444-0.59267 0.26811-0.26811 0.36689-0.26811 0.19756 0 0.19756 0.47978 0 0.98778-1.0019 1.9191-0.98778 0.93133-2.1167 0.93133-1.016 0-1.016-1.8486 0-0.46567 0.15522-1.2841 0.15522-0.81845 0.15522-1.1994z" style="-webkit-animation:animate-svg-stroke-1 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1s both, animate-svg-fill-1 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1s both"/>
+  <path class="ZzndMDsr_1 svg-elem-2" d="m92.347 108.27q-1.1148 1.3123-2.6811 1.3123-1.5522 0-2.3283-0.79023-0.77611-0.80433-0.762-1.9897-0.01411-1.6792 1.0583-2.8928 1.0724-1.2136 2.8081-1.2136 0.79022 0 1.27 0.19755 0.83256 0.33867 0.83256 0.635 0 0.22578-1.1712 0.23989-1.1571 0-1.9473 0.80434-0.77611 0.79022-0.77611 2.0038 0 0.635 0.36689 1.0724 0.381 0.42333 1.0583 0.42333 0.69144 0 1.143-0.28222-1.0019-0.67734-1.0019-1.9614-0.01411-0.67733 0.47978-1.2277 0.508-0.56445 1.2841-0.56445 0.79022-0.0141 1.1289 0.42334t0.33867 1.1289q0 0.67734-0.32456 1.4393h0.08467q0.62089-0.0141 1.0724-0.43745 0.16933-0.16933 0.28222-0.29633 0.127-0.127 0.254-0.127 0.19756 0 0.19756 0.46567 0 0.86077-0.508 1.2982-0.508 0.42333-1.1289 0.42333-0.60678 0-1.0301-0.0847zm-0.127-1.6369q0.23989-0.508 0.23989-0.98778t-0.31044-0.47978q-0.127 0-0.21167 0.18345-0.08467 0.18344-0.08467 0.35277 0 0.56445 0.36689 0.93134z" style="-webkit-animation:animate-svg-stroke-2 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.12s both, animate-svg-fill-2 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.1s both"/>
+  <path class="ZzndMDsr_2 svg-elem-3" d="m95.494 102.84q-1.0442-0.45156-1.0442-0.87489 0-0.22578 0.18344-0.21166 0.254 0 0.57856 0.127 0.32456 0.11288 0.66322 0.18344 1.1571-2.1872 2.6247-2.8646 0.49389-0.22578 0.98778-0.23989 0.97367 0 1.4817 0.47978 0.52211 0.46567 0.52211 1.143 0 1.2136-1.3123 1.8768-1.0724 0.53622-2.921 0.66322-0.66322 1.6369-0.66322 3.5137 0 1.397 0.64911 1.6228 0.45156 0.15522 0.67733 0.0141 0.22578-0.15522 0.35278-0.39511 0.127-0.254 0.127-0.73377 0.01411-0.47978-0.26811-0.80434-0.26811-0.33866-0.52211-0.62089 0.127-0.46566 0.36689-0.77611 0.45156-0.60677 0.77611-0.60677t0.52211 0.22577q0.21167 0.22578 0.33867 0.56445 0.127 0.33866 0.19756 0.73378 0.08467 0.39511 0.18344 0.73377 0.09878 0.33867 0.23989 0.56445 0.15522 0.22577 0.39511 0.22577 0.254 0 0.45156-0.18344 0.19755-0.19756 0.35277-0.42333 0.15523-0.22578 0.28223-0.40923 0.127-0.19755 0.254-0.19755 0.14111 0 0.26811 0.22578 0.14111 0.22577 0.14111 0.42333 0 0.45156-0.45156 1.0724-0.43744 0.62089-1.1289 0.62089-0.69144-0.0141-1.0724-0.29633-0.23989 0.59267-0.81844 0.98778t-1.651 0.39511q-1.0583 0-1.8203-0.55034-0.91722-0.66322-0.91722-2.0602 0-1.9897 0.97367-4.1487zm4.445-2.0038q-0.01411-0.49388-0.36689-0.49388-0.33867 0-0.889 0.52211t-1.0583 1.4534q1.5381-0.26811 2.1026-0.94544 0.19756-0.254 0.21167-0.53623z" style="-webkit-animation:animate-svg-stroke-3 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.24s both, animate-svg-fill-3 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.2s both"/>
+  <path class="ZzndMDsr_3 svg-elem-4" d="m102.79 102.84q-1.0442-0.45156-1.0442-0.87489 0-0.22578 0.18345-0.21166 0.254 0 0.57855 0.127 0.32456 0.11288 0.66322 0.18344 1.1571-2.1872 2.6247-2.8646 0.49389-0.22578 0.98778-0.23989 0.97366 0 1.4817 0.47978 0.52211 0.46567 0.52211 1.143 0 1.2136-1.3123 1.8768-1.0724 0.53622-2.921 0.66322-0.66322 1.6369-0.66322 3.5137 0 1.397 0.64911 1.6228 0.45156 0.15522 0.67733 0.0141 0.22578-0.15522 0.35278-0.39511 0.127-0.254 0.127-0.73377 0.0141-0.47978-0.26811-0.80434-0.26811-0.33866-0.52211-0.62089 0.127-0.46566 0.36689-0.77611 0.45155-0.60677 0.77611-0.60677 0.32455 0 0.52211 0.22577 0.21167 0.22578 0.33867 0.56445 0.127 0.33866 0.19755 0.73378 0.0847 0.39511 0.18345 0.73377 0.0988 0.33867 0.23988 0.56445 0.15523 0.22577 0.39512 0.22577 0.254 0 0.45155-0.18344 0.19756-0.19756 0.35278-0.42333 0.15522-0.22578 0.28222-0.40923 0.127-0.19755 0.254-0.19755 0.14111 0 0.26811 0.22578 0.14111 0.22577 0.14111 0.42333 0 0.45156-0.45155 1.0724-0.43745 0.62089-1.1289 0.62089-0.69145-0.0141-1.0724-0.29633-0.23988 0.59267-0.81844 0.98778-0.57855 0.39511-1.651 0.39511-1.0583 0-1.8203-0.55034-0.91722-0.66322-0.91722-2.0602 0-1.9897 0.97366-4.1487zm4.445-2.0038q-0.0141-0.49388-0.36689-0.49388-0.33866 0-0.889 0.52211-0.55033 0.52211-1.0583 1.4534 1.5381-0.26811 2.1026-0.94544 0.19756-0.254 0.21167-0.53623z" style="-webkit-animation:animate-svg-stroke-4 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.36s both, animate-svg-fill-4 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.3s both"/>
+  <path class="ZzndMDsr_4 svg-elem-5" d="m112.05 109.51q-2.0179 0.0141-2.7517-1.5099-0.254-0.53622-0.254-1.3406 0-0.81845 0.14111-1.7357 0.28222-1.8344 1.0866-3.3867 0.40923-0.79022 0.91722-1.3547 1.1148-1.2418 2.4836-1.2277 0.60678 0 0.94544 0.33867 0.35278 0.32456 0.35278 0.94545t-0.36689 1.2559q-0.36689 0.62088-0.94544 1.2982-0.56445 0.66322-1.2559 1.397-0.69144 0.73377-1.3547 1.5946v0.56444q0 0.79023 0.33867 1.1571 0.33867 0.36689 0.79022 0.36689 1.2136 0 2.1449-1.1994 0.381-0.49389 0.57855-0.49389 0.19756 0 0.19756 0.47978t-0.26811 0.98778q-0.254 0.49388-0.67733 0.91722-0.42334 0.40922-0.97367 0.67733t-1.1289 0.26811zm0.762-7.5777q0.29633-0.36689 0.46567-0.66322 0.16933-0.29634 0.16933-0.60678 0-0.32455-0.22578-0.32455-0.49389 0-1.1007 1.016-0.59267 1.016-0.889 2.667 0.47978-0.73377 0.87489-1.2277 0.40922-0.49389 0.70555-0.86078z" style="-webkit-animation:animate-svg-stroke-5 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.48s both, animate-svg-fill-5 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.4s both"/>
+  <path class="ZzndMDsr_5 svg-elem-6" d="m117.55 107.93q1.1007 0 2.1308-0.87489 0.381-0.32456 0.62089-0.59267 0.23989-0.28222 0.36689-0.28222 0.19756 0 0.19756 0.39511t-0.21167 0.889q-0.21167 0.47978-0.70555 0.94544-1.2136 1.143-3.3302 1.143-1.6792 0-2.286-1.2136-0.21167-0.42333-0.21167-1.2136 0-0.79022 0.31045-1.6369 0.31044-0.86078 0.81844-1.4817 0.52211-0.62089 1.1994-0.95955 0.67734-0.35278 1.4393-0.35278 0.77612 0 1.1853 0.381 0.42333 0.381 0.42333 0.98778 0 0.60677-0.31044 1.0019-0.29634 0.381-0.77611 0.64911-0.47978 0.254-1.0724 0.46567-0.57855 0.19756-1.143 0.45156v0.35277q0.0141 0.508 0.42334 0.71967 0.40922 0.21167 0.93133 0.22578zm-0.23989-3.9793q-0.73378 0-1.016 1.7074 0.29633-0.19756 0.55033-0.35278 0.26811-0.15522 0.46567-0.29633 0.42333-0.31044 0.43744-0.70556 0-0.35277-0.43744-0.35277z" style="-webkit-animation:animate-svg-stroke-6 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.6s both, animate-svg-fill-6 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.5s both"/>
+  <path class="ZzndMDsr_6 svg-elem-7" d="m122.26 107.17 0.0847 1.7216c0 0.22577-0.11759 0.42803-0.35278 0.60677s-0.55504 0.26811-0.95955 0.26811c-0.23519 0-0.39982-0.12229-0.49389-0.36688-0.0847-0.24459-0.127-0.60208-0.127-1.0724 0-0.98777 0.047-1.7592 0.14111-2.3142 0.10348-0.56444 0.30104-1.1336 0.59267-1.7074-0.43275-0.41393-0.64912-0.77141-0.64912-1.0724 0-0.6303 0.33867-0.94545 1.016-0.94545 0.34807 0 0.65382 0.18344 0.91723 0.55033 0.18815 0.254 0.32455 0.55033 0.40922 0.889 0.1317 0.0471 0.29633 0.0706 0.49389 0.0706 0.27281 0 0.58796-0.0894 0.94544-0.26811l0.36689-0.18345c0.11289-0.0565 0.21166-0.0847 0.29633-0.0847 0.27281 0 0.99803 0.91486 0.81845 1.1994s-1.3382 0.58105-2.1967 0.67715c-0.254 0-0.80898-0.037-0.92187-0.0562-0.0847 0.35748-0.16933 0.71966-0.254 1.0866-0.0847 0.35749-0.127 0.69145-0.127 1.0019z" style="-webkit-animation:animate-svg-stroke-7 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.72s both, animate-svg-fill-7 1s cubic-bezier(0.47, 0, 0.745, 0.715) 1.6s both"/>
+ </g>
+ <style>/***************************************************
+ * Generated by SVG Artista on 11/20/2021, 9:32:27 AM
+ * MIT license (https://opensource.org/licenses/MIT)
+ * W. https://svgartista.net
+ **************************************************/
+ @-webkit-keyframes animate-svg-stroke-1{
+    0%{
+        stroke-dashoffset:57.410457611083984px;
+        stroke-dasharray:57.410457611083984px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:57.410457611083984px
+    }
+}
+@keyframes animate-svg-stroke-1{
+    0%{
+        stroke-dashoffset:57.410457611083984px;
+        stroke-dasharray:57.410457611083984px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:57.410457611083984px
+    }
+}
+@-webkit-keyframes animate-svg-fill-1{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+@keyframes animate-svg-fill-1{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+.svg-elem-1{
+    -webkit-animation:animate-svg-stroke-1 1s cubic-bezier(0.47,0,0.745,0.715) 1s both,animate-svg-fill-1 1s cubic-bezier(0.47,0,0.745,0.715) 1s both;
+    animation:animate-svg-stroke-1 1s cubic-bezier(0.47,0,0.745,0.715) 1s both,animate-svg-fill-1 1s cubic-bezier(0.47,0,0.745,0.715) 1s both
+}
+@-webkit-keyframes animate-svg-stroke-2{
+    0%{
+        stroke-dashoffset:46.28290557861328px;
+        stroke-dasharray:46.28290557861328px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:46.28290557861328px
+    }
+}
+@keyframes animate-svg-stroke-2{
+    0%{
+        stroke-dashoffset:46.28290557861328px;
+        stroke-dasharray:46.28290557861328px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:46.28290557861328px
+    }
+}
+@-webkit-keyframes animate-svg-fill-2{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+@keyframes animate-svg-fill-2{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+.svg-elem-2{
+    -webkit-animation:animate-svg-stroke-2 1s cubic-bezier(0.47,0,0.745,0.715) 1.12s both,animate-svg-fill-2 1s cubic-bezier(0.47,0,0.745,0.715) 1.1s both;
+    animation:animate-svg-stroke-2 1s cubic-bezier(0.47,0,0.745,0.715) 1.12s both,animate-svg-fill-2 1s cubic-bezier(0.47,0,0.745,0.715) 1.1s both
+}
+@-webkit-keyframes animate-svg-stroke-3{
+    0%{
+        stroke-dashoffset:57.64841842651367px;
+        stroke-dasharray:57.64841842651367px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:57.64841842651367px
+    }
+}
+@keyframes animate-svg-stroke-3{
+    0%{
+        stroke-dashoffset:57.64841842651367px;
+        stroke-dasharray:57.64841842651367px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:57.64841842651367px
+    }
+}
+@-webkit-keyframes animate-svg-fill-3{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+@keyframes animate-svg-fill-3{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+.svg-elem-3{
+    -webkit-animation:animate-svg-stroke-3 1s cubic-bezier(0.47,0,0.745,0.715) 1.24s both,animate-svg-fill-3 1s cubic-bezier(0.47,0,0.745,0.715) 1.2s both;
+    animation:animate-svg-stroke-3 1s cubic-bezier(0.47,0,0.745,0.715) 1.24s both,animate-svg-fill-3 1s cubic-bezier(0.47,0,0.745,0.715) 1.2s both
+}
+@-webkit-keyframes animate-svg-stroke-4{
+    0%{
+        stroke-dashoffset:57.6484260559082px;
+        stroke-dasharray:57.6484260559082px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:57.6484260559082px
+    }
+}
+@keyframes animate-svg-stroke-4{
+    0%{
+        stroke-dashoffset:57.6484260559082px;
+        stroke-dasharray:57.6484260559082px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:57.6484260559082px
+    }
+}
+@-webkit-keyframes animate-svg-fill-4{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+@keyframes animate-svg-fill-4{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+.svg-elem-4{
+    -webkit-animation:animate-svg-stroke-4 1s cubic-bezier(0.47,0,0.745,0.715) 1.3599999999999999s both,animate-svg-fill-4 1s cubic-bezier(0.47,0,0.745,0.715) 1.3s both;
+    animation:animate-svg-stroke-4 1s cubic-bezier(0.47,0,0.745,0.715) 1.3599999999999999s both,animate-svg-fill-4 1s cubic-bezier(0.47,0,0.745,0.715) 1.3s both
+}
+@-webkit-keyframes animate-svg-stroke-5{
+    0%{
+        stroke-dashoffset:45.53486633300781px;
+        stroke-dasharray:45.53486633300781px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:45.53486633300781px
+    }
+}
+@keyframes animate-svg-stroke-5{
+    0%{
+        stroke-dashoffset:45.53486633300781px;
+        stroke-dasharray:45.53486633300781px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:45.53486633300781px
+    }
+}
+@-webkit-keyframes animate-svg-fill-5{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+@keyframes animate-svg-fill-5{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+.svg-elem-5{
+    -webkit-animation:animate-svg-stroke-5 1s cubic-bezier(0.47,0,0.745,0.715) 1.48s both,animate-svg-fill-5 1s cubic-bezier(0.47,0,0.745,0.715) 1.4s both;
+    animation:animate-svg-stroke-5 1s cubic-bezier(0.47,0,0.745,0.715) 1.48s both,animate-svg-fill-5 1s cubic-bezier(0.47,0,0.745,0.715) 1.4s both
+}
+@-webkit-keyframes animate-svg-stroke-6{
+    0%{
+        stroke-dashoffset:36.216331481933594px;
+        stroke-dasharray:36.216331481933594px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:36.216331481933594px
+    }
+}
+@keyframes animate-svg-stroke-6{
+    0%{
+        stroke-dashoffset:36.216331481933594px;
+        stroke-dasharray:36.216331481933594px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:36.216331481933594px
+    }
+}
+@-webkit-keyframes animate-svg-fill-6{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+@keyframes animate-svg-fill-6{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+.svg-elem-6{
+    -webkit-animation:animate-svg-stroke-6 1s cubic-bezier(0.47,0,0.745,0.715) 1.6s both,animate-svg-fill-6 1s cubic-bezier(0.47,0,0.745,0.715) 1.5s both;
+    animation:animate-svg-stroke-6 1s cubic-bezier(0.47,0,0.745,0.715) 1.6s both,animate-svg-fill-6 1s cubic-bezier(0.47,0,0.745,0.715) 1.5s both
+}
+@-webkit-keyframes animate-svg-stroke-7{
+    0%{
+        stroke-dashoffset:25.473913192749023px;
+        stroke-dasharray:25.473913192749023px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:25.473913192749023px
+    }
+}
+@keyframes animate-svg-stroke-7{
+    0%{
+        stroke-dashoffset:25.473913192749023px;
+        stroke-dasharray:25.473913192749023px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:25.473913192749023px
+    }
+}
+@-webkit-keyframes animate-svg-fill-7{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+@keyframes animate-svg-fill-7{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(78,154,6)
+    }
+}
+.svg-elem-7{
+    -webkit-animation:animate-svg-stroke-7 1s cubic-bezier(0.47,0,0.745,0.715) 1.72s both,animate-svg-fill-7 1s cubic-bezier(0.47,0,0.745,0.715) 1.6s both;
+    animation:animate-svg-stroke-7 1s cubic-bezier(0.47,0,0.745,0.715) 1.72s both,animate-svg-fill-7 1s cubic-bezier(0.47,0,0.745,0.715) 1.6s both
+}
+@-webkit-keyframes animate-svg-stroke-8{
+    0%{
+        stroke-dashoffset:22.085927963256836px;
+        stroke-dasharray:22.085927963256836px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:22.085927963256836px
+    }
+}
+@keyframes animate-svg-stroke-8{
+    0%{
+        stroke-dashoffset:22.085927963256836px;
+        stroke-dasharray:22.085927963256836px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:22.085927963256836px
+    }
+}
+@-webkit-keyframes animate-svg-fill-8{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-8{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-8{
+    -webkit-animation:animate-svg-stroke-8 1s cubic-bezier(0.47,0,0.745,0.715) 1.8399999999999999s both,animate-svg-fill-8 1s cubic-bezier(0.47,0,0.745,0.715) 1.7000000000000002s both;
+    animation:animate-svg-stroke-8 1s cubic-bezier(0.47,0,0.745,0.715) 1.8399999999999999s both,animate-svg-fill-8 1s cubic-bezier(0.47,0,0.745,0.715) 1.7000000000000002s both
+}
+@-webkit-keyframes animate-svg-stroke-9{
+    0%{
+        stroke-dashoffset:16.09411334991455px;
+        stroke-dasharray:16.09411334991455px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:16.09411334991455px
+    }
+}
+@keyframes animate-svg-stroke-9{
+    0%{
+        stroke-dashoffset:16.09411334991455px;
+        stroke-dasharray:16.09411334991455px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:16.09411334991455px
+    }
+}
+@-webkit-keyframes animate-svg-fill-9{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-9{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-9{
+    -webkit-animation:animate-svg-stroke-9 1s cubic-bezier(0.47,0,0.745,0.715) 1.96s both,animate-svg-fill-9 1s cubic-bezier(0.47,0,0.745,0.715) 1.8s both;
+    animation:animate-svg-stroke-9 1s cubic-bezier(0.47,0,0.745,0.715) 1.96s both,animate-svg-fill-9 1s cubic-bezier(0.47,0,0.745,0.715) 1.8s both
+}
+@-webkit-keyframes animate-svg-stroke-10{
+    0%{
+        stroke-dashoffset:20.286741256713867px;
+        stroke-dasharray:20.286741256713867px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:20.286741256713867px
+    }
+}
+@keyframes animate-svg-stroke-10{
+    0%{
+        stroke-dashoffset:20.286741256713867px;
+        stroke-dasharray:20.286741256713867px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:20.286741256713867px
+    }
+}
+@-webkit-keyframes animate-svg-fill-10{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-10{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-10{
+    -webkit-animation:animate-svg-stroke-10 1s cubic-bezier(0.47,0,0.745,0.715) 2.08s both,animate-svg-fill-10 1s cubic-bezier(0.47,0,0.745,0.715) 1.9s both;
+    animation:animate-svg-stroke-10 1s cubic-bezier(0.47,0,0.745,0.715) 2.08s both,animate-svg-fill-10 1s cubic-bezier(0.47,0,0.745,0.715) 1.9s both
+}
+@-webkit-keyframes animate-svg-stroke-11{
+    0%{
+        stroke-dashoffset:20.28675651550293px;
+        stroke-dasharray:20.28675651550293px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:20.28675651550293px
+    }
+}
+@keyframes animate-svg-stroke-11{
+    0%{
+        stroke-dashoffset:20.28675651550293px;
+        stroke-dasharray:20.28675651550293px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:20.28675651550293px
+    }
+}
+@-webkit-keyframes animate-svg-fill-11{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-11{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-11{
+    -webkit-animation:animate-svg-stroke-11 1s cubic-bezier(0.47,0,0.745,0.715) 2.2s both,animate-svg-fill-11 1s cubic-bezier(0.47,0,0.745,0.715) 2s both;
+    animation:animate-svg-stroke-11 1s cubic-bezier(0.47,0,0.745,0.715) 2.2s both,animate-svg-fill-11 1s cubic-bezier(0.47,0,0.745,0.715) 2s both
+}
+@-webkit-keyframes animate-svg-stroke-12{
+    0%{
+        stroke-dashoffset:10.314701080322266px;
+        stroke-dasharray:10.314701080322266px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:10.314701080322266px
+    }
+}
+@keyframes animate-svg-stroke-12{
+    0%{
+        stroke-dashoffset:10.314701080322266px;
+        stroke-dasharray:10.314701080322266px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:10.314701080322266px
+    }
+}
+@-webkit-keyframes animate-svg-fill-12{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-12{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-12{
+    -webkit-animation:animate-svg-stroke-12 1s cubic-bezier(0.47,0,0.745,0.715) 2.32s both,animate-svg-fill-12 1s cubic-bezier(0.47,0,0.745,0.715) 2.1s both;
+    animation:animate-svg-stroke-12 1s cubic-bezier(0.47,0,0.745,0.715) 2.32s both,animate-svg-fill-12 1s cubic-bezier(0.47,0,0.745,0.715) 2.1s both
+}
+@-webkit-keyframes animate-svg-stroke-13{
+    0%{
+        stroke-dashoffset:13.5654296875px;
+        stroke-dasharray:13.5654296875px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:13.5654296875px
+    }
+}
+@keyframes animate-svg-stroke-13{
+    0%{
+        stroke-dashoffset:13.5654296875px;
+        stroke-dasharray:13.5654296875px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:13.5654296875px
+    }
+}
+@-webkit-keyframes animate-svg-fill-13{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-13{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-13{
+    -webkit-animation:animate-svg-stroke-13 1s cubic-bezier(0.47,0,0.745,0.715) 2.44s both,animate-svg-fill-13 1s cubic-bezier(0.47,0,0.745,0.715) 2.2s both;
+    animation:animate-svg-stroke-13 1s cubic-bezier(0.47,0,0.745,0.715) 2.44s both,animate-svg-fill-13 1s cubic-bezier(0.47,0,0.745,0.715) 2.2s both
+}
+@-webkit-keyframes animate-svg-stroke-14{
+    0%{
+        stroke-dashoffset:11.823683738708496px;
+        stroke-dasharray:11.823683738708496px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:11.823683738708496px
+    }
+}
+@keyframes animate-svg-stroke-14{
+    0%{
+        stroke-dashoffset:11.823683738708496px;
+        stroke-dasharray:11.823683738708496px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:11.823683738708496px
+    }
+}
+@-webkit-keyframes animate-svg-fill-14{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-14{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-14{
+    -webkit-animation:animate-svg-stroke-14 1s cubic-bezier(0.47,0,0.745,0.715) 2.56s both,animate-svg-fill-14 1s cubic-bezier(0.47,0,0.745,0.715) 2.3s both;
+    animation:animate-svg-stroke-14 1s cubic-bezier(0.47,0,0.745,0.715) 2.56s both,animate-svg-fill-14 1s cubic-bezier(0.47,0,0.745,0.715) 2.3s both
+}
+@-webkit-keyframes animate-svg-stroke-15{
+    0%{
+        stroke-dashoffset:16.017857551574707px;
+        stroke-dasharray:16.017857551574707px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:16.017857551574707px
+    }
+}
+@keyframes animate-svg-stroke-15{
+    0%{
+        stroke-dashoffset:16.017857551574707px;
+        stroke-dasharray:16.017857551574707px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:16.017857551574707px
+    }
+}
+@-webkit-keyframes animate-svg-fill-15{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-15{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-15{
+    -webkit-animation:animate-svg-stroke-15 1s cubic-bezier(0.47,0,0.745,0.715) 2.6799999999999997s both,animate-svg-fill-15 1s cubic-bezier(0.47,0,0.745,0.715) 2.4000000000000004s both;
+    animation:animate-svg-stroke-15 1s cubic-bezier(0.47,0,0.745,0.715) 2.6799999999999997s both,animate-svg-fill-15 1s cubic-bezier(0.47,0,0.745,0.715) 2.4000000000000004s both
+}
+@-webkit-keyframes animate-svg-stroke-16{
+    0%{
+        stroke-dashoffset:18.497020721435547px;
+        stroke-dasharray:18.497020721435547px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:18.497020721435547px
+    }
+}
+@keyframes animate-svg-stroke-16{
+    0%{
+        stroke-dashoffset:18.497020721435547px;
+        stroke-dasharray:18.497020721435547px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:18.497020721435547px
+    }
+}
+@-webkit-keyframes animate-svg-fill-16{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-16{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-16{
+    -webkit-animation:animate-svg-stroke-16 1s cubic-bezier(0.47,0,0.745,0.715) 2.8s both,animate-svg-fill-16 1s cubic-bezier(0.47,0,0.745,0.715) 2.5s both;
+    animation:animate-svg-stroke-16 1s cubic-bezier(0.47,0,0.745,0.715) 2.8s both,animate-svg-fill-16 1s cubic-bezier(0.47,0,0.745,0.715) 2.5s both
+}
+@-webkit-keyframes animate-svg-stroke-17{
+    0%{
+        stroke-dashoffset:15.900579452514648px;
+        stroke-dasharray:15.900579452514648px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:15.900579452514648px
+    }
+}
+@keyframes animate-svg-stroke-17{
+    0%{
+        stroke-dashoffset:15.900579452514648px;
+        stroke-dasharray:15.900579452514648px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:15.900579452514648px
+    }
+}
+@-webkit-keyframes animate-svg-fill-17{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-17{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-17{
+    -webkit-animation:animate-svg-stroke-17 1s cubic-bezier(0.47,0,0.745,0.715) 2.92s both,animate-svg-fill-17 1s cubic-bezier(0.47,0,0.745,0.715) 2.6s both;
+    animation:animate-svg-stroke-17 1s cubic-bezier(0.47,0,0.745,0.715) 2.92s both,animate-svg-fill-17 1s cubic-bezier(0.47,0,0.745,0.715) 2.6s both
+}
+@-webkit-keyframes animate-svg-stroke-18{
+    0%{
+        stroke-dashoffset:16.094128608703613px;
+        stroke-dasharray:16.094128608703613px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:16.094128608703613px
+    }
+}
+@keyframes animate-svg-stroke-18{
+    0%{
+        stroke-dashoffset:16.094128608703613px;
+        stroke-dasharray:16.094128608703613px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:16.094128608703613px
+    }
+}
+@-webkit-keyframes animate-svg-fill-18{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-18{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-18{
+    -webkit-animation:animate-svg-stroke-18 1s cubic-bezier(0.47,0,0.745,0.715) 3.04s both,animate-svg-fill-18 1s cubic-bezier(0.47,0,0.745,0.715) 2.7s both;
+    animation:animate-svg-stroke-18 1s cubic-bezier(0.47,0,0.745,0.715) 3.04s both,animate-svg-fill-18 1s cubic-bezier(0.47,0,0.745,0.715) 2.7s both
+}
+@-webkit-keyframes animate-svg-stroke-19{
+    0%{
+        stroke-dashoffset:14.483047485351562px;
+        stroke-dasharray:14.483047485351562px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:14.483047485351562px
+    }
+}
+@keyframes animate-svg-stroke-19{
+    0%{
+        stroke-dashoffset:14.483047485351562px;
+        stroke-dasharray:14.483047485351562px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:14.483047485351562px
+    }
+}
+@-webkit-keyframes animate-svg-fill-19{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-19{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-19{
+    -webkit-animation:animate-svg-stroke-19 1s cubic-bezier(0.47,0,0.745,0.715) 3.16s both,animate-svg-fill-19 1s cubic-bezier(0.47,0,0.745,0.715) 2.8s both;
+    animation:animate-svg-stroke-19 1s cubic-bezier(0.47,0,0.745,0.715) 3.16s both,animate-svg-fill-19 1s cubic-bezier(0.47,0,0.745,0.715) 2.8s both
+}
+@-webkit-keyframes animate-svg-stroke-20{
+    0%{
+        stroke-dashoffset:14.481236457824707px;
+        stroke-dasharray:14.481236457824707px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:14.481236457824707px
+    }
+}
+@keyframes animate-svg-stroke-20{
+    0%{
+        stroke-dashoffset:14.481236457824707px;
+        stroke-dasharray:14.481236457824707px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:14.481236457824707px
+    }
+}
+@-webkit-keyframes animate-svg-fill-20{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-20{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-20{
+    -webkit-animation:animate-svg-stroke-20 1s cubic-bezier(0.47,0,0.745,0.715) 3.28s both,animate-svg-fill-20 1s cubic-bezier(0.47,0,0.745,0.715) 2.9000000000000004s both;
+    animation:animate-svg-stroke-20 1s cubic-bezier(0.47,0,0.745,0.715) 3.28s both,animate-svg-fill-20 1s cubic-bezier(0.47,0,0.745,0.715) 2.9000000000000004s both
+}
+@-webkit-keyframes animate-svg-stroke-21{
+    0%{
+        stroke-dashoffset:20.304683685302734px;
+        stroke-dasharray:20.304683685302734px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:20.304683685302734px
+    }
+}
+@keyframes animate-svg-stroke-21{
+    0%{
+        stroke-dashoffset:20.304683685302734px;
+        stroke-dasharray:20.304683685302734px
+    }
+    100%{
+        stroke-dashoffset:0;
+        stroke-dasharray:20.304683685302734px
+    }
+}
+@-webkit-keyframes animate-svg-fill-21{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+@keyframes animate-svg-fill-21{
+    0%{
+        fill:transparent
+    }
+    100%{
+        fill:rgb(0,0,0)
+    }
+}
+.svg-elem-21{
+    -webkit-animation:animate-svg-stroke-21 1s cubic-bezier(0.47,0,0.745,0.715) 3.4s both,animate-svg-fill-21 1s cubic-bezier(0.47,0,0.745,0.715) 3s both;
+    animation:animate-svg-stroke-21 1s cubic-bezier(0.47,0,0.745,0.715) 3.4s both,animate-svg-fill-21 1s cubic-bezier(0.47,0,0.745,0.715) 3s both
+}</style>
+</svg>
