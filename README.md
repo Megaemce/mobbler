@@ -1,4 +1,6 @@
-![mobbly](https://user-images.githubusercontent.com/1651451/142252097-060320f4-e9bd-489e-8436-55bb263fe5af.gif)
+<p align="center">
+  <img src="https://github.com/Megaemce/mobbler/blob/main/img/mobbler.svg" width="300px" />
+</p>
 
 Mobbler is an open source browser tool for analog music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing).
 
