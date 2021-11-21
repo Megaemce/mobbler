@@ -5,8 +5,8 @@
   # Introduction
   
   Are you tired of your old and dirty analog music hardware? <br>
-  Tired of connecting modular synthesizers with actual cables? <br>
-  Tired of acting like we are still in 60s?<br>
+  Tired of connecting modular synthesizers with actual PHYSICAL cables? <br>
+  Have you always dreamed of creating those mesmerizing berlin-techno hits of the 70's?<br>
   <div align="center">
    <img src="https://i.imgur.com/uripicq.jpg" height="250px"/>
     
