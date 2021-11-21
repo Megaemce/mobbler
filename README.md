@@ -26,6 +26,98 @@
     
   </div>
   
+  # Tutorials
+  Learn how to recreate some of the modules available in `Effects` menu. 
+  
+  ## Recreating _Tremolo_ module
+Level: Easy
+  1. Create one `Gain` module and rename (hover mouse over title for 1.5s) it to `Input & Output`
+  2. Create one `Oscillator` module
+     - leave `sine` type
+     - change `Frequency` value to `3 Hz` 
+     - `Frequency` is your `Tremolo`'s `Speed` parameter
+  3. Connect them as follows:
+     - `Oscillator` with `Input`'s gain parameter
+  4. _Tremolo_ module with all its parameters is ready!
+
+![image](https://user-images.githubusercontent.com/1651451/142778723-2331fe88-df70-41ba-8921-ab1e620b8700.png)  
+  
+  ## Recreating _Reverb_ module
+  Level: Medium
+   1. Create four `Gain` modules
+     - Rename (hover mouse over title for 1.5s) first `Gain` module to `Input`
+     - Rename second `Gain` module to `Output`
+     - Rename third `Gain` module to `Wetness`
+     - Rename fourth `Gain` module to `Dryness`
+  2. Create one `Convoler` module
+  3. Connect them them as follows:
+     - `Input` with `Convoler`
+     - `Input` with `Dryness`
+     - `Convoler` into `Wetness`
+     - `Wetness` with `Output`
+     - `Dryness` with `Output`
+  4. _Reverb_ module with all its parameters is ready!
+
+![image](https://user-images.githubusercontent.com/1651451/142778335-bd982af1-30de-4c76-a863-79adff1dc675.png)
+
+
+  ## Recreating _Delay effect_ module
+  
+  Level: Medium
+  
+  1. Create four `Gain` modules
+     - Rename (hover mouse over title for 1.5s) first `Gain` module to `Input`
+     - Rename second `Gain` module to `Output`
+     - Rename third `Gain` module to `Wetness`
+     - Rename fourth `Gain` module to `Duration`
+  2. Create one `Delay` module
+  3. Connect them them as follows:
+     - `Input` with `Wetness`
+     - `Wetness` with `Output`
+     - `Input` with `Delay`
+     - `Delay` with `Duration`
+     - `Duration` with `Delay` (create a loop)
+     - `Delay` with `Output`
+  4. _Delay effect_ module with all its parameters is ready!
+  
+> ❗ Watch out not to exceed `Duration`'s gain value over 1.0
+
+  ![image](https://user-images.githubusercontent.com/1651451/142775605-fa720b13-18d5-49f3-b433-ff26aa77f16c.png)
+  
+  ## Recreating _Flanger_ module
+  Level: Hard
+  > ❗ Unfortunatelly `flanger`'s parameters are way lower than the minimum's of the basic modules thus it might be really hard to create nice-sounding flanger
+  
+  1. Create four `Gain` modules
+     - Rename (hover mouse over title for 1.5s) first `Gain` module to `Input`
+     - Rename second `Gain` module to `Output`
+     - Rename third `Gain` module to `Feedback`  
+     - Leave fourth `Gain` module with its name
+       - `Gain`'s gain is your flanger's `Depth` parameter 
+  2. Create one `Delay` module
+  3. Create one `Oscillator` module
+     - leave `sine` type
+     - change `Frequency` value to `0.1 Hz` 
+     - `Frequency` is your flanger's `Speed` parameter
+  5. Connect them them as follows:
+     - `Oscillator` with `Gain`
+     - `Gain` with `Delay`'s `Delay time` parameter
+     - `Input` with `Output`
+     - `Input` with `Delay`
+     - `Delay` with `Output`
+     - `Delay` with `Feedback`
+     - `Feedback` with `Input`
+  6. _Flanger_ module with all its parameters is ready!
+  
+> ❗ Watch out not to exceed:
+> - `Gain`'s gain value over 0.1
+> - `Delay`'s delay time value over 0.1
+> - `Feedback`'s gain value over 1
+> - `Oscillator`'s frequency value over 1 Hz
+
+![image](https://user-images.githubusercontent.com/1651451/142776725-ba4db0e2-f90f-44bc-9e9e-29e07d6fbdfd.png)
+ 
+  
   # Motive
   <img src="/img/mobbler_word.svg" height="14px"/> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few popular effects and tutorials on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
   
