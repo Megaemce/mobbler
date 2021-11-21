@@ -65,6 +65,39 @@ export default class Module {
             this.movingModule(event);
         };
 
+        // allow title to be renamed
+        this.head.titleWrapper.onmouseover = () => {
+            let timer = window.setTimeout(() => {
+                this.head.titleWrapper.children[0].setAttribute("contenteditable", true);
+                this.head.titleWrapper.style.cursor = "text";
+                // need to click to rename thus disabling onmousedown handler for a moment
+                this.head.titleWrapper.onmousedown = undefined;
+
+                function reset(module) {
+                    window.clearTimeout(timer);
+                    module.head.titleWrapper.children[0].setAttribute("contenteditable", false);
+                    module.head.titleWrapper.style.cursor = "grab";
+                    module.head.titleWrapper.onmousedown = (event) => {
+                        module.movingModule(event);
+                    };
+                }
+
+                // handle "enter" key save
+                document.onkeydown = (event) => {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        reset(this);
+                        document.onkeyup = undefined;
+                    }
+                };
+
+                // mouseout thus finishing editing
+                this.head.titleWrapper.onmouseout = () => {
+                    reset(this);
+                };
+            }, 1500);
+        };
+
         // when close button is clicked delete the module
         this.head.close.onclick = () => {
             this.deleteModule();
