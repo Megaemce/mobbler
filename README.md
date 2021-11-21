@@ -418,7 +418,7 @@
   <table>
       <tr>
         <td>
-          <img src="https://user-images.githubusercontent.com/1651451/142731494-aaa5d07e-0ce8-4fae-9fa1-a3a4d31a5829.png"/>
+          <img src="https://user-images.githubusercontent.com/1651451/142771479-6f50d5d8-cd54-4c65-a389-4a47711e25b7.png"/>
         </td>
         <td>
           Description:
