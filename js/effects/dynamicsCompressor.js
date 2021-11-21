@@ -9,7 +9,7 @@ export default function dynamicsCompressor(event, initalThreshold, initalKnee, i
     const threshold = initalThreshold || -24.0;
     const kneeInfo = "Determines how abruptly or gradually compression begins once the sound level crosses the threshold";
     const ratioInfo = "The amount of gain reduction. Input level over this amount dB will be reduced by 1dB over the threshold";
-    const attackInfo = "The point where the sound begins and increases in volume to its peak.";
+    const attackInfo = "The point where the sound begins and increases in volume to its peak";
     const releaseInfo = "The rate at which the volume drops to zero as the sound stops playing";
     const thresholdInfo = "The level at which a dynamics processing unit will begin to change the gain of the incoming signal";
 
