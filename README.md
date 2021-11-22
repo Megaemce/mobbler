@@ -111,12 +111,10 @@ Level: Easy
   
 > ❗ Watch out not to exceed:
 > - `Gain`'s gain value over 0.1
-> - `Delay`'s delay time value over 0.1
 > - `Feedback`'s gain value over 1
 > - `Oscillator`'s frequency value over 1 Hz
 
-![image](https://user-images.githubusercontent.com/1651451/142776725-ba4db0e2-f90f-44bc-9e9e-29e07d6fbdfd.png)
- 
+![image](https://user-images.githubusercontent.com/1651451/142909373-5df715bf-cad6-404a-92b0-f0c85031e7bf.png) 
   
   # Motive
   <img src="/img/mobbler_word.svg" height="14px"/> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few popular effects and tutorials on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
