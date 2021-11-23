@@ -367,6 +367,8 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     sliderDebug.appendChild(debugValueStepDiv);
     sliderDebug.appendChild(debugValueDiv);
     sliderDebug.appendChild(debugHideButton);
+    // use in Module to update currentValue textNode when dev opens
+    sliderDebug.currentValue = debugValue;
 
     sliderWraper.className = "input-wrapper";
     sliderWraper.appendChild(slider);

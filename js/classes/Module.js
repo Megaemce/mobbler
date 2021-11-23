@@ -130,6 +130,7 @@ export default class Module {
 
             // show new value above slider
             module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
+            module.content.controllers[propertyNoSpaces].debug.currentValue.innerText = sliderValue;
         };
 
         // show slider's debug mode when hovered over value for 1 sec

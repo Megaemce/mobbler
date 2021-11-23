@@ -228,7 +228,7 @@ body {
     margin: 0 2.5px;
     cursor: pointer 
 }
-.module .head .buttons-wrapper button.close {
+.module .head .buttons-wrapper .close {
     background-image: url('../img/close.svg');
     background-repeat: no-repeat;
     background-position: center;
@@ -241,10 +241,10 @@ body {
     -o-transition: filter 0.2s;
     transition: filter 0.2s
 }
-.module .head .buttons-wrapper button.close:hover {
+.module .head .buttons-wrapper .close:hover {
     filter: none;
 }
-.module .head .buttons-wrapper button.maximize {
+.module .head .buttons-wrapper .maximize {
     background-image: url('../img/maximize.svg');
     background-repeat: no-repeat;
     background-position: center;
@@ -257,7 +257,7 @@ body {
     -o-transition: filter 0.2s;
     transition: filter 0.2s
 }
-.module .head .buttons-wrapper button.maximize:hover {
+.module .head .buttons-wrapper .maximize:hover {
     filter: none
 }
 .module .socket-wrapper {
@@ -407,7 +407,7 @@ body {
     justify-content: space-between;
     padding-bottom: 2px;
 }
-.module .content .controllers .sliders .slider-debug button.hide-button {
+.module .content .controllers .sliders .slider-debug .hide-button {
     background-image: url(../img/hide.svg);
     background-repeat: no-repeat;
     background-position: center;
@@ -421,7 +421,7 @@ body {
     -o-transition: filter 0.2s;
     transition: filter 0.2s;
 }
-.module .content .controllers .sliders .slider-debug button.hide-button:hover  {
+.module .content .controllers .sliders .slider-debug .hide-button:hover  {
     cursor: pointer;
     filter: none
 }
