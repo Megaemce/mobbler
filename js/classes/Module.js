@@ -128,7 +128,7 @@ export default class Module {
             if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
             else if (module.audioNodes) module.audioNodes[propertyNoSpaces](sliderValue);
 
-            // show new value above slider
+            // show new value above slider and in debug
             module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
             module.content.controllers[propertyNoSpaces].debug.currentValue.innerText = sliderValue;
         };
