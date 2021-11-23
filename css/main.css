@@ -19,6 +19,7 @@
 button {
     background-color: transparent;
     border: none;
+    cursor: pointer;
 }
 html, button, input, select, textarea {
     font-family: 'ProximaNovaRgRegular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
