@@ -99,7 +99,7 @@ export default class Module {
 
     /* build module audio slider html object and attach all logic into it */
     createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
-        let propertyNoSpaces = property.split(" ").join("");
+        let parameterType = property.split(" ").join("");
         let renameTimerID = undefined;
         let debugTimerID = undefined;
         let module = this;
@@ -107,50 +107,50 @@ export default class Module {
         buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
 
         // set inital values on audioNode
-        if (module.audioNode) module.audioNode[propertyNoSpaces].value = initialValue;
-        else if (module.audioNodes) module.audioNodes[propertyNoSpaces](initialValue);
+        if (module.audioNode) module.audioNode[parameterType].value = initialValue;
+        else if (module.audioNodes) module.audioNodes[parameterType](initialValue);
 
         // when slider is moved (by user or by connected module)
-        module.content.controllers[propertyNoSpaces].slider.oninput = function () {
+        module.content.controllers[parameterType].slider.oninput = function () {
             let sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
 
             // set value on the audiNode parameter
-            if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
-            else if (module.audioNodes) module.audioNodes[propertyNoSpaces](sliderValue);
+            if (module.audioNode) module.audioNode[parameterType].value = sliderValue;
+            else if (module.audioNodes) module.audioNodes[parameterType](sliderValue);
 
             // show new value above slider and in debug
-            module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
-            module.content.controllers[propertyNoSpaces].debug.currentValue.innerText = sliderValue;
+            module.content.controllers[parameterType].info.valueUnit.value.innerHTML = sliderValue;
+            module.content.controllers[parameterType].debug.currentValue.innerText = sliderValue;
         };
 
         // show slider's debug mode when hovered over value for 1 sec
-        module.content.controllers[propertyNoSpaces].info.valueUnit.value.onmouseover = () => {
+        module.content.controllers[parameterType].info.valueUnit.value.onmouseover = () => {
             window.setTimeout(() => {
-                module.content.controllers[propertyNoSpaces].info.valueUnit.value.style.cursor = "progress";
+                module.content.controllers[parameterType].info.valueUnit.value.style.cursor = "progress";
             }, 300);
             debugTimerID = window.setTimeout(() => {
-                module.content.controllers[propertyNoSpaces].debug.classList.add("show");
-                module.content.controllers[propertyNoSpaces].info.valueUnit.value.style.cursor = "default";
+                module.content.controllers[parameterType].debug.classList.add("show");
+                module.content.controllers[parameterType].info.valueUnit.value.style.cursor = "default";
             }, 1000);
         };
 
-        module.content.controllers[propertyNoSpaces].info.valueUnit.value.onmouseout = () => {
+        module.content.controllers[parameterType].info.valueUnit.value.onmouseout = () => {
             window.clearTimeout(debugTimerID);
         };
 
         // allow parameter to be renamed
-        module.content.controllers[propertyNoSpaces].info.label.span.onmouseover = () => {
+        module.content.controllers[parameterType].info.label.span.onmouseover = () => {
             renameTimerID = window.setTimeout(() => {
-                module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", true);
-                module.content.controllers[propertyNoSpaces].info.label.style.cursor = "text";
+                module.content.controllers[parameterType].info.label.span.setAttribute("contenteditable", true);
+                module.content.controllers[parameterType].info.label.style.cursor = "text";
             }, 1500);
         };
 
         // mouseout thus finishing editing
-        module.content.controllers[propertyNoSpaces].info.label.span.onmouseout = () => {
+        module.content.controllers[parameterType].info.label.span.onmouseout = () => {
             window.clearTimeout(renameTimerID);
-            module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", false);
-            module.content.controllers[propertyNoSpaces].info.label.style.cursor = "help";
+            module.content.controllers[parameterType].info.label.span.setAttribute("contenteditable", false);
+            module.content.controllers[parameterType].info.label.style.cursor = "help";
         };
     }
     /* add "open file..." option to select div */
@@ -374,6 +374,7 @@ export default class Module {
         else if (destinationModule.audioNodes) destinationModule.audioNodes[parameterType].value = slider.value;
 
         destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
+        destinationModule.content.controllers[parameterType].debug.currentValue.innerText = scaledValue;
 
         // update the value inifinite
         destinationModule.animationID[parameterType] = requestAnimationFrame(() => {

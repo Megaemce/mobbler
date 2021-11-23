@@ -251,7 +251,7 @@ export function buildModule(module) {
 }
 
 export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
-    let propertyNoSpaces = property.split(" ").join("");
+    let parameterType = property.split(" ").join("");
     let sliderDiv = document.createElement("div");
     let info = document.createElement("div");
     let label = document.createElement("div");
@@ -275,25 +275,25 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     let audioParam = document.createElement("div");
     let parameterImg = document.createElement("img");
 
-    // module.content.controllers.$propertyNoSpaces.info.label.tooltip
+    // module.content.controllers.$parameterType.info.label.tooltip
     labelInfo.className = "label-tooltip";
     labelInfo.innerHTML = propertyInfo;
 
     labelSpan.appendChild(document.createTextNode(property));
     labelSpan.className = "label-span";
 
-    // module.content.controllers.$propertyNoSpaces.info.label
+    // module.content.controllers.$parameterType.info.label
     label.className = "label";
     label.appendChild(labelInfo);
     label.appendChild(labelSpan);
     label.tooltip = labelInfo;
     label.span = labelSpan;
 
-    // module.content.controllers.$propertyNoSpaces.info.valueUnit.value
+    // module.content.controllers.$parameterType.info.valueUnit.value
     value.className = "value";
     value.appendChild(document.createTextNode(initialValue));
 
-    // module.content.controllers.$propertyNoSpaces.info.units
+    // module.content.controllers.$parameterType.info.units
     unit.className = "value";
     unit.appendChild(document.createTextNode(units));
 
@@ -303,14 +303,14 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     valueUnit.value = value;
     valueUnit.unit = unit;
 
-    // module.content.controllers.$propertyNoSpaces.info
+    // module.content.controllers.$parameterType.info
     info.className = "slider-info";
     info.appendChild(label);
     info.appendChild(valueUnit);
     info.valueUnit = valueUnit;
     info.label = label;
 
-    // module.content.controllers.$propertyNoSpaces.slider
+    // module.content.controllers.$parameterType.slider
     slider.type = "range";
     slider.scaleLog = scaleLog;
     slider.min = min;
@@ -363,7 +363,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
         sliderDebug.classList.remove("show");
     };
 
-    // module.content.controllers.$propertyNoSpaces.slider.debug
+    // module.content.controllers.$parameterType.slider.debug
     sliderDebug.className = "slider-debug";
     sliderDebug.appendChild(debugValueMinDiv);
     sliderDebug.appendChild(debugValueMaxDiv);
@@ -376,7 +376,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     sliderWraper.className = "input-wrapper";
     sliderWraper.appendChild(slider);
 
-    // module.content.controllers.$propertyNoSpaces
+    // module.content.controllers.$parameterType
     sliderDiv.className = "slider";
     sliderDiv.appendChild(info);
     sliderDiv.appendChild(sliderWraper);
@@ -395,25 +395,25 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     }
 
     module.content.controllers.sliders.appendChild(sliderDiv);
-    module.content.controllers[propertyNoSpaces] = sliderDiv;
-    module.content.controllers[propertyNoSpaces].value = value;
-    module.content.controllers[propertyNoSpaces].unit = unit;
+    module.content.controllers[parameterType] = sliderDiv;
+    module.content.controllers[parameterType].value = value;
+    module.content.controllers[parameterType].unit = unit;
 
-    // module.footer.$propertyNoSpaces.img
+    // module.footer.$parameterType.img
     // keep info about parent and type in image and it's wrapper for movingCable function
     parameterImg.src = "./img/parameter_input.svg";
     parameterImg.parentModule = module;
-    parameterImg.inputType = propertyNoSpaces;
+    parameterImg.inputType = parameterType;
 
-    // module.footer.$propertyNoSpaces
-    audioParam.inputType = propertyNoSpaces;
+    // module.footer.$parameterType
+    audioParam.inputType = parameterType;
     audioParam.parentModule = module;
     audioParam.className = "parameter-wrapper";
     audioParam.appendChild(parameterImg);
     audioParam.img = parameterImg;
 
     module.footer.appendChild(audioParam);
-    module.footer[propertyNoSpaces] = audioParam;
+    module.footer[parameterType] = audioParam;
 }
 
 export function buildCable(cable) {
