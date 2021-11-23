@@ -12,7 +12,7 @@
     font-weight: normal;
     font-style: normal;
 }
-#main {
+.main {
     position: relative;
     z-index: 1 
 }
@@ -65,62 +65,27 @@ body {
     border-style: solid;
     border-color: transparent transparent transparent rgb(100, 43, 43) 
 }
-#nav {
+.nav {
     padding: 0.5em;
     display: inline-block;
     filter: drop-shadow(3px 3px 1px rgba(0, 0, 0, 0.2));
     z-index: 1000;
     position: relative 
 }
-#controls {
+.nav .nav-list {
     list-style: none;
     margin: 0;
     padding: 0 
 }
-#controls ul {
-    background-color: #fff;
-    border: 1px solid #aaa;
-    border-radius: 5px;
-    list-style: none;
-    padding: .2em 0;
-    position: relative 
-}
-#controls li {
+.nav .nav-list .menu {
     float: left;
     margin-right: .8em;
     position: relative 
 }
-#controls .sub-menu li {
-    margin: 0;
-}
-#controls ul li {
-    float: none;
-}
-#controls li:hover .sub-menu {
+.nav .nav-list .menu:hover .submenu {
     display: block 
 }
-#controls ul::after, #controls ul::before {
-    bottom: 100%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none 
-}
-#controls ul::after {
-    border-bottom-color: #ffffff;
-    border-width: 8px;
-    left: 20%;
-    margin-left: -8px 
-}
-#controls ul::before {
-    border-bottom-color: #aaa;
-    border-width: 9px;
-    left: 20%;
-    margin-left: -9px 
-}
-#controls button.menu  {
+.nav .nav-list .menu .menu-button  {
     background:  rgb(224, 224, 224);
     border-radius: 5px;
     display: block;
@@ -133,15 +98,12 @@ body {
     -o-transition: background-color 0.2s;
     transition: background-color 0.2s; 
 }
-#controls button.menu:hover {
+.nav .nav-list .menu .menu-button:hover {
     background:  rgb(240, 240, 240);
 }
-#controls button.menu::before  {
+.nav .nav-list .menu .menu-button::before  {
     content: url('../img/add.svg');
-    display:inline-block;
     filter: brightness(0) contrast(0.1);
-    width: 10px;
-    height: 10px;
     margin-right: 7px;
     position: relative;
     top: 1px;
@@ -150,15 +112,47 @@ body {
     -o-transition: filter 0.2s;
     transition: filter 0.2s;
 }
-#controls button.menu:hover::before  {
+.nav .nav-list .menu .menu-button.tutorials::before  {
+    content: url('../img/tutorial.svg')
+}
+.nav .nav-list .menu .menu-button:hover::before  {
     filter: none
 }
-#controls .sub-menu {
+.nav .nav-list .menu .submenu {
     display: none;
     padding-top: 8px;
     position: absolute 
 }
-#controls .sub-menu button {
+.nav .nav-list .menu .submenu .submenu-list {
+    background-color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    list-style: none;
+    padding: .2em 0;
+    position: relative;
+}
+
+.nav .nav-list .menu .submenu .submenu-list::after, .submenu-list::before {
+    bottom: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none 
+}
+.nav .nav-list .menu .submenu .submenu-list::after {
+    border-bottom-color: #ffffff;
+    border-width: 8px;
+    margin-left: 6px 
+}
+.nav .nav-list .menu .submenu .submenu-list::before {
+    border-bottom-color: #aaa;
+    border-width: 9px;
+    margin-left: 5px 
+}
+
+.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button {
     background: #fff;
     font-size: .625em;
     text-transform: uppercase;
@@ -168,7 +162,7 @@ body {
     padding: 0.8em;
     cursor: pointer 
 }
-#controls .sub-menu button:hover {
+.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button:hover {
     background: rgb(219, 219, 219) 
 }
 
@@ -397,6 +391,45 @@ body {
     flex-direction: column;
     min-width: 68px 
 }
+.module .content .controllers .sliders .slider-debug {
+    display: none;
+}
+.module .content .controllers .sliders .slider-debug.show {
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    flex-direction: column;
+    font-size: .625em;
+    margin-top: 1em;
+}
+.module .content .controllers .sliders .slider-debug .debug-text {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 2px;
+}
+.module .content .controllers .sliders .slider-debug button.hide-button {
+    background-image: url(../img/hide.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    filter: brightness(0) contrast(0.1);
+    height: 9px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    -webkit-transition: filter 0.2s;
+    -moz-transition: filter 0.2s;
+    -o-transition: filter 0.2s;
+    transition: filter 0.2s;
+}
+.module .content .controllers .sliders .slider-debug button.hide-button:hover  {
+    cursor: pointer;
+    filter: none
+}
+.module .content .controllers .sliders .slider-debug .debug-text span{
+    font-weight: bold;
+    padding-left: 5px;
+}
+
 .module .content .controllers .sliders .slider .slider-info {
     font-size: .625em;
     margin-bottom: 1em;

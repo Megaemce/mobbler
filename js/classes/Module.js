@@ -65,37 +65,39 @@ export default class Module {
             this.movingModule(event);
         };
 
+        let timerID = undefined;
+        // reset function for title renaming handlers
+        function reset(module) {
+            window.clearTimeout(timerID);
+            module.head.titleWrapper.children[0].setAttribute("contenteditable", false);
+            module.head.titleWrapper.style.cursor = "grab";
+            module.head.titleWrapper.onmousedown = (event) => {
+                module.movingModule(event);
+            };
+        }
+
         // allow title to be renamed
         this.head.titleWrapper.onmouseover = () => {
-            let timer = window.setTimeout(() => {
+            timerID = window.setTimeout(() => {
                 this.head.titleWrapper.children[0].setAttribute("contenteditable", true);
                 this.head.titleWrapper.style.cursor = "text";
                 // need to click to rename thus disabling onmousedown handler for a moment
                 this.head.titleWrapper.onmousedown = undefined;
-
-                function reset(module) {
-                    window.clearTimeout(timer);
-                    module.head.titleWrapper.children[0].setAttribute("contenteditable", false);
-                    module.head.titleWrapper.style.cursor = "grab";
-                    module.head.titleWrapper.onmousedown = (event) => {
-                        module.movingModule(event);
-                    };
-                }
-
-                // handle "enter" key save
-                document.onkeydown = (event) => {
-                    if (event.key === "Enter") {
-                        event.preventDefault();
-                        reset(this);
-                        document.onkeyup = undefined;
-                    }
-                };
-
-                // mouseout thus finishing editing
-                this.head.titleWrapper.onmouseout = () => {
-                    reset(this);
-                };
             }, 1500);
+        };
+
+        // mouseout thus finishing editing
+        this.head.titleWrapper.onmouseout = () => {
+            reset(this);
+        };
+
+        // handle "enter" key save when finishing editing
+        document.onkeydown = (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                reset(this);
+                document.onkeyup = undefined;
+            }
         };
 
         // when close button is clicked delete the module
@@ -128,6 +130,22 @@ export default class Module {
 
             // show new value above slider
             module.content.controllers[propertyNoSpaces].info.valueUnit.value.innerHTML = sliderValue;
+        };
+
+        // show slider's debug mode when hovered over value for 1 sec
+        let timerID = undefined;
+        module.content.controllers[propertyNoSpaces].info.valueUnit.value.onmouseover = () => {
+            window.setTimeout(() => {
+                module.content.controllers[propertyNoSpaces].info.valueUnit.value.style.cursor = "progress";
+            }, 300);
+            timerID = window.setTimeout(() => {
+                module.content.controllers[propertyNoSpaces].debug.classList.add("show");
+                module.content.controllers[propertyNoSpaces].info.valueUnit.value.style.cursor = "default";
+            }, 1000);
+        };
+
+        module.content.controllers[propertyNoSpaces].info.valueUnit.value.onmouseout = () => {
+            window.clearTimeout(timerID);
         };
     }
     /* add "open file..." option to select div */

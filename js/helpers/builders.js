@@ -261,6 +261,16 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     let valueUnit = document.createElement("div");
     let slider = document.createElement("input");
     let sliderWraper = document.createElement("div");
+    let sliderDebug = document.createElement("div");
+    let debugValueMin = document.createElement("span");
+    let debugValueMax = document.createElement("span");
+    let debugValueStep = document.createElement("span");
+    let debugValue = document.createElement("span");
+    let debugValueMinDiv = document.createElement("div");
+    let debugValueMaxDiv = document.createElement("div");
+    let debugValueStepDiv = document.createElement("div");
+    let debugValueDiv = document.createElement("div");
+    let debugHideButton = document.createElement("button");
     let audioParam = document.createElement("div");
     let parameterImg = document.createElement("img");
 
@@ -306,6 +316,58 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     // set inital value to the correct position before user starts to play
     slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : parseFloat(initialValue);
 
+    debugValueMinDiv.className = "debug-text";
+    debugValueMaxDiv.className = "debug-text";
+    debugValueStepDiv.className = "debug-text";
+    debugValueDiv.className = "debug-text";
+
+    debugValueMinDiv.appendChild(document.createTextNode("Min: "));
+    debugValueMaxDiv.appendChild(document.createTextNode("Max: "));
+    debugValueStepDiv.appendChild(document.createTextNode("Step: "));
+    debugValueDiv.appendChild(document.createTextNode("Current: "));
+
+    debugValueMin.appendChild(document.createTextNode(slider.min));
+    debugValueMax.appendChild(document.createTextNode(slider.max));
+    debugValueStep.appendChild(document.createTextNode(slider.step));
+    debugValue.appendChild(document.createTextNode(slider.value));
+
+    debugValueMin.setAttribute("contenteditable", true);
+    debugValueMax.setAttribute("contenteditable", true);
+    debugValueStep.setAttribute("contenteditable", true);
+    debugValue.setAttribute("contenteditable", true);
+
+    debugValueMin.oninput = () => {
+        slider.min = parseFloat(debugValueMin.innerText);
+    };
+    debugValueMax.oninput = () => {
+        slider.max = parseFloat(debugValueMax.innerText);
+    };
+    debugValueStep.oninput = () => {
+        slider.step = parseFloat(debugValueStep.innerText);
+    };
+    debugValue.oninput = () => {
+        value.innerHTML = parseFloat(debugValue.innerText);
+        slider.value = parseFloat(debugValue.innerText);
+    };
+
+    debugValueMinDiv.appendChild(debugValueMin);
+    debugValueMaxDiv.appendChild(debugValueMax);
+    debugValueStepDiv.appendChild(debugValueStep);
+    debugValueDiv.appendChild(debugValue);
+
+    debugHideButton.className = "hide-button";
+    debugHideButton.onclick = () => {
+        sliderDebug.classList.remove("show");
+    };
+
+    // module.content.controllers.$propertyNoSpaces.slider.debug
+    sliderDebug.className = "slider-debug";
+    sliderDebug.appendChild(debugValueMinDiv);
+    sliderDebug.appendChild(debugValueMaxDiv);
+    sliderDebug.appendChild(debugValueStepDiv);
+    sliderDebug.appendChild(debugValueDiv);
+    sliderDebug.appendChild(debugHideButton);
+
     sliderWraper.className = "input-wrapper";
     sliderWraper.appendChild(slider);
 
@@ -313,8 +375,10 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     sliderDiv.className = "slider";
     sliderDiv.appendChild(info);
     sliderDiv.appendChild(sliderWraper);
+    sliderDiv.appendChild(sliderDebug);
     sliderDiv.info = info;
     sliderDiv.slider = slider;
+    sliderDiv.debug = sliderDebug;
 
     // if sliders div have not been created yet do it
     if (!module.content.controllers.sliders) {

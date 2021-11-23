@@ -9,54 +9,111 @@
 		<script type="module" src="js/main.js"></script>
 	</head>
 	<body>
-		<div id="main" class="container">
-
-			<section id="modules" class="container">
+		<div class="main">
+			<section>
 				<div class="selection-rect" id="selection-rect" hidden></div>
 			</section>
-            <nav id="nav">
-				<ul id="controls" class="container">
-					<li>
-						<button class="menu">Inputs</button>
-						<div class="sub-menu">
-							<ul>
-								<li><button id="audioSource">Audio Source</button></li>
-								<li><button id="oscillator">Oscillator</button></li>
-								<li><button id="liveInput">Live Input</button></li>
+            <nav class="nav">
+				<ul class="nav-list">
+					<li class="menu">
+						<button class="menu-button">Inputs</button>
+						<div class="submenu">
+							<ul class="submenu-list">
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="audioSource">Audio Source</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="oscillator">Oscillator</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="liveInput">Live Input</button>
+                                </li>
 							</ul>
 						</div>
 					</li>
-					<li>
-						<button class="menu">Basics</button>
-						<div class="sub-menu">
-							<ul>
-								<li><button id="analyser">Analyser</button></li>
-								<li><button id="biquadFilter">Biquad Filter</button></li>
-								<li><button id="convolver">Convolver</button></li>
-								<li><button id="delayNode">Delay</button></li>
-								<li><button id="dynamicsCompressor">Dynamics Compressor</button></li>
-								<li><button id="gainNode">Gain</button></li>
+					<li class="menu">
+						<button class="menu-button">Basics</button>
+						<div class="submenu">
+							<ul class="submenu-list">
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="analyser">Analyser</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="biquadFilter">Biquad Filter</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="convolver">Convolver</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="delayNode">Delay</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="dynamicsCompressor">Dynamics Compressor</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="gainNode">Gain</button>
+                                </li>
 							</ul>
 						</div>
 					</li>
-                    <li>
-						<button class="menu">Effects</button>
-						<div class="sub-menu">
-							<ul> 
-								<li><button id="distortion">Distortion</button></li>
-								<li><button id="delayEffect">Delay effect</button></li>
-								<li><button id="flanger">Flanger</button></li>
-								<li><button id="reverb">Reverb</button></li>
-								<li><button id="tremolo">Tremolo</button></li>
+					<li class="menu">
+						<button class="menu-button">Effects</button>
+						<div class="submenu">
+							<ul class="submenu-list">
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="distortion">Distortion</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="delayEffect">Delay effect</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="flanger">Flanger</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="reverb">Reverb</button>
+                                </li>
+								<li class="submenu-item">
+                                    <button class="submenu-button" id="tremolo">Tremolo</button>
+                                </li>
 							</ul>
 						</div>
 					</li>
-                    <li>
-                        <button class="menu">Outputs</button>
-						<div class="sub-menu">
-							<ul> 
-						        <li><button id="output">Output</button><li>
-                                <li><button id="visualisation">Visualisation</button></li>
+					<li class="menu">
+                        <button class="menu-button">Outputs</button>
+						<div class="submenu">
+							<ul class="submenu-list">
+						        <li class="submenu-item">
+                                    <button class="submenu-button" id="output">Output</button><li class="submenu-item">
+                                <li class="submenu-item">
+                                    <button class="submenu-button" id="visualisation">Visualisation</button>
+                                </li>
+                            </ul>
+                        </div>
+					</li>
+					<li class="menu">
+                        <button class="menu-button tutorials">Tutorials</button>
+						<div class="submenu">
+							<ul class="submenu-list">
+						        <li class="submenu-item">
+                                    <form action="#"><input class="tutorial" type="submit" value="Creating tremolo"/></form><li class="submenu-item">
+                                <li class="submenu-item">
+                                    <form action="#"><input class="tutorial" type="submit" value="Creating reverb"/></form>
+                                </li>
+                                <li class="submenu-item">
+                                    <form action="#"><input class="tutorial" type="submit" value="Creating delay effect"/></form>
+                                </li>
+                                <li class="submenu-item">
+                                    <form action="#"><input class="tutorial" type="submit" value="Creating flanger"/></form>
+                                </li>
+                                <li class="submenu-item">
+                                    <form action="#"><input class="tutorial" type="submit" value="Renaming modules"/></form>
+                                </li>
+                                <li class="submenu-item">
+                                    <form action="#"><input class="tutorial" type="submit" value="Renaming parameters"/></form>
+                                </li>
+                                <li class="submenu-item">
+                                    <form action="#"><input class="tutorial" type="submit" value="Changing parameters settings"/></form>
+                                </li>
                             </ul>
                         </div>
 					</li>
