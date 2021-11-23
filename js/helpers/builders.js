@@ -255,6 +255,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     let sliderDiv = document.createElement("div");
     let info = document.createElement("div");
     let label = document.createElement("div");
+    let labelSpan = document.createElement("span");
     let labelInfo = document.createElement("span");
     let value = document.createElement("span");
     let unit = document.createElement("span");
@@ -275,14 +276,18 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     let parameterImg = document.createElement("img");
 
     // module.content.controllers.$propertyNoSpaces.info.label.tooltip
-    labelInfo.className = "tooltip";
+    labelInfo.className = "label-tooltip";
     labelInfo.innerHTML = propertyInfo;
+
+    labelSpan.appendChild(document.createTextNode(property));
+    labelSpan.className = "label-span";
 
     // module.content.controllers.$propertyNoSpaces.info.label
     label.className = "label";
-    label.innerHTML = property;
     label.appendChild(labelInfo);
+    label.appendChild(labelSpan);
     label.tooltip = labelInfo;
+    label.span = labelSpan;
 
     // module.content.controllers.$propertyNoSpaces.info.valueUnit.value
     value.className = "value";

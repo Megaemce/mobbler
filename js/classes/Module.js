@@ -80,8 +80,8 @@ export default class Module {
         this.head.titleWrapper.onmouseover = () => {
             timerID = window.setTimeout(() => {
                 this.head.titleWrapper.children[0].setAttribute("contenteditable", true);
-                this.head.titleWrapper.style.cursor = "text";
                 // need to click to rename thus disabling onmousedown handler for a moment
+                this.head.titleWrapper.style.cursor = "text";
                 this.head.titleWrapper.onmousedown = undefined;
             }, 1500);
         };
@@ -134,19 +134,49 @@ export default class Module {
         };
 
         // show slider's debug mode when hovered over value for 1 sec
-        let timerID = undefined;
+        let debugTimerID = undefined;
         module.content.controllers[propertyNoSpaces].info.valueUnit.value.onmouseover = () => {
             window.setTimeout(() => {
                 module.content.controllers[propertyNoSpaces].info.valueUnit.value.style.cursor = "progress";
             }, 300);
-            timerID = window.setTimeout(() => {
+            debugTimerID = window.setTimeout(() => {
                 module.content.controllers[propertyNoSpaces].debug.classList.add("show");
                 module.content.controllers[propertyNoSpaces].info.valueUnit.value.style.cursor = "default";
             }, 1000);
         };
 
         module.content.controllers[propertyNoSpaces].info.valueUnit.value.onmouseout = () => {
-            window.clearTimeout(timerID);
+            window.clearTimeout(debugTimerID);
+        };
+
+        let renameTimerID = undefined;
+        // reset function for title renaming handlers
+        function reset(module) {
+            window.clearTimeout(renameTimerID);
+            module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", false);
+            module.content.controllers[propertyNoSpaces].info.label.style.cursor = "help";
+        }
+
+        // allow title to be renamed
+        module.content.controllers[propertyNoSpaces].info.label.span.onmouseover = () => {
+            renameTimerID = window.setTimeout(() => {
+                module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", true);
+                module.content.controllers[propertyNoSpaces].info.label.style.cursor = "text";
+            }, 1500);
+        };
+
+        // mouseout thus finishing editing
+        module.content.controllers[propertyNoSpaces].info.label.span.onmouseout = () => {
+            reset(this);
+        };
+
+        // handle "enter" key save when finishing editing
+        document.onkeydown = (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                reset(this);
+                document.onkeyup = undefined;
+            }
         };
     }
     /* add "open file..." option to select div */

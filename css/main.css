@@ -448,9 +448,17 @@ svg {
     position: relative;
     text-shadow: rgba(245, 245, 245, 0.5) 1px 1px 1px;
     text-transform: uppercase;
-    cursor: help 
+    cursor: help;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
 }
-.module .content .controllers .sliders .slider .slider-info .label .tooltip {
+.module .content .controllers .sliders .slider .slider-info .label .label-span{
+    width: 100%;
+    text-align: center;
+}
+.module .content .controllers .sliders .slider .slider-info .label .label-tooltip {
     visibility: hidden;
     width: 160px;
     background-color: #000000;
@@ -467,7 +475,7 @@ svg {
     transition: opacity 1s;
     text-transform: none 
 }
-.module .content .controllers .sliders .slider .slider-info .label .tooltip::after {
+.module .content .controllers .sliders .slider .slider-info .label .label-tooltip::after {
     content: "";
     position: absolute;
     bottom: 100%;
@@ -477,7 +485,7 @@ svg {
     border-style: solid;
     border-color: transparent transparent black transparent 
 }
-.module .content .controllers .sliders .slider .slider-info .label:hover .tooltip {
+.module .content .controllers .sliders .slider .slider-info .label:hover .label-tooltip {
     visibility: visible;
     opacity: 1 
 }
