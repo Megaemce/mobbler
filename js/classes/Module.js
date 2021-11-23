@@ -362,6 +362,7 @@ export default class Module {
         let dataArray = new Uint8Array(slider.audioNode.fftSize);
 
         slider.audioNode.getByteTimeDomainData(dataArray);
+        // TODO: Why dataArray is always full of 128 at the beginning?
 
         // performance tweak - just get the max value of array instead of iterating
         let element = Math.max(...dataArray);
