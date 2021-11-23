@@ -60,4 +60,10 @@ document.getElementById("svgCanvas").onclick = () => {
     document.getElementById("visualisation").addEventListener("mousedown", visualisation);
     // remove hook from svg
     document.getElementById("svgCanvas").onclick = undefined;
+    // preventing enter key from adding space in name/parameter edition
+    document.onkeydown = (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    };
 };

@@ -51,6 +51,7 @@ export default class Module {
     /* build module html object and attach all logic into it */
     createModule() {
         let module = this;
+        let timerID = undefined;
 
         buildModule(module);
 
@@ -67,17 +68,6 @@ export default class Module {
             module.movingModule(event);
         };
 
-        let timerID = undefined;
-        // reset function for title renaming handlers
-        function reset() {
-            window.clearTimeout(timerID);
-            module.head.titleWrapper.children[0].setAttribute("contenteditable", false);
-            module.head.titleWrapper.style.cursor = "grab";
-            module.head.titleWrapper.onmousedown = (event) => {
-                module.movingModule(event);
-            };
-        }
-
         // allow title to be renamed
         module.head.titleWrapper.onmouseover = () => {
             timerID = window.setTimeout(() => {
@@ -90,16 +80,12 @@ export default class Module {
 
         // mouseout thus finishing editing
         module.head.titleWrapper.onmouseout = () => {
-            reset();
-        };
-
-        // handle "enter" key save when finishing editing
-        document.onkeydown = (event) => {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                reset();
-                document.onkeyup = undefined;
-            }
+            window.clearTimeout(timerID);
+            module.head.titleWrapper.children[0].setAttribute("contenteditable", false);
+            module.head.titleWrapper.style.cursor = "grab";
+            module.head.titleWrapper.onmousedown = (event) => {
+                module.movingModule(event);
+            };
         };
 
         // when close button is clicked delete the module
@@ -114,6 +100,7 @@ export default class Module {
     /* build module audio slider html object and attach all logic into it */
     createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
         let propertyNoSpaces = property.split(" ").join("");
+        let renameTimerID = undefined;
         let module = this;
 
         buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
@@ -151,14 +138,6 @@ export default class Module {
             window.clearTimeout(debugTimerID);
         };
 
-        let renameTimerID = undefined;
-        // reset function for parameter renaming handlers
-        function reset() {
-            window.clearTimeout(renameTimerID);
-            module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", false);
-            module.content.controllers[propertyNoSpaces].info.label.style.cursor = "help";
-        }
-
         // allow parameter to be renamed
         module.content.controllers[propertyNoSpaces].info.label.span.onmouseover = () => {
             renameTimerID = window.setTimeout(() => {
@@ -169,16 +148,9 @@ export default class Module {
 
         // mouseout thus finishing editing
         module.content.controllers[propertyNoSpaces].info.label.span.onmouseout = () => {
-            reset();
-        };
-
-        // handle "enter" key save when finishing editing
-        document.onkeydown = (event) => {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                reset();
-                document.onkeyup = undefined;
-            }
+            window.clearTimeout(renameTimerID);
+            module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", false);
+            module.content.controllers[propertyNoSpaces].info.label.style.cursor = "help";
         };
     }
     /* add "open file..." option to select div */
