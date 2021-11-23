@@ -50,24 +50,26 @@ export default class Module {
     }
     /* build module html object and attach all logic into it */
     createModule() {
-        buildModule(this);
+        let module = this;
+
+        buildModule(module);
 
         // put it on front as a first action
-        this.bringToFront();
+        module.bringToFront();
 
         // set module upfront when choosen
-        this.div.onmousedown = () => {
-            this.bringToFront();
+        module.div.onmousedown = () => {
+            module.bringToFront();
         };
 
         // when title is grabbed move the module
-        this.head.titleWrapper.onmousedown = (event) => {
-            this.movingModule(event);
+        module.head.titleWrapper.onmousedown = (event) => {
+            module.movingModule(event);
         };
 
         let timerID = undefined;
         // reset function for title renaming handlers
-        function reset(module) {
+        function reset() {
             window.clearTimeout(timerID);
             module.head.titleWrapper.children[0].setAttribute("contenteditable", false);
             module.head.titleWrapper.style.cursor = "grab";
@@ -77,36 +79,36 @@ export default class Module {
         }
 
         // allow title to be renamed
-        this.head.titleWrapper.onmouseover = () => {
+        module.head.titleWrapper.onmouseover = () => {
             timerID = window.setTimeout(() => {
-                this.head.titleWrapper.children[0].setAttribute("contenteditable", true);
+                module.head.titleWrapper.children[0].setAttribute("contenteditable", true);
                 // need to click to rename thus disabling onmousedown handler for a moment
-                this.head.titleWrapper.style.cursor = "text";
-                this.head.titleWrapper.onmousedown = undefined;
+                module.head.titleWrapper.style.cursor = "text";
+                module.head.titleWrapper.onmousedown = undefined;
             }, 1500);
         };
 
         // mouseout thus finishing editing
-        this.head.titleWrapper.onmouseout = () => {
-            reset(this);
+        module.head.titleWrapper.onmouseout = () => {
+            reset();
         };
 
         // handle "enter" key save when finishing editing
         document.onkeydown = (event) => {
             if (event.key === "Enter") {
                 event.preventDefault();
-                reset(this);
+                reset();
                 document.onkeyup = undefined;
             }
         };
 
         // when close button is clicked delete the module
-        this.head.close.onclick = () => {
-            this.deleteModule();
+        module.head.close.onclick = () => {
+            module.deleteModule();
         };
 
         // add module to the modules dictionary
-        modules[this.id] = this;
+        modules[module.id] = module;
     }
 
     /* build module audio slider html object and attach all logic into it */
@@ -151,7 +153,7 @@ export default class Module {
 
         let renameTimerID = undefined;
         // reset function for parameter renaming handlers
-        function reset(module) {
+        function reset() {
             window.clearTimeout(renameTimerID);
             module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", false);
             module.content.controllers[propertyNoSpaces].info.label.style.cursor = "help";
@@ -167,14 +169,14 @@ export default class Module {
 
         // mouseout thus finishing editing
         module.content.controllers[propertyNoSpaces].info.label.span.onmouseout = () => {
-            reset(this);
+            reset();
         };
 
         // handle "enter" key save when finishing editing
         document.onkeydown = (event) => {
             if (event.key === "Enter") {
                 event.preventDefault();
-                reset(this);
+                reset();
                 document.onkeyup = undefined;
             }
         };
