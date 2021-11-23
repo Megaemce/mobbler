@@ -101,6 +101,7 @@ export default class Module {
     createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
         let propertyNoSpaces = property.split(" ").join("");
         let renameTimerID = undefined;
+        let debugTimerID = undefined;
         let module = this;
 
         buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
@@ -123,7 +124,6 @@ export default class Module {
         };
 
         // show slider's debug mode when hovered over value for 1 sec
-        let debugTimerID = undefined;
         module.content.controllers[propertyNoSpaces].info.valueUnit.value.onmouseover = () => {
             window.setTimeout(() => {
                 module.content.controllers[propertyNoSpaces].info.valueUnit.value.style.cursor = "progress";
