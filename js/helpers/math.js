@@ -16,9 +16,17 @@ export function valueToLogPosition(value, min, max) {
     return parseFloat(calculation.toFixed(digitsAfterDot));
 }
 
-export function scaleBetween(givenNum, givenMin, givenMax, desirableMin, desirableMax) {
+export function scaleBetween(givenNum, givenMin, givenMax, desirableMin, desirableMax, afterDot) {
     let calculation = ((desirableMax - desirableMin) * (givenNum - givenMin)) / (givenMax - givenMin) + desirableMin;
-    return parseFloat(calculation.toFixed(digitsAfterDot));
+
+    // scaledValue may have more digits after dot than in slider.step thus extending "value"'s width in slider-info
+    // if step has any digits after dot, like 0.1 or 0.02
+    if (afterDot) {
+        return parseFloat(calculation.toFixed(afterDot.length));
+    } // step like 1 or 2
+    else {
+        return parseFloat(calculation.toFixed(0));
+    }
 }
 
 export function directionString(pointA, pointB) {

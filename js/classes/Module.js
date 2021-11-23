@@ -122,7 +122,7 @@ export default class Module {
 
         // when slider is moved (by user or by connected module)
         module.content.controllers[propertyNoSpaces].slider.oninput = function () {
-            let sliderValue = scaleLog ? logPositionToValue(this.value, min, max) : this.value;
+            let sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
 
             // set value on the audiNode parameter
             if (module.audioNode) module.audioNode[propertyNoSpaces].value = sliderValue;
@@ -386,19 +386,11 @@ export default class Module {
 
         // performance tweak - just get the max value of array instead of iterating
         let element = Math.max(...dataArray);
-        let scaledValue = scaleBetween(element, 0, 255, slider.minFloat, slider.maxFloat);
+        console.log("Slider min:", slider.min);
+        console.log("Slider max:", slider.max);
+        let scaledValue = scaleBetween(element, 0, 255, parseFloat(slider.min), parseFloat(slider.max), slider.step.toString().split(".")[1]);
 
-        // scaledValue may have more digits after dot than in slider.step thus extending "value" width in slider-info
-        // if step has any digits after dot, like 0.1 or 0.02
-        if (slider.step.toString().split(".")[1]) {
-            let digitsAfterDot = slider.step.toString().split(".")[1].length;
-            scaledValue = parseFloat(scaledValue.toFixed(digitsAfterDot));
-        } // step like 1 or 2
-        else {
-            scaledValue = parseFloat(scaledValue.toFixed(0));
-        }
-
-        slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, slider.minFloat, slider.maxFloat) : scaledValue;
+        slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, parseFloat(slider.min), parseFloat(slider.max)) : scaledValue;
 
         // if destination is regular module get parameter via audioNode[type]
         if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;

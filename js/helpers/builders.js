@@ -316,8 +316,6 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     slider.min = min;
     slider.max = max;
     slider.step = stepUnits;
-    slider.minFloat = parseFloat(min);
-    slider.maxFloat = parseFloat(max);
     // set inital value to the correct position before user starts to play
     slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : parseFloat(initialValue);
 

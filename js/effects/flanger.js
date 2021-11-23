@@ -16,7 +16,7 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.audioNodes = {
         inputNode: audioContext.createGain(),
         outputNode: audioContext.createGain(),
-        gainNode: audioContext.createGain(),
+        depthNode: audioContext.createGain(),
         feedbackNode: audioContext.createGain(),
         delayNode: audioContext.createDelay(),
         oscillatorNode: audioContext.createOscillator(),
@@ -30,7 +30,7 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
             module.audioNodes.feedbackNode.gain.value = value;
         },
         depth: (value) => {
-            module.audioNodes.gainNode.gain.value = value;
+            module.audioNodes.depthNode.gain.value = value;
         },
     };
 
@@ -39,8 +39,8 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
-    module.audioNodes.oscillatorNode.connect(module.audioNodes.gainNode);
-    module.audioNodes.gainNode.connect(module.audioNodes.delayNode.delayTime);
+    module.audioNodes.oscillatorNode.connect(module.audioNodes.depthNode);
+    module.audioNodes.depthNode.connect(module.audioNodes.delayNode.delayTime);
     module.audioNodes.inputNode.connect(module.audioNodes.outputNode);
     module.audioNodes.inputNode.connect(module.audioNodes.delayNode);
     module.audioNodes.delayNode.connect(module.audioNodes.outputNode);
