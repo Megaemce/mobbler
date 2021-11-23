@@ -30,7 +30,7 @@ body {
     line-height: 1.4;
     background: url('../img/background_main.svg') 
 }
-#svgCanvas {
+svg {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -39,7 +39,7 @@ body {
     left: 0;
     z-index: -1 
 }
-.alertText {
+.alert .alertText {
     visibility: visible;
     opacity: 1;
     transition: visibility 0.5s linear, opacity 0.5s linear;
@@ -93,7 +93,6 @@ body {
     font-size: .625em;
     padding: .5em 1em ;
     text-transform: uppercase;
-    cursor: pointer;
     -webkit-transition: background-color 0.2s;
     -moz-transition: background-color 0.2s;
     -o-transition: background-color 0.2s;
@@ -152,8 +151,7 @@ body {
     border-width: 9px;
     margin-left: 5px 
 }
-
-.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button {
+.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button, .tutorial {
     background: #fff;
     font-size: .625em;
     text-transform: uppercase;
@@ -163,10 +161,12 @@ body {
     padding: 0.8em;
     cursor: pointer 
 }
-.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button:hover {
+.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button:hover, .tutorial:hover {
     background: rgb(219, 219, 219) 
 }
-
+.nav .nav-list .menu .submenu .submenu-list .submenu-item .tutorial {
+    border: none;
+}
 .selection-rect {
     border: 1px dotted #000;
     position: absolute;
@@ -423,7 +423,6 @@ body {
     transition: filter 0.2s;
 }
 .module .content .controllers .sliders .slider-debug .hide-button:hover  {
-    cursor: pointer;
     filter: none
 }
 .module .content .controllers .sliders .slider-debug .debug-text span{
