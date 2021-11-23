@@ -329,7 +329,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     debugValueMin.appendChild(document.createTextNode(slider.min));
     debugValueMax.appendChild(document.createTextNode(slider.max));
     debugValueStep.appendChild(document.createTextNode(slider.step));
-    debugValue.appendChild(document.createTextNode(slider.value));
+    debugValue.appendChild(document.createTextNode(scaleLog ? parseFloat(initialValue) : slider.value));
 
     debugValueMin.setAttribute("contenteditable", true);
     debugValueMax.setAttribute("contenteditable", true);
