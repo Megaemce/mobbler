@@ -219,6 +219,11 @@ export default class Module {
             if (status === "active" && currentCable.inputType === "input") {
                 currentCable.destination.isTransmitting = true;
             }
+            // it might be that module to parameter got deactivated and slider animation is killed. Restart it
+            if (status === "active" && currentCable.inputType !== "input" && currentCable.source.isTransmitting) {
+                let slider = currentCable.destination.content.controllers[currentCable.inputType].slider;
+                currentCable.source.connectToSlider(currentCable.destination, slider, currentCable.inputType);
+            }
             // simply make the cable deactive
             if (status === "deactive") {
                 currentCable.makeDeactive();
@@ -386,10 +391,7 @@ export default class Module {
 
         // performance tweak - just get the max value of array instead of iterating
         let element = Math.max(...dataArray);
-        console.log("Slider min:", slider.min);
-        console.log("Slider max:", slider.max);
         let scaledValue = scaleBetween(element, 0, 255, parseFloat(slider.min), parseFloat(slider.max), slider.step.toString().split(".")[1]);
-
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, parseFloat(slider.min), parseFloat(slider.max)) : scaledValue;
 
         // if destination is regular module get parameter via audioNode[type]
@@ -426,14 +428,18 @@ export default class Module {
 
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
         if (slider && (this.audioNode || this.audioNodes)) {
-            slider.audioNode = audioContext.createAnalyser();
+            if (!slider.audioNode) {
+                slider.audioNode = audioContext.createAnalyser();
+                slider.audioNode.fftSize = 32;
+            }
 
             // if source is regular node connect using audioNode
             if (this.audioNode) this.audioNode.connect(slider.audioNode);
             // if source is multi-node module connect via audioNodes.outputNode audioNode
             else if (this.audioNodes) this.audioNodes.outputNode.connect(slider.audioNode);
 
-            this.connectToSlider(destinationModule, slider, parameterType);
+            // don't make unnesessary slider's animation if source module is not active
+            this.isTransmitting && this.connectToSlider(destinationModule, slider, parameterType);
         }
     }
     /* create analyser on module with given setting */
