@@ -150,14 +150,14 @@ export default class Module {
         };
 
         let renameTimerID = undefined;
-        // reset function for title renaming handlers
+        // reset function for parameter renaming handlers
         function reset(module) {
             window.clearTimeout(renameTimerID);
             module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", false);
             module.content.controllers[propertyNoSpaces].info.label.style.cursor = "help";
         }
 
-        // allow title to be renamed
+        // allow parameter to be renamed
         module.content.controllers[propertyNoSpaces].info.label.span.onmouseover = () => {
             renameTimerID = window.setTimeout(() => {
                 module.content.controllers[propertyNoSpaces].info.label.span.setAttribute("contenteditable", true);
