@@ -29,17 +29,16 @@ export default function oscillator(event, initalFrequency, initalDetune) {
 
             // if there is a sound installed
             if (module.audioNode) {
-                module.markAllLinkedCablesAs("deactive");
                 module.audioNode.disconnect();
+                module.audioNode = undefined;
             }
+
+            module.markAllLinkedCablesAs("deactive");
         } else {
             module.isTransmitting = true;
             playButton.classList.add("switch-on");
 
-            if (!module.audioNode) {
-                module.audioNode = audioContext.createOscillator();
-                module.audioNode.start(0);
-            }
+            module.audioNode = audioContext.createOscillator();
             module.audioNode.frequency.value = frequency;
             module.audioNode.detune.value = detune;
             module.audioNode.type = type;
@@ -50,6 +49,8 @@ export default function oscillator(event, initalFrequency, initalDetune) {
                     if (cable.inputType !== "input") module.connectToParameter(cable.destination, cable.inputType);
                 }
             });
+
+            module.audioNode.start(0);
         }
     };
 

@@ -13,6 +13,13 @@ Module.prototype.playButtonHandler = function () {
         this.isTransmitting = true;
         this.content.controllers.playButton.classList.add("switch-on");
 
+        // remove old audioNode (if there is any)
+        if (this.audioNode) {
+            this.audioNode.stop(0);
+            this.audioNode.disconnect();
+            this.audioNode = undefined;
+        }
+
         //  create a new BufferSource with selected buffer and play it
         this.audioNode = audioContext.createBufferSource();
         this.audioNode.loop = this.content.options.looper.checkbox.checked;
@@ -42,12 +49,7 @@ Module.prototype.playButtonHandler = function () {
 /* function used by playButtonHandler function to stop the sound */
 Module.prototype.stopSound = function () {
     this.isTransmitting = false;
-
-    // remove old audioNode (if there is any)
-    if (this.audioNode) {
-        this.markAllLinkedCablesAs("deactive");
-        this.audioNode.disconnect();
-    }
+    this.audioNode.stop(0);
 
     // clear stopTimer parameter (if there is any)
     if (this.audioNode.stopTimer) {
@@ -62,6 +64,8 @@ Module.prototype.stopSound = function () {
         this.audioNode.loop = false;
         this.content.options.looper.checkbox.checked = false;
     }
+
+    this.markAllLinkedCablesAs("deactive");
 };
 
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
