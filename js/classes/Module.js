@@ -382,6 +382,8 @@ export default class Module {
         // input value will always have 0 in the middle of the slider thus move it according to the inital slider value
         scaledValue = scaledValue + initalValueDeviation;
 
+        console.log("scaled value is", scaledValue);
+
         // now value can be higher than the max or lower than min thus cut it
         if (scaledValue < sliderMin) scaledValue = sliderMin;
         if (scaledValue > sliderMax) scaledValue = sliderMax;
@@ -393,6 +395,8 @@ export default class Module {
         if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
         // if destination is multi-node module get parameter value differently via audioNodes[type]
         else if (destinationModule.audioNodes) destinationModule.audioNodes[parameterType].value = slider.value;
+
+        console.log("slider value is", slider.value);
 
         if (sliderDecimals) displayValue = parseFloat(scaledValue.toFixed(sliderDecimals.length));
         if (!sliderDecimals) displayValue = parseFloat(scaledValue.toFixed(0));

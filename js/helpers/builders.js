@@ -351,6 +351,10 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     debugValue.oninput = () => {
         value.innerHTML = parseFloat(debugValue.innerText);
         slider.value = parseFloat(debugValue.innerText);
+
+        // set value on the audiNode parameter
+        if (module.audioNode) module.audioNode[parameterType].value = slider.value;
+        else if (module.audioNodes) module.audioNodes[parameterType](slider.value);
     };
 
     debugValueMinDiv.appendChild(debugValueMin);
