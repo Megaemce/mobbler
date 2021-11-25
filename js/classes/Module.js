@@ -369,7 +369,7 @@ export default class Module {
         const sliderDecimals = slider.step.toString().split(".")[1]; // decimals from slider.step. Use for displayValue
         const average = (array) => array.reduce((a, b) => a + b, 0) / array.length; // return avarage of elements from array;
 
-        let volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range 0-255
+        let volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range dataMin-dataMax
         let scaledValue; // value scaled between volumeData range (dataMin-dataMax) to sliderMin-sliderMax
         let initalValueDeviation = parseFloat(initalSliderValue - (sliderMin + sliderMax / 2)); // deviation from the slider's middle point
         let displayValue; // scaledValue with same decimals length as slider.step thus not breaking "value"'s div width
@@ -439,7 +439,6 @@ export default class Module {
             else if (this.audioNodes) this.audioNodes.outputNode.connect(slider.audioNode);
 
             // don't make unnesessary slider's animation if source module is not active
-            console.log("slider value w chwili polaczenia do parametru to:", slider.value);
             this.isTransmitting && this.connectToSlider(destinationModule, slider, parameterType, slider.value);
         }
     }
