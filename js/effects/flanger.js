@@ -11,26 +11,38 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     const speedInfo = "Frequency of oscillator that makes swirling sounds";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
 
-    let module = new Module("flanger", true, false, false, undefined);
+    let module = new Module("flanger", true, false, false, undefined, true);
 
-    module.audioNodes = {
+    module.audioNode = {
         inputNode: audioContext.createGain(),
         outputNode: audioContext.createGain(),
         depthNode: audioContext.createGain(),
         feedbackNode: audioContext.createGain(),
         delayNode: audioContext.createDelay(),
         oscillatorNode: audioContext.createOscillator(),
-        speed: (value) => {
-            module.audioNodes.oscillatorNode.frequency.value = value;
+        get speed() {
+            return this.oscillatorNode.frequency;
         },
-        delaytime: (value) => {
-            module.audioNodes.delayNode.delayTime.value = value;
+        set speed(value) {
+            this.oscillatorNode.frequency.value = value;
         },
-        feedback: (value) => {
-            module.audioNodes.feedbackNode.gain.value = value;
+        get delaytime() {
+            return this.delayNode.delayTime;
         },
-        depth: (value) => {
-            module.audioNodes.depthNode.gain.value = value;
+        set delaytime(value) {
+            this.delayNode.delayTime.value = value;
+        },
+        get feedback() {
+            return this.feedbackNode.gain;
+        },
+        set feedback(value) {
+            this.feedbackNode.gain.value = value;
+        },
+        get depth() {
+            return this.depthNode.gain;
+        },
+        set depth(value) {
+            this.depthNode.gain.value = value;
         },
     };
 
@@ -39,16 +51,16 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
-    module.audioNodes.oscillatorNode.connect(module.audioNodes.depthNode);
-    module.audioNodes.depthNode.connect(module.audioNodes.delayNode.delayTime);
-    module.audioNodes.inputNode.connect(module.audioNodes.outputNode);
-    module.audioNodes.inputNode.connect(module.audioNodes.delayNode);
-    module.audioNodes.delayNode.connect(module.audioNodes.outputNode);
-    module.audioNodes.delayNode.connect(module.audioNodes.feedbackNode);
-    module.audioNodes.feedbackNode.connect(module.audioNodes.inputNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.depthNode);
+    module.audioNode.depthNode.connect(module.audioNode.delayNode.delayTime);
+    module.audioNode.inputNode.connect(module.audioNode.outputNode);
+    module.audioNode.inputNode.connect(module.audioNode.delayNode);
+    module.audioNode.delayNode.connect(module.audioNode.outputNode);
+    module.audioNode.delayNode.connect(module.audioNode.feedbackNode);
+    module.audioNode.feedbackNode.connect(module.audioNode.inputNode);
 
-    module.audioNodes.oscillatorNode.type = "sine";
-    module.audioNodes.oscillatorNode.start(0);
+    module.audioNode.oscillatorNode.type = "sine";
+    module.audioNode.oscillatorNode.start(0);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

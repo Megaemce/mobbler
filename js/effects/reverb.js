@@ -9,35 +9,41 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     const drynessInfo = "Loudness of signal without any signal processing";
     const wetnessInfo = "Loudness of signal with full amount of an effect";
 
-    let module = new Module("reverb", true, false, false, irNames);
+    let module = new Module("reverb", true, false, false, irNames, true);
 
-    module.audioNodes = {
+    module.audioNode = {
         inputNode: audioContext.createGain(),
         outputNode: audioContext.createGain(),
         convolerNode: audioContext.createConvolver(),
         wetnessNode: audioContext.createGain(),
         drynessNode: audioContext.createGain(),
-        dryness: (value) => {
-            module.audioNodes.drynessNode.gain.value = value;
+        get dryness() {
+            return this.drynessNode.gain;
         },
-        wetness: (value) => {
-            module.audioNodes.wetnessNode.gain.value = value;
+        set dryness(value) {
+            this.drynessNode.gain.value = value;
+        },
+        get wetness() {
+            return this.wetnessNode.gain;
+        },
+        set wetness(value) {
+            this.wetnessNode.gain.value = value;
         },
     };
 
     module.createSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
     module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
 
-    module.audioNodes.inputNode.connect(module.audioNodes.convolerNode);
-    module.audioNodes.inputNode.connect(module.audioNodes.drynessNode);
-    module.audioNodes.convolerNode.connect(module.audioNodes.wetnessNode);
-    module.audioNodes.wetnessNode.connect(module.audioNodes.outputNode);
-    module.audioNodes.drynessNode.connect(module.audioNodes.outputNode);
+    module.audioNode.inputNode.connect(module.audioNode.convolerNode);
+    module.audioNode.inputNode.connect(module.audioNode.drynessNode);
+    module.audioNode.convolerNode.connect(module.audioNode.wetnessNode);
+    module.audioNode.wetnessNode.connect(module.audioNode.outputNode);
+    module.audioNode.drynessNode.connect(module.audioNode.outputNode);
 
-    module.audioNodes.convolerNode.buffer = audioContext.nameIRBuffer[bufferName];
+    module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[bufferName];
 
     module.content.options.select.onchange = function () {
-        module.audioNodes.convolerNode.buffer = audioContext.nameIRBuffer[this.value];
+        module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[this.value];
     };
 
     // add inital cable when structure is fully build - getBoundingClientRect related

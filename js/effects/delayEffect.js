@@ -9,22 +9,31 @@ export default function delayEffect(event, initalWetness, initalDelay, initalFee
     const wetnessInfo = "Loudness of signal with full amount of an effect";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
 
-    let module = new Module("delay effect", true, false, false, undefined);
+    let module = new Module("delay effect", true, false, false, undefined, true);
 
-    module.audioNodes = {
+    module.audioNode = {
         inputNode: audioContext.createGain(),
         outputNode: audioContext.createGain(),
         wetNode: audioContext.createGain(), // wetness of the delay
         durationNode: audioContext.createGain(), // duration of the delay
         delayNode: audioContext.createDelay(),
-        wetness: (value) => {
-            module.audioNodes.wetNode.gain.value = value;
+        get wetness() {
+            return this.wetNode.gain;
         },
-        delaytime: (value) => {
-            module.audioNodes.delayNode.delayTime.value = value;
+        set wetness(value) {
+            this.wetNode.gain.value = value;
         },
-        feedback: (value) => {
-            module.audioNodes.durationNode.gain.value = value;
+        get delaytime() {
+            return this.delayNode.delayTime;
+        },
+        set delaytime(value) {
+            this.delayNode.delayTime.value = value;
+        },
+        get feedback() {
+            return this.durationNode.gain;
+        },
+        set feedback(value) {
+            this.durationNode.gain.value = value;
         },
     };
 
@@ -32,12 +41,12 @@ export default function delayEffect(event, initalWetness, initalDelay, initalFee
     module.createSlider("delay time", delay, 0, 1, 0.1, "sec", false, delayInfo);
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
 
-    module.audioNodes.inputNode.connect(module.audioNodes.wetNode);
-    module.audioNodes.wetNode.connect(module.audioNodes.outputNode);
-    module.audioNodes.inputNode.connect(module.audioNodes.delayNode);
-    module.audioNodes.delayNode.connect(module.audioNodes.durationNode);
-    module.audioNodes.durationNode.connect(module.audioNodes.delayNode);
-    module.audioNodes.delayNode.connect(module.audioNodes.outputNode);
+    module.audioNode.inputNode.connect(module.audioNode.wetNode);
+    module.audioNode.wetNode.connect(module.audioNode.outputNode);
+    module.audioNode.inputNode.connect(module.audioNode.delayNode);
+    module.audioNode.delayNode.connect(module.audioNode.durationNode);
+    module.audioNode.durationNode.connect(module.audioNode.delayNode);
+    module.audioNode.delayNode.connect(module.audioNode.outputNode);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

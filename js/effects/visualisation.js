@@ -7,7 +7,7 @@ export default function visualisation(event, initalSmoothing) {
     const fftSizeSineWave = 128;
     const smoothingTimeConstant = initalSmoothing || 0.25;
 
-    let module = new Module("visualisation", true, false, false, undefined);
+    let module = new Module("visualisation", true, false, false, undefined, true);
     let maximizeButton = document.createElement("button");
 
     maximizeButton.classList.add("maximize");
@@ -27,12 +27,12 @@ export default function visualisation(event, initalSmoothing) {
     module.audioNode.lineWidth = { value: undefined };
     module.audioNode.zoom = { value: undefined };
 
-    module.createSlider("bar Width", 1, 1, 6, 0.1, "", false, "option 1");
-    module.createSlider("scale Divider", 1, 1, 10, 0.1, "", false, "option 2");
-    module.createSlider("symmetries", 8, 2, 10, 1, "", false, "option 3");
-    module.createSlider("color", 1, 1, 360, 1, "", false, "option 4");
-    module.createSlider("line Width", 1, 1, 100, 1, "", false, "option 5");
-    module.createSlider("zoom", 0.1, 0.1, 10, 0.1, "", false, "option 6");
+    module.createSlider("bar Width", 3.5, 1, 6, 0.1, "", false, "option 1");
+    module.createSlider("scale Divider", 5.5, 1, 10, 0.1, "", false, "option 2");
+    module.createSlider("symmetries", 6, 3, 9, 1, "", false, "option 3");
+    module.createSlider("color", 180, 0, 360, 1, "", false, "option 4");
+    module.createSlider("line Width", 50, 1, 99, 1, "", false, "option 5");
+    module.createSlider("zoom", 5, 0.1, 9.9, 0.1, "", false, "option 6");
 
     module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
 

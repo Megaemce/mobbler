@@ -6,7 +6,7 @@ import { buildModule, buildModuleSlider, addOpenFileButtonTo } from "../helpers/
 let id = 0;
 
 export default class Module {
-    constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect) {
+    constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect, multiNode) {
         this.name = name;
         this.hasLooper = hasLooper;
         this.hasInput = hasInput;
@@ -18,6 +18,7 @@ export default class Module {
         this.zIndex = id;
         this.isTransmitting = false;
         this.animationID = {}; // keep animationID of all parameters for Cable.deleteCable() function
+        this.multiNode = multiNode || false; // false for single, true for multiNode
         this.createModule(); // create html's object
     }
     /* return true/false if there is anything actively talking to this module's input  */
@@ -108,15 +109,14 @@ export default class Module {
 
         // set inital values on audioNode
         if (module.audioNode) module.audioNode[parameterType].value = initialValue;
-        else if (module.audioNodes) module.audioNodes[parameterType](initialValue);
 
         // when slider is moved (by user or by connected module)
         module.content.controllers[parameterType].slider.oninput = function () {
             let sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
 
             // set value on the audiNode parameter
+            console.log("zmiana slidera, nowa wartosc", sliderValue);
             if (module.audioNode) module.audioNode[parameterType].value = sliderValue;
-            else if (module.audioNodes) module.audioNodes[parameterType](sliderValue);
 
             // show new value above slider and in debug
             module.content.controllers[parameterType].info.valueUnit.value.innerHTML = sliderValue;
@@ -327,23 +327,16 @@ export default class Module {
         delete modules[this.id];
 
         // disconnect audioNode (if there is any active)
-        this.audioNode && this.audioNode.disconnect();
+        this.audioNode && !this.multiNode && this.audioNode.disconnect();
 
         // remove object
         delete this;
     }
     /* connect this module to destinationModule and send information further */
     connectToModule(destinationModule) {
-        let source = undefined;
-        let destination = undefined;
-
-        // if source module is multi-node effect act differently
-        if (this.audioNodes) source = this.audioNodes.outputNode;
-        else if (this.audioNode) source = this.audioNode;
-
-        // if destination module is multi-node effect act differently
-        if (destinationModule.audioNodes) destination = destinationModule.audioNodes.inputNode;
-        else if (destinationModule.audioNode) destination = destinationModule.audioNode;
+        // if source module is multiNode effect act differently
+        let source = this.multiNode ? this.audioNode.outputNode : this.audioNode;
+        let destination = destinationModule.multiNode ? destinationModule.audioNode.inputNode : destinationModule.audioNode;
 
         // if this module is transmitting make connection and mark further cables as active
         source && destination && source.connect(destination);
@@ -366,13 +359,11 @@ export default class Module {
         const dataMax = 1;
         const sliderMin = parseFloat(slider.min);
         const sliderMax = parseFloat(slider.max);
-        const sliderDecimals = slider.step.toString().split(".")[1]; // decimals from slider.step. Use for displayValue
         const average = (array) => array.reduce((a, b) => a + b, 0) / array.length; // return avarage of elements from array;
 
         let volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range dataMin-dataMax
         let scaledValue; // value scaled between volumeData range (dataMin-dataMax) to sliderMin-sliderMax
         let initalValueDeviation = parseFloat(initalSliderValue - (sliderMin + sliderMax / 2)); // deviation from the slider's middle point
-        let displayValue; // scaledValue with same decimals length as slider.step thus not breaking "value"'s div width
 
         // load analyser data into volumeData
         slider.audioNode.getFloatTimeDomainData(volumeData);
@@ -382,8 +373,6 @@ export default class Module {
         // input value will always have 0 in the middle of the slider thus move it according to the inital slider value
         scaledValue = scaledValue + initalValueDeviation;
 
-        console.log("scaled value is", scaledValue);
-
         // now value can be higher than the max or lower than min thus cut it
         if (scaledValue < sliderMin) scaledValue = sliderMin;
         if (scaledValue > sliderMax) scaledValue = sliderMax;
@@ -391,18 +380,8 @@ export default class Module {
         // change slider position if scaleLog option is enabled
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
-        // if destination is regular module get parameter via audioNode[type]
-        if (destinationModule.audioNode) destinationModule.audioNode[parameterType].value = slider.value;
-        // if destination is multi-node module get parameter value differently via audioNodes[type]
-        else if (destinationModule.audioNodes) destinationModule.audioNodes[parameterType].value = slider.value;
-
-        console.log("slider value is", slider.value);
-
-        if (sliderDecimals) displayValue = parseFloat(scaledValue.toFixed(sliderDecimals.length));
-        if (!sliderDecimals) displayValue = parseFloat(scaledValue.toFixed(0));
-
-        destinationModule.content.controllers[parameterType].value.innerHTML = displayValue;
-        destinationModule.content.controllers[parameterType].debug.currentValue.innerText = displayValue;
+        destinationModule.content.controllers[parameterType].value.innerHTML = slider.value;
+        destinationModule.content.controllers[parameterType].debug.currentValue.innerText = slider.value;
 
         // update the value inifinite but only if module is actively transmitting
         destinationModule.animationID[parameterType] = requestAnimationFrame(() => {
@@ -437,10 +416,23 @@ export default class Module {
                 slider.audioNode.fftSize = 32;
             }
 
-            // if source is regular node connect using audioNode
-            if (this.audioNode) this.audioNode.connect(slider.audioNode);
-            // if source is multi-node module connect via audioNodes.outputNode audioNode
-            else if (this.audioNodes) this.audioNodes.outputNode.connect(slider.audioNode);
+            if (this.multiNode) {
+                // multiNode-multiNode connection
+                if (destinationModule.multiNode) this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
+                // multiNode-node connection
+                else this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
+
+                // connect just for slider-animation controlled by analyser
+                this.audioNode.outputNode.connect(slider.audioNode);
+            } else {
+                // node-MultiNode connection
+                if (destinationModule.multiNode) this.audioNode.connect(destinationModule.audioNode[parameterType]);
+                // node-node connection
+                else this.audioNode.connect(destinationModule.audioNode[parameterType]);
+
+                // connect just for slider-animation controlled by analyser
+                this.audioNode.connect(slider.audioNode);
+            }
 
             // don't make unnesessary slider's animation if source module is not active
             this.isTransmitting && this.connectToSlider(destinationModule, slider, parameterType, slider.value);

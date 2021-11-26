@@ -354,7 +354,6 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 
         // set value on the audiNode parameter
         if (module.audioNode) module.audioNode[parameterType].value = slider.value;
-        else if (module.audioNodes) module.audioNodes[parameterType](slider.value);
     };
 
     debugValueMinDiv.appendChild(debugValueMin);
