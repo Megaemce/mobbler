@@ -31,8 +31,8 @@ const impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "
 //     createSelectionRectangle(event);
 // };
 
-// start audio with user click on the canvas (chrome policy)
-document.getElementById("svgCanvas").onclick = () => {
+// start audio with user interaction (chrome policy)
+document.onmousemove = () => {
     try {
         audioContext = new AudioContext();
     } catch (e) {
@@ -58,12 +58,10 @@ document.getElementById("svgCanvas").onclick = () => {
     document.getElementById("tremolo").addEventListener("mousedown", tremolo);
     document.getElementById("output").addEventListener("mousedown", output);
     document.getElementById("visualisation").addEventListener("mousedown", visualisation);
-    // remove hook from svg
-    document.getElementById("svgCanvas").onclick = undefined;
     // preventing enter key from adding space in name/parameter edition
     document.onkeydown = (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-        }
+        event.key === "Enter" && event.preventDefault();
     };
+    // remove hook from svg
+    document.onmousemove = undefined;
 };
