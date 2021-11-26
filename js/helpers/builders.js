@@ -251,7 +251,7 @@ export function buildModule(module) {
 }
 
 export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
-    let parameterType = property.split(" ").join("");
+    const parameterType = property.split(" ").join("");
     let sliderDiv = document.createElement("div");
     let info = document.createElement("div");
     let label = document.createElement("div");
@@ -276,6 +276,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     let parameterImg = document.createElement("img");
 
     // module.content.controllers.$parameterType.info.label.tooltip
+    // module.controllers[$parameterType].info.label.tooltip
     labelInfo.className = "label-tooltip";
     labelInfo.innerHTML = propertyInfo;
 
@@ -283,6 +284,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     labelSpan.className = "label-span";
 
     // module.content.controllers.$parameterType.info.label
+    // or module.controllers[$parameterType].info.label
     label.className = "label";
     label.appendChild(labelInfo);
     label.appendChild(labelSpan);
@@ -290,10 +292,13 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     label.span = labelSpan;
 
     // module.content.controllers.$parameterType.info.valueUnit.value
+    // or module.controllers[$parameterType].info.valueUnit.value
+    // or module.controllers[$parameterType].value
     value.className = "value";
     value.appendChild(document.createTextNode(initialValue));
 
     // module.content.controllers.$parameterType.info.units
+    // or module.controllers[$parameterType].info.units
     unit.className = "value";
     unit.appendChild(document.createTextNode(units));
 
@@ -304,6 +309,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     valueUnit.unit = unit;
 
     // module.content.controllers.$parameterType.info
+    // or module.controllers[$parameterType].info
     info.className = "slider-info";
     info.appendChild(label);
     info.appendChild(valueUnit);
@@ -311,6 +317,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     info.label = label;
 
     // module.content.controllers.$parameterType.slider
+    // or module.controllers[$parameterType].slider
     slider.type = "range";
     slider.scaleLog = scaleLog;
     slider.min = min;
@@ -366,7 +373,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
         sliderDebug.classList.remove("show");
     };
 
-    // module.content.controllers.$parameterType.slider.debug
+    // module.content.controllers.$parameterType.slider.debug or module.controllers[$parameterType].slider.debug
     sliderDebug.className = "slider-debug";
     sliderDebug.appendChild(debugValueMinDiv);
     sliderDebug.appendChild(debugValueMaxDiv);
@@ -379,7 +386,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     sliderWraper.className = "input-wrapper";
     sliderWraper.appendChild(slider);
 
-    // module.content.controllers.$parameterType
+    // module.content.controllers.$parameterType or module.controllers[$parameterType]
     sliderDiv.className = "slider";
     sliderDiv.appendChild(info);
     sliderDiv.appendChild(sliderWraper);

@@ -100,10 +100,11 @@ export default class Module {
 
     /* build module audio slider html object and attach all logic into it */
     createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
-        let parameterType = property.split(" ").join("");
+        const module = this;
+        const parameterType = property.split(" ").join("");
+
         let renameTimerID = undefined;
         let debugTimerID = undefined;
-        let module = this;
 
         buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo);
 
@@ -118,22 +119,22 @@ export default class Module {
             if (module.audioNode) module.audioNode[parameterType].value = sliderValue;
 
             // show new value above slider and in debug
-            module.content.controllers[parameterType].info.valueUnit.value.innerHTML = sliderValue;
+            module.content.controllers[parameterType].value.innerHTML = sliderValue;
             module.content.controllers[parameterType].debug.currentValue.innerText = sliderValue;
         };
 
         // show slider's debug mode when hovered over value for 1 sec
-        module.content.controllers[parameterType].info.valueUnit.value.onmouseover = () => {
+        module.content.controllers[parameterType].value.onmouseover = () => {
             window.setTimeout(() => {
-                module.content.controllers[parameterType].info.valueUnit.value.style.cursor = "progress";
+                module.content.controllers[parameterType].value.style.cursor = "progress";
             }, 300);
             debugTimerID = window.setTimeout(() => {
                 module.content.controllers[parameterType].debug.classList.add("show");
-                module.content.controllers[parameterType].info.valueUnit.value.style.cursor = "default";
+                module.content.controllers[parameterType].value.style.cursor = "default";
             }, 1000);
         };
 
-        module.content.controllers[parameterType].info.valueUnit.value.onmouseout = () => {
+        module.content.controllers[parameterType].value.onmouseout = () => {
             window.clearTimeout(debugTimerID);
         };
 
@@ -232,8 +233,8 @@ export default class Module {
     }
     /* all logic related to module movement event */
     movingModule(event) {
-        let canvas = document.getElementById("svgCanvas");
-        let initalCableModules = Object.values(modules).filter((module) => module.initalCable);
+        const canvas = document.getElementById("svgCanvas");
+        const initalCableModules = Object.values(modules).filter((module) => module.initalCable);
 
         // update cursor
         canvas.style.cursor = "grabbing";
@@ -335,8 +336,8 @@ export default class Module {
        destinationModule is always audioNode-enabled */
     connectToModule(destinationModule) {
         // if source module is multiNode effect act differently
-        let source = this.multiNode ? this.audioNode.outputNode : this.audioNode;
-        let destination = destinationModule.multiNode ? destinationModule.audioNode.inputNode : destinationModule.audioNode;
+        const source = this.multiNode ? this.audioNode.outputNode : this.audioNode;
+        const destination = destinationModule.multiNode ? destinationModule.audioNode.inputNode : destinationModule.audioNode;
 
         // if this module is transmitting make connection and mark further cables as active
         source && destination && source.connect(destination);
@@ -360,10 +361,10 @@ export default class Module {
         const dataMax = 1;
         const sliderMin = parseFloat(slider.min);
         const sliderMax = parseFloat(slider.max);
+        const volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range dataMin-dataMax
         const initalValueDeviation = parseFloat(initalSliderValue - (sliderMin + sliderMax / 2)); // deviation from the slider's middle point
         const average = (array) => array.reduce((a, b) => a + b, 0) / array.length; // return avarage of elements from array;
 
-        const volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range dataMin-dataMax
         let scaledValue; // value scaled between volumeData range (dataMin-dataMax) to sliderMin-sliderMax
 
         // load analyser data into volumeData
@@ -396,6 +397,7 @@ export default class Module {
         const sliderDiv = destinationModule.content.controllers[parameterType];
         const slider = sliderDiv.slider;
         const sliderCenter = (parseFloat(slider.max) + parseFloat(slider.min)) / 2;
+        const sliderValue = slider.scaleLog ? logPositionToValue(slider.value, slider.min, slider.max) : slider.value;
 
         // is source is active mark cable as active and slider as disabled
         if (this.isTransmitting) {
@@ -406,7 +408,7 @@ export default class Module {
 
         // show alert if slider value is not in a middle
         if (slider.value != sliderCenter) {
-            displayAlertOnElement(`Value ${slider.value} is not in slider center (${sliderCenter}) thus ${this.name}'s output will not cover all of its range`, sliderDiv, 5);
+            displayAlertOnElement(`Value ${sliderValue} is not in slider center (${sliderCenter}) thus ${this.name}'s output will not cover all of its range`, sliderDiv, 5);
         }
 
         // change input picture to busy version
