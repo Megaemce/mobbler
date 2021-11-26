@@ -248,7 +248,7 @@ export default class Cable {
                         cables[this.id] = this;
                         this.destination = element.parentModule;
                         this.inputType = element.inputType;
-                        this.makeActive();
+                        this.source.isTransmitting && this.makeActive();
                         this.source.connectToParameter(this.destination, this.inputType);
                     }
                 }

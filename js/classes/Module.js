@@ -1,7 +1,7 @@
 import Cable from "./Cable.js";
 import { audioContext, cables, modules } from "../main.js";
 import { valueToLogPosition, logPositionToValue } from "../helpers/math.js";
-import { buildModule, buildModuleSlider, addOpenFileButtonTo } from "../helpers/builders.js";
+import { buildModule, buildModuleSlider, addOpenFileButtonTo, displayAlertOnElement } from "../helpers/builders.js";
 
 let id = 0;
 
@@ -360,11 +360,11 @@ export default class Module {
         const dataMax = 1;
         const sliderMin = parseFloat(slider.min);
         const sliderMax = parseFloat(slider.max);
+        const initalValueDeviation = parseFloat(initalSliderValue - (sliderMin + sliderMax / 2)); // deviation from the slider's middle point
         const average = (array) => array.reduce((a, b) => a + b, 0) / array.length; // return avarage of elements from array;
 
-        let volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range dataMin-dataMax
+        const volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range dataMin-dataMax
         let scaledValue; // value scaled between volumeData range (dataMin-dataMax) to sliderMin-sliderMax
-        let initalValueDeviation = parseFloat(initalSliderValue - (sliderMin + sliderMax / 2)); // deviation from the slider's middle point
 
         // load analyser data into volumeData
         slider.audioNode.getFloatTimeDomainData(volumeData);
@@ -393,13 +393,20 @@ export default class Module {
     /* connect this module's analyser to destinationModule's slider of parameterType 
        destinationModule can have audioNode missing */
     connectToParameter(destinationModule, parameterType) {
-        let slider = destinationModule.content.controllers[parameterType].slider;
+        const sliderDiv = destinationModule.content.controllers[parameterType];
+        const slider = sliderDiv.slider;
+        const sliderCenter = (parseFloat(slider.max) + parseFloat(slider.min)) / 2;
 
         // is source is active mark cable as active and slider as disabled
         if (this.isTransmitting) {
             slider.classList.add("disabled");
         } else {
             slider.classList.remove("disabled");
+        }
+
+        // show alert if slider value is not in a middle
+        if (slider.value != sliderCenter) {
+            displayAlertOnElement(`Value ${slider.value} is not in slider center (${sliderCenter}) thus ${this.name}'s output will not cover all of its range`, sliderDiv, 5);
         }
 
         // change input picture to busy version
