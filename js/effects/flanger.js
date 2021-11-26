@@ -44,6 +44,7 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
         set depth(value) {
             this.depthNode.gain.value = value;
         },
+        return: this.inputNode,
     };
 
     module.createSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);

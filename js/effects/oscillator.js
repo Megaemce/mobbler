@@ -42,15 +42,13 @@ export default function oscillator(event, initalFrequency, initalDetune) {
             module.audioNode.frequency.value = frequency;
             module.audioNode.detune.value = detune;
             module.audioNode.type = type;
+            module.audioNode.start(0);
 
             module.outcomingCables.forEach((cable) => {
-                if (cable.destination.audioNode || cable.destination.audioNodes) {
-                    if (cable.inputType === "input") module.connectToModule(cable.destination);
-                    if (cable.inputType !== "input") module.connectToParameter(cable.destination, cable.inputType);
-                }
+                cable.makeActive();
+                if (cable.inputType === "input" && cable.destination.audioNode) module.connectToModule(cable.destination);
+                if (cable.inputType !== "input") module.connectToParameter(cable.destination, cable.inputType);
             });
-
-            module.audioNode.start(0);
         }
     };
 

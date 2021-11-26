@@ -115,7 +115,6 @@ export default class Module {
             let sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
 
             // set value on the audiNode parameter
-            console.log("zmiana slidera, nowa wartosc", sliderValue);
             if (module.audioNode) module.audioNode[parameterType].value = sliderValue;
 
             // show new value above slider and in debug
@@ -196,8 +195,8 @@ export default class Module {
                 currentCable.destination.isTransmitting = true;
                 currentCable.destination.outcomingCables.forEach((cable) => {
                     if (cable.inputType !== "input") {
-                        let slider = cable.destination.content.controllers[cable.inputType].slider;
-                        currentCable.destination.connectToSlider(cable.destination, slider, cable.inputType, slider.value);
+                        cable.makeActive();
+                        currentCable.destination.connectToParameter(cable.destination, cable.inputType);
                     }
                 });
             }
@@ -332,7 +331,8 @@ export default class Module {
         // remove object
         delete this;
     }
-    /* connect this module to destinationModule and send information further */
+    /* connect this module to destinationModule and send information further. 
+       destinationModule is always audioNode-enabled */
     connectToModule(destinationModule) {
         // if source module is multiNode effect act differently
         let source = this.multiNode ? this.audioNode.outputNode : this.audioNode;
@@ -353,7 +353,8 @@ export default class Module {
             destinationModule.onConnectInput();
         }
     }
-    /* connect this module to destinationModule's slider of parameterType */
+    /* connect this module to destinationModule's slider of parameterType. 
+       destinationModule is always audioNode-enabled */
     connectToSlider(destinationModule, slider, parameterType, initalSliderValue) {
         const dataMin = -1;
         const dataMax = 1;
@@ -389,18 +390,13 @@ export default class Module {
             this.connectToSlider(destinationModule, slider, parameterType, initalSliderValue);
         });
     }
-    /* connect this module's analyser to destinationModule's slider of parameterType */
+    /* connect this module's analyser to destinationModule's slider of parameterType 
+       destinationModule can have audioNode missing */
     connectToParameter(destinationModule, parameterType) {
         let slider = destinationModule.content.controllers[parameterType].slider;
 
         // is source is active mark cable as active and slider as disabled
         if (this.isTransmitting) {
-            // mark cable that is currently used as active
-            Object.values(cables)
-                .find((cable) => {
-                    return cable.destination === destinationModule && cable.source === this && cable.inputType === parameterType;
-                })
-                .makeActive();
             slider.classList.add("disabled");
         } else {
             slider.classList.remove("disabled");
@@ -410,7 +406,7 @@ export default class Module {
         destinationModule.footer[parameterType].img.setAttribute("src", "./img/parameter_input_busy.svg");
 
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
-        if (slider && (this.audioNode || this.audioNodes)) {
+        if (slider && this.audioNode) {
             if (!slider.audioNode) {
                 slider.audioNode = audioContext.createAnalyser();
                 slider.audioNode.fftSize = 32;
@@ -419,16 +415,16 @@ export default class Module {
             if (this.multiNode) {
                 // multiNode-multiNode connection
                 if (destinationModule.multiNode) this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
-                // multiNode-node connection
-                else this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
+                // multiNode-node connection. Destination could be turned off oscilloscope or audio source thus check it
+                else destinationModule.audioNode && this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
 
                 // connect just for slider-animation controlled by analyser
                 this.audioNode.outputNode.connect(slider.audioNode);
             } else {
                 // node-MultiNode connection
                 if (destinationModule.multiNode) this.audioNode.connect(destinationModule.audioNode[parameterType]);
-                // node-node connection
-                else this.audioNode.connect(destinationModule.audioNode[parameterType]);
+                // node-node connection. Destination could be turned off oscilloscope or audio source thus check it
+                else destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
 
                 // connect just for slider-animation controlled by analyser
                 this.audioNode.connect(slider.audioNode);

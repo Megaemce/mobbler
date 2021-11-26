@@ -28,10 +28,9 @@ Module.prototype.playButtonHandler = function () {
 
         // send sound to all connected modules/modules' parameters
         this.outcomingCables.forEach((cable) => {
-            if (cable.destination.audioNode || cable.destination.audioNodes) {
-                if (cable.inputType === "input") this.connectToModule(cable.destination);
-                if (cable.inputType !== "input") this.connectToParameter(cable.destination, cable.inputType);
-            }
+            cable.makeActive();
+            if (cable.inputType === "input" && cable.destination.audioNode) this.connectToModule(cable.destination);
+            if (cable.inputType !== "input") this.connectToParameter(cable.destination, cable.inputType);
         });
 
         this.audioNode.start(audioContext.currentTime);
