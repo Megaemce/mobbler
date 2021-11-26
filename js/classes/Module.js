@@ -382,6 +382,10 @@ export default class Module {
         // change slider position if scaleLog option is enabled
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
+        if (destinationModule.name === "visualisation") {
+            destinationModule.audioNode[parameterType].value = scaledValue;
+        }
+
         destinationModule.content.controllers[parameterType].value.innerHTML = slider.value;
         destinationModule.content.controllers[parameterType].debug.currentValue.innerText = slider.value;
 
@@ -420,24 +424,25 @@ export default class Module {
                 slider.audioNode = audioContext.createAnalyser();
                 slider.audioNode.fftSize = 32;
             }
+            if (destinationModule.name !== "visualisation") {
+                if (this.multiNode) {
+                    // multiNode-multiNode connection
+                    if (destinationModule.multiNode) this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
+                    // multiNode-node connection. Destination could be turned off oscilloscope or audio source thus check it
+                    else destinationModule.audioNode && this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
 
-            if (this.multiNode) {
-                // multiNode-multiNode connection
-                if (destinationModule.multiNode) this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
-                // multiNode-node connection. Destination could be turned off oscilloscope or audio source thus check it
-                else destinationModule.audioNode && this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
-
-                // connect just for slider-animation controlled by analyser
-                this.audioNode.outputNode.connect(slider.audioNode);
-            } else {
-                // node-MultiNode connection
-                if (destinationModule.multiNode) this.audioNode.connect(destinationModule.audioNode[parameterType]);
-                // node-node connection. Destination could be turned off oscilloscope or audio source thus check it
-                else destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
-
-                // connect just for slider-animation controlled by analyser
-                this.audioNode.connect(slider.audioNode);
+                    // connect just for slider-animation controlled by analyser
+                } else {
+                    // node-MultiNode connection
+                    if (destinationModule.multiNode) this.audioNode.connect(destinationModule.audioNode[parameterType]);
+                    // node-node connection. Destination could be turned off oscilloscope or audio source thus check it
+                    else destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
+                }
             }
+
+            // connect just for slider-animation controlled by analyser
+            if (this.multiNode) this.audioNode.outputNode.connect(slider.audioNode);
+            else this.audioNode.connect(slider.audioNode);
 
             // don't make unnesessary slider's animation if source module is not active
             this.isTransmitting && this.connectToSlider(destinationModule, slider, parameterType, slider.value);
