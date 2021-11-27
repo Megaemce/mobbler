@@ -62,7 +62,7 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
     const fftSizeSineWave = 128;
     const smoothingTimeConstant = initalSmoothing || 0.25;
 
-    let module = new Module("visualisation", true, false, false, undefined, false);
+    let module = new Module("visualisation", true, false, false, undefined);
     let maximizeButton = document.createElement("button");
 
     maximizeButton.classList.add("maximize");

@@ -5,16 +5,24 @@ export default function pannerTremolo(event, initalSpeed) {
     const speed = initalSpeed || 15;
     const speedInfo = "Frequency of oscillator that makes trembling effect";
 
-    let module = new Module("panner tremolo", true, false, false, undefined, true, true);
+    let module = new Module("panner tremolo", true, false, false, undefined, true);
 
     module.audioNode = {
-        inputNode: audioContext.createStereoPanner(),
+        inputNode: audioContext.createGain(),
+        pannerNode: audioContext.createStereoPanner(),
         oscillatorNode: audioContext.createOscillator(),
+        outputNode: audioContext.createGain(),
         get speed() {
             return this.oscillatorNode.frequency;
         },
         set speed(value) {
             this.oscillatorNode.frequency.value = value;
+        },
+        connect(destination) {
+            this.outputNode.connect(destination.inputNode ? destination.inputNode : destination);
+        },
+        disconnect() {
+            this.outputNode.disconnect();
         },
     };
 
@@ -23,9 +31,9 @@ export default function pannerTremolo(event, initalSpeed) {
     module.audioNode.oscillatorNode.type = "sine";
     module.audioNode.oscillatorNode.start(0);
 
-    module.audioNode.oscillatorNode.connect(module.audioNode.inputNode.pan);
-
-    module.audioNode.outputNode = module.audioNode.inputNode;
+    module.audioNode.inputNode.connect(module.audioNode.pannerNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.pannerNode.pan);
+    module.audioNode.pannerNode.connect(module.audioNode.outputNode);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

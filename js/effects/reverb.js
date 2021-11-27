@@ -9,7 +9,7 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     const drynessInfo = "Loudness of signal without any signal processing";
     const wetnessInfo = "Loudness of signal with full amount of an effect";
 
-    let module = new Module("reverb", true, false, false, irNames, true);
+    let module = new Module("reverb", true, false, false, irNames);
 
     module.audioNode = {
         inputNode: audioContext.createGain(),
@@ -28,6 +28,12 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
         },
         set wetness(value) {
             this.wetnessNode.gain.value = value;
+        },
+        connect(destination) {
+            this.outputNode.connect(destination.inputNode ? destination.inputNode : destination);
+        },
+        disconnect() {
+            this.outputNode.disconnect();
         },
     };
 

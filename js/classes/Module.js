@@ -6,7 +6,7 @@ import { buildModule, buildModuleSlider, addOpenFileButtonTo, displayAlertOnElem
 let id = 0;
 
 export default class Module {
-    constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect, multiNode) {
+    constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect) {
         this.name = name;
         this.hasLooper = hasLooper;
         this.hasInput = hasInput;
@@ -18,7 +18,6 @@ export default class Module {
         this.zIndex = id;
         this.isTransmitting = false;
         this.animationID = {}; // keep animationID of all parameters for Cable.deleteCable() function
-        this.multiNode = multiNode || false; // false for single, true for multiNode
         this.createModule(); // create html's object
     }
     /* return true/false if there is anything actively talking to this module's input  */
@@ -327,7 +326,7 @@ export default class Module {
         delete modules[this.id];
 
         // disconnect audioNode (if there is any active)
-        this.audioNode && !this.multiNode && this.audioNode.disconnect();
+        this.audioNode && this.audioNode.disconnect();
 
         // remove object
         delete this;
@@ -336,8 +335,8 @@ export default class Module {
        destinationModule is always audioNode-enabled */
     connectToModule(destinationModule) {
         // if source module is multiNode effect act differently
-        const source = this.multiNode ? this.audioNode.outputNode : this.audioNode;
-        const destination = destinationModule.multiNode ? destinationModule.audioNode.inputNode : destinationModule.audioNode;
+        const source = this.audioNode;
+        const destination = destinationModule.audioNode.inputNode ? destinationModule.audioNode.inputNode : destinationModule.audioNode;
 
         // if this module is transmitting make connection and mark further cables as active
         source && destination && source.connect(destination);
@@ -424,25 +423,14 @@ export default class Module {
                 slider.audioNode = audioContext.createAnalyser();
                 slider.audioNode.fftSize = 32;
             }
-            if (destinationModule.name !== "visualisation") {
-                if (this.multiNode) {
-                    // multiNode-multiNode connection
-                    if (destinationModule.multiNode) this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
-                    // multiNode-node connection. Destination could be turned off oscilloscope or audio source thus check it
-                    else destinationModule.audioNode && this.audioNode.outputNode.connect(destinationModule.audioNode[parameterType]);
 
-                    // connect just for slider-animation controlled by analyser
-                } else {
-                    // node-MultiNode connection
-                    if (destinationModule.multiNode) this.audioNode.connect(destinationModule.audioNode[parameterType]);
-                    // node-node connection. Destination could be turned off oscilloscope or audio source thus check it
-                    else destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
-                }
+            // TODO: Why is this here?
+            if (destinationModule.name !== "visualisation") {
+                destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
             }
 
             // connect just for slider-animation controlled by analyser
-            if (this.multiNode) this.audioNode.outputNode.connect(slider.audioNode);
-            else this.audioNode.connect(slider.audioNode);
+            this.audioNode.connect(slider.audioNode);
 
             // don't make unnesessary slider's animation if source module is not active
             this.isTransmitting && this.connectToSlider(destinationModule, slider, parameterType, slider.value);

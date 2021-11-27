@@ -23,11 +23,11 @@ export default function distortion(event, initalClipping, initalGain, initalPost
     const postcut = initalPostcut || 3000;
     const clipping = initalClipping || clippingTypes["Soft clipping"](20);
     const gainInfo = "Multiplication of sound volume";
-    const driveInfo = "Overdrive amount";
-    const postcutInfo = "Post-distortion lowpass filter cutoff frequency";
+    const driveInfo = "Overdrive amount. Only in soft clipping";
     const precutInfo = "Pre-distortion bandpass filter frequency";
+    const postcutInfo = "Post-distortion lowpass filter cutoff frequency";
 
-    let module = new Module("distortion", true, false, false, Object.keys(clippingTypes), true);
+    let module = new Module("distortion", true, false, false, Object.keys(clippingTypes));
 
     module.audioNode = {
         inputNode: audioContext.createGain(),
@@ -61,15 +61,16 @@ export default function distortion(event, initalClipping, initalGain, initalPost
             this.distortionNode.drive = value;
             this.distortionNode.curve = clippingTypes["Soft clipping"](value);
         },
-        // connect(destination) {
-        //     this.outputNode.connect(destination.input ? destination.inputNode : destination);
-        // },
-        // disconnect() {
-        //     this.outputNode.disconnect();
-        // },
+        connect(destination) {
+            this.outputNode.connect(destination.inputNode ? destination.inputNode : destination);
+        },
+        disconnect() {
+            this.outputNode.disconnect();
+        },
     };
 
     // need to be done before createSlider as it reads it value
+    // TODO: Use it in visualisation. Also learn properly how this stuff works
     module.audioNode.distortionNode.drive = { value: drive };
 
     module.createSlider("gain", gain, 1, 20, 1, "", false, gainInfo);
@@ -91,7 +92,8 @@ export default function distortion(event, initalClipping, initalGain, initalPost
 
     module.content.options.select.onchange = function () {
         if (this.value === "Soft clipping") {
-            module.audioNode.distortionNode.curve = clippingTypes["Soft clipping"](module.audioNode.drive);
+            const driveValue = module.audioNode.drive.value;
+            module.audioNode.distortionNode.curve = clippingTypes["Soft clipping"](driveValue);
             module.footer.drive.classList.remove("disabled");
             module.content.controllers.drive.slider.classList.remove("not_used");
         } else {
