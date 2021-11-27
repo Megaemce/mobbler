@@ -1,11 +1,11 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function tremolo(event, initalSpeed) {
+export default function gainTremolo(event, initalSpeed) {
     const speed = initalSpeed || 15;
     const speedInfo = "Frequency of oscillator that makes trembling effect";
 
-    let module = new Module("tremolo", true, false, false, undefined, true, true);
+    let module = new Module("gain tremolo", true, false, false, undefined, true, true);
 
     module.audioNode = {
         multiNode: true,

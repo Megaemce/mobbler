@@ -11,7 +11,8 @@ import distortion from "./effects/distortion.js";
 import delayEffect from "./effects/delayEffect.js";
 import flanger from "./effects/flanger.js";
 import reverb from "./effects/reverb.js";
-import tremolo from "./effects/tremolo.js";
+import gainTremolo from "./effects/gainTremolo.js";
+import pannerTremolo from "./effects/pannerTremolo.js";
 import output from "./effects/output.js";
 import visualisation from "./effects/visualisation.js";
 import panner from "./effects/panner.js";
@@ -57,7 +58,8 @@ document.onmousemove = () => {
     document.getElementById("delayEffect").addEventListener("mousedown", delayEffect);
     document.getElementById("flanger").addEventListener("mousedown", flanger);
     document.getElementById("reverb").addEventListener("mousedown", reverb);
-    document.getElementById("tremolo").addEventListener("mousedown", tremolo);
+    document.getElementById("gainTremolo").addEventListener("mousedown", gainTremolo);
+    document.getElementById("pannerTremolo").addEventListener("mousedown", pannerTremolo);
     document.getElementById("output").addEventListener("mousedown", output);
     document.getElementById("visualisation").addEventListener("mousedown", visualisation);
     // preventing enter key from adding space in name/parameter edition
