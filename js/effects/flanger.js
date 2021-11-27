@@ -15,11 +15,11 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
 
     module.audioNode = {
         inputNode: audioContext.createGain(),
-        outputNode: audioContext.createGain(),
         depthNode: audioContext.createGain(),
         feedbackNode: audioContext.createGain(),
         delayNode: audioContext.createDelay(),
         oscillatorNode: audioContext.createOscillator(),
+        outputNode: audioContext.createGain(),
         get speed() {
             return this.oscillatorNode.frequency;
         },

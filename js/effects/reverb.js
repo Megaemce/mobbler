@@ -13,10 +13,10 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
 
     module.audioNode = {
         inputNode: audioContext.createGain(),
-        outputNode: audioContext.createGain(),
         convolerNode: audioContext.createConvolver(),
         wetnessNode: audioContext.createGain(),
         drynessNode: audioContext.createGain(),
+        outputNode: audioContext.createGain(),
         get dryness() {
             return this.drynessNode.gain;
         },
