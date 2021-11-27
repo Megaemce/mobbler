@@ -14,6 +14,7 @@ import reverb from "./effects/reverb.js";
 import tremolo from "./effects/tremolo.js";
 import output from "./effects/output.js";
 import visualisation from "./effects/visualisation.js";
+import panner from "./effects/panner.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
 
@@ -46,9 +47,10 @@ document.onmousemove = () => {
     document.getElementById("audioSource").addEventListener("mousedown", audioSource);
     document.getElementById("biquadFilter").addEventListener("mousedown", biquadFilter);
     document.getElementById("convolver").addEventListener("mousedown", convolver);
-    document.getElementById("delayNode").addEventListener("mousedown", delay);
+    document.getElementById("delay").addEventListener("mousedown", delay);
     document.getElementById("dynamicsCompressor").addEventListener("mousedown", dynamicsCompressor);
-    document.getElementById("gainNode").addEventListener("mousedown", gain);
+    document.getElementById("gain").addEventListener("mousedown", gain);
+    document.getElementById("panner").addEventListener("mousedown", panner);
     document.getElementById("liveInput").addEventListener("mousedown", liveInput);
     document.getElementById("oscillator").addEventListener("mousedown", oscillator);
     document.getElementById("distortion").addEventListener("mousedown", distortion);

@@ -1,52 +1,51 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-class Visualisation extends AnalyserNode {
+class ExtenderAnalyser extends AnalyserNode {
     constructor(barWidth, scaleDivider, symmetries, color, lineWidth, zoom, audioContext) {
         super(audioContext);
-        this._barWidth = { value: barWidth };
-        this._scaleDivider = { value: scaleDivider };
-        this._symmetries = { value: symmetries };
-        this._color = { value: color };
-        this._lineWidth = { value: lineWidth };
-        this._zoom = { value: zoom };
-        this._audioContext = audioContext;
+        this.innerBarWidth = { value: barWidth };
+        this.innerScaleDivider = { value: scaleDivider };
+        this.innerSymmetries = { value: symmetries };
+        this.innerColor = { value: color };
+        this.innerLineWidth = { value: lineWidth };
+        this.inneZzoom = { value: zoom };
     }
     set barWidth(value) {
-        this._barWidth.value = value;
+        this.innerBarWidth.value = value;
     }
     get barWidth() {
-        return this._barWidth;
+        return this.innerBarWidth;
     }
     set scaleDivider(value) {
-        this._scaleDivider.value = value;
+        this.innerScaleDivider.value = value;
     }
     get scaleDivider() {
-        return this._scaleDivider;
+        return this.innerScaleDivider;
     }
     set symmetries(value) {
-        this._symmetries.value = value;
+        this.innerSymmetries.value = value;
     }
     get symmetries() {
-        return this._symmetries;
+        return this.innerSymmetries;
     }
     get color() {
-        return this._color;
+        return this.innerColor;
     }
     set color(value) {
-        this._color.value = value;
+        this.innerColor.value = value;
     }
     get lineWidth() {
-        return this._lineWidth;
+        return this.innerLineWidth;
     }
     set lineWidth(value) {
-        this._lineWidth.value = value;
+        this.innerLineWidth.value = value;
     }
     get zoom() {
-        return this._zoom;
+        return this.inneZzoom;
     }
     set zoom(value) {
-        this._zoom.value = value;
+        this.inneZzoom.value = value;
     }
 }
 
@@ -63,7 +62,7 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
     const fftSizeSineWave = 128;
     const smoothingTimeConstant = initalSmoothing || 0.25;
 
-    let module = new Module("visualisation", true, false, false, undefined, true);
+    let module = new Module("visualisation", true, false, false, undefined, false);
     let maximizeButton = document.createElement("button");
 
     maximizeButton.classList.add("maximize");
@@ -73,7 +72,7 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
     module.head.buttonsWrapper.appendChild(maximizeButton);
     module.head.buttonsWrapper.maximize = maximizeButton;
 
-    module.audioNode = new Visualisation(barWidth, scaleDivider, symmetries, color, lineWidth, zoom, audioContext);
+    module.audioNode = new ExtenderAnalyser(barWidth, scaleDivider, symmetries, color, lineWidth, zoom, audioContext);
 
     module.createSlider("bar Width", barWidth, 1, 6, 0.1, "", false, "option 1");
     module.createSlider("scale Divider", scaleDivider, 1, 10, 0.1, "", false, "option 2");
