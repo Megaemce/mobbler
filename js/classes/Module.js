@@ -441,50 +441,50 @@ export default class Module {
     }
     /* create analyser on module with given setting */
     createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
-        let canvasDiv = document.createElement("div");
-        let canvas = document.createElement("canvas");
+        const canvasDiv = document.createElement("div");
+        const canvas = document.createElement("canvas");
+        const module = this;
+
         let animationID = undefined;
 
-        if (this.content.controllers.canvasDiv) {
-            this.content.controllers.removeChild(this.content.controllers.canvasDiv);
-            this.content.controllers.canvasDiv.canvas.remove();
+        if (module.content.controllers.canvasDiv) {
+            module.content.controllers.removeChild(module.content.controllers.canvasDiv);
+            module.content.controllers.canvasDiv.canvas.remove();
         }
 
-        canvas.id = `${this.id}-content-controllers-canvas`;
+        canvas.id = `${module.id}-content-controllers-canvas`;
         canvas.height = canvasHeight;
         canvas.width = canvasWidth;
         canvas.className = "canvas";
 
-        this.content.controllers.appendChild(canvasDiv);
-        this.content.controllers.canvasDiv = canvasDiv;
+        module.content.controllers.appendChild(canvasDiv);
+        module.content.controllers.canvasDiv = canvasDiv;
 
-        this.content.controllers.canvasDiv.appendChild(canvas);
-        this.content.controllers.canvasDiv.canvas = canvas;
-        this.content.controllers.canvasDiv.className = "analyser";
+        module.content.controllers.canvasDiv.appendChild(canvas);
+        module.content.controllers.canvasDiv.canvas = canvas;
+        module.content.controllers.canvasDiv.className = "analyser";
 
-        let ctx = (this.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d"));
+        const ctx = (module.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d"));
 
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
         if (style === "frequency bars") {
-            this.audioNode.fftSize = fftSizeFrequencyBars;
-            let bufferLength = this.audioNode.frequencyBinCount; //it's always half of fftSize
-            let dataArray = new Uint8Array(bufferLength);
-            let img = new Image();
+            module.audioNode.fftSize = fftSizeFrequencyBars;
+            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
+            const dataArray = new Uint8Array(bufferLength);
+            const barWidth = (canvasWidth / bufferLength) * 2.5;
+            const img = new Image();
             img.src = "./img/pattern.svg";
 
             let drawBar = () => {
                 animationID = requestAnimationFrame(drawBar);
 
-                this.audioNode.getByteFrequencyData(dataArray);
-
                 // data returned in dataArray array will in range [0-255]
+                module.audioNode.getByteFrequencyData(dataArray);
 
-                let pattern = ctx.createPattern(img, "repeat");
-                ctx.fillStyle = pattern;
+                ctx.fillStyle = ctx.createPattern(img, "repeat");
                 ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-                let barWidth = (canvasWidth / bufferLength) * 2.5;
                 let x = 0;
 
                 dataArray.forEach((barHeight) => {
@@ -498,7 +498,7 @@ export default class Module {
             drawBar();
         }
         if (style === "sine wave") {
-            let bufferLength = (this.audioNode.fftSize = fftSizeSineWave);
+            let bufferLength = (module.audioNode.fftSize = fftSizeSineWave);
             let dataArray = new Uint8Array(bufferLength);
             let img = new Image();
             img.src = "./img/pattern.svg";
@@ -506,7 +506,7 @@ export default class Module {
             let drawWave = () => {
                 animationID = requestAnimationFrame(drawWave);
 
-                this.audioNode && this.audioNode.getByteTimeDomainData(dataArray);
+                module.audioNode && module.audioNode.getByteTimeDomainData(dataArray);
                 // data returned in dataArray will be in range [0-255]
 
                 let pattern = ctx.createPattern(img, "repeat");
@@ -543,7 +543,7 @@ export default class Module {
                 }
             }
 
-            this.head.buttonsWrapper.maximize.onclick = () => {
+            module.head.buttonsWrapper.maximize.onclick = () => {
                 if (canvas.requestFullScreen) canvas.requestFullScreen();
                 else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
                 else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
@@ -569,35 +569,35 @@ export default class Module {
                 return bands;
             }
 
-            this.audioNode.fftSize = Math.pow(2, amount) * 2;
-            let bufferLength = this.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**(amount-1)
+            module.audioNode.fftSize = Math.pow(2, amount) * 2;
+            let bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**(amount-1)
             let dataArray = new Uint8Array(bufferLength);
 
             let drawFreely = () => {
-                let angle = 360 / this.audioNode.symmetries.value;
+                let angle = 360 / module.audioNode.symmetries.value;
                 let angleRad = (angle * Math.PI) / 180;
 
                 animationID = requestAnimationFrame(drawFreely);
 
                 // data returned in dataArray will be in range [0-255]
-                this.audioNode && this.audioNode.getByteFrequencyData(dataArray);
+                module.audioNode && module.audioNode.getByteFrequencyData(dataArray);
                 let bands = getEqualizerBands(dataArray, true);
 
                 //ctx.fillStyle = "white";
                 //tx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = `hsl(${this.audioNode.color.value}, 100%, 50%)`;
+                ctx.strokeStyle = `hsl(${module.audioNode.color.value}, 100%, 50%)`;
 
-                let barWidth = this.audioNode.barWidth.value;
-                let scale = canvas.height / this.audioNode.scaleDivider.value;
+                let barWidth = module.audioNode.barWidth.value;
+                let scale = canvas.height / module.audioNode.scaleDivider.value;
 
                 ctx.save();
 
                 ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.scale(this.audioNode.zoom.value, this.audioNode.zoom.value);
-                ctx.lineWidth = this.audioNode.lineWidth.value;
+                ctx.scale(module.audioNode.zoom.value, module.audioNode.zoom.value);
+                ctx.lineWidth = module.audioNode.lineWidth.value;
 
-                for (let k = 0; k < this.audioNode.symmetries.value; k++) {
+                for (let k = 0; k < module.audioNode.symmetries.value; k++) {
                     ctx.rotate(angleRad);
                     ctx.beginPath();
                     for (var i = 1; i <= amount; i++) {
