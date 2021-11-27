@@ -2,9 +2,11 @@ const digitsAfterDot = 2;
 
 // from log slider position to real value
 export function logPositionToValue(position, min, max) {
+    const minNonZero = parseFloat(min) || 1;
+    if (max - minNonZero === 0) return 0;
     // calculate adjustment factor
-    let scale = (Math.log(max) - Math.log(min || 1)) / (max - min);
-    let calculation = Math.exp((position - min) * scale + Math.log(min || 1));
+    let scale = (Math.log(max) - Math.log(minNonZero)) / (max - minNonZero);
+    let calculation = Math.exp((position - min) * scale + Math.log(minNonZero));
     return parseFloat(calculation.toFixed(digitsAfterDot));
 }
 

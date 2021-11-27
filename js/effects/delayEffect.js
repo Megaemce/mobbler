@@ -14,7 +14,7 @@ export default function delayEffect(event, initalDryness, initalDelay, initalFee
     module.audioNode = {
         inputNode: audioContext.createGain(),
         dryNode: audioContext.createGain(), // dryness of the delay
-        durationNode: audioContext.createGain(), // duration of the delay
+        feedbackNode: audioContext.createGain(), // duration of the delay
         delayNode: audioContext.createDelay(),
         outputNode: audioContext.createGain(),
         get dryness() {
@@ -30,10 +30,10 @@ export default function delayEffect(event, initalDryness, initalDelay, initalFee
             this.delayNode.delayTime.value = value;
         },
         get feedback() {
-            return this.durationNode.gain;
+            return this.feedbackNode.gain;
         },
         set feedback(value) {
-            this.durationNode.gain.value = value;
+            this.feedbackNode.gain.value = value;
         },
     };
 
@@ -44,8 +44,8 @@ export default function delayEffect(event, initalDryness, initalDelay, initalFee
     module.audioNode.inputNode.connect(module.audioNode.dryNode);
     module.audioNode.dryNode.connect(module.audioNode.outputNode);
     module.audioNode.inputNode.connect(module.audioNode.delayNode);
-    module.audioNode.delayNode.connect(module.audioNode.durationNode);
-    module.audioNode.durationNode.connect(module.audioNode.delayNode);
+    module.audioNode.delayNode.connect(module.audioNode.feedbackNode);
+    module.audioNode.feedbackNode.connect(module.audioNode.delayNode);
     module.audioNode.delayNode.connect(module.audioNode.outputNode);
 
     // add inital cable when structure is fully build - getBoundingClientRect related

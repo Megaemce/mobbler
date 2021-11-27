@@ -113,7 +113,7 @@ export default class Module {
 
         // when slider is moved (by user or by connected module)
         module.content.controllers[parameterType].slider.oninput = function () {
-            let sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
+            const sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
 
             // set value on the audiNode parameter
             if (module.audioNode) module.audioNode[parameterType].value = sliderValue;
