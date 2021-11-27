@@ -27,7 +27,4 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
         window.cancelAnimationFrame(animationID);
         module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, this.value);
     };
-
-    // add inital cable when structure is fully build - getBoundingClientRect related
-    module.addInitalCable();
 }

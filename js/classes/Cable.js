@@ -200,7 +200,7 @@ export default class Cable {
             cable.stopPhysicsAnimation();
 
             // replace inital cable with a new one
-            source.name !== "output" && source.addInitalCable();
+            source.addInitalCable();
 
             // only when shape is created enable removal
             cable.shape.onclick = () => {
@@ -299,7 +299,7 @@ export default class Cable {
         }
 
         // send further info that this cable is deactived (if this is not an inital cable)
-        if (destination && destination.name !== "output") {
+        if (destination) {
             destination.markAllLinkedCablesAs("deactive");
         }
 

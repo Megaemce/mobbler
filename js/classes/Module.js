@@ -218,9 +218,9 @@ export default class Module {
             // depth first search section
             if (!visited[currentCable.id]) {
                 visited[currentCable.id] = true;
-                // don't try to do dfs on output nor module-to-parameter cables as destination in those is their mother module thus
-                // making further escalation: Source -> Destination's Parameter -> Destination -> Destination's outgoing cables
-                if (currentCable.destination.name !== "output" && currentCable.inputType === "input") {
+                // don't try to do dfs on module-to-parameter cables as destination in those is their mother module thus making
+                // further escalation: Source -> Destination's Parameter -> Destination -> Destination's outcominggoing cables
+                if (currentCable.inputType === "input") {
                     currentCable.destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);
@@ -290,7 +290,7 @@ export default class Module {
             });
 
             // create new inital cable (just for animation purpose)
-            if (this.name !== "output" && this.name !== "visualisation") {
+            if (this.name !== "output" && this.name !== "visualisation" && this.name !== "analyser") {
                 this.addInitalCable();
             }
 
@@ -381,6 +381,7 @@ export default class Module {
         // change slider position if scaleLog option is enabled
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
+        // visualisation doesn't have audioNodes attached to sliders
         if (destinationModule.name === "visualisation") {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
