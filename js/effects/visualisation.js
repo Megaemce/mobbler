@@ -49,7 +49,7 @@ class ExtenderAnalyser extends AnalyserNode {
     }
 }
 
-export default function visualisation(event, initalZoom, initalColor, initalBarWidth, initalLineWidth, initalSymmetries, initalScaleDivider, initalSmoothing) {
+export default function visualisation(event, initalZoom, initalColor, initalBarWidth, initalLineWidth, initalSymmetries, initalScaleDivider) {
     const zoom = initalZoom || 5;
     const color = initalColor || 180;
     const barWidth = initalBarWidth || 3.5;
@@ -60,7 +60,6 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
     const canvasWidth = 180;
     const canvasHeight = 100;
     const fftSizeSineWave = 128;
-    const smoothingTimeConstant = initalSmoothing || 0.25;
 
     let module = new Module("visualisation", true, false, false, undefined);
     let maximizeButton = document.createElement("button");

@@ -382,6 +382,7 @@ export default class Module {
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
         // visualisation doesn't have audioNodes attached to sliders
+        // this will be probably fixed when I will cleanup visualisation object
         if (destinationModule.name === "visualisation") {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
@@ -425,7 +426,8 @@ export default class Module {
                 slider.audioNode.fftSize = 32;
             }
 
-            // TODO: Why is this here?
+            // visualisation doesn't have proper audioNode parameters
+            // this will be probably fixed when I will cleanup visualisation object
             if (destinationModule.name !== "visualisation") {
                 destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
             }
@@ -514,8 +516,6 @@ export default class Module {
                 ctx.strokeStyle = "rgb(98, 255, 0)";
                 ctx.beginPath();
 
-                let x = 0;
-
                 // element range: [0, 255], index range: [0, bufferLength]
                 dataArray.forEach((element, index) => {
                     let x = (canvasWidth / bufferLength) * index; // sliceWidth * index
@@ -572,7 +572,6 @@ export default class Module {
             this.audioNode.fftSize = Math.pow(2, amount) * 2;
             let bufferLength = this.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**(amount-1)
             let dataArray = new Uint8Array(bufferLength);
-            let zoom = 1;
 
             let drawFreely = () => {
                 let angle = 360 / this.audioNode.symmetries.value;
