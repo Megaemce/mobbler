@@ -290,7 +290,10 @@ export default class Cable {
         // disconnect source and destination (if this is a module-module connection)
         if (destination && source.audioNode && cable.inputType === "input") {
             try {
-                source.audioNode.disconnect(destination.audioNode);
+                if (!source.multiNode && destination.multiNode) source.audioNode.disconnect(destination.audioNode.inputNode);
+                if (!source.multiNode && !destination.multiNode) source.audioNode.disconnect(destination.audioNode);
+                if (source.multiNode && destination.multiNode) source.audioNode.outputNode.disconnect(destination.audioNode.inputNode);
+                if (source.multiNode && !destination.multiNode) source.audioNode.outputNode.disconnect(destination.audioNode);
             } catch (error) {
                 console.log(`Cannot disconnect ${source.name} and ${destination.name} as they are not connected anymore`);
             }
