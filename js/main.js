@@ -16,6 +16,7 @@ import pannerTremolo from "./effects/pannerTremolo.js";
 import output from "./effects/output.js";
 import visualisation from "./effects/visualisation.js";
 import panner from "./effects/panner.js";
+import overide from "./effects/overide.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
 
@@ -60,6 +61,7 @@ document.onmousemove = () => {
     document.getElementById("reverb").addEventListener("mousedown", reverb);
     document.getElementById("gainTremolo").addEventListener("mousedown", gainTremolo);
     document.getElementById("pannerTremolo").addEventListener("mousedown", pannerTremolo);
+    document.getElementById("overide").addEventListener("mousedown", overide);
     document.getElementById("output").addEventListener("mousedown", output);
     document.getElementById("visualisation").addEventListener("mousedown", visualisation);
     // preventing enter key from adding space in name/parameter edition
