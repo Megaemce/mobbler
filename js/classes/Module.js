@@ -543,15 +543,25 @@ export default class Module {
             drawWave();
         }
         if (style === "free") {
-            /*  ꞈ                      ꞈ                       
-                │╥                     │                                           
-                │║ ╥     ╥╥            │՝·¸                        ՝·¸    ¸·¸      ¸·¸          
-                │║╥║    ╥║║          > │   `.     ¸.·¸        >      `∙¸՜    ՝·ֻ՜ ̗`·֬         > * Symmetries and          
-                │║║║╥  ╥║║║╥  ╥   ╥    │      ՝·.·՝     ՝·¸¸·        ¸·՜   ՝·.·՜     ՝·¸¸·           
-                │║║║║╥╥║║║║║╥╥║╥╥╥║    │                          ·՜
-                └─getEqualizerBands─›  └─quadraticCurveTo──›       line with y-reflection  
+            /*                           Mode "bands"
+                ꞈ                         ┌                     ┐
+                │     <─ time ─>            ՝·¸    ¸·¸      ¸.¸                
+                │՝·¸                           `·¸՜    ՝·ֻ՜ ̗`·֬    `            
+                │   `.     ¸.·¸        >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
+                │      ՝·.·՝     ՝·¸¸·        ·՜                         
+                │                             -y reflection          k ∊ [1...symmetries]
+                └─ByteTimeDomainData─›    └                     ┘
+
+                                           Mode "wave"
+                ꞈ                      ꞈ                         ┌                     ┐
+                │╥  <─ frequency ─>    │   <─ frequency ─>         ՝·¸    ¸·¸      ¸.¸                
+                │║ ╥     ╥╥            │՝·¸                           `·¸՜    ՝·ֻ՜ ̗`·֬    `           
+                │║╥║    ╥║║          > │   `.     ¸.·¸        >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
+                │║║║╥  ╥║║║╥  ╥   ╥    │      ՝·.·՝     ՝·¸¸·        ·՜                         
+                │║║║║╥╥║║║║║╥╥║╥╥╥║    │                             -y reflection          k ∊ [1...symmetries]
+                └─ByteFrequencyData─›  └─quadraticCurveTo──›     └                      ┘
             */
-            let amount = 8;
+            let amount = 5;
 
             document.addEventListener("fullscreenchange", exitHandler);
             document.addEventListener("webkitfullscreenchange", exitHandler);
@@ -593,23 +603,32 @@ export default class Module {
 
             module.audioNode.fftSize = Math.pow(2, amount) * 2;
             let bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**amount
-            let dataArray = new Uint8Array(bufferLength);
+            let dataArrayBars = new Uint8Array(bufferLength);
+            let dataArrayWave = new Uint8Array(bufferLength);
 
             let drawFreely = () => {
                 let angle = 360 / module.audioNode.symmetries.value;
                 let angleRad = (angle * Math.PI) / 180;
+                let bands = undefined;
 
                 animationID = requestAnimationFrame(drawFreely);
 
-                // data returned in dataArray will be in range [0-255]
-                module.audioNode && module.audioNode.getByteFrequencyData(dataArray);
-                let bands = getEqualizerBands(dataArray, true);
-
-                ctx.lineWidth = 2;
+                // data returned in dataArrayBars will be in range [0-255]
+                if (module.audioNode) {
+                    if (module.audioNode.type === "bands") {
+                        module.audioNode.getByteFrequencyData(dataArrayBars);
+                        bands = getEqualizerBands(dataArrayBars);
+                    }
+                    if (module.audioNode.type === "wave") {
+                        module.audioNode.getByteTimeDomainData(dataArrayWave);
+                    }
+                }
+                // ctx.fillStyle = "black";
+                // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
                 ctx.strokeStyle = `hsl(${module.audioNode.color.value}, 100%, 50%)`;
 
-                let barWidth = module.audioNode.barWidth.value;
-                let scale = canvas.height / module.audioNode.scaleDivider.value;
+                const lineLength = module.audioNode.lineLength.value;
+                const scale = canvas.height / module.audioNode.scaleDivider.value;
 
                 ctx.save();
 
@@ -619,48 +638,74 @@ export default class Module {
 
                 for (let k = 0; k < module.audioNode.symmetries.value; k++) {
                     ctx.rotate(angleRad);
-                    ctx.beginPath();
-                    for (let i = 1; i <= amount; i++) {
-                        const x1 = barWidth * i;
-                        const y1 = -bands[i - 1] * scale;
+                    if (module.audioNode.type === "bands") {
+                        ctx.beginPath();
+                        for (let i = 1; i <= amount; i++) {
+                            const x1 = lineLength * i;
+                            const y1 = -bands[i - 1] * scale;
 
-                        const x2 = barWidth * (i + 1);
-                        const y2 = -bands[i] * scale;
+                            const x2 = lineLength * (i + 1);
+                            const y2 = -bands[i] * scale;
 
-                        // source: https://stackoverflow.com/a/40978275
-                        const x_mid = (x1 + x2) / 2;
-                        const y_mid = (y1 + y2) / 2;
-                        const cp_x1 = (x_mid + x1) / 2;
-                        const cp_x2 = (x_mid + x2) / 2;
+                            // source: https://stackoverflow.com/a/40978275
+                            const x_mid = (x1 + x2) / 2;
+                            const y_mid = (y1 + y2) / 2;
+                            const cp_x1 = (x_mid + x1) / 2;
+                            const cp_x2 = (x_mid + x2) / 2;
 
-                        if (i === 0) ctx.moveTo(x1, y1);
-                        else {
-                            ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
-                            ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
+                            if (i === 0) ctx.moveTo(x1, y1);
+                            else {
+                                ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
+                                ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
+                            }
                         }
-                    }
-                    ctx.stroke();
-                    ctx.beginPath();
-                    for (let i = 1; i <= amount; i++) {
-                        const x1 = barWidth * i;
-                        const y1 = bands[i - 1] * scale;
+                        ctx.stroke();
+                        ctx.beginPath();
+                        for (let i = 1; i <= amount; i++) {
+                            const x1 = lineLength * i;
+                            const y1 = bands[i - 1] * scale;
 
-                        const x2 = barWidth * (i + 1);
-                        const y2 = bands[i] * scale;
+                            const x2 = lineLength * (i + 1);
+                            const y2 = bands[i] * scale;
 
-                        // source: https://stackoverflow.com/a/40978275
-                        const x_mid = (x1 + x2) / 2;
-                        const y_mid = (y1 + y2) / 2;
-                        const cp_x1 = (x_mid + x1) / 2;
-                        const cp_x2 = (x_mid + x2) / 2;
+                            // source: https://stackoverflow.com/a/40978275
+                            const x_mid = (x1 + x2) / 2;
+                            const y_mid = (y1 + y2) / 2;
+                            const cp_x1 = (x_mid + x1) / 2;
+                            const cp_x2 = (x_mid + x2) / 2;
 
-                        if (i === 0) ctx.moveTo(x1, y1);
-                        else {
-                            ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
-                            ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
+                            if (i === 0) ctx.moveTo(x1, y1);
+                            else {
+                                ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
+                                ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
+                            }
                         }
+                        ctx.stroke();
                     }
-                    ctx.stroke();
+                    if (module.audioNode.type === "wave") {
+                        ctx.beginPath();
+
+                        // element range: [0, 255], index range: [0, bufferLength]
+                        dataArrayWave.forEach((element, index) => {
+                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
+                            let y = scale * (element / 256); // 256 comes from dataArrayWave max value;
+                            if (!index === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        });
+
+                        ctx.stroke();
+                        ctx.beginPath();
+
+                        // element range: [0, 255], index range: [0, bufferLength]
+                        dataArrayWave.forEach((element, index) => {
+                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
+                            let y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
+                            if (!index === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        });
+
+                        ctx.stroke();
+                    }
                 }
 
                 ctx.restore();
