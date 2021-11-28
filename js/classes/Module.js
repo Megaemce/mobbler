@@ -468,13 +468,14 @@ export default class Module {
 
         if (style === "frequency bars") {
             /*  ꞈ
-                │╥╥                    
+            256 ┤╥╥                    
                 │║║  ╥╥          ╥╥╥╥          
                 │║║╥╥║║        ╥╥║║║║          
                 │║║║║║║╥╥    ╥╥║║║║║║╥╥    ╥╥      ╥╥  
                 │║║║║║║║║╥╥╥╥║║║║║║║║║║╥╥╥╥║║╥╥╥╥╥╥║║  
-                └╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨─›
-             */
+              0 ┼──────────────frequency─────────────┬─›
+                0                                 24000Hz  
+            */
             module.audioNode.fftSize = fftSizeFrequencyBars;
             const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
             const dataArray = new Uint8Array(bufferLength);
@@ -492,25 +493,29 @@ export default class Module {
                 ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
                 let x = 0;
+                ctx.beginPath();
 
-                dataArray.forEach((barHeight) => {
+                dataArray.forEach((barHeight, index) => {
                     ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
                     // contex grid is upside down so we substract from y value
                     ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
-
+                    if (!index === 0) ctx.moveTo(x, canvasHeight - barHeight / 2);
+                    else ctx.lineTo(x, canvasHeight - barHeight / 2);
                     x += barWidth + 1;
                 });
+                ctx.stroke();
             };
             drawBar();
         }
         if (style === "sine wave") {
             /*  ꞈ
-                │            .¸            
+            256 ┤            .¸            
                 │.¸     ¸.¸·՜   ՝·¸                  
                 │  ՝·¸·՜           `.¸         
                 │                    ՝·     ¸·`՝·¸¸.¸¸   
                 │                      ՝·..·՜         `
-                └─────────────────────────────────────›
+              0 ┼────────────────time─────────────────┬›
+                0                                    ∞ sec
             */
             let bufferLength = (module.audioNode.fftSize = fftSizeSineWave);
             let dataArray = new Uint8Array(bufferLength);
@@ -543,26 +548,25 @@ export default class Module {
             drawWave();
         }
         if (style === "free") {
-            /*                           Mode "bands"
+            /*                                  Mode "bands"
                 ꞈ                         ┌                     ┐
-                │     <─ time ─>            ՝·¸    ¸·¸      ¸.¸                
+            256 ┤                           ՝·¸    ¸·¸      ¸.¸                
                 │՝·¸                           `·¸՜    ՝·ֻ՜ ̗`·֬    `            
                 │   `.     ¸.·¸        >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
                 │      ՝·.·՝     ՝·¸¸·        ·՜                         
                 │                             -y reflection          k ∊ [1...symmetries]
-                └─ByteTimeDomainData─›    └                     ┘
-
-                                           Mode "wave"
-                ꞈ                         ꞈ                         ┌                     ┐
-                │╥  <─ frequency ─>       │   <─ frequency ─>         ՝·¸    ¸·¸      ¸.¸                
-                │║ ╥     ╥╥               │՝·¸                           `·¸՜    ՝·ֻ՜ ̗`·֬    `           
-                │║╥║    ╥║║            >  │   `.     ¸.·¸        >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
-                │║║║╥  ╥║║║╥  ╥   ╥       │      ՝·.·՝     ՝·¸¸·        ·՜                         
-                │║║║║╥╥║║║║║╥╥║╥╥╥║       │                             -y reflection          k ∊ [1...symmetries]
-                └─ByteFrequencyData─›     └─quadraticCurveTo──›     └                      ┘
-            */
-            let amount = 5;
-
+              0 ┼──TimeDomainData──┬›     └                     ┘
+                0                 ∞ sec
+                                                Mode "wave"
+                ꞈ                         ┌                     ┐
+            256 ┤╥                          ՝·¸    ¸·¸      ¸.¸                
+                │║ ╥     ╥╥                    `·¸՜    ՝·ֻ՜ ̗`·֬    `           
+                │║╥║    ╥║║            >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
+                │║║║╥  ╥║║║╥  ╥   ╥         ·՜                         
+                │║║║║╥╥║║║║║╥╥║╥╥╥║           -y reflection          k ∊ [1...symmetries]
+              0 ┼───FrequencyData──┬›     └                      ┘
+                0               24000Hz
+             */
             document.addEventListener("fullscreenchange", exitHandler);
             document.addEventListener("webkitfullscreenchange", exitHandler);
             document.addEventListener("mozfullscreenchange", exitHandler);
@@ -584,32 +588,15 @@ export default class Module {
                 canvas.height = window.screen.height;
             };
 
-            // source: http://paperjs.org/examples/satie-liked-to-draw/
-            function getEqualizerBands(data) {
-                const bands = [];
-                const amount = Math.sqrt(data.length) / 2;
-                for (let i = 0; i < amount; i++) {
-                    const start = Math.pow(2, i) - 1;
-                    const end = start * 2 + 1;
-                    let sum = 0;
-                    for (let j = start; j < end; j++) {
-                        sum += data[j];
-                    }
-                    const avg = sum / (255 * (end - start));
-                    bands[i] = Math.sqrt(avg / Math.sqrt(2));
-                }
-                return bands;
-            }
-
-            module.audioNode.fftSize = Math.pow(2, amount) * 2;
-            let bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**amount
-            let dataArrayBars = new Uint8Array(bufferLength);
-            let dataArrayWave = new Uint8Array(bufferLength);
+            module.audioNode.fftSize = 64;
+            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
+            const dataArrayBars = new Uint8Array(bufferLength);
+            const dataArrayWave = new Uint8Array(bufferLength);
 
             let drawFreely = () => {
-                let angle = 360 / module.audioNode.symmetries.value;
-                let angleRad = (angle * Math.PI) / 180;
-                let bands = undefined;
+                const angle = 360 / module.audioNode.symmetries.value;
+                const angleRad = (angle * Math.PI) / 180;
+                let dataArray;
 
                 animationID = requestAnimationFrame(drawFreely);
 
@@ -617,10 +604,11 @@ export default class Module {
                 if (module.audioNode) {
                     if (module.audioNode.type === "bands") {
                         module.audioNode.getByteFrequencyData(dataArrayBars);
-                        bands = getEqualizerBands(dataArrayBars);
+                        dataArray = dataArrayBars;
                     }
                     if (module.audioNode.type === "wave") {
                         module.audioNode.getByteTimeDomainData(dataArrayWave);
+                        dataArray = dataArrayWave;
                     }
                 }
                 // ctx.fillStyle = "black";
@@ -638,74 +626,29 @@ export default class Module {
 
                 for (let k = 0; k < module.audioNode.symmetries.value; k++) {
                     ctx.rotate(angleRad);
-                    if (module.audioNode.type === "bands") {
-                        ctx.beginPath();
-                        for (let i = 1; i <= amount; i++) {
-                            const x1 = lineLength * i;
-                            const y1 = -bands[i - 1] * scale;
 
-                            const x2 = lineLength * (i + 1);
-                            const y2 = -bands[i] * scale;
+                    ctx.beginPath();
 
-                            // source: https://stackoverflow.com/a/40978275
-                            const x_mid = (x1 + x2) / 2;
-                            const y_mid = (y1 + y2) / 2;
-                            const cp_x1 = (x_mid + x1) / 2;
-                            const cp_x2 = (x_mid + x2) / 2;
+                    // element range: [0, 255], index range: [0, bufferLength]
+                    dataArray.forEach((element, index) => {
+                        let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
+                        let y = scale * (element / 256); // 256 comes from dataArrayWave max value;
+                        if (!index === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    });
 
-                            if (i === 0) ctx.moveTo(x1, y1);
-                            else {
-                                ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
-                                ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
-                            }
-                        }
-                        ctx.stroke();
-                        ctx.beginPath();
-                        for (let i = 1; i <= amount; i++) {
-                            const x1 = lineLength * i;
-                            const y1 = bands[i - 1] * scale;
+                    ctx.stroke();
+                    ctx.beginPath();
 
-                            const x2 = lineLength * (i + 1);
-                            const y2 = bands[i] * scale;
+                    // element range: [0, 255], index range: [0, bufferLength]
+                    dataArray.forEach((element, index) => {
+                        let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
+                        let y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
+                        if (!index === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    });
 
-                            // source: https://stackoverflow.com/a/40978275
-                            const x_mid = (x1 + x2) / 2;
-                            const y_mid = (y1 + y2) / 2;
-                            const cp_x1 = (x_mid + x1) / 2;
-                            const cp_x2 = (x_mid + x2) / 2;
-
-                            if (i === 0) ctx.moveTo(x1, y1);
-                            else {
-                                ctx.quadraticCurveTo(cp_x1, y1, x_mid, y_mid);
-                                ctx.quadraticCurveTo(cp_x2, y2, x2, y2);
-                            }
-                        }
-                        ctx.stroke();
-                    }
-                    if (module.audioNode.type === "wave") {
-                        ctx.beginPath();
-
-                        // element range: [0, 255], index range: [0, bufferLength]
-                        dataArrayWave.forEach((element, index) => {
-                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                            let y = scale * (element / 256); // 256 comes from dataArrayWave max value;
-                            if (!index === 0) ctx.moveTo(x, y);
-                            else ctx.lineTo(x, y);
-                        });
-
-                        ctx.stroke();
-                        ctx.beginPath();
-
-                        // element range: [0, 255], index range: [0, bufferLength]
-                        dataArrayWave.forEach((element, index) => {
-                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                            let y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
-                            if (!index === 0) ctx.moveTo(x, y);
-                            else ctx.lineTo(x, y);
-                        });
-
-                        ctx.stroke();
-                    }
+                    ctx.stroke();
                 }
 
                 ctx.restore();
