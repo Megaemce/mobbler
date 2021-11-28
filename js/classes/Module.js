@@ -7,29 +7,29 @@ let id = 0;
 
 export default class Module {
     constructor(name, hasInput, hasLooper, hasNormalizer, arrayForSelect) {
-        this.name = name;
-        this.hasLooper = hasLooper;
-        this.hasInput = hasInput;
-        this.hasNormalizer = hasNormalizer;
-        this.arrayForSelect = arrayForSelect;
-        this.position = undefined; // module's position
-        this.div = undefined; // keeping link to HTML sctructure
         this.id = `module-${++id}`;
+        this.div = undefined; // keeping link to HTML sctructure
+        this.name = name;
         this.zIndex = id;
+        this.position = undefined; // module position
+        this.hasInput = Boolean(hasInput || true);
+        this.hasLooper = Boolean(hasLooper || false);
+        this.animationID = new Object(); // keep animationID of all parameters for Cable.deleteCable() function
+        this.hasNormalizer = Boolean(hasNormalizer || false);
         this.isTransmitting = false;
-        this.animationID = {}; // keep animationID of all parameters for Cable.deleteCable() function
+        this.arrayForSelect = arrayForSelect;
         this.createModule(); // create html's object
     }
     /* return true/false if there is anything actively talking to this module's input  */
     get inputActivity() {
-        if (Object.values(cables).find((cable) => cable.destination === this && cable.inputType === "input" && cable.source.isTransmitting)) {
+        if (Object.values(cables).find((cable) => cable.destination === this && cable.inputName === "input" && cable.source.isTransmitting)) {
             return true;
         }
         return false;
     }
     /* return number of incoming cables to the input (not nessesary active). Used by deleteCable() */
     get inputCount() {
-        return Object.values(cables).filter((cable) => cable.destination === this && cable.inputType === "input").length;
+        return Object.values(cables).filter((cable) => cable.destination === this && cable.inputName === "input").length;
     }
     /* return all incoming and outcoming cables linked with this module */
     get relatedCables() {
@@ -191,12 +191,12 @@ export default class Module {
             // but only if cable is module-to-module not module-to-parameter type
             // also as there is no other easy way: restart all the slider's animation in all it's outcoming
             // cables connected to other module's parameters
-            if (status === "active" && currentCable.inputType === "input") {
+            if (status === "active" && currentCable.inputName === "input") {
                 currentCable.destination.isTransmitting = true;
                 currentCable.destination.outcomingCables.forEach((cable) => {
-                    if (cable.inputType !== "input") {
+                    if (cable.inputName !== "input") {
                         cable.makeActive();
-                        currentCable.destination.connectToParameter(cable.destination, cable.inputType);
+                        currentCable.destination.connectToParameter(cable.destination, cable.inputName);
                     }
                 });
             }
@@ -206,13 +206,13 @@ export default class Module {
             }
             // as this cable was module-to-module type and source module is not active anymore,
             // check if there is nothing more actively talking to this module and mark is as inactive
-            if (status === "deactive" && currentCable.inputType === "input" && currentCable.destination.inputActivity === false) {
+            if (status === "deactive" && currentCable.inputName === "input" && currentCable.destination.inputActivity === false) {
                 currentCable.destination.isTransmitting = false;
             }
             // module-to-parameter cable thus just unlock the slider
-            if (status === "deactive" && currentCable.inputType !== "input") {
-                currentCable.destination.stopSliderAnimation(currentCable.inputType);
-                currentCable.destination.content.controllers[currentCable.inputType].slider.classList.remove("disabled");
+            if (status === "deactive" && currentCable.inputName !== "input") {
+                currentCable.destination.stopSliderAnimation(currentCable.inputName);
+                currentCable.destination.content.controllers[currentCable.inputName].slider.classList.remove("disabled");
             }
 
             // depth first search section
@@ -220,7 +220,7 @@ export default class Module {
                 visited[currentCable.id] = true;
                 // don't try to do dfs on module-to-parameter cables as destination in those is their mother module thus making
                 // further escalation: Source -> Destination's Parameter -> Destination -> Destination's outcominggoing cables
-                if (currentCable.inputType === "input") {
+                if (currentCable.inputName === "input") {
                     currentCable.destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);

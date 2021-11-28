@@ -214,11 +214,11 @@ export function buildModule(module) {
         // keep info about parent and type in image and it's wrapper for movingCable function
         img.src = "../img/input.svg";
         img.parentModule = module;
-        img.inputType = "input";
+        img.inputName = "input";
 
         socket.className = "socket-wrapper";
         socket.parentModule = module;
-        socket.inputType = "input";
+        socket.inputName = "input";
         socket.appendChild(img);
 
         leftSide.appendChild(socket);
@@ -414,10 +414,10 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     // keep info about parent and type in image and it's wrapper for movingCable function
     parameterImg.src = "./img/parameter_input.svg";
     parameterImg.parentModule = module;
-    parameterImg.inputType = parameterType;
+    parameterImg.inputName = parameterType;
 
     // module.footer.$parameterType
-    audioParam.inputType = parameterType;
+    audioParam.inputName = parameterType;
     audioParam.parentModule = module;
     audioParam.className = "parameter-wrapper";
     audioParam.appendChild(parameterImg);
