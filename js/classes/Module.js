@@ -467,12 +467,13 @@ export default class Module {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
         if (style === "frequency bars") {
-            /*  │¡                    
-                │| ¡     ¡¡          
-                │|¡|    ¡||          
-                │|||¡  ¡|||¡  ¡   ¡  
-                │||||¡¡|||||¡¡|¡¡¡|  
-                └───────────────────›
+            /*  ꞈ
+                │╥╥                    
+                │║║  ╥╥          ╥╥╥╥          
+                │║║╥╥║║        ╥╥║║║║          
+                │║║║║║║╥╥    ╥╥║║║║║║╥╥    ╥╥      ╥╥  
+                │║║║║║║║║╥╥╥╥║║║║║║║║║║╥╥╥╥║║╥╥╥╥╥╥║║  
+                └╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨╨─›
              */
             module.audioNode.fftSize = fftSizeFrequencyBars;
             const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
@@ -504,12 +505,12 @@ export default class Module {
         }
         if (style === "sine wave") {
             /*  ꞈ
-                │                     
-                │՟՝·¸                  
-                │    `.    ¸·¸
-                │      ՝·.·    ՝·¸¸·¸.       
-                │  
-                └───────────────────›  
+                │            .¸            
+                │.¸     ¸.¸·՜   ՝·¸                  
+                │  ՝·¸·՜           `.¸         
+                │                    ՝·     ¸·`՝·¸¸.¸¸   
+                │                      ՝·..·՜         `
+                └─────────────────────────────────────›
             */
             let bufferLength = (module.audioNode.fftSize = fftSizeSineWave);
             let dataArray = new Uint8Array(bufferLength);
@@ -542,13 +543,13 @@ export default class Module {
             drawWave();
         }
         if (style === "free") {
-            /*  ꞈ                      ꞈ                          ꞈ
-                │¡                     │─┐                        │                     
-                │| ¡     ¡¡            │ | /‾|    /‾|             │՟՝·¸                  
-                │|¡|    ¡||          > │ \/  |   /  |           > │    `.    ¸·¸        > (...)
-                │|||¡  ¡|||¡  ¡   ¡    │      \_/    \_/\__/      │      ՝·.·    ՝·¸¸·¸.       
-                │||||¡¡|||||¡¡|¡¡¡|    │                          │  
-                └───────────────────›  └──────────────────────›   └───────────────────›         
+            /*  ꞈ                      ꞈ                       
+                │╥                     │                                           
+                │║ ╥     ╥╥            │՝·¸                        ՝·¸    ¸·¸      ¸·¸          
+                │║╥║    ╥║║          > │   `.     ¸.·¸        >      `∙¸՜    ՝·ֻ՜ ̗`·֬         > * Symmetries and          
+                │║║║╥  ╥║║║╥  ╥   ╥    │      ՝·.·՝     ՝·¸¸·        ¸·՜   ՝·.·՜     ՝·¸¸·           
+                │║║║║╥╥║║║║║╥╥║╥╥╥║    │                          ·՜
+                └─getEqualizerBands─›  └─quadraticCurveTo──›       line with y-reflection  
             */
             let amount = 8;
 
