@@ -553,13 +553,13 @@ export default class Module {
                 └─ByteTimeDomainData─›    └                     ┘
 
                                            Mode "wave"
-                ꞈ                      ꞈ                         ┌                     ┐
-                │╥  <─ frequency ─>    │   <─ frequency ─>         ՝·¸    ¸·¸      ¸.¸                
-                │║ ╥     ╥╥            │՝·¸                           `·¸՜    ՝·ֻ՜ ̗`·֬    `           
-                │║╥║    ╥║║          > │   `.     ¸.·¸        >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
-                │║║║╥  ╥║║║╥  ╥   ╥    │      ՝·.·՝     ՝·¸¸·        ·՜                         
-                │║║║║╥╥║║║║║╥╥║╥╥╥║    │                             -y reflection          k ∊ [1...symmetries]
-                └─ByteFrequencyData─›  └─quadraticCurveTo──›     └                      ┘
+                ꞈ                         ꞈ                         ┌                     ┐
+                │╥  <─ frequency ─>       │   <─ frequency ─>         ՝·¸    ¸·¸      ¸.¸                
+                │║ ╥     ╥╥               │՝·¸                           `·¸՜    ՝·ֻ՜ ̗`·֬    `           
+                │║╥║    ╥║║            >  │   `.     ¸.·¸        >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
+                │║║║╥  ╥║║║╥  ╥   ╥       │      ՝·.·՝     ՝·¸¸·        ·՜                         
+                │║║║║╥╥║║║║║╥╥║╥╥╥║       │                             -y reflection          k ∊ [1...symmetries]
+                └─ByteFrequencyData─›     └─quadraticCurveTo──›     └                      ┘
             */
             let amount = 5;
 
