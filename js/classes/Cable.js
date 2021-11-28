@@ -99,7 +99,7 @@ export default class Cable {
     stopPhysicsAnimation() {
         setTimeout(() => {
             window.cancelAnimationFrame(this.animationID);
-        }, 100);
+        }, 200);
     }
     /* change cable.shape style so it has moving gradient animation */
     makeActive() {

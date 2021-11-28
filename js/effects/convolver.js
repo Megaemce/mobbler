@@ -1,5 +1,6 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
+import { openFileHandler } from "../helpers/loaders.js";
 
 export default function convolver(event, initalBufferName, initalNormalizer) {
     const bufferName = String(initalBufferName || "IR_theater.wav");
@@ -14,8 +15,25 @@ export default function convolver(event, initalBufferName, initalNormalizer) {
         disableNormalization: !normalizer,
     });
 
-    module.content.options.select.onchange = function () {
-        module.audioNode.buffer = audioContext.nameIRBuffer[this.value];
+    // after this openFile will be accessible via module.content.options.select.fileButton
+    module.addOpenFileTo(module.content.options.select);
+
+    module.content.options.select.onchange = function (event) {
+        // when new option is added (eg. after new file loaded) this onchange event get trigger too
+        // srcElement.id is only defined when if it was triggered by file button (eg. loading file)
+        if (!event.srcElement.id) {
+            // when selected option is an file button start openFileHandler
+            if (this[this.selectedIndex].id === "file button") {
+                // add hooker to the fileButton and then start it by click event
+                module.content.options.select.fileButton.input.onchange = () => {
+                    openFileHandler(module, "ir");
+                };
+                module.content.options.select.fileButton.input.click();
+            } else {
+                // just regular switching thus change IR
+                module.audioNode.buffer = audioContext.nameIRBuffer[this.value];
+            }
+        }
     };
 
     // when normalizer is changed switch audioNode.normalize status

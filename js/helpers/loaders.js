@@ -37,8 +37,9 @@ export function openFileHandler(module, type) {
                 if (type === "sound") audioContext.nameSoundBuffer[fileLoaded.name] = decodedData;
                 if (type === "ir") audioContext.nameIRBuffer[fileLoaded.name] = decodedData;
 
-                // in reverb new file need to be played instantly
+                // in reverb and convolver new file need to be played instantly
                 if (module.name === "reverb") module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[fileLoaded.name];
+                if (module.name === "convolver") module.audioNode.buffer = audioContext.nameIRBuffer[fileLoaded.name];
 
                 fileButton.innerHTML = fileLoaded.name;
                 fileButton.removeAttribute("id"); // not button anymore
