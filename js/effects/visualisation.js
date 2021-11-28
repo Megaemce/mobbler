@@ -2,24 +2,23 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function visualisation(event, initalZoom, initalColor, initalBarWidth, initalLineWidth, initalSymmetries, initalScaleDivider) {
-    const zoom = initalZoom || 5;
-    const color = initalColor || 180;
-    const barWidth = initalBarWidth || 3.5;
-    const lineWidth = initalLineWidth || 50;
-    const symmetries = initalSymmetries || 6;
-    const scaleDivider = initalScaleDivider || 5.5;
+    const zoom = parseFloat(initalZoom || 5);
+    const color = parseFloat(initalColor || 180);
+    const barWidth = parseFloat(initalBarWidth || 3.5);
+    const lineWidth = parseFloat(initalLineWidth || 50);
+    const symmetries = parseFloat(initalSymmetries || 6);
+    const scaleDivider = parseFloat(initalScaleDivider || 5.5);
 
     const canvasWidth = 180;
     const canvasHeight = 100;
     const fftSizeSineWave = 128;
+    const maximizeButton = document.createElement("button");
 
     const module = new Module("visualisation", true, false, false, undefined);
-    let maximizeButton = document.createElement("button");
 
-    maximizeButton.classList.add("maximize");
-    maximizeButton.classList.add("button");
-
+    maximizeButton.classList = "button maximize";
     maximizeButton.id = "maximize";
+
     module.head.buttonsWrapper.appendChild(maximizeButton);
     module.head.buttonsWrapper.maximize = maximizeButton;
 
@@ -43,7 +42,7 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
 
     module.content.controllers.classList.add("visualisation");
 
-    // only one visual possible thus hide output button
+    // only one visual possible thus hide output submenu button
     document.getElementById("visualisation").style.display = "none";
 
     module.onDeletion = () => {

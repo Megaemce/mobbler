@@ -37,10 +37,10 @@ export function displayAlertOnElement(message, element, timeInSec) {
     element.classList.add("alert");
     element.appendChild(span);
 
-    // setTimeout(() => {
-    //     span.style.visibility = "hidden";
-    //     span.style.opacity = "0";
-    // }, time);
+    setTimeout(() => {
+        span.style.visibility = "hidden";
+        span.style.opacity = "0";
+    }, time);
 }
 
 export function createSelectionRectangle(event) {
@@ -393,6 +393,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     sliderDiv.appendChild(sliderDebug);
     sliderDiv.info = info;
     sliderDiv.slider = slider;
+    sliderDiv.wrapper = sliderWraper;
     sliderDiv.debug = sliderDebug;
 
     // if sliders div have not been created yet do it

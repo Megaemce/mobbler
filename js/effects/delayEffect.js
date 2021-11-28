@@ -2,9 +2,9 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function delayEffect(event, initalDryness, initalDelay, initalFeedback) {
-    const delay = initalDelay || 0.1;
-    const dryness = initalDryness || 0.3;
-    const feedback = initalFeedback || 0.8;
+    const delay = parseFloat(initalDelay || 0.1);
+    const dryness = parseFloat(initalDryness || 0.3);
+    const feedback = parseFloat(initalFeedback || 0.8);
     const delayInfo = "Number of seconds from input signal to be storage and play back";
     const drynessInfo = "Loudness of original signal without effect";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
@@ -45,7 +45,7 @@ export default function delayEffect(event, initalDryness, initalDelay, initalFee
 
     module.createSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
     module.createSlider("delay time", delay, 0, 1, 0.1, "sec", false, delayInfo);
-    module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
+    module.createSlider("feedback", feedback, 0, 0.9, 0.1, "sec", false, feedbackInfo);
 
     module.audioNode.inputNode.connect(module.audioNode.dryNode);
     module.audioNode.dryNode.connect(module.audioNode.outputNode);

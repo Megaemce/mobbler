@@ -2,11 +2,11 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function dynamicsCompressor(event, initalThreshold, initalKnee, initalRatio, initalAttack, initalRelease) {
-    const knee = initalKnee || 20.0;
-    const ratio = initalRatio || 12.0;
-    const attack = initalAttack || 0.003;
-    const release = initalRelease || 0.25;
-    const threshold = initalThreshold || -24.0;
+    const knee = parseFloat(initalKnee || 20.0);
+    const ratio = parseFloat(initalRatio || 12.0);
+    const attack = parseFloat(initalAttack || 0.003);
+    const release = parseFloat(initalRelease || 0.25);
+    const threshold = parseFloat(initalThreshold || -24.0);
     const kneeInfo = "Determines how abruptly or gradually compression begins once the sound level crosses the threshold";
     const ratioInfo = "The amount of gain reduction. Input level over this amount dB will be reduced by 1dB over the threshold";
     const attackInfo = "The point where the sound begins and increases in volume to its peak";

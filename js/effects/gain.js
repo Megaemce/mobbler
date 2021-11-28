@@ -2,7 +2,7 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function gain(event, initalGain) {
-    const gain = initalGain || 0.5;
+    const gain = parseFloat(initalGain || 0.5);
     const gainInfo = "Multiplication of sound volume";
 
     const module = new Module("gain", true, false, false, undefined);

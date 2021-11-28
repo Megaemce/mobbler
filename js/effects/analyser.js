@@ -6,9 +6,9 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
     const canvasHeight = 100;
     const fftSizeSineWave = 2048;
     const fftSizeFrequencyBars = 512;
-    const type = initalType || "sine wave";
-    const maxDecibels = initalMaxDecibels || 0;
-    const smoothingTimeConstant = initalSmoothing || 0.25;
+    const type = String(initalType || "sine wave");
+    const maxDecibels = parseFloat(initalMaxDecibels || 0);
+    const smoothingTimeConstant = parseFloat(initalSmoothing || 0.25);
     const analyserTypes = ["sine wave", "frequency bars"];
 
     let animationID;

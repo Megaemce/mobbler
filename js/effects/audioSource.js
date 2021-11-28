@@ -4,75 +4,78 @@ import { openFileHandler } from "../helpers/loaders.js";
 
 /* function used by audio buffer source's playButton to play the sound */
 Module.prototype.playButtonHandler = function () {
-    const selectedBufferName = this.content.options.select.value;
+    const module = this;
+    const selectedBufferName = module.content.options.select.value;
 
     // switched from on to off so stop the sound
-    if (this.isTransmitting === true) {
-        this.stopSound();
+    if (module.isTransmitting === true) {
+        module.stopSound();
     } else {
-        this.isTransmitting = true;
-        this.content.controllers.playButton.classList.add("switch-on");
+        module.isTransmitting = true;
+        module.content.controllers.playButton.classList.add("switch-on");
 
         // remove old audioNode (if there is any)
-        if (this.audioNode) {
-            this.audioNode.stop(0);
-            this.audioNode.disconnect();
-            this.audioNode = undefined;
+        if (module.audioNode) {
+            module.audioNode.stop(0);
+            module.audioNode.disconnect();
+            module.audioNode = undefined;
         }
 
         //  create a new BufferSource with selected buffer and play it
-        this.audioNode = audioContext.createBufferSource();
-        this.audioNode.loop = this.content.options.looper.checkbox.checked;
-        this.audioNode.buffer = audioContext.nameSoundBuffer[selectedBufferName];
-        this.audioNode.playbackRate.value = this.content.controllers.playbackRate.slider.value;
+        module.audioNode = audioContext.createBufferSource();
+        module.audioNode.loop = module.content.options.looper.checkbox.checked;
+        module.audioNode.buffer = audioContext.nameSoundBuffer[selectedBufferName];
+        module.audioNode.playbackRate.value = module.content.controllers.playbackRate.slider.value;
 
         // send sound to all connected modules/modules' parameters
-        this.outcomingCables.forEach((cable) => {
+        module.outcomingCables.forEach((cable) => {
             cable.makeActive();
-            if (cable.inputType === "input" && cable.destination.audioNode) this.connectToModule(cable.destination);
-            if (cable.inputType !== "input") this.connectToParameter(cable.destination, cable.inputType);
+            if (cable.inputType === "input" && cable.destination.audioNode) module.connectToModule(cable.destination);
+            if (cable.inputType !== "input") module.connectToParameter(cable.destination, cable.inputType);
         });
 
-        this.audioNode.start(audioContext.currentTime);
+        module.audioNode.start(audioContext.currentTime);
 
         // if there is loop disabled stop the sound after delay
-        if (this.audioNode.loop === false) {
-            const delay = Math.floor(this.buffer.duration * 1000) + 1;
+        if (module.audioNode.loop === false) {
+            const delay = Math.floor(module.buffer.duration * 1000) + 1;
 
-            this.audioNode.stopTimer = window.setTimeout(() => {
-                this.stopSound();
+            module.audioNode.stopTimer = window.setTimeout(() => {
+                module.stopSound();
             }, delay);
         }
     }
 };
 /* function used by playButtonHandler function to stop the sound */
 Module.prototype.stopSound = function () {
-    this.isTransmitting = false;
-    this.audioNode.stop(0);
+    const module = this;
+
+    module.isTransmitting = false;
+    module.audioNode.stop(0);
 
     // clear stopTimer parameter (if there is any)
-    if (this.audioNode.stopTimer) {
-        window.clearTimeout(this.audioNode.stopTimer);
-        this.audioNode.stopTimer = undefined;
+    if (module.audioNode.stopTimer) {
+        window.clearTimeout(module.audioNode.stopTimer);
+        module.audioNode.stopTimer = undefined;
     }
 
-    this.content.controllers.playButton.classList.remove("switch-on");
+    module.content.controllers.playButton.classList.remove("switch-on");
 
     // if loop is enabled sound will play even with switch-off thus kill it with fire
-    if (this.audioNode.loop === true) {
-        this.audioNode.loop = false;
-        this.content.options.looper.checkbox.checked = false;
+    if (module.audioNode.loop === true) {
+        module.audioNode.loop = false;
+        module.content.options.looper.checkbox.checked = false;
     }
 
-    this.markAllLinkedCablesAs("deactive");
+    module.markAllLinkedCablesAs("deactive");
 };
 
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
-    const loop = initalLoop || false;
-    const bufferName = initalBufferName || "guitar.ogg";
+    const loop = Boolean(initalLoop || false);
+    const bufferName = String(initalBufferName || "guitar.ogg");
     const switchDiv = document.createElement("div");
     const playButton = document.createElement("button");
-    const playbackRate = initalPlaybackRate || 1;
+    const playbackRate = parseFloat(initalPlaybackRate || 1);
     const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
 

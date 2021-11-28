@@ -2,10 +2,10 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function flanger(event, initalDelay, initalDepth, initalFeedback, initalSpeed) {
-    const delay = initalDelay || 0.005;
-    const depth = initalDepth || 0.002;
-    const speed = initalSpeed || 0.25;
-    const feedback = initalFeedback || 0.5;
+    const delay = parseFloat(initalDelay || 0.005);
+    const depth = parseFloat(initalDepth || 0.002);
+    const speed = parseFloat(initalSpeed || 0.25);
+    const feedback = parseFloat(initalFeedback || 0.5);
     const delayInfo = "Affects the frequency range of the flanger's sweep by adjusting the initial delay time";
     const depthInfo = "Length of the effect";
     const speedInfo = "Frequency of oscillator that makes swirling sounds";
@@ -18,7 +18,9 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
         depthNode: new GainNode(audioContext),
         feedbackNode: new GainNode(audioContext),
         delayNode: new DelayNode(audioContext),
-        oscillatorNode: new OscillatorNode(audioContext),
+        oscillatorNode: new OscillatorNode(audioContext, {
+            type: "sine",
+        }),
         outputNode: new GainNode(audioContext),
         get speed() {
             return this.oscillatorNode.frequency;
@@ -65,7 +67,6 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     module.audioNode.delayNode.connect(module.audioNode.feedbackNode);
     module.audioNode.feedbackNode.connect(module.audioNode.inputNode);
 
-    module.audioNode.oscillatorNode.type = "sine";
     module.audioNode.oscillatorNode.start(0);
 
     // add inital cable when structure is fully build - getBoundingClientRect related

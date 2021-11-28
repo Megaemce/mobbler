@@ -18,10 +18,10 @@ export default function distortion(event, initalClipping, initalGain, initalPost
             return new Float32Array([-1, 1]);
         },
     };
-    const gain = initalGain || 2;
-    const drive = initalDrive || 0.2;
-    const precut = initalPrecut || 800;
-    const postcut = initalPostcut || 3000;
+    const gain = parseFloat(initalGain || 2);
+    const drive = parseFloat(initalDrive || 0.2);
+    const precut = parseFloat(initalPrecut || 800);
+    const postcut = parseFloat(initalPostcut || 3000);
     const clipping = initalClipping || clippingTypes["Soft clipping"](drive);
     const gainInfo = "Multiplication of sound volume";
     const driveInfo = "Overdrive amount. Only in soft clipping";

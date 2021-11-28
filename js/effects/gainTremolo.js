@@ -2,7 +2,7 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function gainTremolo(event, initalSpeed) {
-    const speed = initalSpeed || 15;
+    const speed = parseFloat(initalSpeed || 15);
     const speedInfo = "Frequency of oscillator that makes trembling effect";
 
     const module = new Module("gain tremolo", true, false, false, undefined, true);
@@ -29,9 +29,10 @@ export default function gainTremolo(event, initalSpeed) {
 
     module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
-    module.audioNode.oscillatorNode.start(0);
     module.audioNode.oscillatorNode.connect(module.audioNode.inputNode.gain);
     module.audioNode.inputNode.connect(module.audioNode.outputNode);
+
+    module.audioNode.oscillatorNode.start(0);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

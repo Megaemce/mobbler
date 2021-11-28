@@ -2,8 +2,8 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function oscillator(event, initalFrequency, initalDetune) {
-    const detune = initalDetune || 0;
-    const frequecy = initalFrequency || 440;
+    const detune = parseFloat(initalDetune || 0);
+    const frequecy = parseFloat(initalFrequency || 440);
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
     const switchDiv = document.createElement("div");
     const playButton = document.createElement("button");
@@ -17,9 +17,9 @@ export default function oscillator(event, initalFrequency, initalDetune) {
 
     playButton.alt = "play";
     playButton.onclick = function () {
-        const frequency = module.content.controllers.frequency.value.innerText; //.value is a pointer not returner
-        const detune = module.content.controllers.detune.slider.value;
-        const type = module.content.options.select.value;
+        const frequency = parseFloat(module.content.controllers.frequency.value.innerText); //.value is a pointer not returner
+        const detune = parseFloat(module.content.controllers.detune.slider.value);
+        const type = String(module.content.options.select.value);
         const playButton = this;
 
         if (module.isTransmitting) {
@@ -41,7 +41,7 @@ export default function oscillator(event, initalFrequency, initalDetune) {
             module.audioNode = new OscillatorNode(audioContext, {
                 type: type,
                 detune: detune,
-                frequency: frequecy,
+                frequency: frequency,
             });
             module.audioNode.start(0);
 
