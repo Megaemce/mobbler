@@ -1,20 +1,18 @@
 import { valueToLogPosition } from "../helpers/math.js";
 import Line from "../classes/Line.js";
 
-let tempx = 50,
-    tempy = 100;
+let tempx = 50;
+let tempy = 100;
 
 export function addOpenFileButtonTo(selectDiv) {
-    let input = document.createElement("input");
-    let button = document.createElement("button");
-    let fileButton = document.createElement("option");
+    const input = document.createElement("input");
+    const button = document.createElement("button");
+    const fileButton = document.createElement("option");
 
     input.style = "display: none;";
     input.type = "file";
-    input.id = "file-input";
 
     button.innerText = "Open file...";
-    button.id = "button";
 
     fileButton.id = "file button";
     fileButton.appendChild(button);
@@ -28,8 +26,8 @@ export function addOpenFileButtonTo(selectDiv) {
 }
 
 export function displayAlertOnElement(message, element, timeInSec) {
-    let span = document.createElement("span");
-    let time = timeInSec * 1000 || 1000;
+    const span = document.createElement("span");
+    const time = parseFloat(timeInSec * 1000 || 1000);
 
     span.className = "alertText";
     span.innerHTML = message;
@@ -44,13 +42,13 @@ export function displayAlertOnElement(message, element, timeInSec) {
 }
 
 export function createSelectionRectangle(event) {
-    let div = document.getElementById("selection-rect");
-    let x1 = event.clientX;
-    let y1 = event.clientY;
+    const div = document.getElementById("selection-rect");
+    const x1 = event.clientX;
+    const y1 = event.clientY;
 
     document.onmousemove = (event) => {
-        let x2 = event.clientX;
-        let y2 = event.clientY;
+        const x2 = event.clientX;
+        const y2 = event.clientY;
         const xMin = Math.min(x1, x2);
         const xMax = Math.max(x1, x2);
         const yMin = Math.min(y1, y2);
@@ -73,21 +71,21 @@ export function createSelectionRectangle(event) {
 }
 
 export function buildModule(module) {
-    let modulesDiv = document.getElementById("modules");
-    let moduleDiv = document.createElement("div");
-    let head = document.createElement("div");
-    let titleWrapper = document.createElement("div");
-    let title = document.createElement("span");
-    let buttons = document.createElement("div");
-    let close = document.createElement("button");
-    let content = document.createElement("div");
-    let options = document.createElement("div");
-    let controllers = document.createElement("div");
-    let leftSide = document.createElement("div");
-    let frontSide = document.createElement("div");
-    let leftAndFrontSide = document.createElement("div");
-    let footer = document.createElement("footer");
-    let moduleNumber = parseInt(module.id.slice(7, module.id.length));
+    const modulesDiv = document.getElementById("modules");
+    const moduleDiv = document.createElement("div");
+    const head = document.createElement("div");
+    const titleWrapper = document.createElement("div");
+    const title = document.createElement("span");
+    const buttons = document.createElement("div");
+    const close = document.createElement("button");
+    const content = document.createElement("div");
+    const options = document.createElement("div");
+    const controllers = document.createElement("div");
+    const leftSide = document.createElement("div");
+    const frontSide = document.createElement("div");
+    const leftAndFrontSide = document.createElement("div");
+    const footer = document.createElement("footer");
+    const moduleNumber = parseInt(module.id.slice(7, module.id.length));
 
     module.div = moduleDiv;
     module.div.id = module.id;
@@ -132,10 +130,10 @@ export function buildModule(module) {
     options.className = "options";
 
     if (module.arrayForSelect) {
-        let select = document.createElement("select");
+        const select = document.createElement("select");
 
         module.arrayForSelect.forEach((object) => {
-            let option = document.createElement("option");
+            const option = document.createElement("option");
             option.appendChild(document.createTextNode(object));
             select.add(option);
         });
@@ -145,9 +143,9 @@ export function buildModule(module) {
     }
 
     if (module.hasLooper) {
-        let label = document.createElement("label");
-        let looper = document.createElement("div");
-        let checkbox = document.createElement("input");
+        const label = document.createElement("label");
+        const looper = document.createElement("div");
+        const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
 
         // To associate label with an input element, you need to give the input an id attribute.
@@ -169,9 +167,9 @@ export function buildModule(module) {
     }
 
     if (module.hasNormalizer) {
-        let label = document.createElement("label");
-        let normalizer = document.createElement("div");
-        let checkbox = document.createElement("input");
+        const label = document.createElement("label");
+        const normalizer = document.createElement("div");
+        const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
 
         label.htmlFor = `${module.id}-content-options-looper`;
@@ -206,8 +204,8 @@ export function buildModule(module) {
 
     if (module.hasInput) {
         // module.input
-        let socket = document.createElement("div");
-        let img = document.createElement("img");
+        const socket = document.createElement("div");
+        const img = document.createElement("img");
 
         // keep info about parent and type in image and it's wrapper for movingCable function
         img.src = "../img/input.svg";
@@ -250,28 +248,28 @@ export function buildModule(module) {
 
 export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
     const parameterType = property.split(" ").join("");
-    let sliderDiv = document.createElement("div");
-    let info = document.createElement("div");
-    let label = document.createElement("div");
-    let labelSpan = document.createElement("span");
-    let labelInfo = document.createElement("span");
-    let value = document.createElement("span");
-    let unit = document.createElement("span");
-    let valueUnit = document.createElement("div");
-    let slider = document.createElement("input");
-    let sliderWraper = document.createElement("div");
-    let sliderDebug = document.createElement("div");
-    let debugValueMin = document.createElement("span");
-    let debugValueMax = document.createElement("span");
-    let debugValueStep = document.createElement("span");
-    let debugValue = document.createElement("span");
-    let debugValueMinDiv = document.createElement("div");
-    let debugValueMaxDiv = document.createElement("div");
-    let debugValueStepDiv = document.createElement("div");
-    let debugValueDiv = document.createElement("div");
-    let debugHideButton = document.createElement("button");
-    let audioParam = document.createElement("div");
-    let parameterImg = document.createElement("img");
+    const sliderDiv = document.createElement("div");
+    const info = document.createElement("div");
+    const label = document.createElement("div");
+    const labelSpan = document.createElement("span");
+    const labelInfo = document.createElement("span");
+    const value = document.createElement("span");
+    const unit = document.createElement("span");
+    const valueUnit = document.createElement("div");
+    const slider = document.createElement("input");
+    const sliderWraper = document.createElement("div");
+    const sliderDebug = document.createElement("div");
+    const debugValueMin = document.createElement("span");
+    const debugValueMax = document.createElement("span");
+    const debugValueStep = document.createElement("span");
+    const debugValue = document.createElement("span");
+    const debugValueMinDiv = document.createElement("div");
+    const debugValueMaxDiv = document.createElement("div");
+    const debugValueStepDiv = document.createElement("div");
+    const debugValueDiv = document.createElement("div");
+    const debugHideButton = document.createElement("button");
+    const audioParam = document.createElement("div");
+    const parameterImg = document.createElement("img");
 
     // module.content.controllers.$parameterType.info.label.tooltip
     // module.controllers[$parameterType].info.label.tooltip
@@ -396,7 +394,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 
     // if sliders div have not been created yet do it
     if (!module.content.controllers.sliders) {
-        let sliders = document.createElement("div");
+        const sliders = document.createElement("div");
         sliders.className = "sliders";
 
         module.content.controllers.appendChild(sliders);
@@ -426,12 +424,12 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 }
 
 export function buildCable(cable) {
-    let xPosition = cable.source.modulePosition.right;
-    let yPosition = cable.source.modulePosition.top + 10;
-    let shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
-    let shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
-    let jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
-    let svg = document.getElementById("svgCanvas");
+    const xPosition = parseFloat(cable.source.modulePosition.right);
+    const yPosition = parseFloat(cable.source.modulePosition.top) + 10;
+    const shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    const shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    const jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+    const svg = document.getElementById("svgCanvas");
 
     cable.jack.setAttribute("href", "./img/jack.svg");
     cable.jack.setAttribute("height", "9");
@@ -443,7 +441,7 @@ export function buildCable(cable) {
         if (i > 0) {
             // newLine keeps the array with pointers linked to Points which is cool!
             // by updating the line we update the points in the points array too
-            let newLine = new Line(cable.points[i - 1], cable.points[i], Math.log(point.x), 0.8);
+            const newLine = new Line(cable.points[i - 1], cable.points[i], Math.log(point.x), 0.8);
             cable.lines.push(newLine);
         }
     });
