@@ -11,7 +11,7 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     const speedInfo = "Frequency of oscillator that makes swirling sounds";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
 
-    let module = new Module("flanger", true, false, false, undefined);
+    const module = new Module("flanger", true, false, false, undefined);
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),

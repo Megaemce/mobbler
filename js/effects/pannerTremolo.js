@@ -5,7 +5,7 @@ export default function pannerTremolo(event, initalSpeed) {
     const speed = initalSpeed || 15;
     const speedInfo = "Frequency of oscillator that makes trembling effect";
 
-    let module = new Module("panner tremolo", true, false, false, undefined, true);
+    const module = new Module("panner tremolo", true, false, false, undefined, true);
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),

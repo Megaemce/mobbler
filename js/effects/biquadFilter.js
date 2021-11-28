@@ -18,7 +18,7 @@ export default function biquadFilter(event, initalFrequency, initalQ, initalGain
         allpass: { info: "It lets all frequencies through, but changes the phase-relationship between the various frequencies", frequency: { info: "The frequency with the maximal group delay, that is, the frequency where the center of the phase transition occurs" }, q: { enabled: true, info: "Controls how sharp the transition is at the medium frequency. The larger this parameter is, the sharper and larger the transition will be" }, gain: { enabled: false, info: "Not used for this type of filter" } },
     };
 
-    let module = new Module("biquad filter", true, false, false, Object.keys(filters));
+    const module = new Module("biquad filter", true, false, false, Object.keys(filters));
 
     // set audioNode with inital values
     module.audioNode = new BiquadFilterNode(audioContext);

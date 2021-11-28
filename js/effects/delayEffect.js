@@ -9,7 +9,7 @@ export default function delayEffect(event, initalDryness, initalDelay, initalFee
     const drynessInfo = "Loudness of original signal without effect";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
 
-    let module = new Module("delay effect", true, false, false, undefined);
+    const module = new Module("delay effect", true, false, false, undefined);
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),

@@ -4,6 +4,7 @@ import { audioContext } from "../main.js";
 export default function distortion(event, initalClipping, initalGain, initalPostcut, initalPrecut, initalDrive) {
     const clippingTypes = {
         "Soft clipping": (driveValue) => {
+            // taken from https://stackoverflow.com/a/52472603/4633799
             const n_samples = 256;
             const drive = driveValue * 100;
             const curve = new Float32Array(n_samples);
@@ -21,20 +22,20 @@ export default function distortion(event, initalClipping, initalGain, initalPost
     const drive = initalDrive || 0.2;
     const precut = initalPrecut || 800;
     const postcut = initalPostcut || 3000;
-    const clipping = initalClipping || clippingTypes["Soft clipping"](20);
+    const clipping = initalClipping || clippingTypes["Soft clipping"](drive);
     const gainInfo = "Multiplication of sound volume";
     const driveInfo = "Overdrive amount. Only in soft clipping";
     const precutInfo = "Pre-distortion bandpass filter frequency";
     const postcutInfo = "Post-distortion lowpass filter cutoff frequency";
 
-    let module = new Module("distortion", true, false, false, Object.keys(clippingTypes));
+    const module = new Module("distortion", true, false, false, Object.keys(clippingTypes));
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),
         gainNode: new GainNode(audioContext),
-        bandpassNode: new BiquadFilterNode(audioContext),
-        distortionNode: audioContext.createWaveShaper(),
-        lowpassNode: new BiquadFilterNode(audioContext),
+        bandpassNode: new BiquadFilterNode(audioContext, { type: "bandpass" }),
+        distortionNode: new WaveShaperNode(audioContext, { curve: clipping }),
+        lowpassNode: new BiquadFilterNode(audioContext, { type: "lowpass" }),
         outputNode: new GainNode(audioContext),
         get gain() {
             return this.gainNode.gain;
@@ -76,10 +77,6 @@ export default function distortion(event, initalClipping, initalGain, initalPost
     module.createSlider("precut", precut, 0.1, 22050, 1, "Hz", true, precutInfo);
     module.createSlider("drive", drive, 0, 1, 0.1, "", false, driveInfo);
     module.createSlider("postcut", postcut, 0.1, 22050, 1, "Hz", true, postcutInfo);
-
-    module.audioNode.bandpassNode.type = "bandpass";
-    module.audioNode.lowpassNode.type = "lowpass";
-    module.audioNode.distortionNode.curve = clipping;
 
     module.audioNode.inputNode.connect(module.audioNode.gainNode);
     module.audioNode.gainNode.connect(module.audioNode.bandpassNode);

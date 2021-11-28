@@ -13,7 +13,7 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
     const canvasHeight = 100;
     const fftSizeSineWave = 128;
 
-    let module = new Module("visualisation", true, false, false, undefined);
+    const module = new Module("visualisation", true, false, false, undefined);
     let maximizeButton = document.createElement("button");
 
     maximizeButton.classList.add("maximize");

@@ -6,7 +6,7 @@ export default function convolver(event, initalBufferName, initalNormalizer) {
     const normalizer = initalNormalizer || false;
     const irNames = Object.keys(audioContext.nameIRBuffer);
 
-    let module = new Module("convolver", true, false, true, irNames);
+    const module = new Module("convolver", true, false, true, irNames);
 
     // set audioNode with inital values
     module.audioNode = new ConvolverNode(audioContext);

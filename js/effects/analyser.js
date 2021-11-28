@@ -12,7 +12,7 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
     const analyserTypes = ["sine wave", "frequency bars"];
 
     let animationID;
-    let module = new Module("analyser", true, false, false, analyserTypes);
+    const module = new Module("analyser", true, false, false, analyserTypes);
 
     // set audioNode with inital values
     module.audioNode = new AnalyserNode(audioContext);

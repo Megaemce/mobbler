@@ -6,7 +6,7 @@ export default function delay(event, initialDelay, initalMaxDelay) {
     const maxDelay = initalMaxDelay || 5;
     const delayInfo = "Number of seconds by which the signal will be delayed";
 
-    let module = new Module("delay", true, false, false, undefined);
+    const module = new Module("delay", true, false, false, undefined);
 
     module.audioNode = new DelayNode(audioContext, { delayTime: maxDelay });
 

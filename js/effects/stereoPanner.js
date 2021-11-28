@@ -5,7 +5,7 @@ export default function stereoPanner(event, initialPan) {
     const pan = initialPan || 0;
     const panInfo = "Amount of panning to apply. -1 is full left pan and 1 is full right pan";
 
-    let module = new Module("stereo panner", true, false, false, undefined);
+    const module = new Module("stereo panner", true, false, false, undefined);
 
     module.audioNode = new StereoPannerNode(audioContext);
 

@@ -13,7 +13,7 @@ export default function dynamicsCompressor(event, initalThreshold, initalKnee, i
     const releaseInfo = "The rate at which the volume drops to zero as the sound stops playing";
     const thresholdInfo = "The level at which a dynamics processing unit will begin to change the gain of the incoming signal";
 
-    let module = new Module("dynamics compressor", true, false, false, undefined);
+    const module = new Module("dynamics compressor", true, false, false, undefined);
 
     module.audioNode = new DynamicsCompressorNode(audioContext);
 

@@ -5,7 +5,7 @@ export default function gain(event, initalGain) {
     const gain = initalGain || 0.5;
     const gainInfo = "Multiplication of sound volume";
 
-    let module = new Module("gain", true, false, false, undefined);
+    const module = new Module("gain", true, false, false, undefined);
 
     module.audioNode = new GainNode(audioContext);
 
