@@ -13,7 +13,9 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),
-        convolerNode: new ConvolverNode(audioContext),
+        convolerNode: new ConvolverNode(audioContext, {
+            buffer: audioContext.nameIRBuffer[bufferName],
+        }),
         wetnessNode: new GainNode(audioContext),
         drynessNode: new GainNode(audioContext),
         outputNode: new GainNode(audioContext),
@@ -45,8 +47,6 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     module.audioNode.convolerNode.connect(module.audioNode.wetnessNode);
     module.audioNode.wetnessNode.connect(module.audioNode.outputNode);
     module.audioNode.drynessNode.connect(module.audioNode.outputNode);
-
-    module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[bufferName];
 
     module.content.options.select.onchange = function () {
         module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[this.value];

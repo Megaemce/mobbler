@@ -15,9 +15,10 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
     const module = new Module("analyser", true, false, false, analyserTypes);
 
     // set audioNode with inital values
-    module.audioNode = new AnalyserNode(audioContext);
-    module.audioNode.maxDecibels = maxDecibels;
-    module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
+    module.audioNode = new AnalyserNode(audioContext, {
+        maxDecibels: maxDecibels,
+        smoothingTimeConstant: smoothingTimeConstant,
+    });
 
     // start inital analyser
     animationID = module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, type);

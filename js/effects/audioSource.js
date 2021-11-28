@@ -4,7 +4,7 @@ import { openFileHandler } from "../helpers/loaders.js";
 
 /* function used by audio buffer source's playButton to play the sound */
 Module.prototype.playButtonHandler = function () {
-    let selectedBufferName = this.content.options.select.value;
+    const selectedBufferName = this.content.options.select.value;
 
     // switched from on to off so stop the sound
     if (this.isTransmitting === true) {
@@ -37,7 +37,7 @@ Module.prototype.playButtonHandler = function () {
 
         // if there is loop disabled stop the sound after delay
         if (this.audioNode.loop === false) {
-            let delay = Math.floor(this.buffer.duration * 1000) + 1;
+            const delay = Math.floor(this.buffer.duration * 1000) + 1;
 
             this.audioNode.stopTimer = window.setTimeout(() => {
                 this.stopSound();
@@ -70,12 +70,11 @@ Module.prototype.stopSound = function () {
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
     const loop = initalLoop || false;
     const bufferName = initalBufferName || "guitar.ogg";
+    const switchDiv = document.createElement("div");
+    const playButton = document.createElement("button");
     const playbackRate = initalPlaybackRate || 1;
     const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
-
-    let playButton = document.createElement("button");
-    let switchDiv = document.createElement("div");
 
     const module = new Module("audio source", false, true, false, soundNames);
 

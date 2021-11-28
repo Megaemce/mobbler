@@ -21,8 +21,7 @@ export default function biquadFilter(event, initalFrequency, initalQ, initalGain
     const module = new Module("biquad filter", true, false, false, Object.keys(filters));
 
     // set audioNode with inital values
-    module.audioNode = new BiquadFilterNode(audioContext);
-    module.audioNode.type = type;
+    module.audioNode = new BiquadFilterNode(audioContext, { type: type });
 
     module.createSlider("frequency", frequency, 0.1, 20000, 1, "Hz", true, filters[type].frequency.info);
     module.createSlider("Q", q, 1, 100, 0.1, "", false, filters[type].q.info);

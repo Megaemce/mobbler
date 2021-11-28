@@ -381,8 +381,8 @@ export default class Module {
         // change slider position if scaleLog option is enabled
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
-        // visualisation doesn't have audioNodes attached to sliders
-        if (destinationModule.name === "visualisation") {
+        // visualisation nor distortion's drive doesn't have audioNodes attached to sliders
+        if (destinationModule.name === "visualisation" || parameterType === "drive") {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
 
@@ -398,8 +398,7 @@ export default class Module {
     /* connect this module's analyser to destinationModule's slider of parameterType 
        destinationModule can have audioNode missing */
     connectToParameter(destinationModule, parameterType) {
-        const sliderDiv = destinationModule.content.controllers[parameterType];
-        const slider = sliderDiv.slider;
+        const slider = destinationModule.content.controllers[parameterType].slider;
         const sliderCenter = (parseFloat(slider.max) + parseFloat(slider.min)) / 2;
         const sliderValue = slider.scaleLog ? logPositionToValue(slider.value, slider.min, slider.max) : slider.value;
 
@@ -412,7 +411,7 @@ export default class Module {
 
         // show alert if slider value is not in a middle
         if (slider.value != sliderCenter) {
-            displayAlertOnElement(`Value ${sliderValue} is not in slider center (${sliderCenter}) thus ${this.name}'s output will not cover all of its range`, sliderDiv, 5);
+            displayAlertOnElement(`Value ${sliderValue} is not in slider center (${sliderCenter}) thus ${this.name}'s output will not cover all of its range`, slider, 5);
         }
 
         // change input picture to busy version
@@ -425,8 +424,8 @@ export default class Module {
                 slider.audioNode.fftSize = 32;
             }
 
-            // visualisation doesn't have proper audioNode parameters as they are not controlling audio
-            if (destinationModule.name !== "visualisation") {
+            // visualisation nor distortion's drive doesn't have proper audioNode parameters as they are not controlling audioNode
+            if (destinationModule.name !== "visualisation" && parameterType !== "drive") {
                 destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
             }
 

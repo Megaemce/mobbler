@@ -5,11 +5,11 @@ export default function oscillator(event, initalFrequency, initalDetune) {
     const detune = initalDetune || 0;
     const frequecy = initalFrequency || 440;
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];
+    const switchDiv = document.createElement("div");
+    const playButton = document.createElement("button");
     const detuneInfo = "Determine how much signal will be played out of tune";
     const frequencyInfo = "Number of complete cycles a waveform makes in a second";
 
-    let playButton = document.createElement("button");
-    let switchDiv = document.createElement("div");
     const module = new Module("oscillator", false, false, false, oscTypes);
 
     module.createSlider("frequency", frequecy, 0.1, 2000, 0.01, "Hz", true, frequencyInfo);
@@ -17,10 +17,10 @@ export default function oscillator(event, initalFrequency, initalDetune) {
 
     playButton.alt = "play";
     playButton.onclick = function () {
-        let frequency = module.content.controllers.frequency.value.innerText; //.value is a pointer not returner
-        let detune = module.content.controllers.detune.slider.value;
-        let type = module.content.options.select.value;
-        let playButton = this;
+        const frequency = module.content.controllers.frequency.value.innerText; //.value is a pointer not returner
+        const detune = module.content.controllers.detune.slider.value;
+        const type = module.content.options.select.value;
+        const playButton = this;
 
         if (module.isTransmitting) {
             //stop
@@ -38,10 +38,11 @@ export default function oscillator(event, initalFrequency, initalDetune) {
             module.isTransmitting = true;
             playButton.classList.add("switch-on");
 
-            module.audioNode = new OscillatorNode(audioContext);
-            module.audioNode.frequency.value = frequency;
-            module.audioNode.detune.value = detune;
-            module.audioNode.type = type;
+            module.audioNode = new OscillatorNode(audioContext, {
+                type: type,
+                detune: detune,
+                frequency: frequecy,
+            });
             module.audioNode.start(0);
 
             module.outcomingCables.forEach((cable) => {

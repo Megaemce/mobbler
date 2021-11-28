@@ -37,10 +37,10 @@ export function displayAlertOnElement(message, element, timeInSec) {
     element.classList.add("alert");
     element.appendChild(span);
 
-    setTimeout(() => {
-        span.style.visibility = "hidden";
-        span.style.opacity = "0";
-    }, time);
+    // setTimeout(() => {
+    //     span.style.visibility = "hidden";
+    //     span.style.opacity = "0";
+    // }, time);
 }
 
 export function createSelectionRectangle(event) {
