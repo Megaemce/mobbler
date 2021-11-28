@@ -50,7 +50,7 @@ export default class Module {
     }
     /* build module html object and attach all logic into it */
     createModule() {
-        let module = this;
+        const module = this;
         let timerID = undefined;
 
         buildModule(module);
@@ -232,6 +232,7 @@ export default class Module {
     }
     /* all logic related to module movement event */
     movingModule(event) {
+        const module = module;
         const canvas = document.getElementById("svgCanvas");
         const initalCableModules = Object.values(modules).filter((module) => module.initalCable);
 
@@ -239,7 +240,7 @@ export default class Module {
         canvas.style.cursor = "grabbing";
 
         // output module doesn't have initalCable
-        this.initalCable && this.initalCable.deleteCable();
+        module.initalCable && module.initalCable.deleteCable();
 
         // hide all other inital cables so the view stay tidy
         initalCableModules.forEach((module) => {
@@ -248,29 +249,29 @@ export default class Module {
         });
 
         // start physics on all cables
-        this.relatedCables.forEach((cable) => {
+        module.relatedCables.forEach((cable) => {
             cable.startPhysicsAnimation();
         });
 
         // Update module's position and its cables
         document.onmousemove = (event) => {
             // show cables on front while moving modules
-            canvas.style.zIndex = this.zIndex + 1;
+            canvas.style.zIndex = module.zIndex + 1;
 
             // move drag element by the same amount the cursor has moved
-            this.div.style.left = parseInt(this.div.style.left) + event.movementX + "px";
-            this.div.style.top = parseInt(this.div.style.top) + event.movementY + "px";
+            module.div.style.left = parseInt(module.div.style.left) + event.movementX + "px";
+            module.div.style.top = parseInt(module.div.style.top) + event.movementY + "px";
 
             // update any lines that point in here
-            this.incomingCables.forEach((cable) => {
+            module.incomingCables.forEach((cable) => {
                 cable.moveEndPointBy(event.movementX, event.movementY);
-                this.isTransmitting && cable.makeActive();
+                module.isTransmitting && cable.makeActive();
             });
 
             // update any lines that point out of here
-            this.outcomingCables.forEach((cable) => {
+            module.outcomingCables.forEach((cable) => {
                 cable.moveStartPointBy(event.movementX, event.movementY);
-                this.isTransmitting && cable.makeActive();
+                module.isTransmitting && cable.makeActive();
             });
         };
 
@@ -279,7 +280,7 @@ export default class Module {
             canvas.style.zIndex = 0;
 
             // cancel physic animation on all cables
-            this.relatedCables.forEach((cable) => {
+            module.relatedCables.forEach((cable) => {
                 cable.stopPhysicsAnimation();
             });
 
@@ -290,8 +291,8 @@ export default class Module {
             });
 
             // create new inital cable (just for animation purpose)
-            if (this.name !== "output" && this.name !== "visualisation" && this.name !== "analyser") {
-                this.addInitalCable();
+            if (module.name !== "output" && module.name !== "visualisation" && module.name !== "analyser") {
+                module.addInitalCable();
             }
 
             canvas.style.cursor = "default";
@@ -302,34 +303,35 @@ export default class Module {
     }
     /* remove module and all related cables */
     deleteModule() {
+        const module = this;
         // remove inital cable
-        this.initalCable && this.initalCable.deleteCable();
+        module.initalCable && module.initalCable.deleteCable();
 
         // mark this module as not active anymore
-        this.isTransmitting = false;
+        module.isTransmitting = false;
 
         // mark all related cables as inactive
-        this.markAllLinkedCablesAs("deactive");
+        module.markAllLinkedCablesAs("deactive");
 
         // remove all related cables
-        this.relatedCables.forEach((cable) => {
+        module.relatedCables.forEach((cable) => {
             cable.deleteCable();
         });
 
         // execute any module-specific function if there is any
-        this.onDeletion && this.onDeletion();
+        module.onDeletion && module.onDeletion();
 
         // remove html object
-        this.div.parentNode.removeChild(this.div);
+        module.div.parentNode.removeChild(module.div);
 
         // remove module from modules
-        delete modules[this.id];
+        delete modules[module.id];
 
         // disconnect audioNode (if there is any active)
-        this.audioNode && this.audioNode.disconnect();
+        module.audioNode && module.audioNode.disconnect();
 
         // remove object
-        delete this;
+        delete module;
     }
     /* connect this module to destinationModule and send information further. 
        destinationModule is always audioNode-enabled */
@@ -356,6 +358,7 @@ export default class Module {
     /* connect this module to destinationModule's slider of parameterType. 
        destinationModule is always audioNode-enabled */
     connectToSlider(destinationModule, slider, parameterType, initalSliderValue) {
+        const module = this;
         const dataMin = -1;
         const dataMax = 1;
         const sliderMin = parseFloat(slider.min);
@@ -391,20 +394,21 @@ export default class Module {
 
         // update the value inifinite but only if module is actively transmitting
         destinationModule.animationID[parameterType] = requestAnimationFrame(() => {
-            if (this.isTransmitting === false) return;
-            this.connectToSlider(destinationModule, slider, parameterType, initalSliderValue);
+            if (module.isTransmitting === false) return;
+            module.connectToSlider(destinationModule, slider, parameterType, initalSliderValue);
         });
     }
     /* connect this module's analyser to destinationModule's slider of parameterType 
        destinationModule can have audioNode missing */
     connectToParameter(destinationModule, parameterType) {
+        const module = this;
         const slider = destinationModule.content.controllers[parameterType].slider;
         const sliderDiv = destinationModule.content.controllers[parameterType].wrapper;
         const sliderValue = slider.scaleLog ? logPositionToValue(slider.value, slider.min, slider.max) : slider.value;
         const sliderCenter = (parseFloat(slider.max) + parseFloat(slider.min)) / 2;
 
         // is source is active mark cable as active and slider as disabled
-        if (this.isTransmitting) {
+        if (module.isTransmitting) {
             slider.classList.add("disabled");
         } else {
             slider.classList.remove("disabled");
@@ -412,14 +416,14 @@ export default class Module {
 
         // show alert if slider value is not in a middle
         if (slider.value != sliderCenter) {
-            displayAlertOnElement(`Value ${sliderValue} is not in slider center (${sliderCenter}) thus ${this.name}'s output will not cover all of its range`, sliderDiv, 5);
+            displayAlertOnElement(`Value ${sliderValue} is not in slider center (${sliderCenter}) thus ${module.name}'s output will not cover all of its range`, sliderDiv, 5);
         }
 
         // change input picture to busy version
         destinationModule.footer[parameterType].img.setAttribute("src", "./img/parameter_input_busy.svg");
 
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
-        if (slider && this.audioNode) {
+        if (slider && module.audioNode) {
             if (!slider.audioNode) {
                 slider.audioNode = new AnalyserNode(audioContext);
                 slider.audioNode.fftSize = 32;
@@ -427,21 +431,21 @@ export default class Module {
 
             // visualisation nor distortion's drive doesn't have proper audioNode parameters as they are not controlling audioNode
             if (destinationModule.name !== "visualisation" && parameterType !== "drive") {
-                destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
+                destinationModule.audioNode && module.audioNode.connect(destinationModule.audioNode[parameterType]);
             }
 
             // connect just for slider-animation controlled by analyser
-            this.audioNode.connect(slider.audioNode);
+            module.audioNode.connect(slider.audioNode);
 
             // don't make unnesessary slider's animation if source module is not active
-            this.isTransmitting && this.connectToSlider(destinationModule, slider, parameterType, slider.value);
+            module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, slider.value);
         }
     }
     /* create analyser on module with given setting */
     createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
+        const module = this;
         const canvasDiv = document.createElement("div");
         const canvas = document.createElement("canvas");
-        const module = this;
 
         let animationID = undefined;
 
@@ -549,22 +553,22 @@ export default class Module {
         }
         if (style === "free") {
             /*                                  Mode "bands"
-                ꞈ                         ┌                     ┐
-            256 ┤                           ՝·¸    ¸·¸      ¸.¸                
-                │՝·¸                           `·¸՜    ՝·ֻ՜ ̗`·֬    `            
-                │   `.     ¸.·¸        >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
-                │      ՝·.·՝     ՝·¸¸·        ·՜                         
-                │                             -y reflection          k ∊ [1...symmetries]
-              0 ┼──TimeDomainData──┬›     └                     ┘
-                0                 ∞ sec
+                ꞈ                                                             
+            256 ┤                                        ┌                     ┐
+                │՝·¸                                        ՝·¸    ¸·¸      ¸.¸         duplicate k-time
+                │   `.     ¸.·¸        > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
+                │      ՝·.·՝     ՝·¸¸·     flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
+                │                                          ·՜                         
+              0 ┼──TimeDomainData──┬›                    └                     ┘            
+                0                 ∞ sec    
                                                 Mode "wave"
-                ꞈ                         ┌                     ┐
-            256 ┤╥                          ՝·¸    ¸·¸      ¸.¸                
-                │║ ╥     ╥╥                    `·¸՜    ՝·ֻ՜ ̗`·֬    `           
-                │║╥║    ╥║║            >      ·՜   ՝·.·՜     ՝·¸·֬     × (rotate(angleRad * k))           
-                │║║║╥  ╥║║║╥  ╥   ╥         ·՜                         
-                │║║║║╥╥║║║║║╥╥║╥╥╥║           -y reflection          k ∊ [1...symmetries]
-              0 ┼───FrequencyData──┬›     └                      ┘
+                ꞈ
+            256 ┤╥                                       ┌                     ┐
+                │║ ╥     ╥╥                                ՝·¸    ¸·¸      ¸.¸         duplicate k-time
+                │║╥║    ╥║║            > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
+                │║║║╥  ╥║║║╥  ╥   ╥      flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
+                │║║║║╥╥║║║║║╥╥║╥╥╥║                        ·՜                         
+              0 ┼───FrequencyData──┬›                    └                     ┘
                 0               24000Hz
              */
             document.addEventListener("fullscreenchange", exitHandler);
