@@ -134,8 +134,6 @@ export function buildModule(module) {
     if (module.arrayForSelect) {
         let select = document.createElement("select");
 
-        select.className = "ab-source";
-
         module.arrayForSelect.forEach((object) => {
             let option = document.createElement("option");
             option.appendChild(document.createTextNode(object));

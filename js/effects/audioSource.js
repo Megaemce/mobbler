@@ -73,9 +73,9 @@ Module.prototype.stopSound = function () {
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
     const loop = Boolean(initalLoop || false);
     const bufferName = String(initalBufferName || "guitar.ogg");
+    const playbackRate = parseFloat(initalPlaybackRate || 1);
     const switchDiv = document.createElement("div");
     const playButton = document.createElement("button");
-    const playbackRate = parseFloat(initalPlaybackRate || 1);
     const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
 
@@ -102,20 +102,23 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     // after this openFile will be accessible via module.content.options.select.fileButton
     module.addOpenFileTo(module.content.options.select);
 
-    // add openfilehandler to hidden input button
-    module.content.options.select.fileButton.input.onchange = () => {
-        openFileHandler(module);
-    };
-
     module.content.options.select.value = bufferName;
 
     // when select changes
-    module.content.options.select.onchange = function () {
-        // when selected option is an file button start openFileHandler
-        if (this[this.selectedIndex].id === "file button") {
-            module.content.options.select.fileButton.input.click();
-        } else {
-            module.buffer = audioContext.nameSoundBuffer[this.value];
+    module.content.options.select.onchange = function (event) {
+        // when new option is added (eg. after new file loaded) this onchange event get trigger too
+        // srcElement.id is only defined when if it was triggered by file button (eg. loading file)
+        if (!event.srcElement.id) {
+            // when selected option is an file button start openFileHandler
+            if (this[this.selectedIndex].id === "file button") {
+                // add hooker to the fileButton and then start it by click event
+                module.content.options.select.fileButton.input.onchange = () => {
+                    openFileHandler(module, "sound");
+                };
+                module.content.options.select.fileButton.input.click();
+            } else {
+                module.buffer = audioContext.nameSoundBuffer[this.value];
+            }
         }
         // if something is playing stop it
         module.audioNode && module.stopSound();

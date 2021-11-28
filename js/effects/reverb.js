@@ -1,5 +1,6 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
+import { openFileHandler } from "../helpers/loaders.js";
 
 export default function reverb(event, initalDryness, initalWetness, initalBufferName) {
     const irNames = Object.keys(audioContext.nameIRBuffer);
@@ -48,8 +49,25 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     module.audioNode.wetnessNode.connect(module.audioNode.outputNode);
     module.audioNode.drynessNode.connect(module.audioNode.outputNode);
 
-    module.content.options.select.onchange = function () {
-        module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[this.value];
+    // after this openFile will be accessible via module.content.options.select.fileButton
+    module.addOpenFileTo(module.content.options.select);
+
+    module.content.options.select.onchange = function (event) {
+        // when new option is added (eg. after new file loaded) this onchange event get trigger too
+        // srcElement.id is only defined when if it was triggered by file button (eg. loading file)
+        if (!event.srcElement.id) {
+            // when selected option is an file button start openFileHandler
+            if (this[this.selectedIndex].id === "file button") {
+                // add hooker to the fileButton and then start it by click event
+                module.content.options.select.fileButton.input.onchange = () => {
+                    openFileHandler(module, "ir");
+                };
+                module.content.options.select.fileButton.input.click();
+            } else {
+                // just regular switching thus change IR
+                module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[this.value];
+            }
+        }
     };
 
     // add inital cable when structure is fully build - getBoundingClientRect related

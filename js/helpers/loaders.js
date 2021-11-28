@@ -18,22 +18,27 @@ export function loadFilesIntoAudioContext(soundArray, isSound) {
     isSound ? (audioContext.nameSoundBuffer = nameBufferDictonary) : (audioContext.nameIRBuffer = nameBufferDictonary);
 }
 
-export function openFileHandler(module) {
-    let reader = new FileReader();
-    let select = module.content.options.select;
-    let fileButton = module.content.options.select.fileButton;
-    let fileLoaded = module.content.options.select.fileButton.input.files[0];
+export function openFileHandler(module, type) {
+    const reader = new FileReader();
+    const select = module.content.options.select;
+    const fileButton = module.content.options.select.fileButton;
+    const fileLoaded = module.content.options.select.fileButton.input.files[0];
 
     // when file is loaded as array buffer
     reader.onload = function () {
-        let fileAsArrayBuffer = this.result;
+        const fileAsArrayBuffer = this.result;
         // when file is decoded as an audio
         audioContext
             .decodeAudioData(fileAsArrayBuffer)
             .then(function (decodedData) {
                 // store it as an module buffer
                 module.buffer = decodedData;
-                audioContext.nameSoundBuffer[fileLoaded.name] = decodedData;
+                // load into buffer array or IR
+                if (type === "sound") audioContext.nameSoundBuffer[fileLoaded.name] = decodedData;
+                if (type === "ir") audioContext.nameIRBuffer[fileLoaded.name] = decodedData;
+
+                // in reverb new file need to be played instantly
+                if (module.name === "reverb") module.audioNode.convolerNode.buffer = audioContext.nameIRBuffer[fileLoaded.name];
 
                 fileButton.innerHTML = fileLoaded.name;
                 fileButton.removeAttribute("id"); // not button anymore
