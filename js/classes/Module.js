@@ -467,6 +467,13 @@ export default class Module {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
         if (style === "frequency bars") {
+            /*  │¡                    
+                │| ¡     ¡¡          
+                │|¡|    ¡||          
+                │|||¡  ¡|||¡  ¡   ¡  
+                │||||¡¡|||||¡¡|¡¡¡|  
+                └───────────────────›
+             */
             module.audioNode.fftSize = fftSizeFrequencyBars;
             const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
             const dataArray = new Uint8Array(bufferLength);
@@ -496,6 +503,14 @@ export default class Module {
             drawBar();
         }
         if (style === "sine wave") {
+            /*  ꞈ
+                │                     
+                │՟՝·¸                  
+                │    `.    ¸·¸
+                │      ՝·.·    ՝·¸¸·¸.       
+                │  
+                └───────────────────›  
+            */
             let bufferLength = (module.audioNode.fftSize = fftSizeSineWave);
             let dataArray = new Uint8Array(bufferLength);
             let img = new Image();
@@ -527,6 +542,14 @@ export default class Module {
             drawWave();
         }
         if (style === "free") {
+            /*  ꞈ                      ꞈ                          ꞈ
+                │¡                     │─┐                        │                     
+                │| ¡     ¡¡            │ | /‾|    /‾|             │՟՝·¸                  
+                │|¡|    ¡||          > │ \/  |   /  |           > │    `.    ¸·¸        > (...)
+                │|||¡  ¡|||¡  ¡   ¡    │      \_/    \_/\__/      │      ՝·.·    ՝·¸¸·¸.       
+                │||||¡¡|||||¡¡|¡¡¡|    │                          │  
+                └───────────────────›  └──────────────────────›   └───────────────────›         
+            */
             let amount = 8;
 
             document.addEventListener("fullscreenchange", exitHandler);
@@ -552,23 +575,23 @@ export default class Module {
 
             // source: http://paperjs.org/examples/satie-liked-to-draw/
             function getEqualizerBands(data) {
-                var bands = [];
-                var amount = Math.sqrt(data.length) / 2;
-                for (var i = 0; i < amount; i++) {
-                    var start = Math.pow(2, i) - 1;
-                    var end = start * 2 + 1;
-                    var sum = 0;
-                    for (var j = start; j < end; j++) {
+                const bands = [];
+                const amount = Math.sqrt(data.length) / 2;
+                for (let i = 0; i < amount; i++) {
+                    const start = Math.pow(2, i) - 1;
+                    const end = start * 2 + 1;
+                    let sum = 0;
+                    for (let j = start; j < end; j++) {
                         sum += data[j];
                     }
-                    var avg = sum / (255 * (end - start));
+                    const avg = sum / (255 * (end - start));
                     bands[i] = Math.sqrt(avg / Math.sqrt(2));
                 }
                 return bands;
             }
 
             module.audioNode.fftSize = Math.pow(2, amount) * 2;
-            let bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**(amount-1)
+            let bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize, thus 2**amount
             let dataArray = new Uint8Array(bufferLength);
 
             let drawFreely = () => {
@@ -581,8 +604,6 @@ export default class Module {
                 module.audioNode && module.audioNode.getByteFrequencyData(dataArray);
                 let bands = getEqualizerBands(dataArray, true);
 
-                //ctx.fillStyle = "white";
-                //tx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = `hsl(${module.audioNode.color.value}, 100%, 50%)`;
 
@@ -598,18 +619,18 @@ export default class Module {
                 for (let k = 0; k < module.audioNode.symmetries.value; k++) {
                     ctx.rotate(angleRad);
                     ctx.beginPath();
-                    for (var i = 1; i <= amount; i++) {
-                        let x1 = barWidth * i;
-                        let y1 = -bands[i - 1] * scale;
+                    for (let i = 1; i <= amount; i++) {
+                        const x1 = barWidth * i;
+                        const y1 = -bands[i - 1] * scale;
 
-                        let x2 = barWidth * (i + 1);
-                        let y2 = -bands[i] * scale;
+                        const x2 = barWidth * (i + 1);
+                        const y2 = -bands[i] * scale;
 
                         // source: https://stackoverflow.com/a/40978275
-                        var x_mid = (x1 + x2) / 2;
-                        var y_mid = (y1 + y2) / 2;
-                        var cp_x1 = (x_mid + x1) / 2;
-                        var cp_x2 = (x_mid + x2) / 2;
+                        const x_mid = (x1 + x2) / 2;
+                        const y_mid = (y1 + y2) / 2;
+                        const cp_x1 = (x_mid + x1) / 2;
+                        const cp_x2 = (x_mid + x2) / 2;
 
                         if (i === 0) ctx.moveTo(x1, y1);
                         else {
@@ -619,18 +640,18 @@ export default class Module {
                     }
                     ctx.stroke();
                     ctx.beginPath();
-                    for (var i = 1; i <= amount; i++) {
-                        let x1 = barWidth * i;
-                        let y1 = bands[i - 1] * scale;
+                    for (let i = 1; i <= amount; i++) {
+                        const x1 = barWidth * i;
+                        const y1 = bands[i - 1] * scale;
 
-                        let x2 = barWidth * (i + 1);
-                        let y2 = bands[i] * scale;
+                        const x2 = barWidth * (i + 1);
+                        const y2 = bands[i] * scale;
 
                         // source: https://stackoverflow.com/a/40978275
-                        var x_mid = (x1 + x2) / 2;
-                        var y_mid = (y1 + y2) / 2;
-                        var cp_x1 = (x_mid + x1) / 2;
-                        var cp_x2 = (x_mid + x2) / 2;
+                        const x_mid = (x1 + x2) / 2;
+                        const y_mid = (y1 + y2) / 2;
+                        const cp_x1 = (x_mid + x1) / 2;
+                        const cp_x2 = (x_mid + x2) / 2;
 
                         if (i === 0) ctx.moveTo(x1, y1);
                         else {

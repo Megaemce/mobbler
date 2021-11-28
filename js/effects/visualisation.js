@@ -8,6 +8,12 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
     const lineWidth = parseFloat(initalLineWidth || 50);
     const symmetries = parseFloat(initalSymmetries || 6);
     const scaleDivider = parseFloat(initalScaleDivider || 5.5);
+    const zoomInfo = "Canvas zoom volume for new lines";
+    const colorInfo = "Line color in HSL";
+    const barWidthInfo = "Audio to line detail factor. Less make more details visible";
+    const lineWidthInfo = "Line width in pixels";
+    const symmetriesInfo = "Number of kaleidoscope reflection";
+    const scaleDividerInfo = "Effect quite similar to zoom. Less make the line closer";
 
     const canvasWidth = 180;
     const canvasHeight = 100;
@@ -27,16 +33,16 @@ export default function visualisation(event, initalZoom, initalColor, initalBarW
     module.audioNode.zoom = { value: zoom };
     module.audioNode.color = { value: color };
     module.audioNode.barWidth = { value: barWidth };
-    module.audioNode.symmetries = { value: symmetries };
     module.audioNode.lineWidth = { value: lineWidth };
+    module.audioNode.symmetries = { value: symmetries };
     module.audioNode.scaleDivider = { value: scaleDivider };
 
-    module.createSlider("zoom", zoom, 0.1, 9.9, 0.1, "", false, "option 6");
-    module.createSlider("color", color, 0, 360, 1, "", false, "option 4");
-    module.createSlider("bar Width", barWidth, 1, 6, 0.1, "", false, "option 1");
-    module.createSlider("symmetries", symmetries, 3, 9, 1, "", false, "option 3");
-    module.createSlider("line Width", lineWidth, 1, 99, 1, "", false, "option 5");
-    module.createSlider("scale Divider", scaleDivider, 1, 10, 0.1, "", false, "option 2");
+    module.createSlider("zoom", zoom, 0.1, 9.9, 0.1, "", false, zoomInfo);
+    module.createSlider("color", color, 0, 360, 1, "HSL", false, colorInfo);
+    module.createSlider("bar Width", barWidth, 1, 6, 0.1, "px", false, barWidthInfo);
+    module.createSlider("line Width", lineWidth, 1, 99, 1, "px", false, lineWidthInfo);
+    module.createSlider("symmetries", symmetries, 3, 9, 1, "", false, symmetriesInfo);
+    module.createSlider("scale Divider", scaleDivider, 1, 10, 0.1, "", false, scaleDividerInfo);
 
     module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
 
