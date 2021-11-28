@@ -35,7 +35,7 @@ Level: Easy
 2. Create `Oscillator` module
    - Leave `sine` type
    - Change `Frequency` value to `3 Hz` 
-   - Change `Oscillator`'s frequency name to `Speed` (hover mouse over parameter name for 1.5s) <BR> ![image](https://user-images.githubusercontent.com/1651451/143019252-08e4ce6b-9899-4dc5-852f-6aa85f49fe6c.png)
+   - Change `Oscillator`'s frequency name to `Speed` (hover mouse over parameter name for 1.5s)
 3. Connect `Oscillator` with `Input`'s gain parameter
 4. _Tremolo_ module with all its parameters is ready!
 
@@ -59,7 +59,7 @@ Level: Medium
    - `Dryness` with `Output`
 4. _Reverb_ module with all its parameters is ready!
 
-![image](https://user-images.githubusercontent.com/1651451/142778335-bd982af1-30de-4c76-a863-79adff1dc675.png)
+![image](https://user-images.githubusercontent.com/1651451/143022572-0ac5ac25-2fca-46f8-bffa-41c39a4d9e84.png)
 
 ## Recreating _Delay effect_ module
 
@@ -84,8 +84,7 @@ Level: Medium
    - `Delay` with `Output`
 4. _Delay effect_ module with all its parameters is ready!
 
-
-![image](https://user-images.githubusercontent.com/1651451/142775605-fa720b13-18d5-49f3-b433-ff26aa77f16c.png)
+![image](https://user-images.githubusercontent.com/1651451/143023515-4f780eaa-36ed-47df-93e3-d6db6ad3a218.png)
 
 ## Recreating _Flanger_ module
 Level: Hard
@@ -106,7 +105,7 @@ Level: Hard
          - Change `Current` to `0.002`
 2. Create one `Delay` module
    - Open debug option for delay time slider 
-     - Change `Step` to `0.001`
+     - Change `Step` to `0.0001`
      - Change `Max` to `0.01`
      - Change `Current` to `0.005`
 4. Create one `Oscillator` module
@@ -125,7 +124,7 @@ Level: Hard
    - `Feedback` with `Input`
 6. _Flanger_ module with all its parameters is ready!
 
-![image](https://user-images.githubusercontent.com/1651451/142909373-5df715bf-cad6-404a-92b0-f0c85031e7bf.png) 
+![image](https://user-images.githubusercontent.com/1651451/143058249-d9692e63-95f2-4809-828d-753bd962a8b1.png)
 
 # Motive
 <img src="/img/mobbler_word.svg" height="14px"/> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few popular effects and tutorials on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
@@ -220,30 +219,6 @@ Input-output type:
 </details>
 
 ### Basics
-<details><summary>Analyser</summary>
-<table>
-<tr>
-<td>
-<img src="https://user-images.githubusercontent.com/1651451/142767526-7041bfe0-c10e-4865-8956-ddd75c4901e4.png"/>
-</td>
-<td>
-Description:
-<ul>
-<li>Captures audio data in a certain frequency domain and then visualize it in a form of wave or frequency bars</li>
-</ul>
-Input-output type:
-<ul>
-<li>Input & Output</li>
-</ul>
-Options:
-<ul>
-<li><b>Type list</b>: Shows data in sine wave or frequency bars form</li>
-</ul>
-</td>
-</tr>
-</table>
-</details>
-
 <details><summary>Biquad filter</summary>
 <table>
 <tr>
@@ -373,12 +348,36 @@ Input-output type:
 </ul>
 Parameters:
 <ul>
-<li><b>Gain</b>: Change in volume</li>
+<li><b>Gain</b>: Multiplication of sound volume</li>
 </ul>
 </td>
 </tr>
 </table>
+</details>
 
+<details><summary>Stereo panner</summary>
+<table>
+<tr>
+<td>
+<img src="https://user-images.githubusercontent.com/1651451/143776951-544685f7-dc2b-4e71-901d-030515d9e5a4.png"/>
+</td>
+<td>
+Description:
+<ul>
+<li>Pans an audio stream left or right</li>
+</ul>
+Input-output type:
+<ul>
+<li>Input & Output</li>
+</ul>
+Parameters:
+<ul>
+<li><b>Pan</b>: Amount of panning to apply. Full left pan is -1 and full right pan is 1
+</li>
+</ul>
+</td>
+</tr>
+</table>
 </details>
 
 ### Effects
@@ -387,12 +386,12 @@ Parameters:
 <table>
 <tr>
 <td>
-<img src="https://user-images.githubusercontent.com/1651451/142767851-c7c0d06b-030a-452a-94cc-68b8bcd0ecb7.png"/>
+<img src="https://user-images.githubusercontent.com/1651451/143777409-6dd598da-bed0-492b-829e-eb38b99e0f1d.png"/>
 </td>
 <td>
 Description:
 <ul>
-<li>Deforms of a waveform at the output creating a distorted or "dirty" signal</li>
+<li>Multi-node effects in which waveform is deformed (clipped) creating a distorted or "dirty" signal</li>
 </ul>
 Input-output type:
 <ul>
@@ -400,7 +399,14 @@ Input-output type:
 </ul>
 Options:
 <ul>
-<li><b>Oversample value</b>: Up-sampling size applied before the distortion effect</li>
+<li><b>Clipping type</b>: Type of <a href="https://www.sweetwater.com/insync/boost-overdrive-distortion-fuzz-pedals-whats-the-difference/">clipping</a></li>
+</ul>
+Parameters:
+<ul>
+<li><b>Gain</b>: Multiplication of sound volume</li>
+<li><b>Precut</b>: Pre-distortion bandpass filter frequency</li>
+<li><b>Drive</b>: Overdrive amount. Only in soft clipping</li>
+<li><b>Postcut</b>: Post-distortion lowpass filter cutoff frequency</li>
 </ul>
 </td>
 </tr>
@@ -490,11 +496,11 @@ Parameters:
 
 </details>
 
-<details><summary>Tremolo</summary>
+<details><summary>Tremolo (Gain)</summary>
 <table>
 <tr>
 <td>
-<img src="https://user-images.githubusercontent.com/1651451/142768515-475357c8-7651-4581-9bae-636e87baba31.png"/>
+<img src="https://user-images.githubusercontent.com/1651451/143777150-f8be9e2a-2433-4c00-98da-f6ae8bb0dc1d.png"/>
 </td>
 <td>
 Description:
@@ -514,7 +520,55 @@ Parameters:
 </table>
 </details>
 
+<details><summary>Tremolo (Stereo)</summary>
+<table>
+<tr>
+<td>
+<img src="https://user-images.githubusercontent.com/1651451/143777097-c9df1bb2-dd75-413b-9874-4ede7e0f5673.png"/>
+</td>
+<td>
+Description:
+<ul>
+<li>Makes a rapid shift in pan thus creating "shaking" musical effect sliding from left to right channel</li>
+</ul>
+Input-output type:
+<ul>
+<li>Input & Output</li>
+</ul>
+Parameters:
+<ul>
+<li><b>Speed</b>: Frequency of oscillator that makes trembling effect</li>
+</ul>
+</td>
+</tr>
+</table>
+</details>
+
 ### Outputs
+<details><summary>Analyser</summary>
+<table>
+<tr>
+<td>
+<img src="https://user-images.githubusercontent.com/1651451/142767526-7041bfe0-c10e-4865-8956-ddd75c4901e4.png"/>
+</td>
+<td>
+Description:
+<ul>
+<li>Captures audio data in a certain frequency domain and then visualize it in a form of wave or frequency bars</li>
+</ul>
+Input-output type:
+<ul>
+<li>Input only</li>
+</ul>
+Options:
+<ul>
+<li><b>Type list</b>: Shows data in sine wave or frequency bars form</li>
+</ul>
+</td>
+</tr>
+</table>
+</details>
+
 <details><summary>Output</summary>
 <table>
 <tr>
@@ -540,7 +594,7 @@ Input-output type:
 <table>
 <tr>
 <td>
-<img src="https://user-images.githubusercontent.com/1651451/142768629-57dbc31b-2e6d-451f-b9ef-d433e6a5dd37.png"/>
+<img src="https://user-images.githubusercontent.com/1651451/143781277-5c5bb434-82a9-4cf0-911a-36a91cc94138.png"/>
 </td>
 <td>
 Description:
@@ -553,12 +607,13 @@ Input-output type:
 </ul>
 Parameters:
 <ul>
-<li><b>Bar width</b>: </li>
-<li><b>Scale divider</b>: </li>
-<li><b>Symmetries</b>: </li>
-<li><b>Color</b>: </li>
-<li><b>Line width</b>: </li>
-<li><b>Zoom</b>: </li>
+ <li><b>Zoom</b>: Canvas zoom volume for new line </li>
+ <li><b>Color</b>: Line color in HSL</li>
+<li><b>Bar width</b>: Audio to line detail factor. Less make more details visible</li>
+ <li><b>Line width</b>: Line width in pixels</li>
+ <li><b>Symmetries</b>: Number of kaleidoscope reflection</li>
+<li><b>Scale divider</b>: Effect quite similar to zoom. Less make the line closer</li>
+
 </ul>
 </td>
 </tr>
@@ -566,7 +621,7 @@ Parameters:
 </details>
 
 # Technology & limitation
-Made in vanilla JavaScript as an learning exercise. <br>
+Made in vanilla JavaScript as my first big project to get thorough knowledge of this language.<br>
 Due to the mouse-related handlers solution doesn't work properly with touch (mobiles/tablets). <br>
 It was developed for Chrome browser however seems to be working fine on Firefox and Egde too.
 
