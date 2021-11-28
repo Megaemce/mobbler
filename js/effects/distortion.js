@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function distortion(event, initalClipping, initalGain, initalPostcut, initalPrecut, initalDrive) {
+export default function distortion(event, initalGain, initalDrive, initalPrecut, initalPostcut, initalClipping) {
     const clippingTypes = {
         "Soft clipping": (driveValue) => {
             // taken from https://stackoverflow.com/a/52472603/4633799

@@ -2,13 +2,13 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
 export default function analyser(event, initalSmoothing, initalMaxDecibels, initalType) {
+    const type = String(initalType || "sine wave");
+    const maxDecibels = parseFloat(initalMaxDecibels || 0);
+    const smoothingTimeConstant = parseFloat(initalSmoothing || 0.25);
     const canvasWidth = 180;
     const canvasHeight = 100;
     const fftSizeSineWave = 2048;
     const fftSizeFrequencyBars = 512;
-    const type = String(initalType || "sine wave");
-    const maxDecibels = parseFloat(initalMaxDecibels || 0);
-    const smoothingTimeConstant = parseFloat(initalSmoothing || 0.25);
     const analyserTypes = ["sine wave", "frequency bars"];
 
     let animationID;

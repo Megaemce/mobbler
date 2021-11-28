@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function oscillator(event, initalFrequency, initalDetune) {
+export default function oscillator(event, initalDetune, initalFrequency) {
     const detune = parseFloat(initalDetune || 0);
     const frequecy = parseFloat(initalFrequency || 440);
     const oscTypes = ["sine", "square", "sawtooth", "triangle"];

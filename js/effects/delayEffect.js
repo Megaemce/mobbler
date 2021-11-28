@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function delayEffect(event, initalDryness, initalDelay, initalFeedback) {
+export default function delayEffect(event, initalDelay, initalDryness, initalFeedback) {
     const delay = parseFloat(initalDelay || 0.1);
     const dryness = parseFloat(initalDryness || 0.3);
     const feedback = parseFloat(initalFeedback || 0.8);

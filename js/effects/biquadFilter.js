@@ -2,7 +2,7 @@ import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 import { displayAlertOnElement } from "../helpers/builders.js";
 
-export default function biquadFilter(event, initalFrequency, initalQ, initalGain, initalType) {
+export default function biquadFilter(event, initalQ, initalGain, initalType, initalFrequency) {
     const q = parseFloat(initalQ || 1.0);
     const gain = parseFloat(initalGain || 1.0);
     const type = String(initalType || "peaking");

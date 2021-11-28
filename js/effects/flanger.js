@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
 
-export default function flanger(event, initalDelay, initalDepth, initalFeedback, initalSpeed) {
+export default function flanger(event, initalDelay, initalDepth, initalSpeed, initalFeedback) {
     const delay = parseFloat(initalDelay || 0.005);
     const depth = parseFloat(initalDepth || 0.002);
     const speed = parseFloat(initalSpeed || 0.25);
