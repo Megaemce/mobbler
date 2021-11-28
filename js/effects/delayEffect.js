@@ -12,11 +12,11 @@ export default function delayEffect(event, initalDryness, initalDelay, initalFee
     let module = new Module("delay effect", true, false, false, undefined);
 
     module.audioNode = {
-        inputNode: audioContext.createGain(),
-        dryNode: audioContext.createGain(), // dryness of the delay
-        feedbackNode: audioContext.createGain(), // duration of the delay
-        delayNode: audioContext.createDelay(),
-        outputNode: audioContext.createGain(),
+        inputNode: new GainNode(audioContext),
+        dryNode: new GainNode(audioContext), // dryness of the delay
+        feedbackNode: new GainNode(audioContext), // duration of the delay
+        delayNode: new DelayNode(audioContext),
+        outputNode: new GainNode(audioContext),
         get dryness() {
             return this.dryNode.gain;
         },

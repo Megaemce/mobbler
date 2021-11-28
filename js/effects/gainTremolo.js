@@ -8,9 +8,9 @@ export default function gainTremolo(event, initalSpeed) {
     let module = new Module("gain tremolo", true, false, false, undefined, true);
 
     module.audioNode = {
-        inputNode: audioContext.createGain(),
-        oscillatorNode: audioContext.createOscillator(),
-        outputNode: audioContext.createGain(),
+        inputNode: new GainNode(audioContext),
+        oscillatorNode: new OscillatorNode(audioContext),
+        outputNode: new GainNode(audioContext),
         get speed() {
             return this.oscillatorNode.frequency;
         },

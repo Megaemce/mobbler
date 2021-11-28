@@ -30,12 +30,12 @@ export default function distortion(event, initalClipping, initalGain, initalPost
     let module = new Module("distortion", true, false, false, Object.keys(clippingTypes));
 
     module.audioNode = {
-        inputNode: audioContext.createGain(),
-        gainNode: audioContext.createGain(),
-        bandpassNode: audioContext.createBiquadFilter(),
+        inputNode: new GainNode(audioContext),
+        gainNode: new GainNode(audioContext),
+        bandpassNode: new BiquadFilterNode(audioContext),
         distortionNode: audioContext.createWaveShaper(),
-        lowpassNode: audioContext.createBiquadFilter(),
-        outputNode: audioContext.createGain(),
+        lowpassNode: new BiquadFilterNode(audioContext),
+        outputNode: new GainNode(audioContext),
         get gain() {
             return this.gainNode.gain;
         },
@@ -69,8 +69,7 @@ export default function distortion(event, initalClipping, initalGain, initalPost
         },
     };
 
-    // need to be done before createSlider as it reads it value
-    // TODO: Use it in visualisation. Also learn properly how this stuff works
+    // custom distortion drive attribute
     module.audioNode.distortionNode.drive = { value: drive };
 
     module.createSlider("gain", gain, 1, 20, 1, "", false, gainInfo);

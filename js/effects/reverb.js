@@ -12,11 +12,11 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     let module = new Module("reverb", true, false, false, irNames);
 
     module.audioNode = {
-        inputNode: audioContext.createGain(),
-        convolerNode: audioContext.createConvolver(),
-        wetnessNode: audioContext.createGain(),
-        drynessNode: audioContext.createGain(),
-        outputNode: audioContext.createGain(),
+        inputNode: new GainNode(audioContext),
+        convolerNode: new ConvolverNode(audioContext),
+        wetnessNode: new GainNode(audioContext),
+        drynessNode: new GainNode(audioContext),
+        outputNode: new GainNode(audioContext),
         get dryness() {
             return this.drynessNode.gain;
         },

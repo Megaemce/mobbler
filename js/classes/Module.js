@@ -382,7 +382,6 @@ export default class Module {
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
         // visualisation doesn't have audioNodes attached to sliders
-        // this will be probably fixed when I will cleanup visualisation object
         if (destinationModule.name === "visualisation") {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
@@ -422,12 +421,11 @@ export default class Module {
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
         if (slider && this.audioNode) {
             if (!slider.audioNode) {
-                slider.audioNode = audioContext.createAnalyser();
+                slider.audioNode = new AnalyserNode(audioContext);
                 slider.audioNode.fftSize = 32;
             }
 
-            // visualisation doesn't have proper audioNode parameters
-            // this will be probably fixed when I will cleanup visualisation object
+            // visualisation doesn't have proper audioNode parameters as they are not controlling audio
             if (destinationModule.name !== "visualisation") {
                 destinationModule.audioNode && this.audioNode.connect(destinationModule.audioNode[parameterType]);
             }

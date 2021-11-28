@@ -15,7 +15,7 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
     let module = new Module("analyser", true, false, false, analyserTypes);
 
     // set audioNode with inital values
-    module.audioNode = audioContext.createAnalyser();
+    module.audioNode = new AnalyserNode(audioContext);
     module.audioNode.maxDecibels = maxDecibels;
     module.audioNode.smoothingTimeConstant = smoothingTimeConstant;
 

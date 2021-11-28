@@ -6,7 +6,7 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     const depth = initalDepth || 0.002;
     const speed = initalSpeed || 0.25;
     const feedback = initalFeedback || 0.5;
-    const delayInfo = "Number of seconds from input signal to be storage and play back";
+    const delayInfo = "Affects the frequency range of the flanger's sweep by adjusting the initial delay time";
     const depthInfo = "Length of the effect";
     const speedInfo = "Frequency of oscillator that makes swirling sounds";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
@@ -14,12 +14,12 @@ export default function flanger(event, initalDelay, initalDepth, initalFeedback,
     let module = new Module("flanger", true, false, false, undefined);
 
     module.audioNode = {
-        inputNode: audioContext.createGain(),
-        depthNode: audioContext.createGain(),
-        feedbackNode: audioContext.createGain(),
-        delayNode: audioContext.createDelay(),
-        oscillatorNode: audioContext.createOscillator(),
-        outputNode: audioContext.createGain(),
+        inputNode: new GainNode(audioContext),
+        depthNode: new GainNode(audioContext),
+        feedbackNode: new GainNode(audioContext),
+        delayNode: new DelayNode(audioContext),
+        oscillatorNode: new OscillatorNode(audioContext),
+        outputNode: new GainNode(audioContext),
         get speed() {
             return this.oscillatorNode.frequency;
         },

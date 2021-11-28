@@ -8,10 +8,10 @@ export default function pannerTremolo(event, initalSpeed) {
     let module = new Module("panner tremolo", true, false, false, undefined, true);
 
     module.audioNode = {
-        inputNode: audioContext.createGain(),
-        pannerNode: audioContext.createStereoPanner(),
-        oscillatorNode: audioContext.createOscillator(),
-        outputNode: audioContext.createGain(),
+        inputNode: new GainNode(audioContext),
+        pannerNode: new StereoPannerNode(audioContext),
+        oscillatorNode: new OscillatorNode(audioContext),
+        outputNode: new GainNode(audioContext),
         get speed() {
             return this.oscillatorNode.frequency;
         },

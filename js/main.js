@@ -15,7 +15,7 @@ import gainTremolo from "./effects/gainTremolo.js";
 import pannerTremolo from "./effects/pannerTremolo.js";
 import output from "./effects/output.js";
 import visualisation from "./effects/visualisation.js";
-import panner from "./effects/panner.js";
+import stereoPanner from "./effects/stereoPanner.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
 
@@ -51,7 +51,7 @@ document.onmousemove = () => {
     document.getElementById("delay").addEventListener("mousedown", delay);
     document.getElementById("dynamicsCompressor").addEventListener("mousedown", dynamicsCompressor);
     document.getElementById("gain").addEventListener("mousedown", gain);
-    document.getElementById("panner").addEventListener("mousedown", panner);
+    document.getElementById("stereoPanner").addEventListener("mousedown", stereoPanner);
     document.getElementById("liveInput").addEventListener("mousedown", liveInput);
     document.getElementById("oscillator").addEventListener("mousedown", oscillator);
     document.getElementById("distortion").addEventListener("mousedown", distortion);

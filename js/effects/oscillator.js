@@ -38,7 +38,7 @@ export default function oscillator(event, initalFrequency, initalDetune) {
             module.isTransmitting = true;
             playButton.classList.add("switch-on");
 
-            module.audioNode = audioContext.createOscillator();
+            module.audioNode = new OscillatorNode(audioContext);
             module.audioNode.frequency.value = frequency;
             module.audioNode.detune.value = detune;
             module.audioNode.type = type;

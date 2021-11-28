@@ -15,7 +15,7 @@ export default function dynamicsCompressor(event, initalThreshold, initalKnee, i
 
     let module = new Module("dynamics compressor", true, false, false, undefined);
 
-    module.audioNode = audioContext.createDynamicsCompressor();
+    module.audioNode = new DynamicsCompressorNode(audioContext);
 
     module.createSlider("threshold", threshold, -36.0, 0.0, 0.01, "Db", false, thresholdInfo);
     module.createSlider("knee", knee, 0.0, 40.0, 0.01, "Db", false, kneeInfo);
