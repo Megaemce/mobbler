@@ -4,7 +4,7 @@ export default class Point {
         this.y = parseFloat(y || 0);
         this.mass = parseFloat(mass || 1.0);
         this.massInv = 1.0 / this.mass;
-        this.fixed = Boolean(fixed || false);
+        this.fixed = fixed || false;
     }
     moveTo(x, y) {
         this.x = x;

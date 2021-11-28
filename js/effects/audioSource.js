@@ -71,7 +71,7 @@ Module.prototype.stopSound = function () {
 };
 
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
-    const loop = Boolean(initalLoop || false);
+    const loop = initalLoop === undefined ? false : Boolean(initalLoop);
     const bufferName = String(initalBufferName || "guitar.ogg");
     const playbackRate = parseFloat(initalPlaybackRate || 1);
     const switchDiv = document.createElement("div");

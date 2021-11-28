@@ -12,10 +12,10 @@ export default class Module {
         this.name = name;
         this.zIndex = id;
         this.position = undefined; // module position
-        this.hasInput = Boolean(hasInput || true);
-        this.hasLooper = Boolean(hasLooper || false);
+        this.hasInput = hasInput === undefined ? true : Boolean(hasInput);
+        this.hasLooper = hasLooper === undefined ? false : Boolean(hasLooper);
         this.animationID = new Object(); // keep animationID of all parameters for Cable.deleteCable() function
-        this.hasNormalizer = Boolean(hasNormalizer || false);
+        this.hasNormalizer = hasNormalizer === undefined ? false : Boolean(hasNormalizer);
         this.isTransmitting = false;
         this.arrayForSelect = arrayForSelect;
         this.createModule(); // create html's object
