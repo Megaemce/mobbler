@@ -172,7 +172,7 @@ svg {
     align-content: center;
     justify-content: center;
     align-items: center;
-    padding-right: 3px;
+    padding: 3px;
     width: 10px;
     height: 10px;
 }
@@ -191,7 +191,7 @@ svg {
     border: none;
     cursor: pointer ;
 }
-.nav .nav-list .menu .submenu .submenu-list .submenu-item .form-help .help:hover {
+.nav .nav-list .menu .submenu .submenu-list .submenu-item .form-help:hover .help {
     filter: none;
     opacity: 1;
     width: 100%;
@@ -239,7 +239,7 @@ svg {
     display: flex;
     background: #f1f1f1;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     padding: 5px 10px;
     border-radius: 7px 5px 0 0 
 }

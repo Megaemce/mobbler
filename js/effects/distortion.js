@@ -63,7 +63,8 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
             this.distortionNode.curve = clippingTypes["Soft clipping"](value);
         },
         connect(destination) {
-            this.outputNode.connect(destination.inputNode ? destination.inputNode : destination);
+            if (destination.inputNode) this.outputNode.connect(destination.inputNode);
+            else this.outputNode.connect(destination);
         },
         disconnect() {
             this.outputNode.disconnect();

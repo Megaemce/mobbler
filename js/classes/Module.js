@@ -503,8 +503,6 @@ export default class Module {
                     ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
                     // contex grid is upside down so we substract from y value
                     ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
-                    if (!index === 0) ctx.moveTo(x, canvasHeight - barHeight / 2);
-                    else ctx.lineTo(x, canvasHeight - barHeight / 2);
                     x += barWidth + 1;
                 });
                 ctx.stroke();

@@ -36,7 +36,8 @@ export default function delayEffect(event, initalDelay, initalDryness, initalFee
             this.feedbackNode.gain.value = value;
         },
         connect(destination) {
-            this.outputNode.connect(destination.inputNode ? destination.inputNode : destination);
+            if (destination.inputNode) this.outputNode.connect(destination.inputNode);
+            else this.outputNode.connect(destination);
         },
         disconnect() {
             this.outputNode.disconnect();

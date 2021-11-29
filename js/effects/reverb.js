@@ -33,7 +33,8 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
             this.wetnessNode.gain.value = value;
         },
         connect(destination) {
-            this.outputNode.connect(destination.inputNode ? destination.inputNode : destination);
+            if (destination.inputNode) this.outputNode.connect(destination.inputNode);
+            else this.outputNode.connect(destination);
         },
         disconnect() {
             this.outputNode.disconnect();
