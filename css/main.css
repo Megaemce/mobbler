@@ -336,6 +336,14 @@ svg {
     min-height: 30px;
     border-radius: 0 0 10px 10px 
 }
+.module .content .microphone {
+    font-size: 38px;
+    transform: rotate(245deg);
+    -webkit-transform: rotate(245deg);
+    -moz-transform: rotate(245deg);
+    -ms-transform: rotate(245deg);
+    -o-transform: rotate(245deg);
+}
 .module .content .options {
     display: flex;
     min-height: 30px;
@@ -570,6 +578,10 @@ svg {
     position: absolute;
     right: -1px;
     transform: rotate(270deg) translate(50%, calc(var(--sliderWidth) / 2));
+    -webkit-transform:rotate(270deg) translate(50%, calc(var(--sliderWidth) / 2));
+    -moz-transform:rotate(270deg) translate(50%, calc(var(--sliderWidth) / 2));
+    -ms-transform:rotate(270deg) translate(50%, calc(var(--sliderWidth) / 2));
+    -o-transform:rotate(270deg) translate(50%, calc(var(--sliderWidth) / 2));
     bottom: 0 
 }
 .module .content .controllers .sliders .slider .input-wrapper input[type="range"].disabled {

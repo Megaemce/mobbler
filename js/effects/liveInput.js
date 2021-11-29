@@ -6,6 +6,8 @@ function gotStream(stream) {
     this.audioNode = audioContext.createMediaStreamSource(stream);
 }
 export default function liveInput(event) {
+    const mic = document.createTextNode("🎤");
+    const span = document.createElement("span");
     const module = new Module("live input", false, false, false, undefined);
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -31,6 +33,10 @@ export default function liveInput(event) {
 
     module.isTransmitting = true;
     module.markAllLinkedCablesAs("active");
+
+    span.appendChild(mic);
+    span.classList = "microphone";
+    module.content.appendChild(span);
 
     // only one liveInput possible per project
     const liveInputButton = document.getElementById("liveInput");
