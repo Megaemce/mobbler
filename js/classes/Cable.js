@@ -293,7 +293,9 @@ export default class Cable {
                 // multiNode supports disconnect function but can't return proper value on <AudioNode>.disconnect(<multiNode>)
                 if (destination.audioNode.inputNode) source.audioNode.disconnect(destination.audioNode.inputNode);
                 else source.audioNode.disconnect(destination.audioNode);
-            } catch (error) {}
+            } catch (error) {
+                console.log(`Cannot disconnect ${source.name} and ${destination.name} as they are not connected anymore`);
+            }
         }
 
         // send further info that this cable is deactived (if this is not an inital cable)
