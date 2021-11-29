@@ -270,7 +270,7 @@ export default class Cable {
     deleteCable() {
         const cable = this; // current cable
         const source = this.source; // source module
-        const destination = this.destination; // destination module
+        const destination = this.destination;
 
         // fold the cable back to module's top right corner and remove it
         cable.shape.appendChild(cable.shape.foldAnimation);
@@ -293,9 +293,7 @@ export default class Cable {
                 // multiNode supports disconnect function but can't return proper value on <AudioNode>.disconnect(<multiNode>)
                 if (destination.audioNode.inputNode) source.audioNode.disconnect(destination.audioNode.inputNode);
                 else source.audioNode.disconnect(destination.audioNode);
-            } catch (error) {
-                console.log(`Cannot disconnect ${source.name} and ${destination.name} as they are not connected anymore`);
-            }
+            } catch (error) {}
         }
 
         // send further info that this cable is deactived (if this is not an inital cable)

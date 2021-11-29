@@ -338,7 +338,9 @@ export default class Module {
     connectToModule(destinationModule) {
         // if source module is multiNode effect act differently
         const source = this.audioNode;
-        const destination = destinationModule.audioNode.inputNode ? destinationModule.audioNode.inputNode : destinationModule.audioNode;
+        let destination = undefined;
+        if (destinationModule.audioNode.inputNode) destination = destinationModule.audioNode.inputNode;
+        else destination = destinationModule.audioNode;
 
         // if this module is transmitting make connection and mark further cables as active
         source && destination && source.connect(destination);

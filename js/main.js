@@ -21,8 +21,8 @@ import { createSelectionRectangle } from "./helpers/builders.js";
 
 // set all the initial variables
 export let audioContext;
-export let cables = new Object(); // keep all cables
-export let modules = new Object(); // keep all modules
+export let cables = {}; // keep all cables
+export let modules = {}; // keep all modules
 export { audioSource as audioSource };
 
 const sounds = ["classic_guitar.wav", "diminished_slide.wav", "drums.mp3", "male_voice.wav", "melody.wav", "saxophone.wav", "stringbass.wav", "white_noise.wav"];
