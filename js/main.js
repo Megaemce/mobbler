@@ -34,7 +34,7 @@ const impulseResponses = ["IR_cathedral.wav", "IR_church.wav", "IR_room.wav", "I
 // };
 
 // start audio with user interaction (chrome policy)
-document.onmousedown = () => {
+document.onmousemove = () => {
     try {
         audioContext = new AudioContext();
     } catch (e) {
@@ -44,28 +44,28 @@ document.onmousedown = () => {
     loadFilesIntoAudioContext(sounds, true);
     loadFilesIntoAudioContext(impulseResponses, false);
 
-    document.getElementById("analyser").addEventListener("mousedown", analyser);
-    document.getElementById("audioSource").addEventListener("mousedown", audioSource);
-    document.getElementById("biquadFilter").addEventListener("mousedown", biquadFilter);
-    document.getElementById("convolver").addEventListener("mousedown", convolver);
-    document.getElementById("delay").addEventListener("mousedown", delay);
-    document.getElementById("dynamicsCompressor").addEventListener("mousedown", dynamicsCompressor);
-    document.getElementById("gain").addEventListener("mousedown", gain);
-    document.getElementById("stereoPanner").addEventListener("mousedown", stereoPanner);
-    document.getElementById("liveInput").addEventListener("mousedown", liveInput);
-    document.getElementById("oscillator").addEventListener("mousedown", oscillator);
-    document.getElementById("distortion").addEventListener("mousedown", distortion);
-    document.getElementById("delayEffect").addEventListener("mousedown", delayEffect);
-    document.getElementById("flanger").addEventListener("mousedown", flanger);
-    document.getElementById("reverb").addEventListener("mousedown", reverb);
-    document.getElementById("gainTremolo").addEventListener("mousedown", gainTremolo);
-    document.getElementById("pannerTremolo").addEventListener("mousedown", pannerTremolo);
-    document.getElementById("output").addEventListener("mousedown", output);
-    document.getElementById("visualisation").addEventListener("mousedown", visualisation);
-    // preventing enter key from adding space in name/parameter edition
-    document.onkeydown = (event) => {
-        event.key === "Enter" && event.preventDefault();
-    };
-    // remove hook from svg
-    document.onmousedown = undefined;
+    document.onmousemove = undefined;
+};
+
+document.getElementById("analyser").addEventListener("mousedown", analyser);
+document.getElementById("audioSource").addEventListener("mousedown", audioSource);
+document.getElementById("biquadFilter").addEventListener("mousedown", biquadFilter);
+document.getElementById("convolver").addEventListener("mousedown", convolver);
+document.getElementById("delay").addEventListener("mousedown", delay);
+document.getElementById("dynamicsCompressor").addEventListener("mousedown", dynamicsCompressor);
+document.getElementById("gain").addEventListener("mousedown", gain);
+document.getElementById("stereoPanner").addEventListener("mousedown", stereoPanner);
+document.getElementById("liveInput").addEventListener("mousedown", liveInput);
+document.getElementById("oscillator").addEventListener("mousedown", oscillator);
+document.getElementById("distortion").addEventListener("mousedown", distortion);
+document.getElementById("delayEffect").addEventListener("mousedown", delayEffect);
+document.getElementById("flanger").addEventListener("mousedown", flanger);
+document.getElementById("reverb").addEventListener("mousedown", reverb);
+document.getElementById("gainTremolo").addEventListener("mousedown", gainTremolo);
+document.getElementById("pannerTremolo").addEventListener("mousedown", pannerTremolo);
+document.getElementById("output").addEventListener("mousedown", output);
+document.getElementById("visualisation").addEventListener("mousedown", visualisation);
+// preventing enter key from adding space in name/parameter edition
+document.onkeydown = (event) => {
+    event.key === "Enter" && event.preventDefault();
 };
