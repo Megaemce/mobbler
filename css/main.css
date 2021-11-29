@@ -151,6 +151,44 @@ svg {
     border-width: 9px;
     margin-left: 5px 
 }
+.nav .nav-list .menu .submenu .submenu-list .submenu-item {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav .nav-list .menu .submenu .submenu-list .submenu-item form {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    padding-right: 3px;
+    width: 10px;
+    height: 10px;
+}
+
+.nav .nav-list .menu .submenu .submenu-list .submenu-item form .help {
+    background:url('/img/help.svg') no-repeat center center;
+    background-size: contain; 
+    filter: brightness(0) contrast(0.1);
+    opacity: 0.5;
+    width: 7px;
+    height: 7px;
+    -webkit-transition: filter,width,height 0.2s;
+    -moz-transition: filter,width,height 0.2s;
+    -o-transition: filter,width,height 0.2s;
+    transition: filter,width,height 0.2s;
+    border: none;
+    cursor: pointer ;
+}
+.nav .nav-list .menu .submenu .submenu-list .submenu-item form .help:hover {
+    filter: none;
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+}
 .nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button, .tutorial {
     background: #fff;
     font-size: .625em;
@@ -161,8 +199,8 @@ svg {
     padding: 0.8em;
     cursor: pointer 
 }
-.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button:hover, .tutorial:hover {
-    background: rgb(219, 219, 219) 
+.nav .nav-list .menu .submenu .submenu-list .submenu-item .submenu-button:hover, .tutorial:hover, .help:hover {
+    background: linear-gradient(90deg, rgba(219,219,219,1) 0%, rgba(219,219,219,1) 50%, rgba(255,255,255,1) 100%)
 }
 .nav .nav-list .menu .submenu .submenu-list .submenu-item .tutorial {
     border: none;
