@@ -625,6 +625,17 @@ Made in vanilla JavaScript as my first big project to get thorough knowledge of 
 Due to the mouse-related handlers solution doesn't work properly with touch (mobiles/tablets). <br>
 It was developed for Chrome browser however seems to be working fine on Firefox and Egde too.
 
+This solution wouldn't be possible to create without those people:
+- [Matt McKegg](https://github.com/mmckegg) - author of amazing [web-audio-school](http://mmckegg.github.io/web-audio-school/)
+- [Chris Wilson](https://github.com/cwilso) - webAudioAPI guru with his amazing tutorials (just [one example](https://blog.chrislowis.co.uk/2013/06/17/synthesis-web-audio-api-envelopes.html))
+- [Sam Bellen](https://github.com/Sambego) - role model for proper multiAudioNode handling and one of the first who started the fire
+- [Oskar Eriksson](https://github.com/Theodeus) - creator of Tuna.js
+- [Tero Parviainen](https://github.com/teropa) - creator of amazing webAudioAPI [tutorials](https://teropa.info/blog/2016/08/19/what-is-the-web-audio-api.html)
+ 
+**Thank you 👋**
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+
+
+
 
