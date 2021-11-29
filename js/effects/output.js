@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import { displayAlertOnElement } from "../helpers/builders.js";
 import { audioContext } from "../main.js";
 
 export default function output(event) {
@@ -11,9 +12,13 @@ export default function output(event) {
     module.audioNode = audioContext.destination;
 
     // only one output possible thus hide output button
-    document.getElementById("output").style.display = "none";
+    const outputSubMenuButton = document.getElementById("output");
+    outputSubMenuButton.style.cursor = "not-allowed";
+    outputSubMenuButton.onmouseover = () => {
+        displayAlertOnElement("Only one output per project", outputSubMenuButton);
+    };
 
     module.onDeletion = () => {
-        document.getElementById("output").style.display = "block";
+        outputSubMenuButton.style.cursor = "pointer";
     };
 }
