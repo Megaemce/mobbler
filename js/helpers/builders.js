@@ -27,7 +27,7 @@ export function addOpenFileButtonTo(selectDiv) {
 
 export function displayAlertOnElement(message, element, timeInSec) {
     const span = document.createElement("span");
-    const time = parseFloat(timeInSec * 1000 || 1000);
+    const time = timeInSec === undefined ? 1000 : parseFloat(timeInSec) * 1000;
 
     span.className = "alertText";
     span.innerHTML = message;
