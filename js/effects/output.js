@@ -14,6 +14,7 @@ export default function output(event) {
     // only one output possible per project
     const outputButton = document.getElementById("output");
     outputButton.style.cursor = "not-allowed";
+    outputButton.removeEventListener("mousedown");
     outputButton.onmouseover = () => {
         displayAlertOnElement("Only one output per project", outputButton);
     };
@@ -21,5 +22,6 @@ export default function output(event) {
     module.onDeletion = () => {
         outputButton.style.cursor = "pointer";
         outputButton.onmouseover = undefined;
+        outputButton.addEventListener("mousedown", output);
     };
 }

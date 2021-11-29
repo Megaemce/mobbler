@@ -202,13 +202,13 @@ export default class Cable {
             // replace inital cable with a new one
             source.addInitalCable();
 
+            cable.shape.onmouseover = () => {
+                cable.shape.style.cursor = "url(/img/scissors.svg) 5 3, move";
+            };
+
             // only when shape is created enable removal
             cable.shape.onclick = () => {
                 cable.deleteCable();
-            };
-
-            cable.shape.onmouseover = () => {
-                cable.shape.style.cursor = "no-drop";
             };
 
             // if it's an input's image go up to the wrapper
