@@ -78,21 +78,21 @@ export function createSelectionRectangle(event) {
 }
 
 export function buildModule(module) {
-    const modulesDiv = document.getElementById("modules");
-    const moduleDiv = document.createElement("div");
     const head = document.createElement("div");
-    const titleWrapper = document.createElement("div");
-    const title = document.createElement("span");
-    const buttons = document.createElement("div");
     const close = document.createElement("button");
+    const title = document.createElement("span");
+    const footer = document.createElement("footer");
     const content = document.createElement("div");
     const options = document.createElement("div");
-    const controllers = document.createElement("div");
+    const buttons = document.createElement("div");
     const leftSide = document.createElement("div");
     const frontSide = document.createElement("div");
-    const leftAndFrontSide = document.createElement("div");
-    const footer = document.createElement("footer");
+    const moduleDiv = document.createElement("div");
+    const modulesDiv = document.getElementById("modules");
+    const controllers = document.createElement("div");
+    const titleWrapper = document.createElement("div");
     const moduleNumber = parseInt(module.id.slice(7, module.id.length));
+    const leftAndFrontSide = document.createElement("div");
 
     module.div = moduleDiv;
     module.div.id = module.id;
@@ -254,29 +254,29 @@ export function buildModule(module) {
 }
 
 export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
-    const parameterType = property.split(" ").join("");
-    const sliderDiv = document.createElement("div");
+    const unit = document.createElement("span");
     const info = document.createElement("div");
+    const value = document.createElement("span");
     const label = document.createElement("div");
+    const slider = document.createElement("input");
+    const sliderDiv = document.createElement("div");
+    const valueUnit = document.createElement("div");
     const labelSpan = document.createElement("span");
     const labelInfo = document.createElement("span");
-    const value = document.createElement("span");
-    const unit = document.createElement("span");
-    const valueUnit = document.createElement("div");
-    const slider = document.createElement("input");
-    const sliderWraper = document.createElement("div");
+    const debugValue = document.createElement("span");
+    const audioParam = document.createElement("div");
     const sliderDebug = document.createElement("div");
+    const sliderWraper = document.createElement("div");
+    const parameterImg = document.createElement("img");
+    const debugValueDiv = document.createElement("div");
+    const parameterType = property.split(" ").join("");
     const debugValueMin = document.createElement("span");
     const debugValueMax = document.createElement("span");
     const debugValueStep = document.createElement("span");
-    const debugValue = document.createElement("span");
+    const debugHideButton = document.createElement("button");
     const debugValueMinDiv = document.createElement("div");
     const debugValueMaxDiv = document.createElement("div");
     const debugValueStepDiv = document.createElement("div");
-    const debugValueDiv = document.createElement("div");
-    const debugHideButton = document.createElement("button");
-    const audioParam = document.createElement("div");
-    const parameterImg = document.createElement("img");
 
     // module.content.controllers.$parameterType.info.label.tooltip
     // module.controllers[$parameterType].info.label.tooltip
@@ -329,25 +329,25 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     // set inital value to the correct position before user starts to play
     slider.value = scaleLog ? valueToLogPosition(initialValue, min, max) : parseFloat(initialValue);
 
+    debugValueDiv.className = "debug-text";
     debugValueMinDiv.className = "debug-text";
     debugValueMaxDiv.className = "debug-text";
     debugValueStepDiv.className = "debug-text";
-    debugValueDiv.className = "debug-text";
 
+    debugValueDiv.appendChild(document.createTextNode("Current: "));
     debugValueMinDiv.appendChild(document.createTextNode("Min: "));
     debugValueMaxDiv.appendChild(document.createTextNode("Max: "));
     debugValueStepDiv.appendChild(document.createTextNode("Step: "));
-    debugValueDiv.appendChild(document.createTextNode("Current: "));
 
+    debugValue.appendChild(document.createTextNode(scaleLog ? parseFloat(initialValue) : slider.value));
     debugValueMin.appendChild(document.createTextNode(slider.min));
     debugValueMax.appendChild(document.createTextNode(slider.max));
     debugValueStep.appendChild(document.createTextNode(slider.step));
-    debugValue.appendChild(document.createTextNode(scaleLog ? parseFloat(initialValue) : slider.value));
 
+    debugValue.setAttribute("contenteditable", true);
     debugValueMin.setAttribute("contenteditable", true);
     debugValueMax.setAttribute("contenteditable", true);
     debugValueStep.setAttribute("contenteditable", true);
-    debugValue.setAttribute("contenteditable", true);
 
     debugValueMin.oninput = () => {
         slider.min = parseFloat(debugValueMin.innerText);
@@ -366,10 +366,10 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
         if (module.audioNode) module.audioNode[parameterType].value = slider.value;
     };
 
+    debugValueDiv.appendChild(debugValue);
     debugValueMinDiv.appendChild(debugValueMin);
     debugValueMaxDiv.appendChild(debugValueMax);
     debugValueStepDiv.appendChild(debugValueStep);
-    debugValueDiv.appendChild(debugValue);
 
     debugHideButton.className = "hide-button";
     debugHideButton.onclick = () => {
@@ -431,12 +431,12 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
 }
 
 export function buildCable(cable) {
+    const svg = document.getElementById("svgCanvas");
     const xPosition = parseFloat(cable.source.modulePosition.right);
     const yPosition = parseFloat(cable.source.modulePosition.top) + 10;
     const shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
     const shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
     const jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
-    const svg = document.getElementById("svgCanvas");
 
     cable.jack.setAttribute("href", "./img/jack.svg");
     cable.jack.setAttribute("height", "9");

@@ -2,9 +2,9 @@ export default class Line {
     constructor(pointA, pointB, restLength, strength) {
         this.pointA = pointA;
         this.pointB = pointB;
-        this.restLength = parseFloat(restLength || 10);
-        this.strength = parseFloat(strength || 1.0);
         this.gravity = false;
+        this.strength = strength === undefined ? 1.0 : strength;
+        this.restLength = restLength === undefined ? 10 : restLength;
     }
     update() {
         // Compute desired force

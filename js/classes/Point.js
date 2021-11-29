@@ -1,10 +1,10 @@
 export default class Point {
     constructor(x, y, mass, fixed) {
-        this.x = parseFloat(x || 0);
-        this.y = parseFloat(y || 0);
-        this.mass = parseFloat(mass || 1.0);
+        this.x = x === undefined ? 0 : x;
+        this.y = y === undefined ? 0 : y;
+        this.mass = mass === undefined ? 1.0 : mass;
         this.massInv = 1.0 / this.mass;
-        this.fixed = fixed || false;
+        this.fixed = fixed === undefined ? false : fixed;
     }
     moveTo(x, y) {
         this.x = x;

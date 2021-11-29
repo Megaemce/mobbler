@@ -67,7 +67,6 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
             else this.outputNode.connect(destination);
         },
         disconnect() {
-            console.log("wywolanie disconnecta");
             this.outputNode.disconnect();
         },
     };
