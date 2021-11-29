@@ -202,7 +202,7 @@ Parameters:
 <table>
 <tr>
 <td>
-<img src=""/>
+<img src="https://user-images.githubusercontent.com/1651451/143884622-f2e4f458-95fa-4775-8085-f06d5ce77bc2.png"/>
 </td>
 <td>
 Description:
