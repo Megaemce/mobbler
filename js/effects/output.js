@@ -11,14 +11,15 @@ export default function output(event) {
 
     module.audioNode = audioContext.destination;
 
-    // only one output possible thus hide output button
-    const outputSubMenuButton = document.getElementById("output");
-    outputSubMenuButton.style.cursor = "not-allowed";
-    outputSubMenuButton.onmouseover = () => {
-        displayAlertOnElement("Only one output per project", outputSubMenuButton);
+    // only one output possible per project
+    const outputButton = document.getElementById("output");
+    outputButton.style.cursor = "not-allowed";
+    outputButton.onmouseover = () => {
+        displayAlertOnElement("Only one output per project", outputButton);
     };
 
     module.onDeletion = () => {
-        outputSubMenuButton.style.cursor = "pointer";
+        outputButton.style.cursor = "pointer";
+        outputButton.onmouseover = undefined;
     };
 }

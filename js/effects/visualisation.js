@@ -55,10 +55,15 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
         module.audioNode.type = this.value;
     };
 
-    // only one visual possible thus hide output submenu button
-    document.getElementById("visualisation").style.display = "none";
+    // only one output possible per project
+    const visualisationButton = document.getElementById("visualisation");
+    visualisationButton.style.cursor = "not-allowed";
+    visualisationButton.onmouseover = () => {
+        displayAlertOnElement("Only one visualisation per project", visualisationButton);
+    };
 
     module.onDeletion = () => {
-        document.getElementById("visualisation").style.display = "block";
+        visualisationButton.style.cursor = "pointer";
+        visualisationButton.onmouseover = undefined;
     };
 }
