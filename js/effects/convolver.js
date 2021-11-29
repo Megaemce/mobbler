@@ -4,7 +4,7 @@ import { openFileHandler } from "../helpers/loaders.js";
 
 export default function convolver(event, initalBufferName, initalNormalizer) {
     const irNames = Object.keys(audioContext.nameIRBuffer);
-    const bufferName = String(initalBufferName || irNames[0]);
+    const bufferName = String(initalBufferName || "IR_forest.wav");
     const normalizer = initalNormalizer === undefined ? false : Boolean(initalNormalizer);
 
     const module = new Module("convolver", true, false, true, irNames);
@@ -17,6 +17,8 @@ export default function convolver(event, initalBufferName, initalNormalizer) {
 
     // after this openFile will be accessible via module.content.options.select.fileButton
     module.addOpenFileTo(module.content.options.select);
+
+    module.content.options.select.value = bufferName;
 
     module.content.options.select.onchange = function (event) {
         // when new option is added (eg. after new file loaded) this onchange event get trigger too

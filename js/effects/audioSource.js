@@ -73,7 +73,7 @@ Module.prototype.stopSound = function () {
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
     const loop = initalLoop === undefined ? false : Boolean(initalLoop);
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
-    const bufferName = String(initalBufferName || soundNames[5]);
+    const bufferName = String(initalBufferName || "classic_guitar.wav");
     const playbackRate = parseFloat(initalPlaybackRate || 1);
     const switchDiv = document.createElement("div");
     const playButton = document.createElement("button");
@@ -102,7 +102,7 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     // after this openFile will be accessible via module.content.options.select.fileButton
     module.addOpenFileTo(module.content.options.select);
 
-    module.content.options.select.value = bufferName;
+    module.content.options.select.value = "classic_guitar.wav";
 
     // when select changes
     module.content.options.select.onchange = function (event) {
