@@ -1,6 +1,6 @@
 import Module from "../classes/Module.js";
-import { displayAlertOnElement } from "../helpers/builders.js";
 import { audioContext } from "../main.js";
+import { displayAlertOnElement } from "../helpers/builders.js";
 
 export default function output(event) {
     const speakerImg = document.createElement("img");
@@ -14,7 +14,7 @@ export default function output(event) {
     // only one output possible per project
     const outputButton = document.getElementById("output");
     outputButton.style.cursor = "not-allowed";
-    outputButton.removeEventListener("mousedown");
+    outputButton.removeEventListener("mousedown", output);
     outputButton.onmouseover = () => {
         displayAlertOnElement("Only one output per project", outputButton);
     };

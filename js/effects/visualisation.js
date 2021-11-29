@@ -1,5 +1,6 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
+import { displayAlertOnElement } from "../helpers/builders.js";
 
 export default function visualisation(event, initalZoom, initalColor, initalLineWidth, initalLineLength, initalSymmetries, initalScaleDivider) {
     const zoom = parseFloat(initalZoom || 1);
@@ -58,7 +59,7 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     // only one output possible per project
     const visualisationButton = document.getElementById("visualisation");
     visualisationButton.style.cursor = "not-allowed";
-    visualisationButton.onmousedown = undefined;
+    visualisationButton.removeEventListener("mousedown", visualisation);
     visualisationButton.onmouseover = () => {
         displayAlertOnElement("Only one visualisation per project", visualisationButton);
     };
