@@ -26,20 +26,25 @@ export function addOpenFileButtonTo(selectDiv) {
 }
 
 export function displayAlertOnElement(message, element, timeInSec) {
-    const span = document.createElement("span");
     const time = timeInSec === undefined ? 1000 : parseFloat(timeInSec) * 1000;
+    let span;
+    if (element.getElementsByClassName("alertText")[0]) {
+        span = element.getElementsByClassName("alertText")[0];
+        span.style.visibility = "visible";
+        span.style.opacity = "1";
+    } else {
+        span = document.createElement("span");
 
-    span.className = "alertText";
-    span.innerHTML = message;
+        span.className = "alertText";
+        span.innerHTML = message;
 
-    element.classList.add("alert");
-    element.appendChild(span);
+        element.classList.add("alert");
+        element.appendChild(span);
+    }
 
     setTimeout(() => {
         span.style.visibility = "hidden";
         span.style.opacity = "0";
-        element.removeChild(span);
-        element.classList.remove("alert");
     }, time);
 }
 

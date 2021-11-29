@@ -5,7 +5,7 @@ import { displayAlertOnElement } from "../helpers/builders.js";
 export default function visualisation(event, initalZoom, initalColor, initalLineWidth, initalLineLength, initalSymmetries, initalScaleDivider) {
     const zoom = parseFloat(initalZoom || 1);
     const color = parseFloat(initalColor || 180);
-    const lineWidth = parseFloat(initalLineWidth || 50);
+    const lineWidth = parseFloat(initalLineWidth || 1);
     const lineLength = parseFloat(initalLineLength || 3.5);
     const symmetries = parseFloat(initalSymmetries || 6);
     const scaleDivider = parseFloat(initalScaleDivider || 1);
