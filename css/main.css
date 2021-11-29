@@ -36,7 +36,7 @@ html, button, input, select, textarea {
 body {
     font-size: 1em;
     line-height: 1.4;
-    background: url('../img/background.svg') 
+    background: url('https://megaemce.github.io/mobbler/img/background.svg');
 }
 svg {
     width: 100%;

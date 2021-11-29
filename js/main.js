@@ -34,7 +34,7 @@ const impulseResponses = ["IR_cathedral.wav", "IR_church.wav", "IR_room.wav", "I
 // };
 
 // start audio with user interaction (chrome policy)
-document.onmousemove = () => {
+document.onmousedown = () => {
     try {
         audioContext = new AudioContext();
     } catch (e) {
@@ -67,5 +67,5 @@ document.onmousemove = () => {
         event.key === "Enter" && event.preventDefault();
     };
     // remove hook from svg
-    document.onmousemove = undefined;
+    document.onmousedown = undefined;
 };
