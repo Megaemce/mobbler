@@ -36,7 +36,7 @@ html, button, input, select, textarea {
 body {
     font-size: 1em;
     line-height: 1.4;
-    background: url('../img/background_main.svg') 
+    background: url('../img/background.svg') 
 }
 svg {
     width: 100%;
@@ -388,11 +388,14 @@ svg {
 }
 
 .module .content .controllers .analyser {
-    background-image: url('../img/background.svg');
+    background-image: url('../img/background_analyser.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
     margin: 5px 
+}
+.module .content .controllers .analyser.visualisation {
+    background-image: url('../img/background_visualisation.svg');
 }
 .module .content .controllers .analyser canvas {
     margin: 5px 5px 0 0;

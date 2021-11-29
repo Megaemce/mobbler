@@ -571,6 +571,9 @@ export default class Module {
               0 ┼───FrequencyData──┬›                    └                     ┘
                 0               24000Hz
              */
+            module.content.controllers.canvasDiv.classList.add("visualisation"); // white background
+
+            // fullscreen exiting handlers
             document.addEventListener("fullscreenchange", exitHandler);
             document.addEventListener("webkitfullscreenchange", exitHandler);
             document.addEventListener("mozfullscreenchange", exitHandler);
@@ -592,7 +595,6 @@ export default class Module {
                 canvas.height = window.screen.height;
             };
 
-            module.audioNode.fftSize = 64;
             const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
             const dataArrayBars = new Uint8Array(bufferLength);
             const dataArrayWave = new Uint8Array(bufferLength);

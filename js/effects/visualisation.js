@@ -31,7 +31,7 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     module.head.buttonsWrapper.maximize = maximizeButton;
 
     // custom attributes
-    module.audioNode = new AnalyserNode(audioContext);
+    module.audioNode = new AnalyserNode(audioContext, { fftSize: 64 });
     module.audioNode.type = "wave";
     module.audioNode.zoom = { value: zoom };
     module.audioNode.color = { value: color };
