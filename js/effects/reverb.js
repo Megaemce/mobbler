@@ -53,7 +53,7 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     // after this openFile will be accessible via module.content.options.select.fileButton
     module.addOpenFileTo(module.content.options.select);
 
-    module.connect.options.select.value = bufferName;
+    module.content.options.select.value = bufferName;
 
     module.content.options.select.onchange = function (event) {
         // when new option is added (eg. after new file loaded) this onchange event get trigger too
