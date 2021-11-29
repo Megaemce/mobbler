@@ -210,7 +210,7 @@ export function buildModule(module) {
         const img = document.createElement("img");
 
         // keep info about parent and type in image and it's wrapper for movingCable function
-        img.src = "../img/input.svg";
+        img.src = "./img/input.svg";
         img.parentModule = module;
         img.inputName = "input";
 

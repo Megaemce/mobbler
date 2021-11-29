@@ -178,7 +178,7 @@ svg {
 }
 
 .nav .nav-list .menu .submenu .submenu-list .submenu-item .form-help .help {
-    background:url('/img/help.svg') no-repeat center center;
+    background: url('../img/help.svg') no-repeat center center;
     background-size: contain; 
     filter: brightness(0) contrast(0.1);
     opacity: 0.5;
@@ -467,7 +467,7 @@ svg {
     padding-bottom: 2px;
 }
 .module .content .controllers .sliders .slider-debug .hide-button {
-    background-image: url(../img/hide.svg);
+    background-image: url('../img/hide.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -604,7 +604,7 @@ svg {
     width: 32px;
     height: 32px;
     cursor: pointer;
-    background-image: url(../img/slider.svg);
+    background-image: url('../img/slider.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain 
@@ -618,7 +618,7 @@ svg {
     width: 32px;
     height: 32px;
     cursor: pointer;
-    background-image: url(../img/slider.svg);
+    background-image: url('../img/slider.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain 
