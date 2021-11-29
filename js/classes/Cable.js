@@ -203,7 +203,7 @@ export default class Cable {
             source.addInitalCable();
 
             cable.shape.onmouseover = () => {
-                cable.shape.style.cursor = "url(/img/scissors.svg) 5 3, move";
+                cable.shape.style.cursor = "url('../img/scissors.svg') 5 3, move";
             };
 
             // only when shape is created enable removal
