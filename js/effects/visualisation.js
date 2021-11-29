@@ -9,7 +9,7 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     const lineLength = parseFloat(initalLineLength || 3.5);
     const symmetries = parseFloat(initalSymmetries || 6);
     const scaleDivider = parseFloat(initalScaleDivider || 1);
-    const lineCreatorTypes = ["bands", "wave"];
+    const lineCreatorTypes = ["create lines from frequencies chart", "create lines from time domain chart"];
     const zoomInfo = "Canvas zoom volume for new lines";
     const colorInfo = "Line color in HSL";
     const lineWidthInfo = "Line width in pixels";
@@ -32,7 +32,7 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
 
     // custom attributes
     module.audioNode = new AnalyserNode(audioContext, { fftSize: 64 });
-    module.audioNode.type = "wave";
+    module.audioNode.type = lineCreatorTypes[0];
     module.audioNode.zoom = { value: zoom };
     module.audioNode.color = { value: color };
     module.audioNode.lineWidth = { value: lineWidth };
@@ -51,7 +51,7 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
 
     module.content.controllers.classList.add("visualisation");
 
-    module.content.options.select.value = "wave";
+    module.content.options.select.value = lineCreatorTypes[0];
     module.content.options.select.onchange = function () {
         module.audioNode.type = this.value;
     };

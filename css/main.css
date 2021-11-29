@@ -333,6 +333,7 @@ svg {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    min-height: 30px;
     border-radius: 0 0 10px 10px 
 }
 .module .content .options {

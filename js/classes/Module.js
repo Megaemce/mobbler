@@ -552,7 +552,7 @@ export default class Module {
             drawWave();
         }
         if (style === "free") {
-            /*                                  Mode "bands"
+            /*                                  Mode "create lines from frequencies chart"
                 ꞈ                                                             
             256 ┤                                        ┌                     ┐
                 │՝·¸                                        ՝·¸    ¸·¸      ¸.¸         duplicate k-time
@@ -561,7 +561,7 @@ export default class Module {
                 │                                          ·՜                         
               0 ┼──TimeDomainData──┬›                    └                     ┘            
                 0                 ∞ sec    
-                                                Mode "wave"
+                                                Mode "create lines from time domain chart"
                 ꞈ
             256 ┤╥                                       ┌                     ┐
                 │║ ╥     ╥╥                                ՝·¸    ¸·¸      ¸.¸         duplicate k-time
@@ -608,11 +608,11 @@ export default class Module {
 
                 // data returned in dataArrayBars will be in range [0-255]
                 if (module.audioNode) {
-                    if (module.audioNode.type === "bands") {
+                    if (module.audioNode.type === "create lines from frequencies chart") {
                         module.audioNode.getByteFrequencyData(dataArrayBars);
                         dataArray = dataArrayBars;
                     }
-                    if (module.audioNode.type === "wave") {
+                    if (module.audioNode.type === "create lines from time domain chart") {
                         module.audioNode.getByteTimeDomainData(dataArrayWave);
                         dataArray = dataArrayWave;
                     }

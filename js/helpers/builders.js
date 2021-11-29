@@ -38,8 +38,8 @@ export function displayAlertOnElement(message, element, timeInSec) {
     setTimeout(() => {
         span.style.visibility = "hidden";
         span.style.opacity = "0";
-        element.classList.remove("alert");
         element.removeChild(span);
+        element.classList.remove("alert");
     }, time);
 }
 
