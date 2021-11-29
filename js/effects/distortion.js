@@ -22,7 +22,7 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
     const drive = parseFloat(initalDrive || 0.2);
     const precut = parseFloat(initalPrecut || 800);
     const postcut = parseFloat(initalPostcut || 3000);
-    const clipping = initalClipping || clippingTypes["Soft clipping"](drive);
+    const clipping = initalClipping || clippingTypes["Hard clipping"](drive);
     const gainInfo = "Multiplication of sound volume";
     const driveInfo = "Overdrive amount. Only in soft clipping";
     const precutInfo = "Pre-distortion bandpass filter frequency";
@@ -84,7 +84,7 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
     module.audioNode.distortionNode.connect(module.audioNode.lowpassNode);
     module.audioNode.lowpassNode.connect(module.audioNode.outputNode);
 
-    module.content.options.select.value = "Soft clipping";
+    module.content.options.select.value = "Hard clipping";
 
     module.content.options.select.onchange = function () {
         if (this.value === "Soft clipping") {
