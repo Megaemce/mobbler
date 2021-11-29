@@ -6,7 +6,7 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     const irNames = Object.keys(audioContext.nameIRBuffer);
     const dryness = parseFloat(initalDryness || 0.5);
     const wetness = parseFloat(initalWetness || 1);
-    const bufferName = String(initalBufferName || irNames[1]);
+    const bufferName = String(initalBufferName || irNames[0]);
     const drynessInfo = "Loudness of signal without any signal processing";
     const wetnessInfo = "Loudness of signal with full amount of an effect";
 

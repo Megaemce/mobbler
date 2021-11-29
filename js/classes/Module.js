@@ -232,7 +232,7 @@ export default class Module {
     }
     /* all logic related to module movement event */
     movingModule(event) {
-        const module = module;
+        const module = this;
         const canvas = document.getElementById("svgCanvas");
         const initalCableModules = Object.values(modules).filter((module) => module.initalCable);
 
@@ -331,7 +331,7 @@ export default class Module {
         module.audioNode && module.audioNode.disconnect();
 
         // remove object
-        delete module;
+        delete this;
     }
     /* connect this module to destinationModule and send information further. 
        destinationModule is always audioNode-enabled */

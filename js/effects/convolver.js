@@ -3,9 +3,9 @@ import { audioContext } from "../main.js";
 import { openFileHandler } from "../helpers/loaders.js";
 
 export default function convolver(event, initalBufferName, initalNormalizer) {
-    const bufferName = String(initalBufferName || "IR_theater.wav");
-    const normalizer = initalNormalizer === undefined ? false : Boolean(initalNormalizer);
     const irNames = Object.keys(audioContext.nameIRBuffer);
+    const bufferName = String(initalBufferName || irNames[0]);
+    const normalizer = initalNormalizer === undefined ? false : Boolean(initalNormalizer);
 
     const module = new Module("convolver", true, false, true, irNames);
 

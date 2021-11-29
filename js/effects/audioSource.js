@@ -72,12 +72,12 @@ Module.prototype.stopSound = function () {
 
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate) {
     const loop = initalLoop === undefined ? false : Boolean(initalLoop);
-    const bufferName = String(initalBufferName || "guitar.ogg");
+    const soundNames = Object.keys(audioContext.nameSoundBuffer);
+    const bufferName = String(initalBufferName || soundNames[5]);
     const playbackRate = parseFloat(initalPlaybackRate || 1);
     const switchDiv = document.createElement("div");
     const playButton = document.createElement("button");
     const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
-    const soundNames = Object.keys(audioContext.nameSoundBuffer);
 
     const module = new Module("audio source", false, true, false, soundNames);
 

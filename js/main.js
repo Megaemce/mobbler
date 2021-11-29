@@ -25,8 +25,8 @@ export let cables = new Object(); // keep all cables
 export let modules = new Object(); // keep all modules
 export { audioSource as audioSource };
 
-const sounds = ["glass-hit.ogg", "drums.ogg", "noise.ogg", "voice.ogg", "bass.ogg", "guitar.ogg", "stringbass.wav"];
-const impulseResponses = ["IR_theater.wav", "IR_hall.ogg", "IR_cathedral.wav", "concert_voices.ogg"];
+const sounds = ["classic_guitar.wav", "diminished_slide.wav", "drums.mp3", "male_voice.wav", "melody.wav", "saxophone.wav", "stringbass.wav", "white_noise.wav"];
+const impulseResponses = ["IR_cathedral.wav", "IR_church.wav", "IR_room.wav", "IR_forest.wav", "IR_theater.wav"];
 
 // create selection rectangle
 // document.onmousedown = (event) => {
