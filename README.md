@@ -202,7 +202,7 @@ Parameters:
 <table>
 <tr>
 <td>
-<img src=""/>
+<img src="https://user-images.githubusercontent.com/1651451/143884622-f2e4f458-95fa-4775-8085-f06d5ce77bc2.png"/>
 </td>
 <td>
 Description:
@@ -594,7 +594,7 @@ Input-output type:
 <table>
 <tr>
 <td>
-<img src="https://user-images.githubusercontent.com/1651451/143781277-5c5bb434-82a9-4cf0-911a-36a91cc94138.png"/>
+<img src="https://user-images.githubusercontent.com/1651451/143883673-199a1f1c-8791-49c3-98b0-7f88b98701d5.png"/>
 </td>
 <td>
 Description:
@@ -604,6 +604,11 @@ Description:
 Input-output type:
 <ul>
 <li>Input only</li>
+</ul>
+Options:
+<ul>
+<li><b>Line creator type</b>: Sound curve can be created from frequency chart (winamp bargraph style) by connecting all the max values from each bar or time domain chart (which creates sine wave-like curve) <br>
+ </li>
 </ul>
 Parameters:
 <ul>
@@ -625,7 +630,7 @@ Made in vanilla JavaScript as my first big project to get thorough knowledge of 
 Due to the mouse-related handlers solution doesn't work properly with touch (mobiles/tablets). <br>
 It was developed for Chrome browser however seems to be working fine on Firefox and Egde too.
 
-This solution wouldn't be possible to create without those people:
+I would never create this solution without the help of these people:
 - [Matt McKegg](https://github.com/mmckegg) - author of amazing [web-audio-school](http://mmckegg.github.io/web-audio-school/)
 - [Chris Wilson](https://github.com/cwilso) - webAudioAPI guru with his amazing tutorials (just [one example](https://blog.chrislowis.co.uk/2013/06/17/synthesis-web-audio-api-envelopes.html))
 - [Sam Bellen](https://github.com/Sambego) - role model for proper multiAudioNode handling and one of the first who started the fire
