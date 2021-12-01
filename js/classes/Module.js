@@ -364,7 +364,6 @@ export default class Module {
 
         // execute function if there is any hooked
         if (destinationModule.onConnectInput) {
-            console.log("connecting to module");
             destinationModule.onConnectInput();
         }
     }
@@ -503,10 +502,11 @@ export default class Module {
             const barWidth = (canvasWidth / bufferLength) * 2.5;
 
             let drawBar = () => {
+                // monitoring activity changes
+                module.animationID["analyser"] = requestAnimationFrame(drawBar);
+
                 // if there is nothing actively talking don't waste resources
                 if (module.inputActivity) {
-                    module.animationID["analyser"] = requestAnimationFrame(drawBar);
-
                     // data returned in dataArray array will in range [0-255]
                     module.audioNode.getByteFrequencyData(dataArray);
 
@@ -549,10 +549,11 @@ export default class Module {
 
             // taken from: https://github.com/urtzurd/html-audio/blob/gh-pages/static/js/pitch-shifter.js#L253
             let drawBar = () => {
+                // monitoring activity changes
+                module.animationID["analyser"] = requestAnimationFrame(drawBar);
+
                 // if there is nothing actively talking don't waste resources
                 if (module.inputActivity) {
-                    module.animationID["analyser"] = requestAnimationFrame(drawBar);
-
                     // data returned in dataArray array will in range [0-255]
                     module.audioNode.getByteFrequencyData(dataArray);
 
@@ -585,11 +586,11 @@ export default class Module {
             let dataArray = new Uint8Array(bufferLength);
 
             let drawWave = () => {
-                // if there is nothing actively talking don't waste resources
-                console.log(module.inputActivity);
-                if (module.inputActivity) {
-                    module.animationID["analyser"] = requestAnimationFrame(drawWave);
+                // monitoring activity changes
+                module.animationID["analyser"] = requestAnimationFrame(drawWave);
 
+                // if there is nothing actively talking don't waste resources
+                if (module.inputActivity) {
                     module.audioNode && module.audioNode.getByteTimeDomainData(dataArray);
                     // data returned in dataArray will be in range [0-255]
 
@@ -664,13 +665,14 @@ export default class Module {
             const dataArrayWave = new Uint8Array(bufferLength);
 
             let drawFreely = () => {
+                // monitoring activity changes
+                module.animationID["analyser"] = requestAnimationFrame(drawFreely);
+
                 // if there is nothing actively talking don't waste resources
                 if (module.inputActivity) {
                     const angle = 360 / module.audioNode.symmetries.value;
                     const angleRad = (angle * Math.PI) / 180;
                     let dataArray;
-
-                    module.animationID["analyser"] = requestAnimationFrame(drawFreely);
 
                     // data returned in dataArrayBars will be in range [0-255]
                     if (module.audioNode) {
