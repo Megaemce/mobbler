@@ -34,6 +34,8 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
 
     // if animation get stopped by source module deletion restart it after new connection arrive
     module.onConnectInput = () => {
-        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, module.content.options.select.value);
+        if (!module.inputActivity) {
+            module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, module.content.options.select.value);
+        }
     };
 }

@@ -78,6 +78,8 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
 
     // if animation get stopped by source module deletion restart it after new connection arrive
     module.onConnectInput = () => {
-        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
+        if (!module.inputActivity) {
+            module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
+        }
     };
 }
