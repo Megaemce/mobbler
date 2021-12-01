@@ -9,9 +9,8 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
     const canvasHeight = 100;
     const fftSizeSineWave = 2048;
     const fftSizeFrequencyBars = 512;
-    const analyserTypes = ["sine wave", "frequency bars"];
+    const analyserTypes = ["sine wave", "frequency bars", "spectogram"];
 
-    let animationID;
     const module = new Module("analyser", true, false, false, analyserTypes);
 
     // set audioNode with inital values
@@ -20,12 +19,21 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
         smoothingTimeConstant: smoothingTimeConstant,
     });
 
-    // start inital analyser
-    animationID = module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, type);
+    // create inital analyser (it should be empty as nothing is talking to the new module)
+    module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, type);
 
-    // on type change switch animation's style
+    // change analyser type
     module.content.options.select.onchange = function () {
-        window.cancelAnimationFrame(animationID);
         module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, this.value);
+    };
+
+    // when deleting the module freed the animation
+    module.onDeletion = () => {
+        window.cancelAnimationFrame(module.animationID["analyser"]);
+    };
+
+    // if animation get stopped by source module deletion restart it after new connection arrive
+    module.onConnectInput = () => {
+        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, module.content.options.select.value);
     };
 }

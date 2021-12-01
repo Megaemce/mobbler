@@ -47,13 +47,17 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     module.createSlider("symmetries", symmetries, 3, 9, 1, "", false, symmetriesInfo);
     module.createSlider("scale Divider", scaleDivider, 0.1, 1, 0.01, "", false, scaleDividerInfo);
 
+    // create inital analyser (it should be empty as nothing is talking to the new module)
     module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
 
     module.content.controllers.classList.add("visualisation");
 
     module.content.options.select.value = lineCreatorTypes[0];
+
+    // change analyser type. Need to recreate analyser
     module.content.options.select.onchange = function () {
         module.audioNode.type = this.value;
+        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
     };
 
     // only one output possible per project
@@ -64,9 +68,16 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
         displayAlertOnElement("Only one visualisation per project", visualisationButton);
     };
 
+    // when deleting the module freed the animation and the visualisation button in the submenu
     module.onDeletion = () => {
+        window.cancelAnimationFrame(module.animationID["analyser"]);
         visualisationButton.style.cursor = "pointer";
         visualisationButton.onmouseover = undefined;
         visualisationButton.addEventListener("mousedown", visualisation);
+    };
+
+    // if animation get stopped by source module deletion restart it after new connection arrive
+    module.onConnectInput = () => {
+        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
     };
 }

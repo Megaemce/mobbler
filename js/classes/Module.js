@@ -14,7 +14,7 @@ export default class Module {
         this.position = undefined; // module position
         this.hasInput = hasInput === undefined ? true : Boolean(hasInput);
         this.hasLooper = hasLooper === undefined ? false : Boolean(hasLooper);
-        this.animationID = new Object(); // keep animationID of all parameters for Cable.deleteCable() function
+        this.animationID = {}; // keep animationID of all parameters for Cable.deleteCable() function
         this.hasNormalizer = hasNormalizer === undefined ? false : Boolean(hasNormalizer);
         this.isTransmitting = false;
         this.arrayForSelect = arrayForSelect;
@@ -26,6 +26,10 @@ export default class Module {
             return true;
         }
         return false;
+    }
+    /* return input status with one second delay - used to stop analyser with smooth fade */
+    get inputActivityWithDelay() {
+        setTimeout(this.inputActivity, 1000);
     }
     /* return number of incoming cables to the input (not nessesary active). Used by deleteCable() */
     get inputCount() {
@@ -159,6 +163,12 @@ export default class Module {
     /* cancel slider movement animation on sliderType */
     stopSliderAnimation(sliderType) {
         window.cancelAnimationFrame(this.animationID[sliderType]);
+    }
+    /* cancel analyser animation */
+    stopAnalyserAnimation() {
+        setTimeout(() => {
+            window.cancelAnimationFrame(this.animationID["analyser"]);
+        }, 200);
     }
     /* create new cable which is an inital cable */
     addInitalCable() {
@@ -448,8 +458,12 @@ export default class Module {
         const module = this;
         const canvasDiv = document.createElement("div");
         const canvas = document.createElement("canvas");
+        const img = new Image(); // used for pattern
 
-        let animationID = undefined;
+        img.src = "./img/pattern.svg";
+
+        // if there is already other animation kill it
+        if (module.animationID["analyser"]) window.cancelAnimationFrame(module.animationID["analyser"]);
 
         if (module.content.controllers.canvasDiv) {
             module.content.controllers.removeChild(module.content.controllers.canvasDiv);
@@ -466,110 +480,157 @@ export default class Module {
 
         module.content.controllers.canvasDiv.appendChild(canvas);
         module.content.controllers.canvasDiv.canvas = canvas;
-        module.content.controllers.canvasDiv.className = "analyser";
+        module.content.controllers.canvasDiv.className = "analyser visusalisation";
 
         const ctx = (module.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d"));
 
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
         if (style === "frequency bars") {
-            /*  ꞈ
-            256 ┤╥╥                    
-                │║║  ╥╥          ╥╥╥╥          
-                │║║╥╥║║        ╥╥║║║║          
-                │║║║║║║╥╥    ╥╥║║║║║║╥╥    ╥╥      ╥╥  
-                │║║║║║║║║╥╥╥╥║║║║║║║║║║╥╥╥╥║║╥╥╥╥╥╥║║  
-              0 ┼──────────────frequency─────────────┬─›
-                0                                 24000Hz  
+            /*   ꞈ
+             256 ┤╥╥                    
+                 │║║  ╥╥          ╥╥╥╥          
+                 │║║╥╥║║        ╥╥║║║║          
+                 │║║║║║║╥╥    ╥╥║║║║║║╥╥    ╥╥      ╥╥  
+                 │║║║║║║║║╥╥╥╥║║║║║║║║║║╥╥╥╥║║╥╥╥╥╥╥║║  
+               0 ┼──────────────frequency─────────────┬─›
+                 0                                 24000Hz  
             */
             module.audioNode.fftSize = fftSizeFrequencyBars;
             const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
             const dataArray = new Uint8Array(bufferLength);
             const barWidth = (canvasWidth / bufferLength) * 2.5;
-            const img = new Image();
-            img.src = "./img/pattern.svg";
 
             let drawBar = () => {
-                animationID = requestAnimationFrame(drawBar);
+                // if there is nothing actively talking don't waste resources
+                if (module.inputActivity) {
+                    module.animationID["analyser"] = requestAnimationFrame(drawBar);
 
-                // data returned in dataArray array will in range [0-255]
-                module.audioNode.getByteFrequencyData(dataArray);
+                    // data returned in dataArray array will in range [0-255]
+                    module.audioNode.getByteFrequencyData(dataArray);
 
-                ctx.fillStyle = ctx.createPattern(img, "repeat");
-                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                    ctx.fillStyle = ctx.createPattern(img, "repeat");
+                    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-                let x = 0;
-                ctx.beginPath();
+                    let x = 0;
+                    ctx.beginPath();
 
-                dataArray.forEach((barHeight, index) => {
-                    ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
-                    // contex grid is upside down so we substract from y value
-                    ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
-                    x += barWidth + 1;
-                });
-                ctx.stroke();
+                    dataArray.forEach((barHeight, index) => {
+                        ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
+                        // contex grid is upside down so we substract from y value
+                        ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
+                        x += barWidth + 1;
+                    });
+                    ctx.stroke();
+                } else {
+                    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                }
+            };
+            drawBar();
+        }
+        if (style === "spectogram") {
+            /*   ꞈ
+            ∞ Hz ┤                    
+                 │                      
+                 │     ̶̛̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔͑̽̍̽̓̋̆̂͆́̈́͗̕¸̷̶̛̫̤̲͓̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔̈́̌͒̽̍̊̀̈́̿̐̓͌͆͑͑̽̍̽̓̋̆̂͆́̈́͗̕ ̸̨̨̛̹͙̖̩̦̹͈̟̖̼̱̖͙͇̥̰̙̟̤̥̭̖̫̠͔̱̀̋͗̎̽̂͗͗̎̏́̓̋͑̓̔̈́͜͝͝͝  ¸̷̢̡̢̯̜͉͎̦͉̖͈͇̬̘̖͈̹̜͂͝ͅ         ̶̛̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔͑̽̍̽̓̋̆̂͆́̈́͗̕¸̷̶̛̫̤̲͓̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔̈́̌͒̽̍̊̀̈́̿̐̓͌͆͑͑̽̍̽̓̋̆̂͆́̈́͗̕¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜     ̶̛̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔͑̽̍̽̓̋̆̂͆́̈́͗̕¸̷̶̛̫̤̲͓̙͇͉̼̺͔͓͖̤͔̟̟̈́̌͒̽̍̊̀̈́̿̐̓͌͆͑͑̽̍̽̓̋̆̂͆́̈́͗̕             
+                 │.̵̧͕̟͇̠͓͎̥͊̇͌́̎̿́̒͆͒͂̉̓̒͒̋̃̋͊̾͒͌̓̀͝͝͝.¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜¸̸̗̂́̒̇̾́̒͘̕̚͝͠.̵͓̖͓̲̟͋͆́̐̚͝͠͝¸̶̧̡̱̪̟̪͔͖͙̪̈́ͅ.̵̧͕̟͇̠͓͎̥͊̇͌́̎̿́̒͆͒͂̉̓̒͒̋̃̋͊̾͒͌̓̀͝͝͝¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜¸̸̗̂́̒̇̾́̒͘̕̚͝͠.̵͓̖͓̲̟͋͆́̐̚͝͠͝¸̶̧̡̱̪̟̪͔͖͙̪̈́ͅ_̵̛̝̂̓́͋̆͊͂̀̍̊̏̓͂̂͒͌̚͝ ¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜ ,̸̮͉̤̹̬̜͖̞͚͈̥̈́̇̀̈̂̏́̆̈́͛̾̚͝   .̵̧͕̟͇̠͓͎̥͊̇͌́̎̿́̒͆͒͂̉̓̒͒̋̃̋͊̾͒͌̓̀͝͝͝.¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜¸̸̗̂́̒̇̾́̒͘̕̚͝͠         
+                 │  
+               0 ┼─────────────────time──────────────┬›
+                 0                                  ∞ sec  
+            */
+
+            module.audioNode.fftSize = fftSizeFrequencyBars;
+            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
+            const dataArray = new Uint8Array(bufferLength);
+            const bandHeight = canvasHeight / bufferLength;
+
+            module.content.controllers.canvasDiv.className = "analyser visualisation"; // white background
+
+            // taken from: https://github.com/urtzurd/html-audio/blob/gh-pages/static/js/pitch-shifter.js#L253
+            let drawBar = () => {
+                // if there is nothing actively talking don't waste resources
+                if (module.inputActivity) {
+                    module.animationID["analyser"] = requestAnimationFrame(drawBar);
+
+                    // data returned in dataArray array will in range [0-255]
+                    module.audioNode.getByteFrequencyData(dataArray);
+
+                    const previousImage = ctx.getImageData(1, 0, canvasWidth - 1, canvasHeight);
+                    ctx.putImageData(previousImage, 0, 0);
+
+                    for (let i = 0, y = canvasHeight - 1; i < bufferLength; i++, y -= bandHeight) {
+                        const color = dataArray[i] << 16;
+                        ctx.fillStyle = "#" + color.toString(16);
+                        ctx.fillRect(canvasWidth - 1, y, 1, -bandHeight);
+                    }
+                } else {
+                    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                }
             };
             drawBar();
         }
         if (style === "sine wave") {
-            /*  ꞈ
-            256 ┤            .¸            
-                │.¸     ¸.¸·՜   ՝·¸                  
-                │  ՝·¸·՜           `.¸         
-                │                    ՝·     ¸·`՝·¸¸.¸¸   
-                │                      ՝·..·՜         `
-              0 ┼────────────────time─────────────────┬›
-                0                                    ∞ sec
+            /*   ꞈ
+             256 ┤            .¸            
+                 │.¸     ¸.¸·՜   ՝·¸                  
+                 │  ՝·¸·՜           `.¸         
+                 │                    ՝·     ¸·`՝·¸¸.¸¸   
+                 │                      ՝·..·՜         `
+               0 ┼────────────────time─────────────────┬›
+                 0                                    ∞ sec
             */
             let bufferLength = (module.audioNode.fftSize = fftSizeSineWave);
             let dataArray = new Uint8Array(bufferLength);
-            let img = new Image();
-            img.src = "./img/pattern.svg";
 
             let drawWave = () => {
-                animationID = requestAnimationFrame(drawWave);
+                // if there is nothing actively talking don't waste resources
+                if (module.inputActivity) {
+                    module.animationID["analyser"] = requestAnimationFrame(drawWave);
 
-                module.audioNode && module.audioNode.getByteTimeDomainData(dataArray);
-                // data returned in dataArray will be in range [0-255]
+                    module.audioNode && module.audioNode.getByteTimeDomainData(dataArray);
+                    // data returned in dataArray will be in range [0-255]
 
-                let pattern = ctx.createPattern(img, "repeat");
-                ctx.fillStyle = pattern;
-                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "rgb(98, 255, 0)";
-                ctx.beginPath();
+                    let pattern = ctx.createPattern(img, "repeat");
+                    ctx.fillStyle = pattern;
+                    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "rgb(98, 255, 0)";
+                    ctx.beginPath();
 
-                // element range: [0, 255], index range: [0, bufferLength]
-                dataArray.forEach((element, index) => {
-                    let x = (canvasWidth / bufferLength) * index; // sliceWidth * index
-                    let y = canvasHeight * (element / 256); // 256 comes from dataArray max value;
-                    if (!index === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                });
+                    // element range: [0, 255], index range: [0, bufferLength]
+                    dataArray.forEach((element, index) => {
+                        let x = (canvasWidth / bufferLength) * index; // sliceWidth * index
+                        let y = canvasHeight * (element / 256); // 256 comes from dataArray max value;
+                        if (!index === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    });
 
-                ctx.stroke();
+                    ctx.stroke();
+                } else {
+                    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                }
             };
             drawWave();
         }
         if (style === "free") {
             /*                                  Mode "create lines from frequencies chart"
-                ꞈ                                                             
-            256 ┤                                        ┌                     ┐
-                │՝·¸                                        ՝·¸    ¸·¸      ¸.¸         duplicate k-time
-                │   `.     ¸.·¸        > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
-                │      ՝·.·՝     ՝·¸¸·     flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
-                │                                          ·՜                         
-              0 ┼──TimeDomainData──┬›                    └                     ┘            
-                0                 ∞ sec    
+                 ꞈ                                                             
+             256 ┤                                        ┌                     ┐
+                 │՝·¸                                        ՝·¸    ¸·¸      ¸.¸         duplicate k-time
+                 │   `.     ¸.·¸        > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
+                 │      ՝·.·՝     ՝·¸¸·     flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
+                 │                                          ·՜                         
+               0 ┼──TimeDomainData──┬›                    └                     ┘            
+                 0                 ∞ sec    
                                                 Mode "create lines from time domain chart"
-                ꞈ
-            256 ┤╥                                       ┌                     ┐
-                │║ ╥     ╥╥                                ՝·¸    ¸·¸      ¸.¸         duplicate k-time
-                │║╥║    ╥║║            > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
-                │║║║╥  ╥║║║╥  ╥   ╥      flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
-                │║║║║╥╥║║║║║╥╥║╥╥╥║                        ·՜                         
-              0 ┼───FrequencyData──┬›                    └                     ┘
-                0               24000Hz
+                 ꞈ
+             256 ┤╥                                       ┌                     ┐
+                 │║ ╥     ╥╥                                ՝·¸    ¸·¸      ¸.¸         duplicate k-time
+                 │║╥║    ╥║║            > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
+                 │║║║╥  ╥║║║╥  ╥   ╥      flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
+                 │║║║║╥╥║║║║║╥╥║╥╥╥║                        ·՜                         
+               0 ┼───FrequencyData──┬›                    └                     ┘
+                 0               24000Hz
              */
             module.content.controllers.canvasDiv.classList.add("visualisation"); // white background
 
@@ -600,68 +661,72 @@ export default class Module {
             const dataArrayWave = new Uint8Array(bufferLength);
 
             let drawFreely = () => {
-                const angle = 360 / module.audioNode.symmetries.value;
-                const angleRad = (angle * Math.PI) / 180;
-                let dataArray;
+                // if there is nothing actively talking don't waste resources
+                if (module.inputActivity) {
+                    const angle = 360 / module.audioNode.symmetries.value;
+                    const angleRad = (angle * Math.PI) / 180;
+                    let dataArray;
 
-                animationID = requestAnimationFrame(drawFreely);
+                    module.animationID["analyser"] = requestAnimationFrame(drawFreely);
 
-                // data returned in dataArrayBars will be in range [0-255]
-                if (module.audioNode) {
-                    if (module.audioNode.type === "create lines from frequencies chart") {
-                        module.audioNode.getByteFrequencyData(dataArrayBars);
-                        dataArray = dataArrayBars;
+                    // data returned in dataArrayBars will be in range [0-255]
+                    if (module.audioNode) {
+                        if (module.audioNode.type === "create lines from frequencies chart") {
+                            module.audioNode.getByteFrequencyData(dataArrayBars);
+                            dataArray = dataArrayBars;
+                        }
+                        if (module.audioNode.type === "create lines from time domain chart") {
+                            module.audioNode.getByteTimeDomainData(dataArrayWave);
+                            dataArray = dataArrayWave;
+                        }
                     }
-                    if (module.audioNode.type === "create lines from time domain chart") {
-                        module.audioNode.getByteTimeDomainData(dataArrayWave);
-                        dataArray = dataArrayWave;
+                    // ctx.fillStyle = "black";
+                    // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                    ctx.strokeStyle = `hsl(${module.audioNode.color.value}, 100%, 50%)`;
+
+                    const lineLength = module.audioNode.lineLength.value;
+                    const scale = canvas.height / module.audioNode.scaleDivider.value;
+
+                    ctx.save();
+
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.scale(module.audioNode.zoom.value, module.audioNode.zoom.value);
+                    ctx.lineWidth = module.audioNode.lineWidth.value;
+
+                    for (let k = 0; k < module.audioNode.symmetries.value; k++) {
+                        ctx.rotate(angleRad);
+
+                        ctx.beginPath();
+
+                        // element range: [0, 255], index range: [0, bufferLength]
+                        dataArray.forEach((element, index) => {
+                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
+                            let y = scale * (element / 256); // 256 comes from dataArrayWave max value;
+                            if (!index === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        });
+
+                        ctx.stroke();
+                        ctx.beginPath();
+
+                        // element range: [0, 255], index range: [0, bufferLength]
+                        dataArray.forEach((element, index) => {
+                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
+                            let y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
+                            if (!index === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        });
+
+                        ctx.stroke();
                     }
+
+                    ctx.restore();
+                } else {
+                    // maybe it is a good idea to not clean visualisation after signal death
+                    //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
                 }
-                // ctx.fillStyle = "black";
-                // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-                ctx.strokeStyle = `hsl(${module.audioNode.color.value}, 100%, 50%)`;
-
-                const lineLength = module.audioNode.lineLength.value;
-                const scale = canvas.height / module.audioNode.scaleDivider.value;
-
-                ctx.save();
-
-                ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.scale(module.audioNode.zoom.value, module.audioNode.zoom.value);
-                ctx.lineWidth = module.audioNode.lineWidth.value;
-
-                for (let k = 0; k < module.audioNode.symmetries.value; k++) {
-                    ctx.rotate(angleRad);
-
-                    ctx.beginPath();
-
-                    // element range: [0, 255], index range: [0, bufferLength]
-                    dataArray.forEach((element, index) => {
-                        let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                        let y = scale * (element / 256); // 256 comes from dataArrayWave max value;
-                        if (!index === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    });
-
-                    ctx.stroke();
-                    ctx.beginPath();
-
-                    // element range: [0, 255], index range: [0, bufferLength]
-                    dataArray.forEach((element, index) => {
-                        let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                        let y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
-                        if (!index === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    });
-
-                    ctx.stroke();
-                }
-
-                ctx.restore();
             };
             drawFreely();
         }
-
-        return animationID;
     }
 }

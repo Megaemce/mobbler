@@ -313,6 +313,11 @@ export default class Cable {
             destination.footer[cable.inputName].img.setAttribute("src", "./img/parameter_input.svg");
         }
 
+        // if cable was connecting module to analyser stop the animation there (but only if there is no other active connection)
+        if (destination && (destination.name === "analyser" || destination.name === "visualisation") && destination.inputActivity) {
+            destination.stopAnalyserAnimation();
+        }
+
         // un-busy'd input picture but only if there is no other things talking
         if (destination && cable.inputName === "input" && destination.inputCount === 0) {
             destination.div.input.setAttribute("src", "./img/input.svg");
