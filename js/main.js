@@ -25,7 +25,7 @@ export let cables = {}; // keep all cables
 export let modules = {}; // keep all modules
 export { audioSource as audioSource };
 
-const sounds = ["classic_guitar.wav", "diminished_slide.wav", "drums.mp3", "male_voice.wav", "melody.wav", "saxophone.wav", "stringbass.wav", "white_noise.wav"];
+const sounds = ["diminished_slide.wav", "dnbwav", "drums.wav", "guitar.wav", "hihat.wav", "kick.wav", "melody.mp3", , "organ.wav", "radioSignal.wav", "saxophone.wav", "snare.wav"];
 const impulseResponses = ["IR_cathedral.wav", "IR_church.wav", "IR_room.wav", "IR_forest.wav", "IR_theater.wav"];
 
 // create selection rectangle
