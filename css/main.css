@@ -406,6 +406,9 @@ svg {
 .module .content .controllers .analyser.visualisation {
     background-image: url('../img/background_visualisation.svg');
 }
+.module .content .controllers .analyser.spectro {
+    background-image: url('../img/background_spectro.svg');
+}
 .module .content .controllers .analyser canvas {
     margin: 5px 5px 0 0;
     padding: 0 0 0 5px 

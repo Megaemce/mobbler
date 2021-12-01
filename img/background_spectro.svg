@@ -1,0 +1,12 @@
+<svg width="222.54" height="130.66" version="1.1" viewBox="0 0 58.879 34.572" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <filter id="filter1566" x="-.010482" y="-.017992" width="1.0241" height="1.0414" color-interpolation-filters="sRGB">
+   <feFlood flood-color="rgb(0,0,0)" flood-opacity=".59216" result="flood"/>
+   <feComposite in="flood" in2="SourceGraphic" operator="out" result="composite1"/>
+   <feGaussianBlur in="composite1" result="blur" stdDeviation="0.18622323"/>
+   <feOffset dx="0.2" dy="0.2" result="offset"/>
+   <feComposite in="offset" in2="SourceGraphic" operator="atop" result="composite2"/>
+  </filter>
+ </defs>
+ <rect transform="matrix(.89692 0 0 .88279 -4.7334 -7.1297)" x="6.2763" y="9.076" width="63.448" height="36.963" filter="url(#filter1566)" stroke="#efefef" stroke-linejoin="round" stroke-width=".43622"/>
+</svg>

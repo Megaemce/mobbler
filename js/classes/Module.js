@@ -480,7 +480,7 @@ export default class Module {
 
         module.content.controllers.canvasDiv.appendChild(canvas);
         module.content.controllers.canvasDiv.canvas = canvas;
-        module.content.controllers.canvasDiv.className = "analyser visusalisation";
+        module.content.controllers.canvasDiv.className = "analyser";
 
         const ctx = (module.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d"));
 
@@ -544,7 +544,7 @@ export default class Module {
             const dataArray = new Uint8Array(bufferLength);
             const bandHeight = canvasHeight / bufferLength;
 
-            module.content.controllers.canvasDiv.className = "analyser visualisation"; // white background
+            module.content.controllers.canvasDiv.className = "analyser spectro"; // white background
 
             // taken from: https://github.com/urtzurd/html-audio/blob/gh-pages/static/js/pitch-shifter.js#L253
             let drawBar = () => {
@@ -564,7 +564,8 @@ export default class Module {
                         ctx.fillRect(canvasWidth - 1, y, 1, -bandHeight);
                     }
                 } else {
-                    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                    // maybe it better to leave last spectro on the screen after no signal
+                    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
                 }
             };
             drawBar();
