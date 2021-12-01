@@ -364,6 +364,7 @@ export default class Module {
 
         // execute function if there is any hooked
         if (destinationModule.onConnectInput) {
+            console.log("connecting to module");
             destinationModule.onConnectInput();
         }
     }
@@ -585,6 +586,7 @@ export default class Module {
 
             let drawWave = () => {
                 // if there is nothing actively talking don't waste resources
+                console.log(module.inputActivity);
                 if (module.inputActivity) {
                     module.animationID["analyser"] = requestAnimationFrame(drawWave);
 

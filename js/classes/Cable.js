@@ -314,7 +314,7 @@ export default class Cable {
         }
 
         // if cable was connecting module to analyser stop the animation there (but only if there is no other active connection)
-        if (destination && (destination.name === "analyser" || destination.name === "visualisation") && destination.inputActivity) {
+        if (destination && (destination.name === "analyser" || destination.name === "visualisation") && !destination.inputActivity) {
             destination.stopAnalyserAnimation();
         }
 
