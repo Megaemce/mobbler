@@ -390,7 +390,7 @@ svg {
     padding-top: .25em 
 }
 .module .content .controllers.visualisation {
-    flex-direction: column-reverse 
+    flex-direction: column 
 }
 .module .content .controllers img{
     width: 70px 

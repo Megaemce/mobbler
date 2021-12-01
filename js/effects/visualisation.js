@@ -1,15 +1,16 @@
-import Module from "../classes/Module.js";
+import Visualizer from "../classes/Visualizer.js";
 import { audioContext } from "../main.js";
 import { displayAlertOnElement } from "../helpers/builders.js";
 
-export default function visualisation(event, initalZoom, initalColor, initalLineWidth, initalLineLength, initalSymmetries, initalScaleDivider) {
+export default function visualisation(event, initalType, initalZoom, initalColor, initalLineWidth, initalLineLength, initalSymmetries, initalScaleDivider) {
+    const lineCreatorTypes = ["create lines from frequencies chart", "create lines from time domain chart"];
+    const type = initalType === undefined ? lineCreatorTypes[0] : initalType;
     const zoom = parseFloat(initalZoom || 1);
     const color = parseFloat(initalColor || 180);
     const lineWidth = parseFloat(initalLineWidth || 1);
     const lineLength = parseFloat(initalLineLength || 3.5);
     const symmetries = parseFloat(initalSymmetries || 6);
     const scaleDivider = parseFloat(initalScaleDivider || 1);
-    const lineCreatorTypes = ["create lines from frequencies chart", "create lines from time domain chart"];
     const zoomInfo = "Canvas zoom volume for new lines";
     const colorInfo = "Line color in HSL";
     const lineWidthInfo = "Line width in pixels";
@@ -22,7 +23,7 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     const fftSizeSineWave = 128;
     const maximizeButton = document.createElement("button");
 
-    const module = new Module("visualisation", true, false, false, lineCreatorTypes);
+    const module = new Visualizer("visualisation", lineCreatorTypes, type, canvasWidth, canvasHeight, fftSizeSineWave);
 
     maximizeButton.classList = "button maximize";
     maximizeButton.id = "maximize";
@@ -31,7 +32,6 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     module.head.buttonsWrapper.maximize = maximizeButton;
 
     // custom attributes
-    module.audioNode = new AnalyserNode(audioContext, { fftSize: 64 });
     module.audioNode.type = lineCreatorTypes[0];
     module.audioNode.zoom = { value: zoom };
     module.audioNode.color = { value: color };
@@ -47,17 +47,14 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     module.createSlider("symmetries", symmetries, 3, 9, 1, "", false, symmetriesInfo);
     module.createSlider("scale Divider", scaleDivider, 0.1, 1, 0.01, "", false, scaleDividerInfo);
 
-    // create inital analyser (it should be empty as nothing is talking to the new module)
-    module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
-
-    module.content.controllers.classList.add("visualisation");
-
     module.content.options.select.value = lineCreatorTypes[0];
 
-    // change analyser type. Need to recreate analyser
+    module.content.controllers.canvasDiv.classList.add("visualisation"); // white background
+
+    // when switching type it might be that module is not active thus reset everything and start listening again
     module.content.options.select.onchange = function () {
         module.audioNode.type = this.value;
-        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
+        module.resetAnalyser();
     };
 
     // only one output possible per project
@@ -71,13 +68,9 @@ export default function visualisation(event, initalZoom, initalColor, initalLine
     // when deleting the module freed the animation and the visualisation button in the submenu
     module.onDeletion = () => {
         window.cancelAnimationFrame(module.animationID["analyser"]);
+        window.cancelAnimationFrame(module.listeningID);
         visualisationButton.style.cursor = "pointer";
         visualisationButton.onmouseover = undefined;
         visualisationButton.addEventListener("mousedown", visualisation);
-    };
-
-    // if animation get stopped by source module deletion restart it after new connection arrive
-    module.onConnectInput = () => {
-        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, undefined, "free");
     };
 }

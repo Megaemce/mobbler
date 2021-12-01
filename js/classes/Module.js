@@ -186,52 +186,57 @@ export default class Module {
     /* depth first search all outcoming cables and mark them as active or deactive */
     markAllLinkedCablesAs(status) {
         let visited = {};
-        let currentCable = undefined;
         let stack = this.outcomingCables;
 
         // stack keeps a list of outcomingCables from this module
         while (stack.length) {
-            currentCable = stack.pop();
+            const cable = stack.pop(); // currently visited cable
+            const destination = cable.destination;
 
             // simply make the cable active
             if (status === "active") {
-                currentCable.makeActive();
+                cable.makeActive();
             }
             // as the destination is receiving active signal (from this module) mark it as a transmitter too
             // but only if cable is module-to-module not module-to-parameter type
             // also as there is no other easy way: restart all the slider's animation in all it's outcoming
             // cables connected to other module's parameters
-            if (status === "active" && currentCable.inputName === "input") {
-                currentCable.destination.isTransmitting = true;
-                currentCable.destination.outcomingCables.forEach((cable) => {
+            if (status === "active" && cable.inputName === "input") {
+                destination.isTransmitting = true;
+                destination.outcomingCables.forEach((cable) => {
                     if (cable.inputName !== "input") {
                         cable.makeActive();
-                        currentCable.destination.connectToParameter(cable.destination, cable.inputName);
+                        destination.connectToParameter(cable.destination, cable.inputName);
                     }
                 });
             }
             // simply make the cable deactive
             if (status === "deactive") {
-                currentCable.makeDeactive();
+                cable.makeDeactive();
             }
             // as this cable was module-to-module type and source module is not active anymore,
             // check if there is nothing more actively talking to this module and mark is as inactive
-            if (status === "deactive" && currentCable.inputName === "input" && currentCable.destination.inputActivity === false) {
-                currentCable.destination.isTransmitting = false;
+            if (status === "deactive" && cable.inputName === "input" && destination.inputActivity === false) {
+                destination.isTransmitting = false;
+                // stop animation on visualizer and make it listening on input again
+                if (destination.constructor.name === "Visualizer") {
+                    destination.resetAnalyser();
+                }
             }
+
             // module-to-parameter cable thus just unlock the slider
-            if (status === "deactive" && currentCable.inputName !== "input") {
-                currentCable.destination.stopSliderAnimation(currentCable.inputName);
-                currentCable.destination.content.controllers[currentCable.inputName].slider.classList.remove("disabled");
+            if (status === "deactive" && cable.inputName !== "input") {
+                destination.stopSliderAnimation(cable.inputName);
+                destination.content.controllers[cable.inputName].slider.classList.remove("disabled");
             }
 
             // depth first search section
-            if (!visited[currentCable.id]) {
-                visited[currentCable.id] = true;
+            if (!visited[cable.id]) {
+                visited[cable.id] = true;
                 // don't try to do dfs on module-to-parameter cables as destination in those is their mother module thus making
                 // further escalation: Source -> Destination's Parameter -> Destination -> Destination's outcominggoing cables
-                if (currentCable.inputName === "input") {
-                    currentCable.destination.outcomingCables.forEach((cable) => {
+                if (cable.inputName === "input") {
+                    destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);
                         }
@@ -301,7 +306,7 @@ export default class Module {
             });
 
             // create new inital cable (just for animation purpose)
-            if (module.name !== "output" && module.name !== "visualisation" && module.name !== "analyser") {
+            if (module.name !== "output" && module.constructor.name !== "Visualizer") {
                 module.addInitalCable();
             }
 
@@ -451,287 +456,6 @@ export default class Module {
 
             // don't make unnesessary slider's animation if source module is not active
             module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, slider.value);
-        }
-    }
-    /* create analyser on module with given setting */
-    createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, style) {
-        const module = this;
-        const canvasDiv = document.createElement("div");
-        const canvas = document.createElement("canvas");
-        const img = new Image(); // used for pattern
-
-        img.src = "./img/pattern.svg";
-
-        // if there is already other animation kill it
-        if (module.animationID["analyser"]) window.cancelAnimationFrame(module.animationID["analyser"]);
-
-        if (module.content.controllers.canvasDiv) {
-            module.content.controllers.removeChild(module.content.controllers.canvasDiv);
-            module.content.controllers.canvasDiv.canvas.remove();
-        }
-
-        canvas.id = `${module.id}-content-controllers-canvas`;
-        canvas.height = canvasHeight;
-        canvas.width = canvasWidth;
-        canvas.className = "canvas";
-
-        module.content.controllers.appendChild(canvasDiv);
-        module.content.controllers.canvasDiv = canvasDiv;
-
-        module.content.controllers.canvasDiv.appendChild(canvas);
-        module.content.controllers.canvasDiv.canvas = canvas;
-        module.content.controllers.canvasDiv.className = "analyser";
-
-        const ctx = (module.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d"));
-
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        if (style === "frequency bars") {
-            /*   ꞈ
-             256 ┤╥╥                    
-                 │║║  ╥╥          ╥╥╥╥          
-                 │║║╥╥║║        ╥╥║║║║          
-                 │║║║║║║╥╥    ╥╥║║║║║║╥╥    ╥╥      ╥╥  
-                 │║║║║║║║║╥╥╥╥║║║║║║║║║║╥╥╥╥║║╥╥╥╥╥╥║║  
-               0 ┼──────────────frequency─────────────┬─›
-                 0                                 24000Hz  
-            */
-            module.audioNode.fftSize = fftSizeFrequencyBars;
-            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
-            const dataArray = new Uint8Array(bufferLength);
-            const barWidth = (canvasWidth / bufferLength) * 2.5;
-
-            let drawBar = () => {
-                // monitoring activity changes
-                module.animationID["analyser"] = requestAnimationFrame(drawBar);
-
-                // if there is nothing actively talking don't waste resources
-                if (module.inputActivity) {
-                    // data returned in dataArray array will in range [0-255]
-                    module.audioNode.getByteFrequencyData(dataArray);
-
-                    ctx.fillStyle = ctx.createPattern(img, "repeat");
-                    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-                    let x = 0;
-                    ctx.beginPath();
-
-                    dataArray.forEach((barHeight, index) => {
-                        ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
-                        // contex grid is upside down so we substract from y value
-                        ctx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
-                        x += barWidth + 1;
-                    });
-                    ctx.stroke();
-                } else {
-                    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                }
-            };
-            drawBar();
-        }
-        if (style === "spectogram") {
-            /*   ꞈ
-            ∞ Hz ┤                    
-                 │                      
-                 │     ̶̛̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔͑̽̍̽̓̋̆̂͆́̈́͗̕¸̷̶̛̫̤̲͓̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔̈́̌͒̽̍̊̀̈́̿̐̓͌͆͑͑̽̍̽̓̋̆̂͆́̈́͗̕ ̸̨̨̛̹͙̖̩̦̹͈̟̖̼̱̖͙͇̥̰̙̟̤̥̭̖̫̠͔̱̀̋͗̎̽̂͗͗̎̏́̓̋͑̓̔̈́͜͝͝͝  ¸̷̢̡̢̯̜͉͎̦͉̖͈͇̬̘̖͈̹̜͂͝ͅ         ̶̛̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔͑̽̍̽̓̋̆̂͆́̈́͗̕¸̷̶̛̫̤̲͓̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔̈́̌͒̽̍̊̀̈́̿̐̓͌͆͑͑̽̍̽̓̋̆̂͆́̈́͗̕¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜     ̶̛̙͇͉̼̺͔͓͖̤͔̟̟̠̰͕͔͑̽̍̽̓̋̆̂͆́̈́͗̕¸̷̶̛̫̤̲͓̙͇͉̼̺͔͓͖̤͔̟̟̈́̌͒̽̍̊̀̈́̿̐̓͌͆͑͑̽̍̽̓̋̆̂͆́̈́͗̕             
-                 │.̵̧͕̟͇̠͓͎̥͊̇͌́̎̿́̒͆͒͂̉̓̒͒̋̃̋͊̾͒͌̓̀͝͝͝.¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜¸̸̗̂́̒̇̾́̒͘̕̚͝͠.̵͓̖͓̲̟͋͆́̐̚͝͠͝¸̶̧̡̱̪̟̪͔͖͙̪̈́ͅ.̵̧͕̟͇̠͓͎̥͊̇͌́̎̿́̒͆͒͂̉̓̒͒̋̃̋͊̾͒͌̓̀͝͝͝¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜¸̸̗̂́̒̇̾́̒͘̕̚͝͠.̵͓̖͓̲̟͋͆́̐̚͝͠͝¸̶̧̡̱̪̟̪͔͖͙̪̈́ͅ_̵̛̝̂̓́͋̆͊͂̀̍̊̏̓͂̂͒͌̚͝ ¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜ ,̸̮͉̤̹̬̜͖̞͚͈̥̈́̇̀̈̂̏́̆̈́͛̾̚͝   .̵̧͕̟͇̠͓͎̥͊̇͌́̎̿́̒͆͒͂̉̓̒͒̋̃̋͊̾͒͌̓̀͝͝͝.¸̶͕̠͈͎̖̮̘̂̓͐́͗̌̀̀̇̈̈̊̈́͑̕͜¸̸̗̂́̒̇̾́̒͘̕̚͝͠         
-                 │  
-               0 ┼─────────────────time──────────────┬›
-                 0                                  ∞ sec  
-            */
-
-            module.audioNode.fftSize = fftSizeFrequencyBars;
-            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
-            const dataArray = new Uint8Array(bufferLength);
-            const bandHeight = canvasHeight / bufferLength;
-
-            module.content.controllers.canvasDiv.className = "analyser spectro"; // white background
-
-            // taken from: https://github.com/urtzurd/html-audio/blob/gh-pages/static/js/pitch-shifter.js#L253
-            let drawBar = () => {
-                // monitoring activity changes
-                module.animationID["analyser"] = requestAnimationFrame(drawBar);
-
-                // if there is nothing actively talking don't waste resources
-                if (module.inputActivity) {
-                    // data returned in dataArray array will in range [0-255]
-                    module.audioNode.getByteFrequencyData(dataArray);
-
-                    const previousImage = ctx.getImageData(1, 0, canvasWidth - 1, canvasHeight);
-                    ctx.putImageData(previousImage, 0, 0);
-
-                    for (let i = 0, y = canvasHeight - 1; i < bufferLength; i++, y -= bandHeight) {
-                        const color = dataArray[i] << 16;
-                        ctx.fillStyle = "#" + color.toString(16);
-                        ctx.fillRect(canvasWidth - 1, y, 1, -bandHeight);
-                    }
-                } else {
-                    // maybe it better to leave last spectro on the screen after no signal
-                    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                }
-            };
-            drawBar();
-        }
-        if (style === "sine wave") {
-            /*   ꞈ
-             256 ┤            .¸            
-                 │.¸     ¸.¸·՜   ՝·¸                  
-                 │  ՝·¸·՜           `.¸         
-                 │                    ՝·     ¸·`՝·¸¸.¸¸   
-                 │                      ՝·..·՜         `
-               0 ┼────────────────time─────────────────┬›
-                 0                                    ∞ sec
-            */
-            let bufferLength = (module.audioNode.fftSize = fftSizeSineWave);
-            let dataArray = new Uint8Array(bufferLength);
-
-            let drawWave = () => {
-                // monitoring activity changes
-                module.animationID["analyser"] = requestAnimationFrame(drawWave);
-
-                // if there is nothing actively talking don't waste resources
-                if (module.inputActivity) {
-                    module.audioNode && module.audioNode.getByteTimeDomainData(dataArray);
-                    // data returned in dataArray will be in range [0-255]
-
-                    let pattern = ctx.createPattern(img, "repeat");
-                    ctx.fillStyle = pattern;
-                    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = "rgb(98, 255, 0)";
-                    ctx.beginPath();
-
-                    // element range: [0, 255], index range: [0, bufferLength]
-                    dataArray.forEach((element, index) => {
-                        let x = (canvasWidth / bufferLength) * index; // sliceWidth * index
-                        let y = canvasHeight * (element / 256); // 256 comes from dataArray max value;
-                        if (!index === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    });
-
-                    ctx.stroke();
-                } else {
-                    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                }
-            };
-            drawWave();
-        }
-        if (style === "free") {
-            /*                                  Mode "create lines from frequencies chart"
-                 ꞈ                                                             
-             256 ┤                                        ┌                     ┐
-                 │՝·¸                                        ՝·¸    ¸·¸      ¸.¸         duplicate k-time
-                 │   `.     ¸.·¸        > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
-                 │      ՝·.·՝     ՝·¸¸·     flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
-                 │                                          ·՜                         
-               0 ┼──TimeDomainData──┬›                    └                     ┘            
-                 0                 ∞ sec    
-                                                Mode "create lines from time domain chart"
-                 ꞈ
-             256 ┤╥                                       ┌                     ┐
-                 │║ ╥     ╥╥                                ՝·¸    ¸·¸      ¸.¸         duplicate k-time
-                 │║╥║    ╥║║            > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
-                 │║║║╥  ╥║║║╥  ╥   ╥      flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
-                 │║║║║╥╥║║║║║╥╥║╥╥╥║                        ·՜                         
-               0 ┼───FrequencyData──┬›                    └                     ┘
-                 0               24000Hz
-             */
-            module.content.controllers.canvasDiv.classList.add("visualisation"); // white background
-
-            // fullscreen exiting handlers
-            document.addEventListener("fullscreenchange", exitHandler);
-            document.addEventListener("webkitfullscreenchange", exitHandler);
-            document.addEventListener("mozfullscreenchange", exitHandler);
-            document.addEventListener("MSFullscreenChange", exitHandler);
-
-            function exitHandler() {
-                if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-                    canvas.width = canvasWidth;
-                    canvas.height = canvasHeight;
-                }
-            }
-
-            module.head.buttonsWrapper.maximize.onclick = () => {
-                if (canvas.requestFullScreen) canvas.requestFullScreen();
-                else if (canvas.webkitRequestFullScreen) canvas.webkitRequestFullScreen();
-                else if (canvas.mozRequestFullScreen) canvas.mozRequestFullScreen();
-
-                canvas.width = window.screen.width;
-                canvas.height = window.screen.height;
-            };
-
-            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
-            const dataArrayBars = new Uint8Array(bufferLength);
-            const dataArrayWave = new Uint8Array(bufferLength);
-
-            let drawFreely = () => {
-                // monitoring activity changes
-                module.animationID["analyser"] = requestAnimationFrame(drawFreely);
-
-                // if there is nothing actively talking don't waste resources
-                if (module.inputActivity) {
-                    const angle = 360 / module.audioNode.symmetries.value;
-                    const angleRad = (angle * Math.PI) / 180;
-                    let dataArray;
-
-                    // data returned in dataArrayBars will be in range [0-255]
-                    if (module.audioNode) {
-                        if (module.audioNode.type === "create lines from frequencies chart") {
-                            module.audioNode.getByteFrequencyData(dataArrayBars);
-                            dataArray = dataArrayBars;
-                        }
-                        if (module.audioNode.type === "create lines from time domain chart") {
-                            module.audioNode.getByteTimeDomainData(dataArrayWave);
-                            dataArray = dataArrayWave;
-                        }
-                    }
-                    // ctx.fillStyle = "black";
-                    // ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-                    ctx.strokeStyle = `hsl(${module.audioNode.color.value}, 100%, 50%)`;
-
-                    const lineLength = module.audioNode.lineLength.value;
-                    const scale = canvas.height / module.audioNode.scaleDivider.value;
-
-                    ctx.save();
-
-                    ctx.translate(canvas.width / 2, canvas.height / 2);
-                    ctx.scale(module.audioNode.zoom.value, module.audioNode.zoom.value);
-                    ctx.lineWidth = module.audioNode.lineWidth.value;
-
-                    for (let k = 0; k < module.audioNode.symmetries.value; k++) {
-                        ctx.rotate(angleRad);
-
-                        ctx.beginPath();
-
-                        // element range: [0, 255], index range: [0, bufferLength]
-                        dataArray.forEach((element, index) => {
-                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                            let y = scale * (element / 256); // 256 comes from dataArrayWave max value;
-                            if (!index === 0) ctx.moveTo(x, y);
-                            else ctx.lineTo(x, y);
-                        });
-
-                        ctx.stroke();
-                        ctx.beginPath();
-
-                        // element range: [0, 255], index range: [0, bufferLength]
-                        dataArray.forEach((element, index) => {
-                            let x = ((canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                            let y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
-                            if (!index === 0) ctx.moveTo(x, y);
-                            else ctx.lineTo(x, y);
-                        });
-
-                        ctx.stroke();
-                    }
-
-                    ctx.restore();
-                } else {
-                    // maybe it is a good idea to not clean visualisation after signal death
-                    //ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-                }
-            };
-            drawFreely();
         }
     }
 }

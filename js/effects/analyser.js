@@ -1,4 +1,4 @@
-import Module from "../classes/Module.js";
+import Visualizer from "../classes/Visualizer.js";
 import { audioContext } from "../main.js";
 
 export default function analyser(event, initalSmoothing, initalMaxDecibels, initalType) {
@@ -11,29 +11,12 @@ export default function analyser(event, initalSmoothing, initalMaxDecibels, init
     const fftSizeFrequencyBars = 512;
     const analyserTypes = ["sine wave", "frequency bars", "spectogram"];
 
-    const module = new Module("analyser", true, false, false, analyserTypes);
+    const module = new Visualizer("analyser", analyserTypes, type, canvasWidth, canvasHeight, fftSizeSineWave, fftSizeFrequencyBars, maxDecibels, smoothingTimeConstant);
 
-    // set audioNode with inital values
-    module.audioNode = new AnalyserNode(audioContext, {
-        maxDecibels: maxDecibels,
-        smoothingTimeConstant: smoothingTimeConstant,
-    });
-
-    // create inital analyser (it should be empty as nothing is talking to the new module)
-    module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, type);
-
-    // change analyser type
+    // when switching type it might be that module is not active thus reset everything and start listening again
     module.content.options.select.onchange = function () {
-        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, this.value);
-    };
-
-    // when deleting the module freed the animation
-    module.onDeletion = () => {
-        window.cancelAnimationFrame(module.animationID["analyser"]);
-    };
-
-    // if animation get stopped by source module deletion restart it after new connection arrive
-    module.onConnectInput = () => {
-        module.createAnalyser(canvasHeight, canvasWidth, fftSizeSineWave, fftSizeFrequencyBars, module.content.options.select.value);
+        if (this.value === "spectogram") module.content.controllers.canvasDiv.className = "analyser spectro";
+        else module.content.controllers.canvasDiv.className = "analyser";
+        module.resetAnalyser();
     };
 }

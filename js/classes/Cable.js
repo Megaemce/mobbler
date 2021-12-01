@@ -314,8 +314,8 @@ export default class Cable {
         }
 
         // if cable was connecting module to analyser stop the animation there (but only if there is no other active connection)
-        if (destination && (destination.name === "analyser" || destination.name === "visualisation") && !destination.inputActivity) {
-            destination.stopAnalyserAnimation();
+        if (destination && destination.constructor.name == "Visualizer" && !destination.inputActivity) {
+            destination.resetAnalyser();
         }
 
         // un-busy'd input picture but only if there is no other things talking
