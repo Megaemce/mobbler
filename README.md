@@ -28,13 +28,21 @@ Introducing <a href="https://megaemce.github.io/mobbler/"><img src="/img/mobbler
 # Motive
 <a href="https://megaemce.github.io/mobbler/"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few [popular effects](https://github.com/Megaemce/mobbler/wiki/Effects) and [tutorials](https://github.com/Megaemce/mobbler/wiki/Tutorials) on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
 
+# How to start
+Simply create Audio source module (from `Inputs` menu) and Output (from `Outputs` menu) and connect them with a Audio source cable. Hit the play button 
+
+<div align="center">
+ 
+![Audio source to output connection](https://user-images.githubusercontent.com/1651451/144228280-6568e761-79db-43ba-b518-28597ff0b8c8.png)
+ </div>
+
+For more specific modules details and tutorials please check **[mobbler's WIKI](https://github.com/Megaemce/mobbler/wiki)**
 
 # Technology & limitation
 Made in vanilla JavaScript as my first big project to get thorough knowledge of this language.<br>
 Due to the mouse-related handlers solution doesn't work properly with touch (mobiles/tablets). <br>
 It was developed for Chrome browser however seems to be working fine on Firefox and Egde too.
 
-For more specific modules details please check **[mobbler's WIKI](https://github.com/Megaemce/mobbler/wiki)**
 
 I would never create this solution without the help of these people:
 - [Matt McKegg](https://github.com/mmckegg) - author of amazing [web-audio-school](http://mmckegg.github.io/web-audio-school/)
