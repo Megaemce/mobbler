@@ -1,15 +1,14 @@
 import Visualizer from "../classes/Visualizer.js";
-import { audioContext } from "../main.js";
 
-export default function analyser(event, initalSmoothing, initalMaxDecibels, initalType) {
-    const type = String(initalType || "sine wave");
-    const maxDecibels = parseFloat(initalMaxDecibels || 0);
-    const smoothingTimeConstant = parseFloat(initalSmoothing || 0.25);
-    const canvasWidth = 180;
-    const canvasHeight = 100;
-    const fftSizeSineWave = 2048;
-    const fftSizeFrequencyBars = 512;
+export default function analyser(event, initalType, initalSmoothing, initalMaxDecibels, initalCanvasWidth, initalCanvasHeight, initalFFTSizeSine, initalFFTSizeFrequency) {
     const analyserTypes = ["sine wave", "frequency bars", "spectogram"];
+    const type = initalType === undefined ? analyserTypes[0] : initalType;
+    const maxDecibels = parseFloat(initalMaxDecibels || 0);
+    const canvasWidth = parseFloat(initalCanvasWidth || 180);
+    const canvasHeight = parseFloat(initalCanvasHeight || 100);
+    const fftSizeSineWave = parseFloat(initalFFTSizeSine || 2048);
+    const fftSizeFrequencyBars = parseFloat(initalFFTSizeFrequency || 512);
+    const smoothingTimeConstant = parseFloat(initalSmoothing || 0.25);
 
     const module = new Visualizer("analyser", analyserTypes, type, canvasWidth, canvasHeight, fftSizeSineWave, fftSizeFrequencyBars, maxDecibels, smoothingTimeConstant);
 

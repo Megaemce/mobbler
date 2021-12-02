@@ -6,8 +6,6 @@ export default class Visualizer extends Module {
         super(name, true, false, false, typeList);
         this.fft = fftSizeSineWave === undefined ? fftSizeFrequencyBars : fftSizeFrequencyBars;
         this.type = type;
-        this.canvas = document.createElement("canvas");
-        this.canvasDiv = document.createElement("div");
         this.audioNode = new AnalyserNode(audioContext, { fftSize: this.fftSize });
         this.listeningID = undefined; // keep animationFrameID for listener
         this.canvasWidth = canvasWidth;
@@ -20,8 +18,8 @@ export default class Visualizer extends Module {
     /* build HTML base for actual animated canvas */
     buildCanvasStucture() {
         const module = this;
-        const canvas = this.canvas;
-        const canvasDiv = this.canvasDiv;
+        const canvas = document.createElement("canvas");
+        const canvasDiv = document.createElement("div");
 
         module.content.controllers.classList.add("visualisation"); // controls flex-direction
 
@@ -36,6 +34,9 @@ export default class Visualizer extends Module {
         module.content.controllers.canvasDiv.appendChild(canvas);
         module.content.controllers.canvasDiv.canvas = canvas;
         module.content.controllers.canvasDiv.className = "analyser";
+
+        this.ctx = module.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d");
+        this.canvas = canvas;
     }
     /* set listener on input - performance tweak - don't waste resource on animated empty signal */
     startListeningOnInput() {
@@ -50,18 +51,13 @@ export default class Visualizer extends Module {
         };
         listen();
     }
-
     /* create analyser on this module*/
     createAnalyser(type) {
+        const img = new Image(); // used for pattern
+        const ctx = this.ctx;
         const module = this;
         const canvas = this.canvas;
 
-        this.ctx = module.content.controllers.canvasDiv.drawingContext = canvas.getContext("2d");
-
-        const ctx = this.ctx;
-        ctx.clearRect(0, 0, module.canvasWidth, module.canvasHeight);
-
-        const img = new Image(); // used for pattern
         img.src = "./img/pattern.svg";
 
         if (type === "frequency bars") {
@@ -88,15 +84,16 @@ export default class Visualizer extends Module {
                 ctx.fillRect(0, 0, module.canvasWidth, module.canvasHeight);
 
                 let x = 0;
-                ctx.beginPath();
 
-                dataArray.forEach((barHeight, index) => {
-                    ctx.fillStyle = `rgb(98, 255, ${barHeight - 100})`;
+                dataArray.forEach((element) => {
                     // contex grid is upside down so we substract from y value
-                    ctx.fillRect(x, module.canvasHeight - barHeight / 2, barWidth, barHeight / 2);
-                    x += barWidth + 1;
+                    const y = module.canvasHeight - (module.canvasHeight * element) / 256;
+
+                    ctx.fillStyle = `rgb(98, 255, ${element - 100})`;
+                    ctx.fillRect(x, y, barWidth, module.canvasHeight);
+
+                    x += barWidth + 1; // make pixel space between bars
                 });
-                ctx.stroke();
             };
             drawBar();
         }
@@ -178,7 +175,7 @@ export default class Visualizer extends Module {
                  ꞈ                                                             
              256 ┤                                        ┌                     ┐
                  │՝·¸                                        ՝·¸    ¸·¸      ¸.¸         duplicate k-time
-                 │   `.     ¸.·¸        > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
+                 │   `.     ¸.·¸        > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·՝    ՝   >  rotate (angleRad * k))
                  │      ՝·.·՝     ՝·¸¸·     flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
                  │                                          ·՜                         
                0 ┼──TimeDomainData──┬›                    └                     ┘            
@@ -187,12 +184,18 @@ export default class Visualizer extends Module {
                  ꞈ
              256 ┤╥                                       ┌                     ┐
                  │║ ╥     ╥╥                                ՝·¸    ¸·¸      ¸.¸         duplicate k-time
-                 │║╥║    ╥║║            > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·֬    `   >  rotate (angleRad * k))
+                 │║╥║    ╥║║            > duplicate and >      `·¸՜    ՝·ֻ՜ ̗`·՝    ՝   >  rotate (angleRad * k))
                  │║║║╥  ╥║║║╥  ╥   ╥      flip y values       ·՜   ՝·.·՜     ՝·¸·֬        k ∊ [1...symmetries]
                  │║║║║╥╥║║║║║╥╥║╥╥╥║                        ·՜                         
                0 ┼───FrequencyData──┬›                    └                     ┘
                  0               24000Hz
              */
+
+            const lineLength = module.audioNode.lineLength.value;
+            const angle = 360 / module.audioNode.symmetries.value;
+            const angleRad = (angle * Math.PI) / 180;
+            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
+            const dataArray = new Uint8Array(bufferLength);
 
             // fullscreen exiting handlers
             document.addEventListener("fullscreenchange", exitHandler);
@@ -216,36 +219,26 @@ export default class Visualizer extends Module {
                 canvas.height = window.screen.height;
             };
 
-            const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
-            const dataArrayBars = new Uint8Array(bufferLength);
-            const dataArrayWave = new Uint8Array(bufferLength);
-
             let drawFreely = () => {
-                module.animationID["analyser"] = requestAnimationFrame(drawFreely);
+                // need to be here not ouside as the canvas height/width get updated on fullscreen
+                const scale = canvas.height * module.audioNode.lineFlatness.value;
+                const barWidth = canvas.width / bufferLength;
 
-                const angle = 360 / module.audioNode.symmetries.value;
-                const angleRad = (angle * Math.PI) / 180;
-                let dataArray;
+                module.animationID["analyser"] = requestAnimationFrame(drawFreely);
 
                 // data returned in dataArrayBars will be in range [0-255]
                 if (module.audioNode) {
                     if (module.audioNode.type === "create lines from frequencies chart") {
-                        module.audioNode.getByteFrequencyData(dataArrayBars);
-                        dataArray = dataArrayBars;
+                        module.audioNode.getByteFrequencyData(dataArray);
                     }
                     if (module.audioNode.type === "create lines from time domain chart") {
-                        module.audioNode.getByteTimeDomainData(dataArrayWave);
-                        dataArray = dataArrayWave;
+                        module.audioNode.getByteTimeDomainData(dataArray);
                     }
                 }
 
                 ctx.strokeStyle = `hsl(${module.audioNode.color.value}, 100%, 50%)`;
 
-                const lineLength = module.audioNode.lineLength.value;
-                const scale = canvas.height / module.audioNode.scaleDivider.value;
-
                 ctx.save();
-
                 ctx.translate(canvas.width / 2, canvas.height / 2);
                 ctx.scale(module.audioNode.zoom.value, module.audioNode.zoom.value);
                 ctx.lineWidth = module.audioNode.lineWidth.value;
@@ -257,8 +250,8 @@ export default class Visualizer extends Module {
 
                     // element range: [0, 255], index range: [0, bufferLength]
                     dataArray.forEach((element, index) => {
-                        let x = ((module.canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                        let y = scale * (element / 256); // 256 comes from dataArrayWave max value;
+                        const x = barWidth * lineLength * index;
+                        const y = scale * (element / 256); // 256 comes from dataArrayWave max value;
                         if (!index === 0) ctx.moveTo(x, y);
                         else ctx.lineTo(x, y);
                     });
@@ -268,8 +261,8 @@ export default class Visualizer extends Module {
 
                     // element range: [0, 255], index range: [0, bufferLength]
                     dataArray.forEach((element, index) => {
-                        let x = ((module.canvasWidth * lineLength) / bufferLength) * index; // sliceWidth * index
-                        let y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
+                        const x = barWidth * lineLength * index;
+                        const y = -scale * (element / 256); // 256 comes from dataArrayWave max value;
                         if (!index === 0) ctx.moveTo(x, y);
                         else ctx.lineTo(x, y);
                     });
@@ -289,7 +282,6 @@ export default class Visualizer extends Module {
         this.ctx && this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.startListeningOnInput();
     }
-
     /* when deleting the module stop the animationFrames */
     onDeletion() {
         window.cancelAnimationFrame(this.animationID["analyser"]);
