@@ -191,9 +191,6 @@ export default class Visualizer extends Module {
                  0               24000Hz
              */
 
-            const lineLength = module.audioNode.lineLength.value;
-            const angle = 360 / module.audioNode.symmetries.value;
-            const angleRad = (angle * Math.PI) / 180;
             const bufferLength = module.audioNode.frequencyBinCount; //it's always half of fftSize
             const dataArray = new Uint8Array(bufferLength);
 
@@ -223,6 +220,10 @@ export default class Visualizer extends Module {
                 // need to be here not ouside as the canvas height/width get updated on fullscreen
                 const scale = canvas.height * module.audioNode.lineFlatness.value;
                 const barWidth = canvas.width / bufferLength;
+                // need to be inside as the parameters get changed
+                const angle = 360 / module.audioNode.symmetries.value;
+                const angleRad = (angle * Math.PI) / 180;
+                const lineLength = module.audioNode.lineLength.value;
 
                 module.animationID["analyser"] = requestAnimationFrame(drawFreely);
 
