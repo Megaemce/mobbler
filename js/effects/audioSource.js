@@ -20,16 +20,21 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     module.content.options.select.onchange = function (event) {
         // when new option is added (eg. after new file loaded) this onchange event get trigger too
         // srcElement.id is only defined when if it was triggered by file button (eg. loading file)
-        // when selected option is an file button start openFileHandler
-        if (!event.srcElement.id && this[this.selectedIndex].id === "file button") {
-            // add hooker to the fileButton and then start it by click event
-            module.content.options.select.fileButton.input.onchange = () => {
-                openFileHandler(module, "sound");
-            };
-            module.content.options.select.fileButton.input.click();
+        if (!event.srcElement.id) {
+            // when selected option is an file button start openFileHandler
+            if (this[this.selectedIndex].id === "file button") {
+                // add hooker to the fileButton and then start it by click event
+                module.content.options.select.fileButton.input.onchange = () => {
+                    openFileHandler(module, "sound");
+                };
+                module.content.options.select.fileButton.input.click();
+                // stop the sound as select.value is still "open file..." thus causing issue in loading audio buffer
+                module.stopSound();
+            } else {
+                // if something is playing stop it and play the new one
+                module.isTransmitting && module.playSound();
+            }
         }
-        // if something is playing stop it and play the new one
-        module.isTransmitting && module.playSound();
     };
 
     // when changing looper settings kill or loop the buffer
