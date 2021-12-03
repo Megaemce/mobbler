@@ -1,5 +1,5 @@
 import Point from "../classes/Point.js";
-import { cables } from "../main.js";
+import { cables, modules } from "../main.js";
 import { directionString } from "../helpers/math.js";
 import { buildCable, displayAlertOnElement } from "../helpers/builders.js";
 
@@ -287,53 +287,50 @@ export default class Cable {
         // remove jack (if it's still exists)
         cable.jack && svg.removeChild(cable.jack);
 
-        // disconnect source and destination (if this is a module-module connection)
-        if (destination && source.audioNode && cable.inputName === "input") {
-            try {
-                // multiNode supports disconnect function but can't return proper value on <AudioNode>.disconnect(<multiNode>)
-                if (destination.audioNode.inputNode) source.audioNode.disconnect(destination.audioNode.inputNode);
-                else source.audioNode.disconnect(destination.audioNode);
-            } catch (error) {
-                console.log(`Cannot disconnect ${source.name} and ${destination.name} as they are not connected anymore`);
-            }
-        }
-
-        // send further info that this cable is deactived (if this is not an inital cable)
-        if (destination) destination.markAllLinkedCablesAs("deactive");
-
-        // remove from cables dictionary (this needs to be after markAllLinkedCablesAs)
+        // remove from cables dictionary (this needs to be done before inputActivity)
         delete cables[cable.id];
 
-        // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
-        if (destination && cable.inputName !== "input") {
-            destination.content.controllers[cable.inputName].slider.classList.remove("disabled");
-            destination.stopSliderAnimation(cable.inputName);
+        // if this is not an inital cable
+        if (destination) {
+            // if destination is no longer active mark it correctly (needs to be done after cable is deleted from "cables")
+            if (destination.inputActivity === false) {
+                destination.isTransmitting = false;
+            }
 
-            // un-busy'd input picture
-            destination.footer[cable.inputName].img.setAttribute("src", "./img/parameter_input.svg");
-        }
+            // send further info that this cable is deactivated (needs to be done after destination.isTansmitting is set)
+            destination.markAllLinkedCablesAs("deactive");
 
-        // if cable was connecting module to analyser stop the animation there (but only if there is no other active connection)
-        if (destination && destination.constructor.name == "Visualizer" && !destination.inputActivity) {
-            destination.resetAnalyser();
-        }
+            // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
+            if (cable.inputName !== "input") {
+                destination.content.controllers[cable.inputName].slider.classList.remove("disabled");
+                destination.stopSliderAnimation(cable.inputName);
 
-        // un-busy'd input picture but only if there is no other things talking
-        if (destination && cable.inputName === "input" && destination.inputCount === 0) {
-            destination.div.input.setAttribute("src", "./img/input.svg");
-        }
+                // un-busy'd input picture
+                destination.footer[cable.inputName].img.setAttribute("src", "./img/parameter_input.svg");
+            }
 
-        // reconnect all others nodes. If module got deleted don't try to reconnect its outcoming cables
-        if (modules[source.id] && source.audioNode) {
-            source.audioNode.disconnect();
+            // if cable was connecting module to analyser stop the animation there (but only if there is no other active connection)
+            if (destination.constructor.name == "Visualizer" && !destination.inputActivity) {
+                destination.resetAnalyser();
+            }
 
-            source.outcomingCables.forEach((cable) => {
-                if (cable.inputName === "input") {
-                    source.connectToModule(cable.destination);
-                } else {
-                    source.connectToParameter(cable.destination, cable.inputName);
-                }
-            });
+            // un-busy'd input picture but only if there is no other things talking
+            if (cable.inputName === "input" && destination.inputCount === 0) {
+                destination.div.input.setAttribute("src", "./img/input.svg");
+            }
+
+            // reconnect all others nodes. If module got deleted don't try to reconnect its outcoming cables
+            if (modules[source.id] && source.audioNode) {
+                source.audioNode.disconnect();
+
+                source.outcomingCables.forEach((cable) => {
+                    if (cable.inputName === "input") {
+                        source.connectToModule(cable.destination);
+                    } else {
+                        source.connectToParameter(cable.destination, cable.inputName);
+                    }
+                });
+            }
         }
     }
 }

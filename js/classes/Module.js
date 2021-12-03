@@ -192,6 +192,7 @@ export default class Module {
         while (stack.length) {
             const cable = stack.pop(); // currently visited cable
             const destination = cable.destination;
+            const source = cable.source;
 
             // simply make the cable active
             if (status === "active") {
@@ -210,8 +211,8 @@ export default class Module {
                     }
                 });
             }
-            // simply make the cable deactive
-            if (status === "deactive") {
+            // simple make the cable deactive if it's source is also death
+            if (status === "deactive" && source.isTransmitting === false) {
                 cable.makeDeactive();
             }
             // as this cable was module-to-module type and source module is not active anymore,
@@ -268,7 +269,7 @@ export default class Module {
             cable.startPhysicsAnimation();
         });
 
-        // Update module's position and its cables
+        // update module position and its cables
         document.onmousemove = (event) => {
             // show cables on front while moving modules
             canvas.style.zIndex = module.zIndex + 1;
