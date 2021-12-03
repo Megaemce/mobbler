@@ -1,4 +1,4 @@
-import Visualizer from "../classes/Visualizer.js";
+import Visualizer from "../classes/ModuleVisualizer.js";
 
 export default function analyser(event, initalType, initalSmoothing, initalMaxDecibels, initalCanvasWidth, initalCanvasHeight, initalFFTSizeSine, initalFFTSizeFrequency) {
     const analyserTypes = ["sine wave", "frequency bars", "spectogram"];
