@@ -23,14 +23,8 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
         get dryness() {
             return this.drynessNode.gain;
         },
-        set dryness(value) {
-            this.drynessNode.gain.value = value;
-        },
         get wetness() {
             return this.wetnessNode.gain;
-        },
-        set wetness(value) {
-            this.wetnessNode.gain.value = value;
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);

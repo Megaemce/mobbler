@@ -20,20 +20,11 @@ export default function delayEffect(event, initalDelay, initalDryness, initalFee
         get dryness() {
             return this.dryNode.gain;
         },
-        set dryness(value) {
-            this.dryNode.gain.value = value;
-        },
         get delaytime() {
             return this.delayNode.delayTime;
         },
-        set delaytime(value) {
-            this.delayNode.delayTime.value = value;
-        },
         get feedback() {
             return this.feedbackNode.gain;
-        },
-        set feedback(value) {
-            this.feedbackNode.gain.value = value;
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);

@@ -27,10 +27,6 @@ export default class Module {
         }
         return false;
     }
-    /* return input status with one second delay - used to stop analyser with smooth fade */
-    get inputActivityWithDelay() {
-        setTimeout(this.inputActivity, 1000);
-    }
     /* return number of incoming cables to the input (not nessesary active). Used by deleteCable() */
     get inputCount() {
         return Object.values(cables).filter((cable) => cable.destination === this && cable.inputName === "input").length;
@@ -162,12 +158,6 @@ export default class Module {
     /* cancel slider movement animation on sliderType */
     stopSliderAnimation(sliderType) {
         window.cancelAnimationFrame(this.animationID[sliderType]);
-    }
-    /* cancel analyser animation */
-    stopAnalyserAnimation() {
-        setTimeout(() => {
-            window.cancelAnimationFrame(this.animationID["analyser"]);
-        }, 200);
     }
     /* create new cable which is an inital cable */
     addInitalCable() {

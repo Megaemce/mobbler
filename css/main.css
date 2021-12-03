@@ -567,10 +567,6 @@ svg {
     height: var(--sliderWidth);
     position: relative 
 }
-.module .content .controllers .sliders .slider .input-wrapper input[type="checkbox"] {
-    cursor: pointer;
-    margin-right: 7px 
-}
 .module .content .controllers .sliders .slider .input-wrapper input[type="range"] {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -602,20 +598,6 @@ svg {
 .module .content .controllers .sliders .slider .input-wrapper input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     position: relative;
-    top: 0;
-    z-index: 1;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    background-image: url('../img/slider.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain 
-}
-.module .content .controllers .sliders .slider .input-wrapper input[type="range"]::-moz-range-thumb {
-    -moz-appearance: none;
-    position: relative;
-    border: 0;
     top: 0;
     z-index: 1;
     width: 32px;

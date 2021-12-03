@@ -22,7 +22,7 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
     const drive = parseFloat(initalDrive || 0.2);
     const precut = parseFloat(initalPrecut || 800);
     const postcut = parseFloat(initalPostcut || 3000);
-    const clipping = initalClipping || clippingTypes["Hard clipping"](drive);
+    const clipping = initalClipping || clippingTypes["Soft clipping"](drive);
     const gainInfo = "Multiplication of sound volume";
     const driveInfo = "Overdrive amount. Only in soft clipping";
     const precutInfo = "Pre-distortion bandpass filter frequency";
@@ -40,27 +40,11 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
         get gain() {
             return this.gainNode.gain;
         },
-        set gain(value) {
-            this.gainNode.gain.value = value;
-        },
         get precut() {
             return this.bandpassNode.frequency;
         },
-        set precut(value) {
-            this.bandpassNode.frequency.value = value;
-        },
         get postcut() {
             return this.lowpassNode.frequency;
-        },
-        set postcut(value) {
-            this.lowpassNode.frequency.value = value;
-        },
-        get drive() {
-            return this.distortionNode.drive;
-        },
-        set drive(value) {
-            this.distortionNode.drive = value;
-            this.distortionNode.curve = clippingTypes["Soft clipping"](value);
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
@@ -71,9 +55,19 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
         },
     };
 
-    // custom distortion drive attribute
-    module.audioNode.distortionNode.drive = { value: drive };
+    // state-of-the-art drive with it setter changing distortionNode curve. That was hard to figure out!
+    module.audioNode.drive = {
+        _value: undefined,
+        get value() {
+            return this._value;
+        },
+        set value(amount) {
+            this._value = amount;
+            module.audioNode.distortionNode.curve = clippingTypes["Soft clipping"](amount);
+        },
+    };
 
+    // custom distortion drive attribute
     module.createSlider("gain", gain, 1, 20, 1, "", false, gainInfo);
     module.createSlider("precut", precut, 0.1, 22050, 1, "Hz", true, precutInfo);
     module.createSlider("drive", drive, 0, 1, 0.1, "", false, driveInfo);
@@ -85,7 +79,7 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
     module.audioNode.distortionNode.connect(module.audioNode.lowpassNode);
     module.audioNode.lowpassNode.connect(module.audioNode.outputNode);
 
-    module.content.options.select.value = "Hard clipping";
+    module.content.options.select.value = "Soft clipping";
 
     module.content.options.select.onchange = function () {
         if (this.value === "Soft clipping") {

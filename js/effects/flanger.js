@@ -25,26 +25,14 @@ export default function flanger(event, initalDelay, initalDepth, initalSpeed, in
         get speed() {
             return this.oscillatorNode.frequency;
         },
-        set speed(value) {
-            this.oscillatorNode.frequency.value = value;
-        },
         get delaytime() {
             return this.delayNode.delayTime;
-        },
-        set delaytime(value) {
-            this.delayNode.delayTime.value = value;
         },
         get feedback() {
             return this.feedbackNode.gain;
         },
-        set feedback(value) {
-            this.feedbackNode.gain.value = value;
-        },
         get depth() {
             return this.depthNode.gain;
-        },
-        set depth(value) {
-            this.depthNode.gain.value = value;
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);

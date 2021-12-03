@@ -17,9 +17,6 @@ export default function pannerTremolo(event, initalSpeed) {
         get speed() {
             return this.oscillatorNode.frequency;
         },
-        set speed(value) {
-            this.oscillatorNode.frequency.value = value;
-        },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);

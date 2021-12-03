@@ -17,12 +17,7 @@ export function valueToLogPosition(value, min, max) {
     let calculation = min + (Math.log(value || 1) - Math.log(min || 1)) / scale;
     return parseFloat(calculation.toFixed(digitsAfterDot));
 }
-
-export function scaleBetween(givenNum, givenMin, givenMax, desirableMin, desirableMax) {
-    let calculation = ((desirableMax - desirableMin) * (givenNum - givenMin)) / (givenMax - givenMin) + desirableMin;
-    return calculation;
-}
-
+// returns direction as a string based on line between point A and B
 export function directionString(pointA, pointB) {
     let angle = (Math.atan2(pointB.y - pointA.y, pointB.x - pointA.x) * 180) / Math.PI;
     if (angle < 0) angle = 360 + angle; // changing range [-180,180] to [0, 360]

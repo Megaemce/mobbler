@@ -21,11 +21,9 @@ import { createSelectionRectangle } from "./helpers/builders.js";
 // import inputOutput from "./tutorials/inputOutput.js"; // tutorial for input-output
 
 // set all the initial variables
-export let audioContext;
 export let cables = {}; // keep all cables
 export let modules = {}; // keep all modules
-
-export { audioSource as audioSource };
+export let audioContext;
 
 const sounds = ["diminished_slide.wav", "dnb.wav", "drums.wav", "guitar.wav", "hihat.wav", "kick.wav", "melody.mp3", , "organ.wav", "radioSignal.wav", "saxophone.wav", "snare.wav"];
 const impulseResponses = ["IR_cathedral.wav", "IR_church.wav", "IR_room.wav", "IR_forest.wav", "IR_theater.wav"];
