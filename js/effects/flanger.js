@@ -72,4 +72,6 @@ export default function flanger(event, initalDelay, initalDepth, initalSpeed, in
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
+
+    return module;
 }

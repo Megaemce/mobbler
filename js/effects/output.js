@@ -24,4 +24,6 @@ export default function output(event) {
         outputButton.onmouseover = undefined;
         outputButton.addEventListener("mousedown", output);
     };
+
+    return module;
 }

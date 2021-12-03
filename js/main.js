@@ -6,6 +6,7 @@ import gain from "./effects/gain.js";
 import oscillator from "./effects/oscillator.js";
 import delay from "./effects/delay.js";
 import audioSource from "./effects/audioSource.js";
+import output from "./effects/output.js";
 import liveInput from "./effects/liveInput.js";
 import distortion from "./effects/distortion.js";
 import delayEffect from "./effects/delayEffect.js";
@@ -13,16 +14,17 @@ import flanger from "./effects/flanger.js";
 import reverb from "./effects/reverb.js";
 import gainTremolo from "./effects/gainTremolo.js";
 import pannerTremolo from "./effects/pannerTremolo.js";
-import output from "./effects/output.js";
 import visualisation from "./effects/visualisation.js";
 import stereoPanner from "./effects/stereoPanner.js";
 import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
+// import inputOutput from "./tutorials/inputOutput.js"; // tutorial for input-output
 
 // set all the initial variables
 export let audioContext;
 export let cables = {}; // keep all cables
 export let modules = {}; // keep all modules
+
 export { audioSource as audioSource };
 
 const sounds = ["diminished_slide.wav", "dnb.wav", "drums.wav", "guitar.wav", "hihat.wav", "kick.wav", "melody.mp3", , "organ.wav", "radioSignal.wav", "saxophone.wav", "snare.wav"];

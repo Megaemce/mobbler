@@ -18,4 +18,6 @@ export default function analyser(event, initalType, initalSmoothing, initalMaxDe
         else module.content.controllers.canvasDiv.className = "analyser";
         module.resetAnalyser();
     };
+
+    return module;
 }

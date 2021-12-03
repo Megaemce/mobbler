@@ -28,8 +28,11 @@ export function addOpenFileButtonTo(selectDiv) {
 export function displayAlertOnElement(message, element, timeInSec) {
     const time = timeInSec === undefined ? 1000 : parseFloat(timeInSec) * 1000;
     let span;
-    if (element.getElementsByClassName("alertText")[0]) {
-        span = element.getElementsByClassName("alertText")[0];
+    const previousAlert = element.getElementsByClassName("alertText")[0];
+
+    // don't replicate the same alert
+    if (previousAlert && previousAlert.innerHTML === message) {
+        span = previousAlert;
         span.style.visibility = "visible";
         span.style.opacity = "1";
     } else {

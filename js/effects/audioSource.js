@@ -52,4 +52,6 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
+
+    return module;
 }

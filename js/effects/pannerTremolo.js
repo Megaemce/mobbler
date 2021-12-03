@@ -39,4 +39,6 @@ export default function pannerTremolo(event, initalSpeed) {
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
+
+    return module;
 }

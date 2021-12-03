@@ -71,4 +71,6 @@ export default function visualisation(event, initalType, initalCanvasWidth, init
         visualisationButton.onmouseover = undefined;
         visualisationButton.addEventListener("mousedown", visualisation);
     };
+
+    return module;
 }

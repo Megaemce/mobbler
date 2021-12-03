@@ -20,4 +20,6 @@ export default function oscillator(event, initalType, initalDetune, initalFreque
 
     // structure needs to be fully build before. GetBoundingClientRect related.
     module.addInitalCable();
+
+    return module;
 }

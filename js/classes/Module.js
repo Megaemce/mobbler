@@ -100,7 +100,6 @@ export default class Module {
         // add module to the modules dictionary
         modules[module.id] = module;
     }
-
     /* build module audio slider html object and attach all logic into it */
     createSlider(property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
         const module = this;

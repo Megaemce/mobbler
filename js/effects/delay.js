@@ -14,4 +14,6 @@ export default function delay(event, initialDelay, initalMaxDelay) {
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
+
+    return module;
 }
