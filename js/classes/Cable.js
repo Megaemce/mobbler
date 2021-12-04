@@ -332,5 +332,8 @@ export default class Cable {
                 });
             }
         }
+
+        // remove object
+        delete this;
     }
 }
