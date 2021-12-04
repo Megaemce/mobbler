@@ -41,7 +41,7 @@ export default function liveInput(event) {
     // only one liveInput possible per project
     const liveInputButton = document.getElementById("liveInput");
     liveInputButton.style.cursor = "not-allowed";
-    liveInputButton.removeEventListener("mousedown", liveInput);
+    liveInputButton.onmousedown = undefined;
     liveInputButton.onmouseover = () => {
         displayAlertOnElement("Only one live input per project", liveInputButton);
     };
@@ -49,7 +49,7 @@ export default function liveInput(event) {
     module.onDeletion = () => {
         liveInputButton.style.cursor = "pointer";
         liveInputButton.onmouseover = undefined;
-        liveInputButton.addEventListener("mousedown", liveInput);
+        liveInputButton.onmousedown = liveInput;
     };
 
     // add inital cable when structure is fully build - getBoundingClientRect related

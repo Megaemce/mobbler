@@ -46,24 +46,25 @@ document.onmousemove = () => {
 
     document.onmousemove = undefined;
 };
-document.getElementById("gain").addEventListener("mousedown", gain);
-document.getElementById("delay").addEventListener("mousedown", delay);
-document.getElementById("output").addEventListener("mousedown", output);
-document.getElementById("reverb").addEventListener("mousedown", reverb);
-document.getElementById("flanger").addEventListener("mousedown", flanger);
-document.getElementById("analyser").addEventListener("mousedown", analyser);
-document.getElementById("convolver").addEventListener("mousedown", convolver);
-document.getElementById("liveInput").addEventListener("mousedown", liveInput);
-document.getElementById("distortion").addEventListener("mousedown", distortion);
-document.getElementById("oscillator").addEventListener("mousedown", oscillator);
-document.getElementById("audioSource").addEventListener("mousedown", audioSource);
-document.getElementById("delayEffect").addEventListener("mousedown", delayEffect);
-document.getElementById("gainTremolo").addEventListener("mousedown", gainTremolo);
-document.getElementById("biquadFilter").addEventListener("mousedown", biquadFilter);
-document.getElementById("stereoPanner").addEventListener("mousedown", stereoPanner);
-document.getElementById("pannerTremolo").addEventListener("mousedown", pannerTremolo);
-document.getElementById("visualisation").addEventListener("mousedown", visualisation);
-document.getElementById("dynamicsCompressor").addEventListener("mousedown", dynamicsCompressor);
+
+document.getElementById("gain").onmousedown = gain;
+document.getElementById("delay").onmousedown = delay;
+document.getElementById("output").onmousedown = output;
+document.getElementById("reverb").onmousedown = reverb;
+document.getElementById("flanger").onmousedown = flanger;
+document.getElementById("analyser").onmousedown = analyser;
+document.getElementById("convolver").onmousedown = convolver;
+document.getElementById("liveInput").onmousedown = liveInput;
+document.getElementById("distortion").onmousedown = distortion;
+document.getElementById("oscillator").onmousedown = oscillator;
+document.getElementById("audioSource").onmousedown = audioSource;
+document.getElementById("delayEffect").onmousedown = delayEffect;
+document.getElementById("gainTremolo").onmousedown = gainTremolo;
+document.getElementById("biquadFilter").onmousedown = biquadFilter;
+document.getElementById("stereoPanner").onmousedown = stereoPanner;
+document.getElementById("pannerTremolo").onmousedown = pannerTremolo;
+document.getElementById("visualisation").onmousedown = visualisation;
+document.getElementById("dynamicsCompressor").onmousedown = dynamicsCompressor;
 
 // preventing enter key from adding space in name/parameter edition
 document.onkeydown = (event) => {

@@ -58,7 +58,7 @@ export default function visualisation(event, initalType, initalCanvasWidth, init
     // only one output possible per project
     const visualisationButton = document.getElementById("visualisation");
     visualisationButton.style.cursor = "not-allowed";
-    visualisationButton.removeEventListener("mousedown", visualisation);
+    visualisationButton.onmousedown = undefined;
     visualisationButton.onmouseover = () => {
         displayAlertOnElement("Only one visualisation per project", visualisationButton);
     };
@@ -69,7 +69,7 @@ export default function visualisation(event, initalType, initalCanvasWidth, init
         window.cancelAnimationFrame(module.listeningID);
         visualisationButton.style.cursor = "pointer";
         visualisationButton.onmouseover = undefined;
-        visualisationButton.addEventListener("mousedown", visualisation);
+        visualisationButton.onmousedown = visualisation;
     };
 
     return module;
