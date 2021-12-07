@@ -1,4 +1,5 @@
 import { valueToLogPosition } from "../helpers/math.js";
+import { modules } from "../main.js";
 import Line from "../classes/Line.js";
 
 let tempx = 50;
@@ -24,10 +25,12 @@ export function addOpenFileButtonTo(selectDiv) {
     selectDiv.appendChild(fileButton);
     selectDiv.fileButton = fileButton;
 }
-
 export function displayAlertOnElement(message, element, timeInSec) {
     const time = timeInSec === undefined ? 1000 : parseFloat(timeInSec) * 1000;
     let span;
+
+    if (element === undefined) return;
+
     const previousAlert = element.getElementsByClassName("alertText")[0];
 
     // don't replicate the same alert
@@ -50,7 +53,6 @@ export function displayAlertOnElement(message, element, timeInSec) {
         span.style.opacity = "0";
     }, time);
 }
-
 export function createSelectionRectangle(event) {
     const div = document.getElementById("selection-rect");
     const x1 = event.clientX;
@@ -79,12 +81,11 @@ export function createSelectionRectangle(event) {
         document.onmousedown = undefined; // create selection only once. Remove later!
     };
 }
-
 export function buildModule(module) {
     const head = document.createElement("div");
     const close = document.createElement("button");
     const title = document.createElement("span");
-    const footer = document.createElement("footer");
+    const footer = document.createElement("div");
     const content = document.createElement("div");
     const options = document.createElement("div");
     const buttons = document.createElement("div");
@@ -219,12 +220,12 @@ export function buildModule(module) {
 
         // keep info about parent and type in image and it's wrapper for movingCable function
         img.src = "./img/input.svg";
-        img.parentModule = module;
         img.inputName = "input";
+        img.parentModuleID = module.id;
 
         socket.className = "socket-wrapper";
-        socket.parentModule = module;
         socket.inputName = "input";
+        socket.parentModuleID = module.id;
         socket.appendChild(img);
 
         leftSide.appendChild(socket);
@@ -255,7 +256,6 @@ export function buildModule(module) {
     // add the node into the soundfield
     modulesDiv.appendChild(moduleDiv);
 }
-
 export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
     const unit = document.createElement("span");
     const info = document.createElement("div");
@@ -419,12 +419,12 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     // module.footer.$parameterType.img
     // keep info about parent and type in image and it's wrapper for movingCable function
     parameterImg.src = "./img/parameter_input.svg";
-    parameterImg.parentModule = module;
     parameterImg.inputName = parameterType;
+    parameterImg.parentModuleID = module.id;
 
     // module.footer.$parameterType
     audioParam.inputName = parameterType;
-    audioParam.parentModule = module;
+    audioParam.parentModuleID = module.id;
     audioParam.className = "parameter-wrapper";
     audioParam.appendChild(parameterImg);
     audioParam.img = parameterImg;
@@ -432,18 +432,17 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     module.footer.appendChild(audioParam);
     module.footer[parameterType] = audioParam;
 }
-
 export function buildCable(cable) {
     const svg = document.getElementById("svgCanvas");
-    const xPosition = parseFloat(cable.source.modulePosition.right);
-    const yPosition = parseFloat(cable.source.modulePosition.top) + 10;
+    const xPosition = parseFloat(modules[cable.sourceID].modulePosition.right);
+    const yPosition = parseFloat(modules[cable.sourceID].modulePosition.top) + 10;
     const shapeUnfoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
     const shapeFoldAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
     const jackRotateAnimation = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
 
     cable.jack.setAttribute("href", "./img/jack.svg");
     cable.jack.setAttribute("height", "9");
-    cable.jack.setAttribute("id", `${cable.source.id}-jack`);
+    cable.jack.setAttribute("id", `${cable.sourceID}-jack`);
 
     // move original shape to the position on the right top of module
     cable.points.forEach((point, i) => {
@@ -491,4 +490,156 @@ export function buildCable(cable) {
     jackRotateAnimation.setAttribute("fill", "freeze");
 
     cable.jack.rotateAnimation = jackRotateAnimation;
+}
+export function buildMixer() {
+    // if console was already created don't bother
+    if (!document.getElementById("mixer-controllers")) {
+        const footer = document.getElementById("mixer");
+        const hideButton = document.createElement("button");
+        const hideButtonDiv = document.createElement("div");
+        const controllers = document.createElement("div");
+
+        hideButton.className = "hide-button";
+
+        hideButtonDiv.className = "hide-wrapper";
+        hideButtonDiv.appendChild(document.createTextNode("MIXER"));
+        hideButtonDiv.appendChild(hideButton);
+        hideButtonDiv.onclick = () => {
+            if (controllers.classList.contains("show")) controllers.classList.remove("show");
+            else controllers.classList.add("show");
+            if (hideButton.classList.contains("show")) hideButton.classList.remove("show");
+            else hideButton.classList.add("show");
+        };
+
+        controllers.id = "mixer-controllers";
+        controllers.className = "controllers nothing";
+
+        footer.appendChild(hideButtonDiv);
+        footer.appendChild(controllers);
+        footer.hideButton = hideButton;
+    }
+}
+export function buildMixerChannel(module) {
+    const muteDiv = document.createElement("div");
+    const soloDiv = document.createElement("div");
+    const muteButton = document.createElement("button");
+    const soloButton = document.createElement("button");
+    const controller = document.createElement("div");
+    const moduleName = document.createElement("span");
+
+    const mixerControllers = document.getElementById("mixer-controllers");
+
+    moduleName.appendChild(document.createTextNode(module.name));
+    moduleName.className = "moduleName";
+    moduleName.onclick = () => {
+        module.bringToFront();
+        const position = module.modulePosition;
+        const newPostion1 = { left: position.left - 0.9, top: position.top };
+        const newPostion2 = { left: position.left + 0.3, top: position.top };
+        const newPostion3 = { left: position.left - 1, top: position.top };
+        const newPostion4 = { left: position.left + 0.7, top: position.top };
+
+        // wiggle the module
+        module.moveModule(newPostion1);
+        setTimeout(() => {
+            module.moveModule(newPostion2);
+            setTimeout(() => {
+                module.moveModule(newPostion3);
+                setTimeout(() => {
+                    module.moveModule(newPostion4);
+                }, 50);
+            }, 50);
+        }, 50);
+
+        setTimeout(() => {
+            module.moveModule(position);
+        }, 3000);
+    };
+
+    muteButton.className = "mute-button";
+
+    muteDiv.appendChild(document.createTextNode("ON"));
+    muteDiv.appendChild(muteButton);
+    muteDiv.appendChild(document.createTextNode("OFF"));
+    muteDiv.className = "mute-wrapper";
+
+    soloButton.className = "solo-button";
+
+    soloDiv.appendChild(document.createTextNode("SOLO"));
+    soloDiv.appendChild(soloButton);
+    soloDiv.className = "solo-wrapper";
+
+    controller.className = "mixer-controller";
+    controller.appendChild(moduleName);
+    controller.appendChild(soloDiv);
+    controller.appendChild(muteDiv);
+
+    controller.muteButton = muteButton;
+    controller.soloButton = soloButton;
+    controller.id = module.id;
+
+    mixerControllers.appendChild(controller);
+    mixerControllers[module.id] = controller;
+}
+export function buildEnvelope(module, delay, attack, decay, sustain, hold, release) {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const visualizer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const circleHold = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const circleStart = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const circleDecay = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const circleDelay = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const circleAttack = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const circleRelease = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+    visualizer.setAttribute("viewBox", "-5 -5 510 110");
+    visualizer.setAttribute("preserveAspectRatio", "xMinYMin slice");
+
+    circleStart.setAttribute("cx", 0);
+    circleStart.setAttribute("cy", 100);
+    circleStart.setAttribute("r", 5);
+    circleStart.setAttribute("id", "delay");
+
+    circleDelay.setAttribute("cx", delay);
+    circleDelay.setAttribute("cy", 100);
+    circleDelay.setAttribute("r", 5);
+    circleDelay.setAttribute("id", "delay");
+
+    circleAttack.setAttribute("cx", attack);
+    circleAttack.setAttribute("cy", 0);
+    circleAttack.setAttribute("r", 5);
+    circleAttack.setAttribute("id", "attack");
+
+    circleDecay.setAttribute("cx", decay);
+    circleDecay.setAttribute("cy", sustain);
+    circleDecay.setAttribute("r", 5);
+    circleDecay.setAttribute("id", "decay");
+
+    circleHold.setAttribute("cx", hold);
+    circleHold.setAttribute("cy", sustain);
+    circleHold.setAttribute("r", 5);
+    circleHold.setAttribute("id", "attack");
+
+    circleRelease.setAttribute("cx", release);
+    circleRelease.setAttribute("cy", 100);
+    circleRelease.setAttribute("r", 5);
+    circleRelease.setAttribute("id", "release");
+
+    visualizer.appendChild(path);
+    visualizer.appendChild(circleHold);
+    visualizer.appendChild(circleStart);
+    visualizer.appendChild(circleDelay);
+    visualizer.appendChild(circleAttack);
+    visualizer.appendChild(circleDecay);
+    visualizer.appendChild(circleRelease);
+
+    visualizer.path = path;
+    visualizer.hold = circleHold;
+    visualizer.decay = circleDecay;
+    visualizer.delay = circleDelay;
+    visualizer.attack = circleAttack;
+    visualizer.release = circleRelease;
+
+    module.content.classList.add("envelope");
+    module.content.appendChild(visualizer);
+    return visualizer;
 }

@@ -34,6 +34,7 @@ html, button, input, select, textarea {
     color: #4c4c4c 
 }
 body {
+    margin: 0;
     font-size: 1em;
     line-height: 1.4;
     background: url('https://megaemce.github.io/mobbler/img/background.svg');
@@ -76,6 +77,7 @@ svg {
 }
 .nav {
     padding: 0.5em;
+    margin-left: 8px;
     display: inline-block;
     filter: drop-shadow(3px 3px 1px rgba(0, 0, 0, 0.2));
     z-index: 1000;
@@ -223,13 +225,13 @@ svg {
     filter: drop-shadow(10px 10px 1px rgba(0, 0, 0, 0.2));
     display: flex;
     flex-direction: column;
-    position: absolute 
+    position: absolute; 
 }
 .module .left-and-front-side {
     display: flex 
 }
 .module .front-side {
-    background: linear-gradient(95deg, transparent 3%, #9a9a9a 5px, #9a9a9a 20%, transparent 72%), linear-gradient(105deg, transparent 44%, transparent calc(100% - 10px), #545252 calc(100% - 4px), transparent) 
+    background: linear-gradient(95deg, transparent 3%, #9a9a9a 5px, #9a9a9a 20%, transparent 72%), linear-gradient(105deg, transparent 44%, transparent calc(100% - 10px), #545252 calc(100% - 4px), transparent) ;
 }
 .module .left-side {
     width: 7px;
@@ -335,6 +337,27 @@ svg {
     flex-direction: column;
     min-height: 30px;
     border-radius: 0 0 10px 10px 
+}
+.module .content.envelope {
+    flex-direction: column-reverse;
+}
+.module .content.envelope svg { 
+    width: 85%;
+    overflow: visible;
+    z-index: 1;
+    position: relative;
+    filter: none;
+    margin-bottom: 5px;
+}
+.module .content.envelope svg path {
+    fill: #9a9a9a;
+    stroke: black;
+    stroke-width: 2;
+}
+.module .content.envelope svg circle {
+    /* fill: #c4c4c4; */
+    stroke: black;
+    stroke-width: 1;
 }
 .module .content .microphone {
     font-size: 38px;
@@ -451,7 +474,7 @@ svg {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    min-width: 68px 
+    /* min-width: 68px  */
 }
 .module .content .controllers .sliders .slider-debug {
     display: none;
@@ -494,7 +517,7 @@ svg {
 .module .content .controllers .sliders .slider .slider-info {
     font-size: .625em;
     margin-bottom: 1em;
-    padding-bottom: .4em;
+    /* padding-bottom: .4em; */
     position: relative;
     display: flex;
     flex-direction: column;
@@ -608,7 +631,7 @@ svg {
     background-position: center;
     background-size: contain 
 }
-.module footer {
+.module .footer {
     background: linear-gradient(105deg, #9a9a9a 8px, #797575 12px, #797878, transparent calc(100% - 30px)), linear-gradient(105deg, transparent 30%, #545252 31%, #545252 calc(100% - 7.5px), transparent calc(100% - 6.5px));
     padding: 0 8px 0 11px;
     display: flex;
@@ -617,10 +640,10 @@ svg {
     justify-content: space-around;
     border-radius: 0 0 16px 10px 
 }
-.module footer.move-by-switch {
+.module .footer.move-by-switch {
     padding-right: 50px 
 }
-.module footer .parameter-wrapper {
+.module .footer .parameter-wrapper {
     padding-top: 3.5px;
     display: flex;
     justify-content: center;
@@ -630,12 +653,97 @@ svg {
     height: 20px;
     cursor: crosshair 
 }
-.module footer .parameter-wrapper.disabled {
+.module .footer .parameter-wrapper.disabled {
     opacity: 0.5;
     pointer-events: none 
 }
-.module footer .parameter-wrapper img {
+.module .footer .parameter-wrapper img {
     width: 25px;
     object-fit: contain 
 }
-
+.mixer {
+    font-size: 10px;
+    text-transform: uppercase;
+    position:absolute;
+    bottom: 0;
+    background-color: #b1acac;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.mixer .controllers {
+    max-height: 0px;
+    transition: max-height 0.2s ease-out;
+}
+.mixer .controllers.show {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    max-height: 300px;
+}
+.mixer .controllers .mixer-controller {
+    display: none
+}
+.mixer .controllers.show .mixer-controller {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.mixer .controllers.show .mixer-controller.nothing {
+    background-image: url('../img/add.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 45px;
+    height: 40px;
+}
+.mixer .controllers .mixer-controller .moduleName {
+    border-radius: 5px;
+    border: 2px solid rgb(66, 66, 66);
+    padding: 5px 7px;
+    display: inline-block;
+    background-color: #c2b0b0;
+}
+.mixer .controllers .mixer-controller .solo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.mixer .controllers button {
+    background-image: url('../img/switch_on.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 45px;
+    height: 40px;
+}
+.mixer .controllers .mixer-controller .solo-button {
+    background-image: url('../img/switch_off.svg');
+}
+.mixer .controllers .mixer-controller .mute-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.mixer .hide-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+.mixer .hide-wrapper .hide-button {
+    width: 21px;
+    height: 14px;
+    background: url('../img/hide.svg') no-repeat;
+    background-size: contain;
+    filter: brightness(0) contrast(0.1);
+    -webkit-transition: filter 0.2s;
+    -moz-transition: filter 0.2s;
+    -o-transition: filter 0.2s;
+    transition: filter 0.2s;
+}
+.mixer .hide-wrapper .hide-button.show {
+    transform: rotate(180deg);
+}
+.mixer .hide-wrapper .hide-button:hover {
+    filter: none;
+}

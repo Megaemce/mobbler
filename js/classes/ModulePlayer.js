@@ -1,5 +1,5 @@
 import Module from "./Module.js";
-import { audioContext } from "../main.js";
+import { audioContext, modules } from "../main.js";
 
 export default class Player extends Module {
     constructor(name, listElement, list, looper, looperValue) {
@@ -90,9 +90,11 @@ export default class Player extends Module {
 
         // send sound to all connected modules/modules' parameters
         module.outcomingCables.forEach((cable) => {
+            const cableDestination = modules[cable.destinationID];
             cable.makeActive();
-            if (cable.inputName === "input" && cable.destination.audioNode) module.connectToModule(cable.destination);
-            if (cable.inputName !== "input") module.connectToParameter(cable.destination, cable.inputName);
+            if (cableDestination === undefined) return;
+            if (cable.inputName === "input" && cableDestination.audioNode) module.connectToModule(cableDestination);
+            if (cable.inputName !== "input") module.connectToParameter(cableDestination, cable.inputName);
         });
     }
     /* stop sound on this module */

@@ -1,4 +1,4 @@
-import { audioContext } from "../main.js";
+import { audioContext, modules, cables } from "../main.js";
 import { addOpenFileButtonTo, displayAlertOnElement } from "./builders.js";
 
 // adding sounds to the audioContext
@@ -57,4 +57,45 @@ export function openFileHandler(module, type) {
     };
 
     reader.readAsArrayBuffer(fileLoaded);
+}
+
+export function save() {
+    let modulesToSave = [];
+    let cablesToSave = [];
+
+    Object.keys(modules).forEach((module) => {
+        const moduleLimited = {
+            arrayForSelect: modules[module].arrayForSelect,
+            hasInput: modules[module].hasInput,
+            hasLooper: modules[module].hasLooper,
+            hasNormalizer: modules[module].hasNormalizer,
+            id: modules[module].id,
+            name: modules[module].name,
+            position: modules[module].modulePosition,
+            type: modules[module].type,
+            zIndex: modules[module].zIndex,
+        };
+        modulesToSave.push(moduleLimited);
+    });
+    Object.keys(cables).forEach((cable) => {
+        const cableLimited = {
+            destionationID: cables[cable].destionationID,
+            id: cables[cable].id,
+            inputName: cables[cable].inputName,
+            lines: cables[cable].lines,
+            points: cables[cable].points,
+            shape: cables[cable].shape,
+            sourceID: cables[cable].sourceID,
+        };
+        cablesToSave.push(cableLimited);
+    });
+    const state = { modules: modulesToSave, cables: cablesToSave };
+
+    localStorage.setItem(new Date().toLocaleString(), JSON.stringify(state));
+}
+
+export function load() {
+    /* move module to given position */
+    this.div.style.left = parseInt(position.left) + "px";
+    this.div.style.top = parseInt(position.top) + "px";
 }

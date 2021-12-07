@@ -4,6 +4,7 @@ import output from "./effects/output.js";
 import reverb from "./effects/reverb.js";
 import flanger from "./effects/flanger.js";
 import analyser from "./effects/analyser.js";
+import envelope from "./effects/envelope.js";
 import convolver from "./effects/convolver.js";
 import liveInput from "./effects/liveInput.js";
 import distortion from "./effects/distortion.js";
@@ -16,7 +17,7 @@ import stereoPanner from "./effects/stereoPanner.js";
 import pannerTremolo from "./effects/pannerTremolo.js";
 import visualisation from "./effects/visualisation.js";
 import dynamicsCompressor from "./effects/dynamicsCompressor.js";
-import { loadFilesIntoAudioContext } from "./helpers/loaders.js";
+import { loadFilesIntoAudioContext, save } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
 // import inputOutput from "./tutorials/inputOutput.js"; // tutorial for input-output
 
@@ -46,13 +47,14 @@ document.onmousemove = () => {
 
     document.onmousemove = undefined;
 };
-
+document.getElementById("save").onmousedown = save;
 document.getElementById("gain").onmousedown = gain;
 document.getElementById("delay").onmousedown = delay;
 document.getElementById("output").onmousedown = output;
 document.getElementById("reverb").onmousedown = reverb;
 document.getElementById("flanger").onmousedown = flanger;
 document.getElementById("analyser").onmousedown = analyser;
+document.getElementById("envelope").onmousedown = envelope;
 document.getElementById("convolver").onmousedown = convolver;
 document.getElementById("liveInput").onmousedown = liveInput;
 document.getElementById("distortion").onmousedown = distortion;

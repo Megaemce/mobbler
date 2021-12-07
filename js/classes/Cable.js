@@ -8,15 +8,15 @@ let id = 0;
 
 // Cables are made out of lines that stretch between points
 export default class Cable {
-    constructor(source, destination) {
+    constructor(sourceID, destinationID) {
         this.id = `cable-${++id}`; // used for cables dictionary
         this.jack = document.createElementNS("http://www.w3.org/2000/svg", "image");
         this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
         this.lines = new Array();
         this.points = [new Point(0.378, 1.056, 0.4, true), new Point(2.695, 2.016, 0.4), new Point(4.831, 3.454, 0.4), new Point(6.789, 5.335, 0.4), new Point(8.575, 7.623, 0.4), new Point(10.192, 10.284, 0.4), new Point(11.646, 13.281, 0.4), new Point(14.078, 20.143, 0.4), new Point(15.909, 27.926, 0.4), new Point(17.173, 36.348, 0.4), new Point(17.906, 45.122, 0.4, true), new Point(18.142, 53.97, 0.4, true)]; // inital hanging shape
-        this.source = source;
+        this.sourceID = sourceID;
         this.inputName = undefined; // "input" for regular module-module connection or parameterType (eg. "Frequency")
-        this.destination = destination;
+        this.destinationID = destinationID;
         this.animationID = undefined; // keep reference to the physics animation function
         this.createCable(); // create cable HTML object
     }
@@ -72,8 +72,8 @@ export default class Cable {
     connectionUniqueness(element) {
         let unique = true;
         Object.values(cables).forEach((cable) => {
-            if (cable.source === this.source) {
-                if (cable.destination === element.parentModule) {
+            if (cable.sourceID === this.sourceID) {
+                if (cable.destinationID === element.parentModuleID) {
                     if (cable.inputName === element.inputName) {
                         unique = false;
                     }
@@ -194,7 +194,7 @@ export default class Cable {
 
         // stop moving cable - let's see where we are
         document.onmouseup = (event) => {
-            const source = cable.source; // source module
+            const source = modules[cable.sourceID]; // source module
             let target = event.target; // choosen HTML element
 
             cable.stopPhysicsAnimation();
@@ -216,8 +216,8 @@ export default class Cable {
                 target = target.parentNode;
             }
 
-            // only module's input got parameter "parentModule"
-            if (!target.parentModule) {
+            // only module's input got parameter "parentModuleID"
+            if (!target.parentModuleID) {
                 displayAlertOnElement("Not connected", source.head);
                 cable.deleteCable();
             } // check if not duplicated
@@ -225,35 +225,38 @@ export default class Cable {
                 displayAlertOnElement("Cable duplicated", target);
                 cable.deleteCable();
             } // disabled option for self-loop
-            else if (target.parentModule === source) {
+            else if (target.parentModuleID === source.id) {
                 displayAlertOnElement("Self-loop disabled", target);
                 cable.deleteCable();
             } else {
                 // module-to-module connection
                 if (target.inputName === "input") {
                     cables[cable.id] = cable;
-                    cable.destination = target.parentModule;
+                    cable.destinationID = target.parentModuleID;
+                    const cableDestination = modules[cable.destinationID];
                     cable.inputName = target.inputName;
-                    source.connectToModule(cable.destination);
+                    source.connectToModule(cableDestination);
                 }
                 // module-to-parameter connection
                 if (target.inputName !== "input") {
-                    // check if any other cable is connected to this parameter
-                    let parameterOccupant = Object.values(cables).find((cable) => {
-                        return cable.destination === target.parentModule && cable.inputName !== "input" && cable.inputName === target.inputName && cable.source !== source;
+                    // check if any other cable is connected to this parameter. Returns cable
+                    const parameterOccupant = Object.values(cables).find((cable) => {
+                        return cable.destinationID === target.parentModuleID && cable.inputName !== "input" && cable.inputName === target.inputName && cable.sourceID !== source.id;
                     });
 
                     if (parameterOccupant) {
-                        let typeWithCase = target.inputName.charAt(0).toUpperCase() + target.inputName.substr(1);
+                        const typeWithCase = target.inputName.charAt(0).toUpperCase() + target.inputName.substr(1);
+                        const sourceDiv = modules[parameterOccupant.sourceID].div;
                         displayAlertOnElement("Only one input per parameter", target);
-                        displayAlertOnElement(`${typeWithCase} parameter's occupant`, parameterOccupant.source.div);
+                        displayAlertOnElement(`${typeWithCase} parameter's occupant`, sourceDiv);
                         cable.deleteCable();
                     } else {
                         cables[cable.id] = cable;
-                        cable.destination = target.parentModule;
+                        cable.destinationID = target.parentModuleID;
+                        const cableDestination = modules[cable.destinationID];
                         cable.inputName = target.inputName;
                         source.isTransmitting && cable.makeActive();
-                        source.connectToParameter(cable.destination, cable.inputName);
+                        source.connectToParameter(cableDestination, cable.inputName);
                     }
                 }
             }
@@ -269,8 +272,8 @@ export default class Cable {
     /* remove cable from all related items. Check this.destination as initalCables get deleted too */
     deleteCable() {
         const cable = this; // current cable
-        const source = this.source; // source module
-        const destination = this.destination;
+        const source = modules[this.sourceID]; // source module
+        const destination = modules[this.destinationID];
 
         // fold the cable back to module's top right corner and remove it
         cable.shape.appendChild(cable.shape.foldAnimation);
@@ -324,12 +327,18 @@ export default class Cable {
                 source.audioNode.disconnect();
 
                 source.outcomingCables.forEach((cable) => {
+                    const cableDestination = modules[cable.destinationID];
                     if (cable.inputName === "input") {
-                        source.connectToModule(cable.destination);
+                        source.connectToModule(cableDestination);
                     } else {
-                        source.connectToParameter(cable.destination, cable.inputName);
+                        source.connectToParameter(cableDestination, cable.inputName);
                     }
                 });
+            }
+
+            // execute function if there is any hooked
+            if (destination.onDisconnectInput) {
+                destination.onDisconnectInput(source);
             }
         }
 

@@ -22,31 +22,34 @@ export default class Module {
     }
     /* return true/false if there is anything actively talking to this module's input  */
     get inputActivity() {
-        if (Object.values(cables).find((cable) => cable.destination === this && cable.inputName === "input" && cable.source.isTransmitting)) {
+        if (Object.values(cables).find((cable) => cable.destinationID === this.id && cable.inputName === "input" && modules[cable.sourceID].isTransmitting)) {
             return true;
         }
         return false;
     }
     /* return number of incoming cables to the input (not nessesary active). Used by deleteCable() */
     get inputCount() {
-        return Object.values(cables).filter((cable) => cable.destination === this && cable.inputName === "input").length;
+        return Object.values(cables).filter((cable) => cable.destinationID === this.id && cable.inputName === "input").length;
     }
     /* return all incoming and outcoming cables linked with this module */
     get relatedCables() {
-        return Object.values(cables).filter((cable) => cable.destination === this || cable.source === this);
+        return Object.values(cables).filter((cable) => cable.destinationID === this.id || cable.sourceID === this.id);
     }
     /* return all incoming cables linked with this module */
     get incomingCables() {
-        return Object.values(cables).filter((cable) => cable.destination === this);
+        return Object.values(cables).filter((cable) => cable.destinationID === this.id);
     }
     /* return all outcoming cables linked with this module */
     get outcomingCables() {
-        return Object.values(cables).filter((cable) => cable.source === this);
+        return Object.values(cables).filter((cable) => cable.sourceID === this.id);
     }
     /* save module position within class and return it */
     get modulePosition() {
         this.position = this.div.getBoundingClientRect();
         return this.position;
+    }
+    set modulePosition(value) {
+        this.position = value;
     }
     /* build module html object and attach all logic into it */
     createModule() {
@@ -161,7 +164,7 @@ export default class Module {
     }
     /* create new cable which is an inital cable */
     addInitalCable() {
-        this.initalCable = new Cable(this);
+        this.initalCable = new Cable(this.id);
     }
     /* check highest zIndex within modules and make choosen module higher */
     bringToFront() {
@@ -180,8 +183,8 @@ export default class Module {
         // stack keeps a list of outcomingCables from this module
         while (stack.length) {
             const cable = stack.pop(); // currently visited cable
-            const destination = cable.destination;
-            const source = cable.source;
+            const source = modules[cable.sourceID];
+            const destination = modules[cable.destinationID];
 
             // simply make the cable active
             if (status === "active") {
@@ -191,12 +194,13 @@ export default class Module {
             // but only if cable is module-to-module not module-to-parameter type
             // also as there is no other easy way: restart all the slider's animation in all it's outcoming
             // cables connected to other module's parameters
-            if (status === "active" && cable.inputName === "input") {
+            if (status === "active" && cable.inputName === "input" && destination) {
                 destination.isTransmitting = true;
                 destination.outcomingCables.forEach((cable) => {
+                    const cableDestination = modules[cable.destinationID];
                     if (cable.inputName !== "input") {
                         cable.makeActive();
-                        destination.connectToParameter(cable.destination, cable.inputName);
+                        destination.connectToParameter(cableDestination, cable.inputName);
                     }
                 });
             }
@@ -206,7 +210,7 @@ export default class Module {
             }
             // as this cable was module-to-module type and source module is not active anymore,
             // check if there is nothing more actively talking to this module and mark is as inactive
-            if (status === "deactive" && cable.inputName === "input" && destination.inputActivity === false) {
+            if (status === "deactive" && cable.inputName === "input" && destination && destination.inputActivity === false) {
                 destination.isTransmitting = false;
                 // stop animation on visualizer and make it listening on input again
                 if (destination.constructor.name === "Visualizer") {
@@ -215,7 +219,7 @@ export default class Module {
             }
 
             // module-to-parameter cable thus just unlock the slider
-            if (status === "deactive" && cable.inputName !== "input") {
+            if (status === "deactive" && cable.inputName !== "input" && destination) {
                 destination.stopSliderAnimation(cable.inputName);
                 destination.content.controllers[cable.inputName].slider.classList.remove("disabled");
             }
@@ -225,7 +229,7 @@ export default class Module {
                 visited[cable.id] = true;
                 // don't try to do dfs on module-to-parameter cables as destination in those is their mother module thus making
                 // further escalation: Source -> Destination's Parameter -> Destination -> Destination's outcominggoing cables
-                if (cable.inputName === "input") {
+                if (cable.inputName === "input" && destination) {
                     destination.outcomingCables.forEach((cable) => {
                         if (!visited[cable.id]) {
                             stack.push(cable);
@@ -306,6 +310,11 @@ export default class Module {
         };
         event.preventDefault();
     }
+    /* move module to given position. Used to showcase module when clicked on its name in mixer */
+    moveModule(position) {
+        this.div.style.left = parseInt(position.left) + "px";
+        this.div.style.top = parseInt(position.top) + "px";
+    }
     /* remove module and all related cables */
     deleteModule() {
         const module = this;
@@ -359,7 +368,7 @@ export default class Module {
 
         // execute function if there is any hooked
         if (destinationModule.onConnectInput) {
-            destinationModule.onConnectInput();
+            destinationModule.onConnectInput(this);
         }
     }
     /* connect this module to destinationModule's slider of parameterType. 
@@ -435,6 +444,10 @@ export default class Module {
                 slider.audioNode = new AnalyserNode(audioContext);
                 slider.audioNode.fftSize = 32;
             }
+
+            // used by envelope
+            slider.audioNode.parentID = destinationModule.id;
+            slider.audioNode.parameterType = parameterType;
 
             // visualisation nor distortion's drive doesn't have proper audioNode parameters as they are not controlling audioNode
             if (destinationModule.name !== "visualisation" && parameterType !== "drive") {

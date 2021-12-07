@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
 export default function distortion(event, initalGain, initalDrive, initalPrecut, initalPostcut, initalClipping) {
@@ -37,6 +38,9 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
         distortionNode: new WaveShaperNode(audioContext, { curve: clipping }),
         lowpassNode: new BiquadFilterNode(audioContext, { type: "lowpass" }),
         outputNode: new GainNode(audioContext),
+        drive: new Parameter(drive, (value) => {
+            module.audioNode.distortionNode.curve = clippingTypes["Soft clipping"](value);
+        }),
         get gain() {
             return this.gainNode.gain;
         },
@@ -55,19 +59,6 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
         },
     };
 
-    // state-of-the-art drive with it setter changing distortionNode curve. That was hard to figure out!
-    module.audioNode.drive = {
-        _value: undefined,
-        get value() {
-            return this._value;
-        },
-        set value(amount) {
-            this._value = amount;
-            module.audioNode.distortionNode.curve = clippingTypes["Soft clipping"](amount);
-        },
-    };
-
-    // custom distortion drive attribute
     module.createSlider("gain", gain, 1, 20, 1, "", false, gainInfo);
     module.createSlider("precut", precut, 0.1, 22050, 1, "Hz", true, precutInfo);
     module.createSlider("drive", drive, 0, 1, 0.1, "", false, driveInfo);
