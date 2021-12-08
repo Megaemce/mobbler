@@ -421,18 +421,12 @@ export default class Module {
         const slider = destinationModule.content.controllers[parameterType].slider;
         const sliderDiv = destinationModule.content.controllers[parameterType].wrapper;
         const sliderValue = slider.scaleLog ? logPositionToValue(slider.value, slider.min, slider.max) : slider.value;
-        const sliderCenter = (parseFloat(slider.max) + parseFloat(slider.min)) / 2;
 
         // is source is active mark cable as active and slider as disabled
         if (module.isTransmitting) {
             slider.classList.add("disabled");
         } else {
             slider.classList.remove("disabled");
-        }
-
-        // show alert if slider value is not in a middle
-        if (slider.value != sliderCenter) {
-            displayAlertOnElement(`Value ${sliderValue} is not in slider center (${sliderCenter}) thus ${module.name}'s output will not cover all of its range`, sliderDiv, 5);
         }
 
         // change input picture to busy version

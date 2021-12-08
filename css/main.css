@@ -341,23 +341,49 @@ svg {
 .module .content.envelope {
     flex-direction: column-reverse;
 }
-.module .content.envelope svg { 
+.module .content.envelope .envelope-visualizer { 
     width: 85%;
     overflow: visible;
     z-index: 1;
     position: relative;
     filter: none;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
-.module .content.envelope svg path {
-    fill: #9a9a9a;
+.module .content.envelope .envelope-visualizer text {
+    font-weight: 700;
+}
+.module .content.envelope .envelope-visualizer .axis-text {
+    font-weight: 100;
+    fill: #808080;
+}
+.module .content.envelope .envelope-visualizer polygon {
+        fill:#808080;
+}
+.module .content.envelope .envelope-visualizer .slider-path {
+    fill: transparent;
+    stroke: black;
+    stroke-dasharray: 2 5;
+    stroke-width: 1;
+}
+.module .content.envelope .envelope-visualizer .axis {
+    fill:#808080;
+    stroke:#808080;
+    stroke-width:1;
+}
+.module .content.envelope .envelope-visualizer .current-path {
+    fill: #3cacd8;
+    stroke: #3cacd8;
+    stroke-width: 2;
+}
+.module .content.envelope .envelope-visualizer circle {
+    fill: white;
     stroke: black;
     stroke-width: 2;
 }
-.module .content.envelope svg circle {
-    /* fill: #c4c4c4; */
-    stroke: black;
-    stroke-width: 1;
+.module .content.envelope .envelope-visualizer .value-line {
+    fill:#808080;
+    stroke:#808080;
+    stroke-width:1;
 }
 .module .content .microphone {
     font-size: 38px;
@@ -418,7 +444,6 @@ svg {
 .module .content .controllers img{
     width: 70px 
 }
-
 .module .content .controllers .analyser {
     background-image: url('../img/background_analyser.svg');
     background-repeat: no-repeat;

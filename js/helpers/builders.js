@@ -581,65 +581,134 @@ export function buildMixerChannel(module) {
     mixerControllers.appendChild(controller);
     mixerControllers[module.id] = controller;
 }
+export function changePathInSVG(svg, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease) {
+    svg.path.setAttribute("d", `M0,100 L${pointDelay},100,${pointAttack},0,${pointDecay},${pointSustain},${pointHold},${pointSustain},${pointRelease},100`);
+}
 export function buildEnvelope(module, delay, attack, decay, sustain, hold, release) {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const ampAxis = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const timeAxis = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const ampValue = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const timeValue = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const pointHold = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     const visualizer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const circleHold = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    const circleStart = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    const circleDecay = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    const circleDelay = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    const circleAttack = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    const circleRelease = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const pointStart = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const pointDecay = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const pointDelay = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const currentPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const ampAxisText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const pointAttack = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const pointRelease = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const ampAxisArrow = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    const timeAxisArrow = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    const ampAxisValueLine = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const timeAxisValueLine = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
     visualizer.setAttribute("viewBox", "-5 -5 510 110");
     visualizer.setAttribute("preserveAspectRatio", "xMinYMin slice");
+    visualizer.classList.add("envelope-visualizer");
 
-    circleStart.setAttribute("cx", 0);
-    circleStart.setAttribute("cy", 100);
-    circleStart.setAttribute("r", 5);
-    circleStart.setAttribute("id", "delay");
+    path.classList.add("slider-path");
 
-    circleDelay.setAttribute("cx", delay);
-    circleDelay.setAttribute("cy", 100);
-    circleDelay.setAttribute("r", 5);
-    circleDelay.setAttribute("id", "delay");
+    // amplitude value, text and axis
+    ampValue.innerHTML = "0";
+    ampValue.setAttribute("x", 515); // align it to be in the center of current point
+    ampValue.setAttribute("y", 105);
+    ampValue.classList.add("axis-text");
 
-    circleAttack.setAttribute("cx", attack);
-    circleAttack.setAttribute("cy", 0);
-    circleAttack.setAttribute("r", 5);
-    circleAttack.setAttribute("id", "attack");
+    ampAxis.setAttribute("d", "M505,0 L505,100");
+    ampAxis.classList.add("axis");
 
-    circleDecay.setAttribute("cx", decay);
-    circleDecay.setAttribute("cy", sustain);
-    circleDecay.setAttribute("r", 5);
-    circleDecay.setAttribute("id", "decay");
+    ampAxisText.innerHTML = "AMPLITUDE";
+    ampAxisText.setAttribute("x", 400);
+    ampAxisText.setAttribute("y", 10);
+    ampAxisText.classList.add("axis-text");
 
-    circleHold.setAttribute("cx", hold);
-    circleHold.setAttribute("cy", sustain);
-    circleHold.setAttribute("r", 5);
-    circleHold.setAttribute("id", "attack");
+    ampAxisArrow.setAttribute("points", "500,10 510,10 505,0");
 
-    circleRelease.setAttribute("cx", release);
-    circleRelease.setAttribute("cy", 100);
-    circleRelease.setAttribute("r", 5);
-    circleRelease.setAttribute("id", "release");
+    // time value and axis
+    timeValue.innerHTML = "TIME";
+    timeValue.setAttribute("x", -40); // align it to be in the center of current point
+    timeValue.setAttribute("y", 120);
+    timeValue.classList.add("axis-text");
 
+    timeAxisArrow.setAttribute("points", "495,110 495,120 505,115");
+
+    timeAxis.setAttribute("d", "M0,115 L495,115");
+    timeAxis.classList.add("axis");
+
+    currentPath.classList.add("current-path");
+    currentPath.setAttribute("d", "M0,100");
+
+    pointStart.setAttribute("cx", 0);
+    pointStart.setAttribute("cy", 100);
+    pointStart.setAttribute("id", "start");
+    pointStart.setAttribute("r", 3);
+
+    pointDelay.setAttribute("cx", delay);
+    pointDelay.setAttribute("cy", 100);
+    pointDelay.setAttribute("id", "delay");
+    pointDelay.setAttribute("r", 3);
+
+    pointAttack.setAttribute("cx", attack);
+    pointAttack.setAttribute("cy", 0);
+    pointAttack.setAttribute("id", "attack");
+    pointAttack.setAttribute("r", 3);
+
+    pointDecay.setAttribute("cx", decay);
+    pointDecay.setAttribute("cy", sustain);
+    pointDecay.setAttribute("id", "decay");
+    pointDecay.setAttribute("r", 3);
+
+    pointHold.setAttribute("cx", hold);
+    pointHold.setAttribute("cy", sustain);
+    pointHold.setAttribute("id", "attack");
+    pointHold.setAttribute("r", 3);
+
+    pointRelease.setAttribute("cx", release);
+    pointRelease.setAttribute("cy", 100);
+    pointRelease.setAttribute("id", "release");
+    pointRelease.setAttribute("r", 3);
+
+    timeAxisValueLine.setAttribute("d", "M0,110 L0,115");
+    timeAxisValueLine.classList.add("value-line");
+
+    // ampAxisValueLine.setAttribute("d", "M505,0 L490,0");
+    ampAxisValueLine.classList.add("value-line");
+
+    visualizer.appendChild(ampAxis);
+    visualizer.appendChild(ampAxisText);
+    visualizer.appendChild(ampAxisArrow);
+    visualizer.appendChild(timeAxis);
+    visualizer.appendChild(timeAxisArrow);
+    visualizer.appendChild(currentPath); // need to be after main path
     visualizer.appendChild(path);
-    visualizer.appendChild(circleHold);
-    visualizer.appendChild(circleStart);
-    visualizer.appendChild(circleDelay);
-    visualizer.appendChild(circleAttack);
-    visualizer.appendChild(circleDecay);
-    visualizer.appendChild(circleRelease);
+    visualizer.appendChild(pointHold);
+    visualizer.appendChild(pointStart);
+    visualizer.appendChild(pointDelay);
+    visualizer.appendChild(pointAttack);
+    visualizer.appendChild(pointDecay);
+    visualizer.appendChild(pointRelease);
+    visualizer.appendChild(timeAxisValueLine);
+    visualizer.appendChild(ampAxisValueLine);
+    visualizer.appendChild(timeValue); // on the top
+    //visualizer.appendChild(ampValue); // on the top
 
     visualizer.path = path;
-    visualizer.hold = circleHold;
-    visualizer.decay = circleDecay;
-    visualizer.delay = circleDelay;
-    visualizer.attack = circleAttack;
-    visualizer.release = circleRelease;
+    visualizer.hold = pointHold;
+    visualizer.decay = pointDecay;
+    visualizer.delay = pointDelay;
+    visualizer.attack = pointAttack;
+    visualizer.release = pointRelease;
+    visualizer.ampValue = ampValue;
+    visualizer.timeValue = timeValue;
+    visualizer.currentPath = currentPath;
+    visualizer.ampAxisText = ampAxisText;
+    visualizer.ampAxisValueLine = ampAxisValueLine;
+    visualizer.timeAxisValueLine = timeAxisValueLine;
 
     module.content.classList.add("envelope");
     module.content.appendChild(visualizer);
+
     return visualizer;
 }

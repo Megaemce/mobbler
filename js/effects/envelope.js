@@ -1,70 +1,71 @@
 import Module from "../classes/Module.js";
 import Parameter from "../classes/Parameter.js";
-import { displayAlertOnElement, buildEnvelope } from "../helpers/builders.js";
+import { displayAlertOnElement, buildEnvelope, changePathInSVG } from "../helpers/builders.js";
 import { modules, cables } from "../main.js";
 
 export default function enveloper(event, initalDelay, initalAttack, initalHold, initalDecay, initalSustain, initalRelease) {
-    const hold = parseFloat(initalHold || 75);
+    const hold = parseFloat(initalHold || 750);
     const delay = parseFloat(initalDelay || 0);
-    const decay = parseFloat(initalDecay || 85);
-    const attack = parseFloat(initalAttack || 40);
-    const sustain = parseFloat(initalSustain || 20);
-    const release = parseFloat(initalRelease || 55);
+    const decay = parseFloat(initalDecay || 850);
+    const attack = parseFloat(initalAttack || 400);
+    const sustain = parseFloat(initalSustain || 200);
+    const release = parseFloat(initalRelease || 550);
     const holdInfo = "Number of second by which max sound will be played";
     const delayInfo = "Number of second by which envelope start will be delayed";
     const decayInfo = "Time taken for the subsequent run down from the attack level to the designated sustain level";
     const attackInfo = "Time taken for initial run-up of level from nil to peak, beginning when the key is pressed";
     const sustainInfo = "Level during the main sequence of the sound's duration, until the key is released";
     const releaseInfo = "Time taken for the level to decay from the sustain level to zero after the key is released";
-    let pointDelay = delay;
-    let pointAttack = pointDelay + attack;
-    let pointDecay = pointAttack + decay;
-    let pointSustain = 100 - sustain;
-    let pointHold = pointDecay + hold;
-    let pointRelease = pointHold + release;
+    let pointDelay = delay / 10;
+    let pointAttack = pointDelay + attack / 10;
+    let pointDecay = pointAttack + decay / 10;
+    let pointSustain = 100 - sustain / 10;
+    let pointHold = pointDecay + hold / 10;
+    let pointRelease = pointHold + release / 10;
 
     const module = new Module("Envelope", false);
 
     const visualizer = buildEnvelope(module, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease);
-    visualizer.path.setAttribute("d", `M0,100 L${pointDelay},100,${pointAttack},0,${pointDecay},${pointSustain},${pointHold},${pointSustain},${pointRelease},100`);
+    // set inital path (from slider inital values) in envelope svg
+    changePathInSVG(visualizer, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease);
 
-    module.createSlider("delay", delay, 0, 100, 1, "sec", false, delayInfo);
-    module.createSlider("attack", attack, 0, 100, 1, "sec", false, attackInfo);
-    module.createSlider("decay", decay, 0, 100, 1, "sec", false, decayInfo);
-    module.createSlider("sustain", sustain, 0, 100, 1, "", false, sustainInfo);
-    module.createSlider("hold", hold, 0, 100, 1, "sec", false, holdInfo);
-    module.createSlider("release", release, 0, 100, 1, "sec", false, releaseInfo);
+    module.createSlider("delay", delay, 0, 1000, 1, "ms", false, delayInfo);
+    module.createSlider("attack", attack, 0, 1000, 1, "ms", false, attackInfo);
+    module.createSlider("decay", decay, 0, 1000, 1, "ms", false, decayInfo);
+    module.createSlider("sustain", sustain, 0, 1000, 1, "", false, sustainInfo);
+    module.createSlider("hold", hold, 0, 1000, 1, "ms", false, holdInfo);
+    module.createSlider("release", release, 1, 1000, 1, "ms", false, releaseInfo);
 
     // reverse slider order. Update path after all other values are updated too
-    // functions used when specific parameter is changed
+    // functions used when specific parameter is changed. Extract -5 as half of the square width/height
     function releaseSetFunction() {
-        pointRelease = pointHold + module.audioNode.release.value;
+        pointRelease = pointHold + module.audioNode.release.value / 10;
         visualizer.release.setAttribute("cx", pointRelease);
-        visualizer.path.setAttribute("d", `M0,100 L${pointDelay},100,${pointAttack},0,${pointDecay},${pointSustain},${pointHold},${pointSustain},${pointRelease},100`);
+        changePathInSVG(visualizer, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease);
     }
     function holdSetFunction() {
-        pointHold = pointDecay + module.audioNode.hold.value;
+        pointHold = pointDecay + module.audioNode.hold.value / 10;
         visualizer.hold.setAttribute("cx", pointHold);
         visualizer.hold.setAttribute("cy", pointSustain);
         releaseSetFunction();
     }
     function sustainSetFunction() {
-        pointSustain = 100 - module.audioNode.sustain.value;
+        pointSustain = 100 - module.audioNode.sustain.value / 10;
         visualizer.decay.setAttribute("cy", pointSustain);
         holdSetFunction();
     }
     function decaySetFunction() {
-        pointDecay = pointAttack + module.audioNode.decay.value;
+        pointDecay = pointAttack + module.audioNode.decay.value / 10;
         visualizer.decay.setAttribute("cx", pointDecay);
         sustainSetFunction();
     }
     function attackSetFunction() {
-        pointAttack = pointDelay + module.audioNode.attack.value;
+        pointAttack = pointDelay + module.audioNode.attack.value / 10;
         visualizer.attack.setAttribute("cx", pointAttack);
         decaySetFunction();
     }
     function delaySetFunction() {
-        pointDelay = module.audioNode.delay.value;
+        pointDelay = module.audioNode.delay.value / 10;
         visualizer.delay.setAttribute("cx", pointDelay);
         attackSetFunction(); // update other value as they depand on each other
     }
@@ -76,22 +77,24 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
         attack: new Parameter(attack, attackSetFunction),
         sustain: new Parameter(sustain, sustainSetFunction),
         release: new Parameter(release, releaseSetFunction),
-        async timeout(ms) {
+        sleep: (milliseconds) => {
             // slow down "for" loop to update slider according to envelope time
-            return new Promise((handler) => setTimeout(handler, ms));
+            return new Promise((resolve) => setTimeout(resolve, milliseconds));
         },
         async updateSlider() {
             const pathLength = visualizer.path.getTotalLength().toFixed(0);
-            const envelopeTime = parseFloat(visualizer.release.attributes.cx.value) / 100; // num of sec
 
             // collect pathLength points (not too much not to small)
             let pathPoints = [];
             for (let i = 0; i <= pathLength; i++) {
                 const point = {};
-                point.x = visualizer.path.getPointAtLength(i).x.toFixed(2);
-                point.y = visualizer.path.getPointAtLength(i).y.toFixed(2);
+                point.x = parseFloat(visualizer.path.getPointAtLength(i).x.toFixed(2));
+                point.y = parseFloat(visualizer.path.getPointAtLength(i).y.toFixed(2));
                 pathPoints.push(point);
             }
+
+            // reset current value path to zero
+            visualizer.currentPath.setAttribute("d", "M0,100");
 
             // reduce array to element that don't lay on the straight vertical line (calling too many promises is slow)
             let reducedPathPoints = [pathPoints[0]];
@@ -101,25 +104,37 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
                 }
             }
 
-            // time between for loop iteration in miliseconds
-            const timePerFrame = (envelopeTime / pathLength) * 1000; // ms per frame
-
-            for (let i = 0; i < reducedPathPoints.length; i++) {
+            for (let i = 1; i < reducedPathPoints.length; i++) {
+                const timeBetweenPoints = (reducedPathPoints[i].x - reducedPathPoints[i - 1].x) * 10; // scaled to milliseconds
                 // scale value from [0,100] to [0, this.maxSliderValue]. First scale is reversed (0 is max) thus extract maxSlideValue
                 const scaledValue = this.maxSliderValue - (this.maxSliderValue * reducedPathPoints[i].y) / 100;
 
-                // update slider and audioNode
-                this.slider.value = scaledValue;
-                if (this.destination.audioNode) this.destination.audioNode[this.parameterType].value = scaledValue;
+                // move time with new value on time axis
+                visualizer.timeValue.setAttribute("x", reducedPathPoints[i].x - 40);
+                visualizer.timeValue.setAttribute("y", 115);
+                visualizer.timeValue.innerHTML = `${(reducedPathPoints[i].x / 100).toFixed(2)}s`;
+                visualizer.timeAxisValueLine.setAttribute("d", `M${reducedPathPoints[i].x},100 L${reducedPathPoints[i].x},115`);
+
+                // move amp value on amp axis
+                visualizer.ampAxisText.setAttribute("y", reducedPathPoints[i].y + 5); // 3 is half of font size
+                visualizer.ampAxisValueLine.setAttribute("d", `M505,${reducedPathPoints[i].y} L490,${reducedPathPoints[i].y}`);
+                // visualizer.ampValue.innerHTML = ;
+
+                // update current value path
+                const updatedPath = `${visualizer.currentPath.getAttribute("d")} L${reducedPathPoints[i].x},${reducedPathPoints[i].y},${reducedPathPoints[i].x},100`;
+                visualizer.currentPath.setAttribute("d", updatedPath);
+
+                if (this.loop) {
+                    // update slider and audioNode
+                    this.slider.value = scaledValue;
+                    if (this.destination.audioNode) this.destination.audioNode[this.parameterType].value = scaledValue;
+                }
 
                 // don't call promises if release time === 0 (it's a vertical-line-only-chart)
-                if (timePerFrame !== 0) await this.timeout(timePerFrame);
-
-                // loop everything up
-                if (i === reducedPathPoints.length - 1 && this.loop) {
-                    this.updateSlider();
-                }
+                if (timeBetweenPoints !== 0) await this.sleep(timeBetweenPoints);
             }
+
+            this.loop && reducedPathPoints.length > 1 && this.updateSlider();
         },
         connect(destination) {
             // don't connect to input, only to parameters
@@ -138,7 +153,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
                 // start the show
                 this.updateSlider();
             } else {
-                displayAlertOnElement("Please connect to the parameter instead of input", module.head, 3);
+                //displayAlertOnElement("Please connect to the parameter instead of input", module.head, 3);
             }
         },
         disconnect() {
