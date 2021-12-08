@@ -23,7 +23,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     let pointHold = pointDecay + hold / 10;
     let pointRelease = pointHold + release / 10;
 
-    const module = new Module("Envelope", false);
+    const module = new Module("envelope", false);
 
     const visualizer = buildEnvelope(module, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease);
     // set inital path (from slider inital values) in envelope svg

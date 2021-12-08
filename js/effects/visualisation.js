@@ -1,4 +1,5 @@
 import Visualizer from "../classes/ModuleVisualizer.js";
+import Parameter from "../classes/Parameter.js";
 import { displayAlertOnElement } from "../helpers/builders.js";
 
 export default function visualisation(event, initalType, initalCanvasWidth, initalCanvasHeight, initatFFTSize, initalZoom, initalColor, initalLineWidth, initalLineLength, initalSymmetries, initalLineFlatness) {
@@ -31,12 +32,12 @@ export default function visualisation(event, initalType, initalCanvasWidth, init
 
     // custom attributes
     module.audioNode.type = type;
-    module.audioNode.zoom = { value: zoom };
-    module.audioNode.color = { value: color };
-    module.audioNode.lineWidth = { value: lineWidth };
-    module.audioNode.lineLength = { value: lineLength };
-    module.audioNode.symmetries = { value: symmetries };
-    module.audioNode.lineFlatness = { value: lineFlatness };
+    module.audioNode.zoom = new Parameter(zoom);
+    module.audioNode.color = new Parameter(color);
+    module.audioNode.lineWidth = new Parameter(lineWidth);
+    module.audioNode.lineLength = new Parameter(lineLength);
+    module.audioNode.symmetries = new Parameter(symmetries);
+    module.audioNode.lineFlatness = new Parameter(lineFlatness);
 
     module.createSlider("zoom", zoom, 0.1, 2, 0.1, "", false, zoomInfo);
     module.createSlider("color", color, 0, 360, 1, "HSL", false, colorInfo);

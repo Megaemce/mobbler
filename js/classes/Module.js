@@ -400,8 +400,8 @@ export default class Module {
         // change slider position if scaleLog option is enabled
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
-        // visualisation nor distortion's drive doesn't have audioNodes attached to sliders
-        if (destinationModule.name === "visualisation" || parameterType === "drive") {
+        // custom Parameter don't control audio thus just set the new value (they know what to do next)
+        if (destinationModule.audioNode[parameterType].constructor.name === "Parameter") {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
 
@@ -443,8 +443,8 @@ export default class Module {
             slider.audioNode.parentID = destinationModule.id;
             slider.audioNode.parameterType = parameterType;
 
-            // visualisation nor distortion's drive doesn't have proper audioNode parameters as they are not controlling audioNode
-            if (destinationModule.name !== "visualisation" && parameterType !== "drive") {
+            // connect only to "AudioParam" parameters as they control actual audio rather than "Parameter"
+            if (destinationModule.audioNode[parameterType].constructor.name !== "Parameter") {
                 destinationModule.audioNode && module.audioNode.connect(destinationModule.audioNode[parameterType]);
             }
 
