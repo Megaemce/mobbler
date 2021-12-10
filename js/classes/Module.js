@@ -401,7 +401,7 @@ export default class Module {
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
         // custom Parameter don't control audio thus just set the new value (they know what to do next)
-        if (destinationModule.audioNode[parameterType].constructor.name === "Parameter") {
+        if (destinationModule.audioNode && destinationModule.audioNode[parameterType].constructor.name === "Parameter") {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
 
@@ -419,8 +419,6 @@ export default class Module {
     connectToParameter(destinationModule, parameterType) {
         const module = this;
         const slider = destinationModule.content.controllers[parameterType].slider;
-        const sliderDiv = destinationModule.content.controllers[parameterType].wrapper;
-        const sliderValue = slider.scaleLog ? logPositionToValue(slider.value, slider.min, slider.max) : slider.value;
 
         // is source is active mark cable as active and slider as disabled
         if (module.isTransmitting) {
@@ -444,8 +442,8 @@ export default class Module {
             slider.audioNode.parameterType = parameterType;
 
             // connect only to "AudioParam" parameters as they control actual audio rather than "Parameter"
-            if (destinationModule.audioNode[parameterType].constructor.name !== "Parameter") {
-                destinationModule.audioNode && module.audioNode.connect(destinationModule.audioNode[parameterType]);
+            if (destinationModule.audioNode && destinationModule.audioNode[parameterType].constructor.name !== "Parameter") {
+                module.audioNode.connect(destinationModule.audioNode[parameterType]);
             }
 
             // connect just for slider-animation controlled by analyser

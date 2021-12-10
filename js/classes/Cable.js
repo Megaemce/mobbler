@@ -295,33 +295,45 @@ export default class Cable {
 
         // if this is not an inital cable
         if (destination) {
-            // if destination is no longer active mark it correctly (needs to be done after cable is deleted from "cables")
-            if (destination.inputActivity === false) {
-                destination.isTransmitting = false;
+            // action for cable connected to input
+            if (cable.inputName === "input") {
+                // if destination is no longer active mark it correctly (needs to be done after cable is deleted from "cables")
+                if (destination.inputActivity === false) {
+                    destination.isTransmitting = false;
+                }
+
+                // send further info that this cable is deactivated (needs to be done after destination.isTansmitting is set)
+                destination.markAllLinkedCablesAs("deactive");
+
+                // if cable was connecting module to analyser stop the animation there (but only if there is no other active connection)
+                if (destination.constructor.name == "Visualizer" && !destination.inputActivity) {
+                    destination.resetAnalyser();
+                }
+
+                // un-busy'd input picture but only if there is no other things talking
+                if (destination.inputCount === 0) {
+                    destination.div.input.setAttribute("src", "./img/input.svg");
+                }
+
+                // execute function if there is any hooked
+                if (destination.onDisconnectInput) {
+                    destination.onDisconnectInput(source);
+                }
             }
-
-            // send further info that this cable is deactivated (needs to be done after destination.isTansmitting is set)
-            destination.markAllLinkedCablesAs("deactive");
-
-            // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
+            // action for cable connected to parameters
             if (cable.inputName !== "input") {
+                // if cable get removed directly markAllLinkedCablesAs will not unblock slider as there is no connection left
                 destination.content.controllers[cable.inputName].slider.classList.remove("disabled");
                 destination.stopSliderAnimation(cable.inputName);
 
                 // un-busy'd input picture
                 destination.footer[cable.inputName].img.setAttribute("src", "./img/parameter_input.svg");
-            }
 
-            // if cable was connecting module to analyser stop the animation there (but only if there is no other active connection)
-            if (destination.constructor.name == "Visualizer" && !destination.inputActivity) {
-                destination.resetAnalyser();
+                // execute function if there is any hooked
+                if (destination.onDisconnectParameter) {
+                    destination.onDisconnectParameter(source);
+                }
             }
-
-            // un-busy'd input picture but only if there is no other things talking
-            if (cable.inputName === "input" && destination.inputCount === 0) {
-                destination.div.input.setAttribute("src", "./img/input.svg");
-            }
-
             // reconnect all others nodes. If module got deleted don't try to reconnect its outcoming cables
             if (modules[source.id] && source.audioNode) {
                 source.audioNode.disconnect();
@@ -334,11 +346,6 @@ export default class Cable {
                         source.connectToParameter(cableDestination, cable.inputName);
                     }
                 });
-            }
-
-            // execute function if there is any hooked
-            if (destination.onDisconnectInput) {
-                destination.onDisconnectInput(source);
             }
         }
 
