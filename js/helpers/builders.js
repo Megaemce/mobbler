@@ -1,10 +1,12 @@
-import { valueToLogPosition } from "../helpers/math.js";
-import { modules } from "../main.js";
 import Line from "../classes/Line.js";
+import { modules } from "../main.js";
+import { valueToLogPosition } from "../helpers/math.js";
 
+// used by buildModule function to locate new modules on the screen
 let tempx = 50;
 let tempy = 100;
 
+/* add button "open file..." that allows user to add file into the select */
 export function addOpenFileButtonTo(selectDiv) {
     const input = document.createElement("input");
     const button = document.createElement("button");
@@ -25,6 +27,7 @@ export function addOpenFileButtonTo(selectDiv) {
     selectDiv.appendChild(fileButton);
     selectDiv.fileButton = fileButton;
 }
+/* show message popup on the element for timeInSec seconds */
 export function displayAlertOnElement(message, element, timeInSec) {
     const time = timeInSec === undefined ? 1000 : parseFloat(timeInSec) * 1000;
     let span;
@@ -53,6 +56,7 @@ export function displayAlertOnElement(message, element, timeInSec) {
         span.style.opacity = "0";
     }, time);
 }
+/* currently not used. Make selection rectangle on canvas */
 export function createSelectionRectangle(event) {
     const div = document.getElementById("selection-rect");
     const x1 = event.clientX;
@@ -81,6 +85,7 @@ export function createSelectionRectangle(event) {
         document.onmousedown = undefined; // create selection only once. Remove later!
     };
 }
+/* build HTML structure for module */
 export function buildModule(module) {
     const head = document.createElement("div");
     const close = document.createElement("button");
@@ -256,6 +261,7 @@ export function buildModule(module) {
     // add the node into the soundfield
     modulesDiv.appendChild(moduleDiv);
 }
+/* build HTML structure for slider */
 export function buildModuleSlider(module, property, initialValue, min, max, stepUnits, units, scaleLog, propertyInfo) {
     const unit = document.createElement("span");
     const info = document.createElement("div");
@@ -432,6 +438,7 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     module.footer.appendChild(audioParam);
     module.footer[parameterType] = audioParam;
 }
+/* build HTML (and SVG) structure for cable */
 export function buildCable(cable) {
     const svg = document.getElementById("svgCanvas");
     const xPosition = parseFloat(modules[cable.sourceID].modulePosition.right);
@@ -456,6 +463,7 @@ export function buildCable(cable) {
     });
 
     // translate points to actual svg shape (polyline)
+    // pointsToString is Cable class function
     cable.shape.setAttribute("stroke", "#040404");
     cable.shape.setAttribute("fill", "none");
     cable.shape.setAttribute("opacity", "0.9");
@@ -491,6 +499,7 @@ export function buildCable(cable) {
 
     cable.jack.rotateAnimation = jackRotateAnimation;
 }
+/* build HTML structure for output final mixer */
 export function buildMixer() {
     // if console was already created don't bother
     if (!document.getElementById("mixer-controllers")) {
@@ -519,7 +528,8 @@ export function buildMixer() {
         footer.hideButton = hideButton;
     }
 }
-export function buildMixerChannel(module) {
+/* build HTML structure within mixer div for module's channel */
+export function addModuleToMixer(module) {
     const muteDiv = document.createElement("div");
     const soloDiv = document.createElement("div");
     const muteButton = document.createElement("button");
@@ -532,28 +542,7 @@ export function buildMixerChannel(module) {
     moduleName.appendChild(document.createTextNode(module.name));
     moduleName.className = "moduleName";
     moduleName.onclick = () => {
-        module.bringToFront();
-        const position = module.modulePosition;
-        const newPostion1 = { left: position.left - 0.9, top: position.top };
-        const newPostion2 = { left: position.left + 0.3, top: position.top };
-        const newPostion3 = { left: position.left - 1, top: position.top };
-        const newPostion4 = { left: position.left + 0.7, top: position.top };
-
-        // wiggle the module
-        module.moveModule(newPostion1);
-        setTimeout(() => {
-            module.moveModule(newPostion2);
-            setTimeout(() => {
-                module.moveModule(newPostion3);
-                setTimeout(() => {
-                    module.moveModule(newPostion4);
-                }, 50);
-            }, 50);
-        }, 50);
-
-        setTimeout(() => {
-            module.moveModule(position);
-        }, 3000);
+        moduleName.shake();
     };
 
     muteButton.className = "mute-button";
@@ -581,9 +570,11 @@ export function buildMixerChannel(module) {
     mixerControllers.appendChild(controller);
     mixerControllers[module.id] = controller;
 }
+/* change SVG path points. Used by envelope */
 export function changePathInSVG(svg, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease) {
     svg.path.setAttribute("d", `M0,100 L${pointDelay},100,${pointAttack},0,${pointDecay},${pointSustain},${pointHold},${pointSustain},${pointRelease},100`);
 }
+/* build HTML (and SVG) structure for envelope */
 export function buildEnvelope(module, delay, attack, decay, sustain, hold, release) {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     const ampAxis = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -673,7 +664,6 @@ export function buildEnvelope(module, delay, attack, decay, sustain, hold, relea
     timeAxisValueLine.setAttribute("d", "M0,110 L0,115");
     timeAxisValueLine.classList.add("value-line");
 
-    // ampAxisValueLine.setAttribute("d", "M505,0 L490,0");
     ampAxisValueLine.classList.add("value-line");
 
     visualizer.appendChild(ampAxis);
@@ -681,7 +671,7 @@ export function buildEnvelope(module, delay, attack, decay, sustain, hold, relea
     visualizer.appendChild(ampAxisArrow);
     visualizer.appendChild(timeAxis);
     visualizer.appendChild(timeAxisArrow);
-    visualizer.appendChild(currentPath); // need to be after main path
+    visualizer.appendChild(currentPath);
     visualizer.appendChild(path);
     visualizer.appendChild(pointHold);
     visualizer.appendChild(pointStart);
@@ -692,7 +682,6 @@ export function buildEnvelope(module, delay, attack, decay, sustain, hold, relea
     visualizer.appendChild(timeAxisValueLine);
     visualizer.appendChild(ampAxisValueLine);
     visualizer.appendChild(timeValue); // on the top
-    //visualizer.appendChild(ampValue); // on the top
 
     visualizer.path = path;
     visualizer.hold = pointHold;

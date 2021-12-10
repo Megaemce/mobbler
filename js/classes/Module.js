@@ -315,6 +315,33 @@ export default class Module {
         this.div.style.left = parseInt(position.left) + "px";
         this.div.style.top = parseInt(position.top) + "px";
     }
+    /* shake the module so the user know where it is. Used by mixer */
+    shake() {
+        const module = this;
+
+        module.bringToFront();
+        const position = module.modulePosition;
+        const newPostion1 = { left: position.left - 0.9, top: position.top };
+        const newPostion2 = { left: position.left + 0.3, top: position.top };
+        const newPostion3 = { left: position.left - 1, top: position.top };
+        const newPostion4 = { left: position.left + 0.7, top: position.top };
+
+        // wiggle the module
+        module.moveModule(newPostion1);
+        setTimeout(() => {
+            module.moveModule(newPostion2);
+            setTimeout(() => {
+                module.moveModule(newPostion3);
+                setTimeout(() => {
+                    module.moveModule(newPostion4);
+                }, 50);
+            }, 50);
+        }, 50);
+
+        setTimeout(() => {
+            module.moveModule(position);
+        }, 3000);
+    }
     /* remove module and all related cables */
     deleteModule() {
         const module = this;
