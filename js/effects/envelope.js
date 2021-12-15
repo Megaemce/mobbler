@@ -1,6 +1,7 @@
 import Module from "../classes/Module.js";
 import Parameter from "../classes/Parameter.js";
 import { displayAlertOnElement, buildEnvelope, changePathInSVG } from "../helpers/builders.js";
+import { logPositionToValue } from "../helpers/math.js";
 import { modules, cables } from "../main.js";
 
 export default function enveloper(event, initalDelay, initalAttack, initalHold, initalDecay, initalSustain, initalRelease) {
@@ -16,6 +17,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     const attackInfo = "Time taken for initial run-up of level from nil to peak, beginning when the key is pressed";
     const sustainInfo = "Level during the main sequence of the sound's duration, until the key is released";
     const releaseInfo = "Time taken for the level to decay from the sustain level to zero after the key is released";
+
     let pointDelay = delay / 10;
     let pointAttack = pointDelay + attack / 10;
     let pointDecay = pointAttack + decay / 10;
@@ -81,7 +83,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
             // slow down "for" loop to update slider according to envelope time
             return new Promise((resolve) => setTimeout(resolve, milliseconds));
         },
-        async updateSlider() {
+        async updateConnectedSlider() {
             const pathLength = visualizer.path.getTotalLength().toFixed(0);
 
             // collect pathLength points (not too much not to small)
@@ -106,8 +108,8 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
 
             for (let i = 1; i < reducedPathPoints.length; i++) {
                 const timeBetweenPoints = (reducedPathPoints[i].x - reducedPathPoints[i - 1].x) * 10; // scaled to milliseconds
-                // scale value from [0,100] to [0, this.maxSliderValue]. First scale is reversed (0 is max) thus extract maxSlideValue
-                const scaledValue = this.maxSliderValue - (this.maxSliderValue * reducedPathPoints[i].y) / 100;
+                // scale value from [0,100] to [this.sliderMin, this.sliderMax]. First scale is reversed (0 is max) thus extract maxSlideValue
+                module.audioNode.scaledValue = this.sliderMax - ((this.sliderMax - this.sliderMin) * (reducedPathPoints[i].y - this.sliderMin)) / 100;
 
                 // move time with new value on time axis
                 visualizer.timeValue.setAttribute("x", reducedPathPoints[i].x - 40);
@@ -116,7 +118,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
                 visualizer.timeAxisValueLine.setAttribute("d", `M${reducedPathPoints[i].x},100 L${reducedPathPoints[i].x},115`);
 
                 // move amp value on amp axis
-                visualizer.ampAxisText.setAttribute("y", reducedPathPoints[i].y + 5); // 3 is half of font size
+                visualizer.ampAxisText.setAttribute("y", reducedPathPoints[i].y + 5); // 5 is half of font size
                 visualizer.ampAxisValueLine.setAttribute("d", `M505,${reducedPathPoints[i].y} L490,${reducedPathPoints[i].y}`);
                 // visualizer.ampValue.innerHTML = ;
 
@@ -124,17 +126,11 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
                 const updatedPath = `${visualizer.currentPath.getAttribute("d")} L${reducedPathPoints[i].x},${reducedPathPoints[i].y},${reducedPathPoints[i].x},100`;
                 visualizer.currentPath.setAttribute("d", updatedPath);
 
-                if (this.loop) {
-                    // update slider and audioNode
-                    this.slider.value = scaledValue;
-                    if (this.destination.audioNode) this.destination.audioNode[this.parameterType].value = scaledValue;
-                }
-
                 // don't call promises if release time === 0 (it's a vertical-line-only-chart)
                 if (timeBetweenPoints !== 0) await this.sleep(timeBetweenPoints);
             }
 
-            this.loop && reducedPathPoints.length > 1 && this.updateSlider();
+            this.loop && reducedPathPoints.length > 1 && this.updateConnectedSlider();
         },
         connect(destination) {
             // don't connect to input, only to parameters
@@ -145,13 +141,21 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
 
                 // disable slider
                 this.slider.classList.add("disabled");
-                this.maxSliderValue = parseFloat(this.slider.value);
+
+                // keep current slider value as the maximum value that envelope can reach
+                if (this.slider.scaleLog) {
+                    this.sliderMax = logPositionToValue(this.slider.value, this.slider.min, this.slider.max);
+                } else {
+                    this.sliderMax = this.slider.value;
+                }
+
+                this.sliderMin = parseFloat(this.slider.min);
 
                 // allow loop to start
                 this.loop = true;
 
                 // start the show
-                this.updateSlider();
+                this.updateConnectedSlider();
             } else {
                 //displayAlertOnElement("Please connect to the parameter instead of input", module.head, 3);
             }
@@ -159,9 +163,10 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
         disconnect() {
             // cancel the show
             this.loop = false;
+            this.destination && window.cancelAnimationFrame(this.destination.animationID[this.parameterType]);
         },
     };
 
-    module.audioNode.isTransmitting = true;
+    module.isTransmitting = true;
     module.addInitalCable();
 }
