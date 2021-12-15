@@ -16,8 +16,8 @@ export default class Cable {
         this.points = [new Point(0.378, 1.056, 0.4, true), new Point(2.695, 2.016, 0.4), new Point(4.831, 3.454, 0.4), new Point(6.789, 5.335, 0.4), new Point(8.575, 7.623, 0.4), new Point(10.192, 10.284, 0.4), new Point(11.646, 13.281, 0.4), new Point(14.078, 20.143, 0.4), new Point(15.909, 27.926, 0.4), new Point(17.173, 36.348, 0.4), new Point(17.906, 45.122, 0.4, true), new Point(18.142, 53.97, 0.4, true)]; // inital hanging shape
         this.sourceID = sourceID;
         this.inputName = undefined; // "input" for regular module-module connection or parameterType (eg. "Frequency")
-        this.destinationID = destinationID;
         this.animationID = undefined; // keep reference to the physics animation function
+        this.destinationID = destinationID;
         this.createCable(); // create cable HTML object
     }
     /* return points array as a flat string for cable.shape's points attribute  */
