@@ -1,23 +1,33 @@
-const digitsAfterDot = 2;
-
-// from log slider position to real value
-export function logPositionToValue(position, min, max) {
-    const minNonZero = parseFloat(min || 1);
-    if (max - minNonZero === 0) return 0;
+/* from log slider position to real value */
+export function logPositionToValue(position, valueMin, valueMax) {
+    const min = Math.abs(parseFloat(valueMin)) || 1;
+    const max = Math.abs(parseFloat(valueMax)) || 1;
+    const minSign = valueMin < 0 ? -1 : 1;
+    const maxSign = valueMax < 0 ? -1 : 1;
+    if (maxSign * max - minSign * min === 0) return 0;
     // calculate adjustment factor
-    let scale = (Math.log(max) - Math.log(minNonZero)) / (max - minNonZero);
-    let calculation = Math.exp((position - min) * scale + Math.log(minNonZero));
-    return parseFloat(calculation.toFixed(digitsAfterDot));
+    const scale = (maxSign * Math.log(max) - minSign * Math.log(min)) / (maxSign * max - minSign * min);
+    const calculation = Math.exp((position - minSign * min) * scale + minSign * Math.log(min));
+
+    return calculation;
 }
 
-// from real value to log slider position
-export function valueToLogPosition(value, min, max) {
+/* from real value to log slider position */
+export function valueToLogPosition(sliderValue, sliderMin, sliderMax) {
     // calculate adjustment factor
-    let scale = (Math.log(max) - Math.log(min || 1)) / (max - min);
-    let calculation = min + (Math.log(value || 1) - Math.log(min || 1)) / scale;
-    return parseFloat(calculation.toFixed(digitsAfterDot));
+    const max = parseFloat(sliderMax);
+    const min = Math.abs(parseFloat(sliderMin)) || 1;
+    const value = Math.abs(parseFloat(sliderValue)) || 1;
+    const maxSign = sliderMax < 0 ? -1 : 1;
+    const minSign = sliderMin < 0 ? -1 : 1;
+    const valueSign = sliderValue < 0 ? -1 : 1;
+
+    const scale = (maxSign * Math.log(max) - minSign * Math.log(min)) / (maxSign * max - minSign * min);
+    const calculation = minSign * min + (valueSign * Math.log(value) - minSign * Math.log(min)) / scale;
+
+    return calculation;
 }
-// returns direction as a string based on line between point A and B
+/* returns direction as a string based on line between point A and B */
 export function directionString(pointA, pointB) {
     let angle = (Math.atan2(pointB.y - pointA.y, pointB.x - pointA.x) * 180) / Math.PI;
     if (angle < 0) angle = 360 + angle; // changing range [-180,180] to [0, 360]
