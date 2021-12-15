@@ -114,7 +114,13 @@ export default class Module {
 
         // when slider is moved (by user or by connected module)
         module.content.controllers[parameterType].slider.oninput = function () {
-            const sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
+            const slider = module.content.controllers[parameterType].slider;
+            const sliderDecimals = slider.step.split(".")[1] ? slider.step.split(".")[1].length : 0;
+
+            let sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
+
+            // cut decimals so they fit to the decimals of slider.step
+            sliderValue = parseFloat(sliderValue).toFixed(sliderDecimals);
 
             // set value on the audiNode parameter
             if (module.audioNode) module.audioNode[parameterType].value = sliderValue;
@@ -402,12 +408,13 @@ export default class Module {
        destinationModule is always audioNode-enabled */
     connectToSlider(destinationModule, slider, parameterType, initalSliderValue) {
         const module = this;
-        const dataMin = -1;
-        const dataMax = 1;
+        const dataMin = -1; // floatTimeDomain min
+        const dataMax = 1; // floatTimeDomain max
         const sliderMin = parseFloat(slider.min);
         const sliderMax = parseFloat(slider.max);
         const volumeData = new Float32Array(slider.audioNode.fftSize); // slider.audioNode's getByteTimeDomainData values in range dataMin-dataMax
-        const initalValueDeviation = parseFloat(initalSliderValue - (sliderMin + sliderMax / 2)); // deviation from the slider's middle point
+        const sliderDecimals = slider.step.split(".")[1] ? slider.step.split(".")[1].length : 0;
+        const initalValueDeviation = parseFloat(initalSliderValue - (sliderMin + sliderMax) / 2); // deviation from the slider's middle point
         const average = (array) => array.reduce((a, b) => a + b, 0) / array.length; // return avarage of elements from array;
 
         let scaledValue; // value scaled between volumeData range (dataMin-dataMax) to sliderMin-sliderMax
@@ -415,15 +422,20 @@ export default class Module {
         // load analyser data into volumeData
         slider.audioNode.getFloatTimeDomainData(volumeData);
 
-        scaledValue = ((sliderMax - sliderMin) * (average(volumeData) - dataMin)) / (dataMax - dataMin) + sliderMin;
+        // envelope generate it's own signal thus volumeData will be empty. Envelope keeps data in .scaledValue parameter
+        if (this.name !== "envelope") {
+            scaledValue = ((sliderMax - sliderMin) * (average(volumeData) - dataMin)) / (dataMax - dataMin) + sliderMin;
 
-        // input value will always have 0 in the middle of the slider thus move it according to the inital slider value
-        scaledValue = scaledValue + initalValueDeviation;
+            // input value will always have 0 in the middle of the slider thus move it according to the inital slider value
+            scaledValue = scaledValue + initalValueDeviation;
 
-        // now value can be higher than the max or lower than min thus cut it
-        if (scaledValue < sliderMin) scaledValue = sliderMin;
-        if (scaledValue > sliderMax) scaledValue = sliderMax;
-
+            // now value can be higher than the max or lower than min thus cut it
+            if (scaledValue < sliderMin) scaledValue = sliderMin;
+            if (scaledValue > sliderMax) scaledValue = sliderMax;
+        }
+        if (this.name === "envelope") {
+            scaledValue = this.audioNode.scaledValue || initalSliderValue;
+        }
         // change slider position if scaleLog option is enabled
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
@@ -432,8 +444,12 @@ export default class Module {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
 
-        destinationModule.content.controllers[parameterType].value.innerHTML = slider.value;
-        destinationModule.content.controllers[parameterType].debug.currentValue.innerText = slider.value;
+        // cut decimals so they fit to the decimals of slider.step
+        scaledValue = parseFloat(scaledValue).toFixed(sliderDecimals);
+
+        // show value in debug console and above the slider
+        destinationModule.content.controllers[parameterType].value.innerHTML = scaledValue;
+        destinationModule.content.controllers[parameterType].debug.currentValue.innerText = scaledValue;
 
         // update the value inifinite but only if module is actively transmitting
         destinationModule.animationID[parameterType] = requestAnimationFrame(() => {
