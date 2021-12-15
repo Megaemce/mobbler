@@ -11,7 +11,7 @@ export default function oscillator(event, initalType, initalDetune, initalFreque
     const module = new Player("oscillator", type, types);
 
     module.createSlider("frequency", frequecy, 0.1, 2000, 0.01, "Hz", true, frequencyInfo);
-    module.createSlider("detune", detune, -1200, 1200, 1, "cents", false, detuneInfo);
+    module.createSlider("detune", detune, -1200, 1200, 1, "cts", false, detuneInfo);
 
     // changing oscillator type
     module.content.options.select.onchange = function () {

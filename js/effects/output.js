@@ -1,6 +1,6 @@
 import Module from "../classes/Module.js";
 import { audioContext } from "../main.js";
-import { displayAlertOnElement, buildMixerChannel, buildMixer } from "../helpers/builders.js";
+import { displayAlertOnElement, addModuleToMixer, buildMixer } from "../helpers/builders.js";
 
 export default function output(event) {
     const speakerImg = document.createElement("img");
@@ -24,6 +24,8 @@ export default function output(event) {
     buildMixer();
 
     module.onDeletion = () => {
+        const mixer = document.getElementById("mixer-controllers");
+
         outputButton.style.cursor = "pointer";
         outputButton.onmouseover = undefined;
         outputButton.onmousedown = output;
@@ -33,19 +35,20 @@ export default function output(event) {
     // add new channel mixer to the mixer (if it's not already there)
     module.onConnectInput = (source) => {
         const mixer = document.getElementById("mixer-controllers");
-        console.log(mixer);
-        console.log(source.id);
-        console.log(mixer[source.id]);
+
         if (!mixer[source.id]) {
-            buildMixerChannel(source);
+            addModuleToMixer(source);
         }
         mixer.classList.remove("nothing");
     };
 
     module.onDisconnectInput = (source) => {
         const mixer = document.getElementById("mixer-controllers");
+
         mixer.removeChild(mixer[source.id]);
-        if (module.inputCount === 0) mixer.classList.add("nothing");
+        if (module.inputCount === 0) {
+            mixer.classList.add("nothing");
+        }
     };
 
     return module;
