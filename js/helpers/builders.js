@@ -369,10 +369,10 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     };
     debugValue.oninput = () => {
         value.innerHTML = parseFloat(debugValue.innerText);
-        slider.value = parseFloat(debugValue.innerText);
+        slider.value = slider.scaleLog ? valueToLogPosition(debugValue.innerText, slider.min, slider.max) : debugValue.innerText;
 
         // set value on the audiNode parameter
-        if (module.audioNode) module.audioNode[parameterType].value = slider.value;
+        if (module.audioNode) module.audioNode[parameterType].value = debugValue.innerText;
     };
 
     debugValueDiv.appendChild(debugValue);
@@ -542,7 +542,7 @@ export function addModuleToMixer(module) {
     moduleName.appendChild(document.createTextNode(module.name));
     moduleName.className = "moduleName";
     moduleName.onclick = () => {
-        moduleName.shake();
+        module.shake();
     };
 
     muteButton.className = "mute-button";
@@ -653,7 +653,7 @@ export function buildEnvelope(module, delay, attack, decay, sustain, hold, relea
 
     pointHold.setAttribute("cx", hold);
     pointHold.setAttribute("cy", sustain);
-    pointHold.setAttribute("id", "attack");
+    pointHold.setAttribute("id", "hold");
     pointHold.setAttribute("r", 3);
 
     pointRelease.setAttribute("cx", release);
