@@ -493,13 +493,11 @@ svg {
     align-items: center;
     flex-direction: row 
 }
-
 .module .content .controllers .sliders .slider {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    /* min-width: 68px  */
 }
 .module .content .controllers .sliders .slider-debug {
     display: none;
