@@ -1,7 +1,7 @@
 import Cable from "./Cable.js";
 import { audioContext, cables, modules } from "../main.js";
-import { valueToLogPosition, logPositionToValue } from "../helpers/math.js";
-import { buildModule, buildModuleSlider, addOpenFileButtonTo, displayAlertOnElement } from "../helpers/builders.js";
+import { valueToLogPosition, logPositionToValue, scaleBetween } from "../helpers/math.js";
+import { buildModule, buildModuleSlider, addOpenFileButtonTo } from "../helpers/builders.js";
 
 let id = 0;
 
@@ -389,6 +389,8 @@ export default class Module {
         if (destinationModule.audioNode.inputNode) destination = destinationModule.audioNode.inputNode;
         else destination = destinationModule.audioNode;
 
+        destination.parentID = destinationModule.id; // used by envelope
+
         // if this module is transmitting make connection and mark further cables as active
         source && destination && source.connect(destination);
 
@@ -405,7 +407,12 @@ export default class Module {
         }
     }
     /* connect this module to destinationModule's slider of parameterType. 
-       destinationModule is always audioNode-enabled */
+       destinationModule is always audioNode-enabled 
+       
+       There are two way to connect to slider: 
+        - one by envelope module and this moves slider into range [sliderMin:x], where x is slider starting position,
+        - any other module and this connection moves slider from its current position into range [x-sliderMin/2:x+sliderMax/2]
+       */
     connectToSlider(destinationModule, slider, parameterType, initalSliderValue) {
         const module = this;
         const dataMin = -1; // floatTimeDomain min
@@ -422,24 +429,19 @@ export default class Module {
         // load analyser data into volumeData
         slider.audioNode.getFloatTimeDomainData(volumeData);
 
-        // envelope generate it's own signal thus volumeData will be empty. Envelope keeps data in .scaledValue parameter
-        if (this.name !== "envelope") {
-            scaledValue = ((sliderMax - sliderMin) * (average(volumeData) - dataMin)) / (dataMax - dataMin) + sliderMin;
+        // scale avarage of timeDomainData value from [dataMin,dataMax] to [sliderMin, sliderMax]
+        // input value will always have 0 in the middle of the slider thus move it according to the inital slider value deviation
+        scaledValue = scaleBetween(average(volumeData), dataMin, dataMax, sliderMin, sliderMax) + initalValueDeviation;
 
-            // input value will always have 0 in the middle of the slider thus move it according to the inital slider value
-            scaledValue = scaledValue + initalValueDeviation;
+        // now value can be higher than the max or lower than min thus cut it
+        if (scaledValue < sliderMin) scaledValue = sliderMin;
+        if (scaledValue > sliderMax) scaledValue = sliderMax;
 
-            // now value can be higher than the max or lower than min thus cut it
-            if (scaledValue < sliderMin) scaledValue = sliderMin;
-            if (scaledValue > sliderMax) scaledValue = sliderMax;
-        }
-        if (this.name === "envelope") {
-            scaledValue = this.audioNode.scaledValue || initalSliderValue;
-        }
         // change slider position if scaleLog option is enabled
         slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
 
         // custom Parameter don't control audio thus just set the new value (they know what to do next)
+        // only exception is envelope which actually controls the audio but cannot be connected directly from connectToParameter()
         if (destinationModule.audioNode && destinationModule.audioNode[parameterType].constructor.name === "Parameter") {
             destinationModule.audioNode[parameterType].value = scaledValue;
         }
@@ -484,16 +486,19 @@ export default class Module {
             slider.audioNode.parentID = destinationModule.id;
             slider.audioNode.parameterType = parameterType;
 
-            // connect only to "AudioParam" parameters as they control actual audio rather than "Parameter"
-            if (destinationModule.audioNode && destinationModule.audioNode[parameterType].constructor.name !== "Parameter") {
-                module.audioNode.connect(destinationModule.audioNode[parameterType]);
-            }
-
             // connect just for slider-animation controlled by analyser
             module.audioNode.connect(slider.audioNode);
 
-            // don't make unnesessary slider's animation if source module is not active
-            module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, slider.value);
+            // don't try to connect when the source is envelope as it's controlling audio with its own method
+            if (module.audioNode.type !== "envelope") {
+                // connect only to "AudioParam" parameters as they control actual audio rather than "Parameter"
+                if (destinationModule.audioNode && destinationModule.audioNode[parameterType].constructor.name !== "Parameter") {
+                    module.audioNode.connect(destinationModule.audioNode[parameterType]);
+                }
+
+                // don't make unnesessary slider's animation if source module is not active
+                module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, slider.value);
+            }
         }
     }
 }
