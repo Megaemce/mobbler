@@ -1,7 +1,7 @@
 import Module from "../classes/Module.js";
 import Parameter from "../classes/Parameter.js";
 import { displayAlertOnElement, buildEnvelope, changePathInSVG } from "../helpers/builders.js";
-import { logPositionToValue } from "../helpers/math.js";
+import { scaleBetween, valueToLogPosition } from "../helpers/math.js";
 import { modules, cables } from "../main.js";
 
 export default function enveloper(event, initalDelay, initalAttack, initalHold, initalDecay, initalSustain, initalRelease) {
@@ -73,100 +73,155 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     }
 
     module.audioNode = {
+        type: "envelope", // used by connectToSlider and connectToParameter
         hold: new Parameter(hold, holdSetFunction),
         delay: new Parameter(delay, delaySetFunction),
         decay: new Parameter(decay, decaySetFunction),
         attack: new Parameter(attack, attackSetFunction),
         sustain: new Parameter(sustain, sustainSetFunction),
         release: new Parameter(release, releaseSetFunction),
-        sleep: (milliseconds) => {
-            // slow down "for" loop to update slider according to envelope time
-            return new Promise((resolve) => setTimeout(resolve, milliseconds));
-        },
-        async updateConnectedSlider() {
+        intervalID: undefined, // used to stop animation when reconnecting
+        connectedModules: new Array(), // keeping all info about connected modules
+        updateConnectedSlider() {
             const pathLength = visualizer.path.getTotalLength().toFixed(0);
 
-            // collect pathLength points (not too much not to small)
-            let pathPoints = [];
+            // collect pathLength points and time between points (delta x)
+            const pathPoints = [];
             for (let i = 0; i <= pathLength; i++) {
                 const point = {};
                 point.x = parseFloat(visualizer.path.getPointAtLength(i).x.toFixed(2));
                 point.y = parseFloat(visualizer.path.getPointAtLength(i).y.toFixed(2));
+                point.time = parseFloat(visualizer.path.getPointAtLength(i + 1).x) - point.x;
                 pathPoints.push(point);
             }
 
             // reset current value path to zero
             visualizer.currentPath.setAttribute("d", "M0,100");
 
-            // reduce array to element that don't lay on the straight vertical line (calling too many promises is slow)
-            let reducedPathPoints = [pathPoints[0]];
+            // reduce array to element that don't lay on the straight vertical line (calling too many setTimeouts is just slow)
+            const reducedPathPoints = [pathPoints[0]];
             for (let i = 1; i < pathPoints.length; i++) {
                 if (pathPoints[i - 1].x !== pathPoints[i].x && Math.abs(pathPoints[i - 1].y - pathPoints[i].y) !== 1) {
                     reducedPathPoints.push(pathPoints[i - 1]);
                 }
             }
 
-            for (let i = 1; i < reducedPathPoints.length; i++) {
-                const timeBetweenPoints = (reducedPathPoints[i].x - reducedPathPoints[i - 1].x) * 10; // scaled to milliseconds
-                // scale value from [0,100] to [this.sliderMin, this.sliderMax]. First scale is reversed (0 is max) thus extract maxSlideValue
-                module.audioNode.scaledValue = this.sliderMax - ((this.sliderMax - this.sliderMin) * (reducedPathPoints[i].y - this.sliderMin)) / 100;
+            const iterator = reducedPathPoints[Symbol.iterator]();
 
-                // move time with new value on time axis
-                visualizer.timeValue.setAttribute("x", reducedPathPoints[i].x - 40);
-                visualizer.timeValue.setAttribute("y", 115);
-                visualizer.timeValue.innerHTML = `${(reducedPathPoints[i].x / 100).toFixed(2)}s`;
-                visualizer.timeAxisValueLine.setAttribute("d", `M${reducedPathPoints[i].x},100 L${reducedPathPoints[i].x},115`);
+            const iterating = () => {
+                const point = iterator.next();
 
-                // move amp value on amp axis
-                visualizer.ampAxisText.setAttribute("y", reducedPathPoints[i].y + 5); // 5 is half of font size
-                visualizer.ampAxisValueLine.setAttribute("d", `M505,${reducedPathPoints[i].y} L490,${reducedPathPoints[i].y}`);
-                // visualizer.ampValue.innerHTML = ;
+                // if iteration is not done refresh sliders on all connected modules
+                if (point.done === false) {
+                    clearInterval(this.intervalID);
 
-                // update current value path
-                const updatedPath = `${visualizer.currentPath.getAttribute("d")} L${reducedPathPoints[i].x},${reducedPathPoints[i].y},${reducedPathPoints[i].x},100`;
-                visualizer.currentPath.setAttribute("d", updatedPath);
+                    this.connectedModules.forEach((module) => {
+                        // copy-pasta from connectToSlider(). It's not located there as it was an exception
+                        // for almost all of the function thus kept here for better clarity in the Module class
+                        const slider = module.slider;
+                        const sliderMin = parseFloat(slider.min);
+                        const sliderMax = parseFloat(slider.max);
+                        const destination = module.destination;
+                        const parameterType = module.parameterType;
+                        const sliderDecimals = slider.step.split(".")[1] ? slider.step.split(".")[1].length : 0;
+                        const sliderInitalValue = module.sliderInitalValue;
 
-                // don't call promises if release time === 0 (it's a vertical-line-only-chart)
-                if (timeBetweenPoints !== 0) await this.sleep(timeBetweenPoints);
-            }
+                        // scale value from [100,0] (0 is max thus scale is reversed) to [sliderMin, sliderInitalValue]
+                        let scaledValue = scaleBetween(point.value.y, 100, 0, sliderMin, sliderInitalValue);
 
-            this.loop && reducedPathPoints.length > 1 && this.updateConnectedSlider();
+                        // update slider's audioNode
+                        if (destination.audioNode) destination.audioNode[parameterType].value = scaledValue;
+
+                        // change slider position if scaleLog option is enabled
+                        slider.value = slider.scaleLog ? valueToLogPosition(scaledValue, sliderMin, sliderMax) : scaledValue;
+
+                        // cut decimals so they fit to the decimals of slider.step
+                        scaledValue = parseFloat(scaledValue).toFixed(sliderDecimals);
+
+                        // show value in debug console and above the slider
+                        destination.content.controllers[parameterType].value.innerHTML = scaledValue;
+                        destination.content.controllers[parameterType].debug.currentValue.innerText = scaledValue;
+                    });
+
+                    // move time with new value on time axis
+                    visualizer.timeValue.setAttribute("x", point.value.x - 40);
+                    visualizer.timeValue.setAttribute("y", 115);
+                    visualizer.timeValue.innerHTML = `${(point.value.x / 100).toFixed(2)}s`;
+                    visualizer.timeAxisValueLine.setAttribute("d", `M${point.value.x},100 L${point.value.x},115`);
+
+                    // move amp value on amp axis
+                    visualizer.ampAxisText.setAttribute("y", point.value.y + 5); // 5 is half of font size
+                    visualizer.ampAxisValueLine.setAttribute("d", `M505,${point.value.y} L490,${point.value.y}`);
+
+                    // update current value path
+                    const updatedPath = `${visualizer.currentPath.getAttribute("d")} L${point.value.x},${point.value.y},${point.value.x},100`;
+                    visualizer.currentPath.setAttribute("d", updatedPath);
+
+                    // start new iteration
+                    this.intervalID = setInterval(iterating, point.value.time);
+                } else {
+                    // when the whole path is fisnihed run the cycle again
+                    if (this.loop === true && reducedPathPoints.length > 1) {
+                        this.updateConnectedSlider();
+                    }
+                }
+            };
+
+            iterating();
         },
         connect(destination) {
+            // in all places where connection is done destination will have parentID attribute set
+            const destinationModule = modules[destination.parentID];
+
             // don't connect to input, only to parameters
-            if (destination.parentID) {
-                this.destination = modules[destination.parentID];
-                this.parameterType = destination.parameterType;
-                this.slider = modules[destination.parentID].content.controllers[destination.parameterType].slider;
+            if (destination.parameterType) {
+                const sliderDiv = destinationModule.content.controllers[destination.parameterType];
 
                 // disable slider
-                this.slider.classList.add("disabled");
+                sliderDiv.slider.classList.add("disabled");
 
-                // keep current slider value as the maximum value that envelope can reach
-                if (this.slider.scaleLog) {
-                    this.sliderMax = logPositionToValue(this.slider.value, this.slider.min, this.slider.max);
-                } else {
-                    this.sliderMax = this.slider.value;
+                // add new module into connectedModules array
+                this.connectedModules.push({
+                    id: destination.parentID,
+                    destination: destinationModule,
+                    parameterType: destination.parameterType,
+                    slider: sliderDiv.slider,
+                    sliderInitalValue: parseFloat(sliderDiv.value.innerHTML),
+                });
+
+                if (this.connectedModules.length > 1) {
+                    displayAlertOnElement("It's better NOT to connect envelope to multiple modules", destinationModule.head, 3);
                 }
 
-                this.sliderMin = parseFloat(this.slider.min);
+                // allow loop to start. When there is more than one module connected to envelope don't rerun the function
+                if (this.loop === false) {
+                    this.loop = true;
 
-                // allow loop to start
-                this.loop = true;
-
-                // start the show
-                this.updateConnectedSlider();
+                    // clearInterval(this.intervalID);
+                    // start the show
+                    this.updateConnectedSlider();
+                }
             } else {
-                //displayAlertOnElement("Please connect to the parameter instead of input", module.head, 3);
+                // removing cable too fast would make input image set to busy
+                setTimeout(() => {
+                    module.outcomingCables[module.outcomingCables.length - 1].deleteCable();
+                }, 100);
+                displayAlertOnElement("Please connect to the parameter instead of input", destinationModule.head, 3);
             }
         },
         disconnect() {
-            // cancel the show
+            // cancel the show on all connected modules
+            this.connectedModules.forEach((module) => {
+                module.destination && window.cancelAnimationFrame(module.destination.animationID[module.parameterType]);
+            });
+            // flush existing connection
+            this.connectedModules = [];
             this.loop = false;
-            this.destination && window.cancelAnimationFrame(this.destination.animationID[this.parameterType]);
         },
     };
 
     module.isTransmitting = true;
+    module.audioNode.loop = false;
+    //module.audioNode.updateConnectedSlider = module.audioNode.makeSingle(module.audioNode.updateConnectedSlider);
     module.addInitalCable();
 }
