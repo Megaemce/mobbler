@@ -9,7 +9,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     const delay = parseFloat(initalDelay || 0);
     const decay = parseFloat(initalDecay || 850);
     const attack = parseFloat(initalAttack || 400);
-    const sustain = parseFloat(initalSustain || 200);
+    const sustain = parseFloat(initalSustain || 20);
     const release = parseFloat(initalRelease || 550);
     const holdInfo = "Number of second by which max sound will be played";
     const delayInfo = "Number of second by which envelope start will be delayed";
@@ -34,7 +34,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     module.createSlider("delay", delay, 0, 1000, 1, "ms", false, delayInfo);
     module.createSlider("attack", attack, 0, 1000, 1, "ms", false, attackInfo);
     module.createSlider("decay", decay, 0, 1000, 1, "ms", false, decayInfo);
-    module.createSlider("sustain", sustain, 0, 1000, 1, "", false, sustainInfo);
+    module.createSlider("sustain", sustain, 0, 100, 1, "%", false, sustainInfo);
     module.createSlider("hold", hold, 0, 1000, 1, "ms", false, holdInfo);
     module.createSlider("release", release, 1, 1000, 1, "ms", false, releaseInfo);
 
@@ -52,7 +52,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
         releaseSetFunction();
     }
     function sustainSetFunction() {
-        pointSustain = 100 - module.audioNode.sustain.value / 10;
+        pointSustain = 100 - module.audioNode.sustain.value;
         visualizer.decay.setAttribute("cy", pointSustain);
         holdSetFunction();
     }
@@ -222,6 +222,5 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
 
     module.isTransmitting = true;
     module.audioNode.loop = false;
-    //module.audioNode.updateConnectedSlider = module.audioNode.makeSingle(module.audioNode.updateConnectedSlider);
     module.addInitalCable();
 }
