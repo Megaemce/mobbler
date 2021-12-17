@@ -28,21 +28,23 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     const module = new Module("envelope", false);
 
     const visualizer = buildEnvelope(module, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease);
+
     // set inital path (from slider inital values) in envelope svg
     changePathInSVG(visualizer, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease);
 
-    module.createSlider("delay", delay, 0, 1000, 1, "ms", false, delayInfo);
-    module.createSlider("attack", attack, 0, 1000, 1, "ms", false, attackInfo);
-    module.createSlider("decay", decay, 0, 1000, 1, "ms", false, decayInfo);
+    module.createSlider("delay", delay, 0, 1000, 1, "ms", true, delayInfo);
+    module.createSlider("attack", attack, 0, 1000, 1, "ms", true, attackInfo);
+    module.createSlider("decay", decay, 0, 1000, 1, "ms", true, decayInfo);
     module.createSlider("sustain", sustain, 0, 100, 1, "%", false, sustainInfo);
-    module.createSlider("hold", hold, 0, 1000, 1, "ms", false, holdInfo);
-    module.createSlider("release", release, 1, 1000, 1, "ms", false, releaseInfo);
+    module.createSlider("hold", hold, 0, 1000, 1, "ms", true, holdInfo);
+    module.createSlider("release", release, 1, 1000, 1, "ms", true, releaseInfo);
 
-    // reverse slider order. Update path after all other values are updated too
-    // functions used when specific parameter is changed. Extract -5 as half of the square width/height
+    // functions used when specific parameter is changed. Reverse slider order.
     function releaseSetFunction() {
         pointRelease = pointHold + module.audioNode.release.value / 10;
         visualizer.release.setAttribute("cx", pointRelease);
+
+        // update path after all other values are updated too
         changePathInSVG(visualizer, pointDelay, pointAttack, pointDecay, pointSustain, pointHold, pointRelease);
     }
     function holdSetFunction() {
