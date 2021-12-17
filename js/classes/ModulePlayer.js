@@ -72,19 +72,6 @@ export default class Player extends Module {
             }
         }
 
-        // create a new oscillator with selected options
-        if (module.type === "oscillator") {
-            const type = String(module.content.options.select.value);
-            const detune = parseFloat(module.content.controllers.detune.slider.value);
-            const frequency = parseFloat(module.content.controllers.frequency.value.innerText); //.value is a pointer not returner
-
-            module.audioNode = new OscillatorNode(audioContext, {
-                type: type,
-                detune: detune,
-                frequency: frequency,
-            });
-        }
-
         // start playing
         module.audioNode.start(0);
 
@@ -102,9 +89,10 @@ export default class Player extends Module {
         const module = this;
 
         module.isTransmitting = false;
-        module.audioNode.stop(0);
 
         module.playButton.classList.remove("switch-on");
+
+        if (module.type === "audio source") module.audioNode.stop(0);
 
         // clear stopTimer parameter (if there is any)
         if (module.audioNode.stopTimer) {
