@@ -16,6 +16,7 @@ import biquadFilter from "./effects/biquadFilter.js";
 import stereoPanner from "./effects/stereoPanner.js";
 import pannerTremolo from "./effects/pannerTremolo.js";
 import visualisation from "./effects/visualisation.js";
+import pulseOscillator from "./effects/pulseOscillator.js";
 import dynamicsCompressor from "./effects/dynamicsCompressor.js";
 import { loadFilesIntoAudioContext, save } from "./helpers/loaders.js";
 import { createSelectionRectangle } from "./helpers/builders.js";
@@ -66,6 +67,7 @@ document.getElementById("biquadFilter").onmousedown = biquadFilter;
 document.getElementById("stereoPanner").onmousedown = stereoPanner;
 document.getElementById("pannerTremolo").onmousedown = pannerTremolo;
 document.getElementById("visualisation").onmousedown = visualisation;
+document.getElementById("pulseOscillator").onmousedown = pulseOscillator;
 document.getElementById("dynamicsCompressor").onmousedown = dynamicsCompressor;
 
 // preventing enter key from adding space in name/parameter edition
