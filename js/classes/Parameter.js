@@ -1,13 +1,13 @@
 export default class Parameter {
-    constructor(value, valueSetFunction) {
-        this._value = value || 0;
+    constructor(initalValue, valueSetFunction) {
+        this._value = initalValue || 0;
         this.valueSetFunction = valueSetFunction;
     }
     get value() {
         return parseFloat(this._value);
     }
-    set value(value) {
-        this._value = value;
-        this.valueSetFunction && this.valueSetFunction(value);
+    set value(newValue) {
+        this._value = newValue;
+        this.valueSetFunction && this.valueSetFunction(newValue);
     }
 }
