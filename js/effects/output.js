@@ -20,36 +20,36 @@ export default function output(event) {
         displayAlertOnElement("Only one output per project", outputButton);
     };
 
-    // add mixer to the body
-    buildMixer();
+    // // add mixer to the body
+    // buildMixer();
 
     module.onDeletion = () => {
-        const mixer = document.getElementById("mixer-controllers");
+        // const mixer = document.getElementById("mixer-controllers");
+        // mixer.classList.remove("show");
 
         outputButton.style.cursor = "pointer";
         outputButton.onmouseover = undefined;
         outputButton.onmousedown = output;
-        mixer.classList.remove("show");
     };
 
-    // add new channel mixer to the mixer (if it's not already there)
-    module.onConnectInput = (source) => {
-        const mixer = document.getElementById("mixer-controllers");
+    // // add new channel mixer to the mixer (if it's not already there)
+    // module.onConnectInput = (source) => {
+    //     const mixer = document.getElementById("mixer-controllers");
 
-        if (!mixer[source.id]) {
-            addModuleToMixer(source);
-        }
-        mixer.classList.remove("nothing");
-    };
+    //     if (!mixer[source.id]) {
+    //         addModuleToMixer(source);
+    //     }
+    //     mixer.classList.remove("nothing");
+    // };
 
-    module.onDisconnectInput = (source) => {
-        const mixer = document.getElementById("mixer-controllers");
+    // module.onDisconnectInput = (source) => {
+    //     const mixer = document.getElementById("mixer-controllers");
 
-        mixer.removeChild(mixer[source.id]);
-        if (module.inputCount === 0) {
-            mixer.classList.add("nothing");
-        }
-    };
+    //     mixer.removeChild(mixer[source.id]);
+    //     if (module.inputCount === 0) {
+    //         mixer.classList.add("nothing");
+    //     }
+    // };
 
     return module;
 }

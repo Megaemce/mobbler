@@ -48,7 +48,7 @@ document.onmousemove = () => {
 
     document.onmousemove = undefined;
 };
-document.getElementById("save").onmousedown = save;
+// document.getElementById("save").onmousedown = save;
 document.getElementById("gain").onmousedown = gain;
 document.getElementById("delay").onmousedown = delay;
 document.getElementById("output").onmousedown = output;
