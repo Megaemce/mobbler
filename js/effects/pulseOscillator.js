@@ -72,8 +72,9 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
             this.oscillatorNode.start(time);
         },
         stop(time) {
-            // don't need to stop the oscillator as it get recreated every time
-            this.oscillatorNode.disconnect();
+            // don't leave oscillator running in the background
+            this.oscillatorNode && this.oscillatorNode.disconnect();
+            this.oscillatorNode = undefined;
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);

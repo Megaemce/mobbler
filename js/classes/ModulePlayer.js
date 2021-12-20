@@ -92,7 +92,7 @@ export default class Player extends Module {
 
         module.playButton.classList.remove("switch-on");
 
-        if (module.type === "audio source") module.audioNode.stop(0);
+        module.audioNode.stop(0);
 
         // clear stopTimer parameter (if there is any)
         if (module.audioNode.stopTimer) {
