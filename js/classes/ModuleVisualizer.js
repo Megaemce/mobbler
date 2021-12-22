@@ -77,7 +77,7 @@ export default class Visualizer extends Module {
             let drawBar = () => {
                 module.animationID["analyser"] = requestAnimationFrame(drawBar);
 
-                // data returned in dataArray array will in range [0-255]
+                // data returned in dataArray array will in range [0,255]
                 module.audioNode.getByteFrequencyData(dataArray);
 
                 ctx.fillStyle = ctx.createPattern(img, "repeat");
@@ -118,7 +118,7 @@ export default class Visualizer extends Module {
             let drawBar = () => {
                 module.animationID["analyser"] = requestAnimationFrame(drawBar);
 
-                // data returned in dataArray array will in range [0-255]
+                // data returned in dataArray array will in range [0,255]
                 module.audioNode.getByteFrequencyData(dataArray);
 
                 const previousImage = ctx.getImageData(1, 0, module.canvasWidth - 1, module.canvasHeight);
@@ -149,7 +149,7 @@ export default class Visualizer extends Module {
                 module.animationID["analyser"] = requestAnimationFrame(drawWave);
 
                 module.audioNode && module.audioNode.getByteTimeDomainData(dataArray);
-                // data returned in dataArray will be in range [0-255]
+                // data returned in dataArray will be in range [0,255]
 
                 let pattern = ctx.createPattern(img, "repeat");
                 ctx.fillStyle = pattern;
@@ -227,7 +227,7 @@ export default class Visualizer extends Module {
 
                 module.animationID["analyser"] = requestAnimationFrame(drawFreely);
 
-                // data returned in dataArrayBars will be in range [0-255]
+                // data returned in dataArrayBars will be in range [0,255]
                 if (module.audioNode) {
                     if (module.audioNode.type === "create lines from frequencies chart") {
                         module.audioNode.getByteFrequencyData(dataArray);

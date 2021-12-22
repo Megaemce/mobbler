@@ -30,7 +30,7 @@ export function valueToLogPosition(sliderValue, sliderMin, sliderMax) {
 /* returns direction as a string based on line between point A and B */
 export function directionString(pointA, pointB) {
     let angle = (Math.atan2(pointB.y - pointA.y, pointB.x - pointA.x) * 180) / Math.PI;
-    if (angle < 0) angle = 360 + angle; // changing range [-180,180] to [0, 360]
+    if (angle < 0) angle = 360 + angle; // changing range [-180,180] to [0,360]
 
     if (angle > 330 || angle <= 30) {
         return "left-to-right";
@@ -45,7 +45,7 @@ export function directionString(pointA, pointB) {
     return false;
 }
 
-/* scale value between [from_min:from_max] to [to_min:to_max] range */
+/* scale value between [from_min,from_max] to [to_min,to_max] range */
 export function scaleBetween(value, from_min, from_max, to_min, to_max) {
     const calculation = ((value - from_min) * (to_max - to_min)) / (from_max - from_min) + to_min;
 

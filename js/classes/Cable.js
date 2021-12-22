@@ -202,9 +202,8 @@ export default class Cable {
             // replace inital cable with a new one
             source.addInitalCable();
 
-            cable.shape.onmouseover = () => {
-                cable.shape.style.cursor = "url('https://megaemce.github.io/mobbler/img/scissors.svg') 5 3, move";
-            };
+            // add cursor - scissors to the cable
+            cable.shape.classList.add("cable");
 
             // only when shape is created enable removal
             cable.shape.onclick = () => {

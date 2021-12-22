@@ -37,7 +37,7 @@ body {
     margin: 0;
     font-size: 1em;
     line-height: 1.4;
-    background: url('https://megaemce.github.io/mobbler/img/background.svg');
+    background: url('../img/background.svg');
 }
 svg {
     width: 100%;
@@ -47,6 +47,9 @@ svg {
     top: 0;
     left: 0;
     z-index: -1 
+}
+svg .cable {
+    cursor: url('../img/scissors.svg') 5 3, move;
 }
 .alert .alertText {
     visibility: visible;

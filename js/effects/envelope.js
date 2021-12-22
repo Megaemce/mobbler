@@ -11,7 +11,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     const attack = parseFloat(initalAttack || 400);
     const sustain = parseFloat(initalSustain || 20);
     const release = parseFloat(initalRelease || 550);
-    const holdInfo = "Number of second by which max sound will be played";
+    const holdInfo = "Number of second by which sound will be played on the sustain level";
     const delayInfo = "Number of second by which envelope start will be delayed";
     const decayInfo = "Time taken for the subsequent run down from the attack level to the designated sustain level";
     const attackInfo = "Time taken for initial run-up of level from nil to peak, beginning when the key is pressed";

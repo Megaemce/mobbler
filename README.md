@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://megaemce.github.io/mobbler/"><img src="/img/mobbler_animated.svg" width="300px" /></a>
+<a href="https://mobbler.js.org"><img src="/img/mobbler_animated.svg" width="300px" /></a>
 </p>
 
 ## Introduction
@@ -15,18 +15,18 @@ Have you always dreamed of creating those mesmerizing berlin-techno hits of the 
 <br/>
 
 **Say no more!** Turn those clumsy analog nightmares into modern world browser-based dreamsᵀᴹ.<br>
-Introducing <a href="https://megaemce.github.io/mobbler/"><img src="/img/mobbler_word.svg" height="14px"/></a> - an revolutionary browser tool for analog-like music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing)ᵇᵉᵗᵃ.
+Introducing <a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> - an revolutionary browser tool for analog-like music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing)ᵇᵉᵗᵃ.
 <div align="center">
 <img src="https://user-images.githubusercontent.com/1651451/142727254-c605e95b-abd8-4084-aa79-d2510d038e0b.png" height="300px" />
 </div>
 <BR>
 <div align="center">
  
- 🎙️ <b>[TRY IT!](https://megaemce.github.io/mobbler/)</b>
+ 🎙️ <b>[TRY IT!](https://mobbler.js.org)</b>
 </div>
 
 ## Motive
-<a href="https://megaemce.github.io/mobbler/"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few [popular effects](https://github.com/Megaemce/mobbler/wiki/Effects) and [tutorials](https://github.com/Megaemce/mobbler/wiki/Tutorials) on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
+<a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few [popular effects](https://github.com/Megaemce/mobbler/wiki/Effects) and [tutorials](https://github.com/Megaemce/mobbler/wiki/Tutorials) on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
 
 ## How to start
 Simply create Audio source module (from `Inputs` menu) and Output (from `Outputs` menu) and connect them with a Audio source cable. Hit the play button 

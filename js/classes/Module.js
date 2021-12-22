@@ -410,8 +410,8 @@ export default class Module {
        destinationModule is always audioNode-enabled 
        
        There are two way to connect to slider: 
-        - one by envelope module and this moves slider into range [sliderMin:x], where x is slider starting position,
-        - any other module and this connection moves slider from its current position into range [x-sliderMin/2:x+sliderMax/2]
+        - one by envelope module and this moves slider into range [sliderMin,x], where x is slider starting position,
+        - any other module and this connection moves slider from its current position into range [x-sliderMin/2,x+sliderMax/2]
        */
     connectToSlider(destinationModule, slider, parameterType, initalSliderValue) {
         const module = this;
