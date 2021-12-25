@@ -59,11 +59,9 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
             const detune = parseFloat(module.content.controllers.detune.slider.value);
             const frequency = parseFloat(module.content.controllers.frequency.value.innerText); //.value is a pointer not returner
 
-            this.oscillatorNode = new OscillatorNode(audioContext, {
-                type: type,
-                detune: detune,
-                frequency: frequency,
-            });
+            this.oscillatorNode.type = type;
+            this.oscillatorNode.detune.value = detune;
+            this.oscillatorNode.frequency.value = frequency;
 
             // reconnect oscillator with another node
             this.oscillatorNode.connect(this.squareShaper);
@@ -74,7 +72,8 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
         stop(time) {
             // don't leave oscillator running in the background
             this.oscillatorNode && this.oscillatorNode.disconnect();
-            this.oscillatorNode = undefined;
+            // there is no easy way to know if oscillator is running thus simply stoping it might cause an warning
+            this.oscillatorNode = new OscillatorNode(audioContext);
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
