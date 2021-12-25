@@ -1,6 +1,7 @@
 import gain from "./effects/gain.js";
 import delay from "./effects/delay.js";
 import output from "./effects/output.js";
+import offset from "./effects/offset.js";
 import reverb from "./effects/reverb.js";
 import flanger from "./effects/flanger.js";
 import analyser from "./effects/analyser.js";
@@ -19,7 +20,7 @@ import visualisation from "./effects/visualisation.js";
 import pulseOscillator from "./effects/pulseOscillator.js";
 import dynamicsCompressor from "./effects/dynamicsCompressor.js";
 import { loadFilesIntoAudioContext, save } from "./helpers/loaders.js";
-import { createSelectionRectangle } from "./helpers/builders.js";
+// import { createSelectionRectangle } from "./helpers/builders.js";
 // import inputOutput from "./tutorials/inputOutput.js"; // tutorial for input-output
 
 // set all the initial variables
@@ -48,10 +49,12 @@ document.onmousemove = () => {
 
     document.onmousemove = undefined;
 };
+
 // document.getElementById("save").onmousedown = save;
 document.getElementById("gain").onmousedown = gain;
 document.getElementById("delay").onmousedown = delay;
 document.getElementById("output").onmousedown = output;
+document.getElementById("offset").onmousedown = offset;
 document.getElementById("reverb").onmousedown = reverb;
 document.getElementById("flanger").onmousedown = flanger;
 document.getElementById("analyser").onmousedown = analyser;
