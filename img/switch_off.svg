@@ -8,22 +8,6 @@
    <stop stop-opacity="0" offset="0"/>
    <stop offset="1"/>
   </linearGradient>
-  <filter id="filter1672" x="-1.796" y="-.59865" width="4.5919" height="2.1973" color-interpolation-filters="sRGB">
-   <feGaussianBlur in="SourceGraphic" result="result8" stdDeviation="5"/>
-   <feComposite in2="result8" operator="xor"/>
-   <feComposite in2="result8" k2="1" operator="arithmetic" result="result16"/>
-   <feComposite in="result16" in2="result16" operator="xor" result="result6"/>
-   <feOffset in="result16" result="result17"/>
-   <feDisplacementMap in="result17" in2="result16" result="result4" scale="100"/>
-   <feComposite in="SourceGraphic" in2="result4" k1="1" k3="1" operator="arithmetic" result="result2"/>
-   <feComposite in="result6" in2="result2" operator="in" result="fbSourceGraphic"/>
-   <feComposite in2="SourceGraphic" operator="in" result="result14"/>
-   <feComposite in="result14" in2="SourceGraphic" operator="in" result="result15"/>
-  </filter>
-  <linearGradient id="linearGradient1771" x1="17.05" x2="14.655" y1="28.227" y2="29.801" gradientUnits="userSpaceOnUse">
-   <stop stop-color="#909090" offset="0"/>
-   <stop stop-color="#909090" stop-opacity="0" offset="1"/>
-  </linearGradient>
   <linearGradient id="linearGradient2004" x1="14.585" x2="18.642" y1="31.22" y2="26.054" gradientTransform="matrix(1.0814,0,0,1.0814,2.5353,-2.3502)" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient1318"/>
   <linearGradient id="linearGradient56667" x1="210.84" x2="220.24" y1="130.52" y2="120.82" gradientTransform="matrix(.80801 .081326 -.08127 .80857 -144.55 -82.37)" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient1318"/>
   <linearGradient id="linearGradient1702" x1="62.931" x2="64.453" y1="25.883" y2="26.014" gradientTransform="matrix(2.9385 -.33589 -.33589 -2.9385 -157.72 135.81)" gradientUnits="userSpaceOnUse">
@@ -35,14 +19,10 @@
    <stop stop-color="#9f9e9e" offset="0"/>
    <stop stop-color="#191816" offset="1"/>
   </linearGradient>
-  <clipPath id="clipPath1179">
-   <rect x=".044764" y="5.5198" width="29.828" height="54.278" fill="#9b9a9a" stroke-width=".2124"/>
-  </clipPath>
-  <linearGradient id="linearGradient1199" x1="210.84" x2="220.24" y1="130.52" y2="120.82" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
+  <linearGradient id="linearGradient9122" x1="210.84" x2="220.24" y1="130.52" y2="120.82" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
    <stop stop-color="#5f1b00" offset="0"/>
    <stop stop-color="#fd4c03" offset="1"/>
   </linearGradient>
-  <linearGradient id="linearGradient9122" x1="210.84" x2="220.24" y1="130.52" y2="120.82" gradientUnits="userSpaceOnUse" spreadMethod="reflect" xlink:href="#linearGradient1199"/>
   <clipPath id="clipPath1195-3">
    <rect transform="rotate(-5.7435)" x="178" y="101.36" width="45.755" height="83.202" fill="#9b9a9a" stroke-width=".32569"/>
   </clipPath>
@@ -109,7 +89,6 @@
    <feGaussianBlur stdDeviation="0.57012524"/>
   </filter>
  </defs>
- <rect transform="matrix(1.2457,0,0,1.2457,-2.1699,-22.341)" x="12.271" y="16.333" width="6.6817" height="20.045" rx="3.3409" ry="3.3409" clip-path="url(#clipPath1179)" fill="url(#linearGradient1771)" filter="url(#filter1672)" opacity=".28" style="paint-order:fill markers stroke"/>
  <g transform="translate(-26.533,-14.293)">
   <path transform="matrix(.80801 .081326 -.08127 .80857 -115.03 -80.152)" d="m205.75 107.2c1.5141-1.0831 13.745-2.2774 15.44-1.5077 1.695 0.76972 8.8448 10.765 9.0257 12.618 0.18093 1.8528-4.9002 13.042-6.4143 14.125-1.5141 1.0831-13.745 2.2774-15.44 1.5077-1.695-0.76971-8.8448-10.765-9.0257-12.618-0.18093-1.8528 4.9002-13.042 6.4143-14.125z" clip-path="url(#clipPath1195-3)" fill="url(#linearGradient9122)" filter="url(#filter137556-6)"/>
   <path transform="matrix(.80801 .081326 -.08127 .80857 -115.56 -80.681)" d="m205.75 107.2c1.5141-1.0831 13.745-2.2774 15.44-1.5077 1.695 0.76972 8.8448 10.765 9.0257 12.618 0.18093 1.8528-4.9002 13.042-6.4143 14.125-1.5141 1.0831-13.745 2.2774-15.44 1.5077-1.695-0.76971-8.8448-10.765-9.0257-12.618-0.18093-1.8528 4.9002-13.042 6.4143-14.125z" clip-path="url(#clipPath1191-3)" fill="url(#linearGradient9122)" filter="url(#filter136896-5)"/>
