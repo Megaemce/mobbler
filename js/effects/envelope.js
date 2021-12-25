@@ -21,7 +21,7 @@ export default function enveloper(event, initalDelay, initalAttack, initalHold, 
     let pointDelay = delay / 10;
     let pointAttack = pointDelay + attack / 10;
     let pointDecay = pointAttack + decay / 10;
-    let pointSustain = 100 - sustain / 10;
+    let pointSustain = 100 - sustain;
     let pointHold = pointDecay + hold / 10;
     let pointRelease = pointHold + release / 10;
 
