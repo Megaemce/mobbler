@@ -60,7 +60,6 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
             this.offsetNode.connect(this.squareShaper);
 
             this.oscillatorNode.start(time);
-            s;
             this.offsetNode.start(time);
         },
         stop(time) {
