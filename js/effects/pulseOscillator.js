@@ -20,8 +20,6 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
     squareCurve.fill(-1, 0, 128);
     squareCurve.fill(1, 128, 256);
 
-    console.log(squareCurve);
-
     module.audioNode = {
         oscillatorNode: new OscillatorNode(audioContext, {
             type: type,
@@ -62,6 +60,7 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
             this.offsetNode.connect(this.squareShaper);
 
             this.oscillatorNode.start(time);
+            s;
             this.offsetNode.start(time);
         },
         stop(time) {
