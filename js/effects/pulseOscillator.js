@@ -13,12 +13,14 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
     const amplitudeInfo = "Max amplitude of the oscillator signal";
     const frequencyInfo = "Number of complete cycles a waveform makes in a second";
 
-    const module = new Player("pulse oscillator", type, [type]);
+    const module = new Player("pulse oscillator");
 
     // create new curve that will transform values [0:127] to -1 and [128:255] to +1
     const squareCurve = new Float32Array(256);
-    squareCurve.fill(-1, 0, 127);
-    squareCurve.fill(1, 128, 255);
+    squareCurve.fill(-1, 0, 128);
+    squareCurve.fill(1, 128, 256);
+
+    console.log(squareCurve);
 
     module.audioNode = {
         oscillatorNode: new OscillatorNode(audioContext, {
@@ -46,16 +48,14 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
             return this.oscillatorNode.frequency;
         },
         start(time) {
-            const type = String(module.content.options.select.value);
             const duty = parseFloat(module.content.controllers.duty.slider.value);
             const detune = parseFloat(module.content.controllers.detune.slider.value);
             const frequency = parseFloat(module.content.controllers.frequency.value.innerText); //.value is a pointer not returner
 
-            this.oscillatorNode.type = type;
+            this.offsetNode.offset.value = duty;
+
             this.oscillatorNode.detune.value = detune;
             this.oscillatorNode.frequency.value = frequency;
-
-            this.offsetNode.offset.value = duty;
 
             // reconnect oscillator with another node
             this.oscillatorNode.connect(this.squareShaper);
@@ -83,7 +83,7 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
 
     module.createSlider("frequency", frequency, 0.1, 2000, 0.01, "Hz", true, frequencyInfo);
     module.createSlider("detune", detune, -1200, 1200, 1, "cts", false, detuneInfo);
-    module.createSlider("duty", duty, -1, 2, 0.1, "", false, dutyInfo);
+    module.createSlider("duty", duty, -1, 1, 0.1, "", false, dutyInfo);
     module.createSlider("amplitude", amplitude, 0, 2, 0.1, "", false, amplitudeInfo);
 
     module.audioNode.oscillatorNode.connect(module.audioNode.squareShaper);
