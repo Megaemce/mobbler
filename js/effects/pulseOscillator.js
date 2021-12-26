@@ -2,13 +2,13 @@ import Player from "../classes/ModulePlayer.js";
 import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
-export default function pulseOscillator(event, initalDetune, initalFrequency, initalWidth, initalAmplitude) {
+export default function pulseOscillator(event, initalDetune, initalFrequency, initalDuty, initalAmplitude) {
     const type = "sawtooth";
-    const width = parseFloat(initalWidth || 0.5);
+    const duty = parseFloat(initalDuty || 0.5);
     const detune = parseFloat(initalDetune || 0);
     const amplitude = parseFloat(initalAmplitude || 1);
     const frequency = parseFloat(initalFrequency || 110);
-    const widthInfo = "The amount of time the oscillator spends in the high and low part of its cycle";
+    const dutyInfo = "The amount of time the oscillator spends in the high and low part of its cycle";
     const detuneInfo = "Determine how much signal will be played out of tune";
     const amplitudeInfo = "Max amplitude of the oscillator signal";
     const frequencyInfo = "Number of complete cycles a waveform makes in a second";
@@ -20,31 +20,22 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
     squareCurve.fill(-1, 0, 127);
     squareCurve.fill(1, 128, 255);
 
-    // creating curve with constant amplitude of value
-    const constantCurve = (value) => {
-        const curve = new Float32Array(2);
-        curve[0] = value;
-        curve[1] = value;
-
-        return curve;
-    };
-
     module.audioNode = {
         oscillatorNode: new OscillatorNode(audioContext, {
             type: type,
             detune: detune,
             frequency: frequency,
         }),
-        constantShaper: new WaveShaperNode(audioContext, { curve: constantCurve(width) }),
+        offsetNode: new ConstantSourceNode(audioContext, { offset: duty }),
         squareShaper: new WaveShaperNode(audioContext, { curve: squareCurve }),
         amplitudeNode: new GainNode(audioContext),
         outputNode: new GainNode(audioContext),
-        width: new Parameter(width, (value) => {
-            module.audioNode.constantShaper.curve = constantCurve(value);
-        }),
         amplitude: new Parameter(amplitude, (value) => {
             module.audioNode.amplitudeNode.gain.value = value;
         }),
+        get duty() {
+            return this.offsetNode.offset;
+        },
         get type() {
             return this.oscillatorNode.type;
         },
@@ -56,6 +47,7 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
         },
         start(time) {
             const type = String(module.content.options.select.value);
+            const duty = parseFloat(module.content.controllers.duty.slider.value);
             const detune = parseFloat(module.content.controllers.detune.slider.value);
             const frequency = parseFloat(module.content.controllers.frequency.value.innerText); //.value is a pointer not returner
 
@@ -63,17 +55,22 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
             this.oscillatorNode.detune.value = detune;
             this.oscillatorNode.frequency.value = frequency;
 
+            this.offsetNode.offset.value = duty;
+
             // reconnect oscillator with another node
             this.oscillatorNode.connect(this.squareShaper);
-            this.oscillatorNode.connect(this.constantShaper);
+            this.offsetNode.connect(this.squareShaper);
 
             this.oscillatorNode.start(time);
+            this.offsetNode.start(time);
         },
         stop(time) {
             // don't leave oscillator running in the background
             this.oscillatorNode && this.oscillatorNode.disconnect();
+            this.offsetNode && this.offsetNode.disconnect();
             // there is no easy way to know if oscillator is running thus simply stoping it might cause an warning
             this.oscillatorNode = new OscillatorNode(audioContext);
+            this.offsetNode = new ConstantSourceNode(audioContext);
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
@@ -86,12 +83,11 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
 
     module.createSlider("frequency", frequency, 0.1, 2000, 0.01, "Hz", true, frequencyInfo);
     module.createSlider("detune", detune, -1200, 1200, 1, "cts", false, detuneInfo);
-    module.createSlider("width", width, -1, 1, 0.1, "", false, widthInfo);
+    module.createSlider("duty", duty, -1, 2, 0.1, "", false, dutyInfo);
     module.createSlider("amplitude", amplitude, 0, 2, 0.1, "", false, amplitudeInfo);
 
-    module.audioNode.oscillatorNode.connect(module.audioNode.constantShaper);
-    module.audioNode.constantShaper.connect(module.audioNode.squareShaper);
     module.audioNode.oscillatorNode.connect(module.audioNode.squareShaper);
+    module.audioNode.offsetNode.connect(module.audioNode.squareShaper);
     module.audioNode.squareShaper.connect(module.audioNode.amplitudeNode);
     module.audioNode.amplitudeNode.connect(module.audioNode.outputNode);
 

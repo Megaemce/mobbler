@@ -21,7 +21,9 @@ export default class Player extends Module {
 
         module.content.controllers.appendChild(switchDiv);
 
-        module.content.options.select.value = type;
+        if (module.content.options) {
+            module.content.options.select.value = type;
+        }
 
         if (module.looperValue) {
             module.content.options.looper.checkbox.checked = module.looperValue;
