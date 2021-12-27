@@ -1,6 +1,7 @@
 import gain from "./effects/gain.js";
 import delay from "./effects/delay.js";
 import output from "./effects/output.js";
+import chorus from "./effects/chorus.js";
 import offset from "./effects/offset.js";
 import reverb from "./effects/reverb.js";
 import flanger from "./effects/flanger.js";
@@ -54,6 +55,7 @@ document.onmousemove = () => {
 document.getElementById("gain").onmousedown = gain;
 document.getElementById("delay").onmousedown = delay;
 document.getElementById("output").onmousedown = output;
+document.getElementById("chorus").onmousedown = chorus;
 document.getElementById("offset").onmousedown = offset;
 document.getElementById("reverb").onmousedown = reverb;
 document.getElementById("flanger").onmousedown = flanger;
