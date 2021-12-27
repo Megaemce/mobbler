@@ -15,13 +15,13 @@ export default function oscillator(event, initalType, initalDetune, initalFreque
     const module = new Player("oscillator", type, types);
 
     module.audioNode = {
+        outputNode: new GainNode(audioContext),
+        amplitudeNode: new GainNode(audioContext),
         oscillatorNode: new OscillatorNode(audioContext, {
             type: type,
             detune: detune,
             frequency: frequency,
         }),
-        amplitudeNode: new GainNode(audioContext),
-        outputNode: new GainNode(audioContext),
         amplitude: new Parameter(amplitude, (value) => {
             module.audioNode.amplitudeNode.gain.value = value;
         }),
@@ -67,8 +67,8 @@ export default function oscillator(event, initalType, initalDetune, initalFreque
     module.createSlider("detune", detune, -1200, 1200, 1, "cts", false, detuneInfo);
     module.createSlider("amplitude", amplitude, 0, 2, 0.1, "", false, amplitudeInfo);
 
-    module.audioNode.oscillatorNode.connect(module.audioNode.amplitudeNode);
     module.audioNode.amplitudeNode.connect(module.audioNode.outputNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.amplitudeNode);
 
     // changing oscillator type
     module.content.options.select.onchange = function () {

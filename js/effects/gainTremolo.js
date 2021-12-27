@@ -9,10 +9,8 @@ export default function gainTremolo(event, initalSpeed) {
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),
-        oscillatorNode: new OscillatorNode(audioContext, {
-            type: "sine",
-        }),
         outputNode: new GainNode(audioContext),
+        oscillatorNode: new OscillatorNode(audioContext, { type: "sine" }),
         get speed() {
             return this.oscillatorNode.frequency;
         },
@@ -27,8 +25,8 @@ export default function gainTremolo(event, initalSpeed) {
 
     module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
-    module.audioNode.oscillatorNode.connect(module.audioNode.inputNode.gain);
     module.audioNode.inputNode.connect(module.audioNode.outputNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.inputNode.gain);
 
     module.audioNode.oscillatorNode.start(0);
 

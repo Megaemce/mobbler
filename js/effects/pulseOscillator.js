@@ -21,15 +21,15 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
     squareCurve.fill(1, 128, 256);
 
     module.audioNode = {
+        outputNode: new GainNode(audioContext),
+        offsetNode: new ConstantSourceNode(audioContext, { offset: duty }),
+        squareShaper: new WaveShaperNode(audioContext, { curve: squareCurve }),
+        amplitudeNode: new GainNode(audioContext),
         oscillatorNode: new OscillatorNode(audioContext, {
             type: type,
             detune: detune,
             frequency: frequency,
         }),
-        offsetNode: new ConstantSourceNode(audioContext, { offset: duty }),
-        squareShaper: new WaveShaperNode(audioContext, { curve: squareCurve }),
-        amplitudeNode: new GainNode(audioContext),
-        outputNode: new GainNode(audioContext),
         amplitude: new Parameter(amplitude, (value) => {
             module.audioNode.amplitudeNode.gain.value = value;
         }),
@@ -84,10 +84,10 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
     module.createSlider("duty", duty, -1, 1, 0.1, "", false, dutyInfo);
     module.createSlider("amplitude", amplitude, 0, 2, 0.1, "", false, amplitudeInfo);
 
-    module.audioNode.oscillatorNode.connect(module.audioNode.squareShaper);
     module.audioNode.offsetNode.connect(module.audioNode.squareShaper);
     module.audioNode.squareShaper.connect(module.audioNode.amplitudeNode);
     module.audioNode.amplitudeNode.connect(module.audioNode.outputNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.squareShaper);
 
     // structure needs to be fully build before. GetBoundingClientRect related.
     module.addInitalCable();

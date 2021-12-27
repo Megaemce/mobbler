@@ -14,12 +14,12 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),
+        outputNode: new GainNode(audioContext),
+        wetnessNode: new GainNode(audioContext),
+        drynessNode: new GainNode(audioContext),
         convolerNode: new ConvolverNode(audioContext, {
             buffer: audioContext.nameIRBuffer[bufferName],
         }),
-        wetnessNode: new GainNode(audioContext),
-        drynessNode: new GainNode(audioContext),
-        outputNode: new GainNode(audioContext),
         get dryness() {
             return this.drynessNode.gain;
         },
@@ -38,11 +38,11 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
     module.createSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
     module.createSlider("wetness", wetness, 0, 5, 0.1, "", false, wetnessInfo);
 
-    module.audioNode.inputNode.connect(module.audioNode.convolerNode);
     module.audioNode.inputNode.connect(module.audioNode.drynessNode);
-    module.audioNode.convolerNode.connect(module.audioNode.wetnessNode);
+    module.audioNode.inputNode.connect(module.audioNode.convolerNode);
     module.audioNode.wetnessNode.connect(module.audioNode.outputNode);
     module.audioNode.drynessNode.connect(module.audioNode.outputNode);
+    module.audioNode.convolerNode.connect(module.audioNode.wetnessNode);
 
     // after this openFile will be accessible via module.content.options.select.fileButton
     module.addOpenFileTo(module.content.options.select);

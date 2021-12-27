@@ -10,8 +10,8 @@ export default function offset(event, initalOffset) {
     module.audioNode = new ConstantSourceNode(audioContext);
 
     module.audioNode = {
-        offsetNode: new ConstantSourceNode(audioContext),
         outputNode: new GainNode(audioContext),
+        offsetNode: new ConstantSourceNode(audioContext),
         get offset() {
             return this.offsetNode.offset;
         },

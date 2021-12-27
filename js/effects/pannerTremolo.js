@@ -9,11 +9,9 @@ export default function pannerTremolo(event, initalSpeed) {
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),
-        pannerNode: new StereoPannerNode(audioContext),
-        oscillatorNode: new OscillatorNode(audioContext, {
-            type: "sine",
-        }),
         outputNode: new GainNode(audioContext),
+        pannerNode: new StereoPannerNode(audioContext),
+        oscillatorNode: new OscillatorNode(audioContext, { type: "sine" }),
         get speed() {
             return this.oscillatorNode.frequency;
         },
@@ -29,8 +27,8 @@ export default function pannerTremolo(event, initalSpeed) {
     module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
     module.audioNode.inputNode.connect(module.audioNode.pannerNode);
-    module.audioNode.oscillatorNode.connect(module.audioNode.pannerNode.pan);
     module.audioNode.pannerNode.connect(module.audioNode.outputNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.pannerNode.pan);
 
     module.audioNode.oscillatorNode.start(0);
 

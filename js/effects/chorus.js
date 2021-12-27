@@ -10,23 +10,23 @@ export default function chorus(event, initalDelay, initalDepth, initalSpeed, ini
     const delayInfo = "Number of seconds from input signal to be storage and play back";
     const depthInfo = "Length of the effect";
     const speedInfo = "Frequency of oscillator that makes change in delay time";
-    const feedbackInfo = " The return of a portion of the output signal back into delay loop";
+    const feedbackInfo = "The return of a portion of the output signal back into delay loop";
 
     const module = new Module("chorus", true, false, false, undefined);
 
     module.audioNode = {
-        inputNode: new GainNode(audioContext),
-        feedbackNode: new GainNode(audioContext, { gain: feedback }),
+        mixNode: new GainNode(audioContext),
         dryNode: new GainNode(audioContext, { gain: 1 / Math.sqrt(2) }), // don't cancel each other on mixNode
         wetNode: new GainNode(audioContext, { gain: 1 / Math.sqrt(2) }),
-        delayLNode: new DelayNode(audioContext, { delayTime: delay }),
-        delayRNode: new DelayNode(audioContext, { delayTime: delay }),
-        oscillatorLNode: new OscillatorNode(audioContext, { type: "triangle", frequency: speed }),
-        oscillatorRNode: new OscillatorNode(audioContext, { type: "triangle", frequency: speed }),
+        inputNode: new GainNode(audioContext),
+        outputNode: new GainNode(audioContext),
         depthLNode: new GainNode(audioContext, { gain: depth }),
         depthRNode: new GainNode(audioContext, { gain: -depth }),
-        mixNode: new GainNode(audioContext),
-        outputNode: new GainNode(audioContext),
+        delayLNode: new DelayNode(audioContext, { delayTime: delay }),
+        delayRNode: new DelayNode(audioContext, { delayTime: delay }),
+        feedbackNode: new GainNode(audioContext, { gain: feedback }),
+        oscillatorLNode: new OscillatorNode(audioContext, { type: "triangle", frequency: speed }),
+        oscillatorRNode: new OscillatorNode(audioContext, { type: "triangle", frequency: speed }),
         delayTime: new Parameter(delay, (value) => {
             module.audioNode.delayLNode.delayTime.value = value;
             module.audioNode.delayRNode.delayTime.value = value;
@@ -56,20 +56,20 @@ export default function chorus(event, initalDelay, initalDepth, initalSpeed, ini
     module.createSlider("feedback", feedback, 0, 0.7, 0.01, "", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
-    module.audioNode.inputNode.connect(module.audioNode.feedbackNode);
-    module.audioNode.feedbackNode.connect(module.audioNode.delayLNode);
-    module.audioNode.feedbackNode.connect(module.audioNode.delayRNode);
-    module.audioNode.delayLNode.connect(module.audioNode.wetNode);
-    module.audioNode.delayRNode.connect(module.audioNode.wetNode);
     module.audioNode.wetNode.connect(module.audioNode.mixNode);
-    module.audioNode.oscillatorRNode.connect(module.audioNode.depthLNode);
-    module.audioNode.depthLNode.connect(module.audioNode.delayLNode.delayTime);
-    module.audioNode.oscillatorLNode.connect(module.audioNode.depthRNode);
-    module.audioNode.depthRNode.connect(module.audioNode.delayRNode.delayTime);
-    module.audioNode.inputNode.connect(module.audioNode.dryNode);
     module.audioNode.dryNode.connect(module.audioNode.mixNode);
     module.audioNode.mixNode.connect(module.audioNode.feedbackNode);
     module.audioNode.mixNode.connect(module.audioNode.outputNode);
+    module.audioNode.inputNode.connect(module.audioNode.dryNode);
+    module.audioNode.inputNode.connect(module.audioNode.feedbackNode);
+    module.audioNode.delayLNode.connect(module.audioNode.wetNode);
+    module.audioNode.delayRNode.connect(module.audioNode.wetNode);
+    module.audioNode.depthLNode.connect(module.audioNode.delayLNode.delayTime);
+    module.audioNode.depthRNode.connect(module.audioNode.delayRNode.delayTime);
+    module.audioNode.feedbackNode.connect(module.audioNode.delayLNode);
+    module.audioNode.feedbackNode.connect(module.audioNode.delayRNode);
+    module.audioNode.oscillatorRNode.connect(module.audioNode.depthLNode);
+    module.audioNode.oscillatorLNode.connect(module.audioNode.depthRNode);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

@@ -14,14 +14,12 @@ export default function flanger(event, initalDelay, initalDepth, initalSpeed, in
     const module = new Module("flanger", true, false, false, undefined);
 
     module.audioNode = {
-        inputNode: new GainNode(audioContext),
         depthNode: new GainNode(audioContext),
-        feedbackNode: new GainNode(audioContext),
+        inputNode: new GainNode(audioContext),
         delayNode: new DelayNode(audioContext),
-        oscillatorNode: new OscillatorNode(audioContext, {
-            type: "sine",
-        }),
         outputNode: new GainNode(audioContext),
+        feedbackNode: new GainNode(audioContext),
+        oscillatorNode: new OscillatorNode(audioContext, { type: "sine" }),
         get speed() {
             return this.oscillatorNode.frequency;
         },
@@ -48,13 +46,13 @@ export default function flanger(event, initalDelay, initalDepth, initalSpeed, in
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
-    module.audioNode.oscillatorNode.connect(module.audioNode.depthNode);
-    module.audioNode.depthNode.connect(module.audioNode.delayNode.delayTime);
     module.audioNode.inputNode.connect(module.audioNode.outputNode);
     module.audioNode.inputNode.connect(module.audioNode.delayNode);
     module.audioNode.delayNode.connect(module.audioNode.outputNode);
     module.audioNode.delayNode.connect(module.audioNode.feedbackNode);
+    module.audioNode.depthNode.connect(module.audioNode.delayNode.delayTime);
     module.audioNode.feedbackNode.connect(module.audioNode.inputNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.depthNode);
 
     module.audioNode.oscillatorNode.start(0);
 
