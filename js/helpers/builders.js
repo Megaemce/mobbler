@@ -286,13 +286,14 @@ export function buildModuleSlider(module, property, initialValue, min, max, step
     const debugValueMinDiv = document.createElement("div");
     const debugValueMaxDiv = document.createElement("div");
     const debugValueStepDiv = document.createElement("div");
+    const propertyNoUnderscores = property.split("_").join(""); // used by equalizer
 
     // module.content.controllers.$parameterType.info.label.tooltip
     // module.controllers[$parameterType].info.label.tooltip
     labelInfo.className = "label-tooltip";
     labelInfo.innerHTML = propertyInfo;
 
-    labelSpan.appendChild(document.createTextNode(property));
+    labelSpan.appendChild(document.createTextNode(propertyNoUnderscores));
     labelSpan.className = "label-span";
 
     // module.content.controllers.$parameterType.info.label
