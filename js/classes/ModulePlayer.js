@@ -94,14 +94,16 @@ export default class Player extends Module {
 
         module.playButton.classList.remove("switch-on");
 
-        module.audioNode.stop(0);
+        if (module.audioNode) {
+            module.audioNode.stop(0);
 
-        // clear stopTimer parameter (if there is any)
-        if (module.audioNode.stopTimer) {
-            window.clearTimeout(module.audioNode.stopTimer);
-            module.audioNode.stopTimer = undefined;
-        } else {
-            module.audioNode.disconnect();
+            // clear stopTimer parameter (if there is any)
+            if (module.audioNode.stopTimer) {
+                window.clearTimeout(module.audioNode.stopTimer);
+                module.audioNode.stopTimer = undefined;
+            } else {
+                module.audioNode.disconnect();
+            }
         }
 
         module.markAllLinkedCablesAs("deactive");
