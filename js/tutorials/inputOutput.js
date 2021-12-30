@@ -15,11 +15,11 @@ export default function inputOutput() {
     // step 2
     setTimeout(() => {
         outputModule = output();
-        outputModule.onConnectInput = () => {
+        outputModule.onInputConnected = () => {
             displayAlertOnElement("Now start the sound", inputModule.playButton, 2);
 
             // action when input will be started
-            outputModule.onConnectInput = () => {
+            outputModule.onInputConnected = () => {
                 displayAlertOnElement("You are done!", inputModule.div, 5);
             };
         };

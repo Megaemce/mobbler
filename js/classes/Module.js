@@ -209,6 +209,11 @@ export default class Module {
                         destination.connectToParameter(cableDestination, cable.inputName);
                     }
                 });
+
+                // execute function if there is any hooked
+                if (destination.onInputActivated) {
+                    destination.onInputActivated(source);
+                }
             }
             // simple make the cable deactive if it's source is also death
             if (status === "deactive" && source.isTransmitting === false) {
@@ -402,8 +407,8 @@ export default class Module {
         destinationModule.div.input.setAttribute("src", "./img/input_busy.svg");
 
         // execute function if there is any hooked
-        if (destinationModule.onConnectInput) {
-            destinationModule.onConnectInput(this);
+        if (destinationModule.onInputConnected) {
+            destinationModule.onInputConnected(this);
         }
     }
     /* connect this module to destinationModule's slider of parameterType. 

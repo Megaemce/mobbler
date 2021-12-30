@@ -33,7 +33,7 @@ export default function output(event) {
     };
 
     // // add new channel mixer to the mixer (if it's not already there)
-    // module.onConnectInput = (source) => {
+    // module.onInputConnected = (source) => {
     //     const mixer = document.getElementById("mixer-controllers");
 
     //     if (!mixer[source.id]) {
