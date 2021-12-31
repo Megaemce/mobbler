@@ -657,6 +657,22 @@ svg .cable {
     background-position: center;
     background-size: contain 
 }
+.module .content .controllers .sliders .slider .input-wrapper input[type="range"]::-moz-range-thumb {
+    -webkit-appearance: none;
+    position: relative;
+    top: 0;
+    z-index: 1;
+    border: 0;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    background-image: url('../img/slider.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain 
+}
+
+
 .module .footer {
     background: linear-gradient(105deg, #9a9a9a 8px, #797575 12px, #797878, transparent calc(100% - 30px)), linear-gradient(105deg, transparent 30%, #545252 31%, #545252 calc(100% - 7.5px), transparent calc(100% - 6.5px));
     padding: 0 8px 0 11px;
