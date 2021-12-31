@@ -597,6 +597,7 @@ export function buildEnvelope(module, delay, attack, decay, sustain, hold, relea
     const timeAxisValueLine = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
     visualizer.setAttribute("viewBox", "-5 -5 510 110");
+    visualizer.setAttribute("width", "300px");
     visualizer.setAttribute("preserveAspectRatio", "xMinYMin slice");
     visualizer.classList.add("envelope-visualizer");
 
