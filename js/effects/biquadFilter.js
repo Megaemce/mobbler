@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 import { displayAlertOnElement } from "../helpers/builders.js";
 
@@ -21,16 +22,39 @@ export default function biquadFilter(event, initalQ, initalGain, initalType, ini
     const module = new Module("biquad filter", true, false, false, Object.keys(filters));
 
     // set audioNode with inital values
-    module.audioNode = new BiquadFilterNode(audioContext, { type: type });
+    module.audioNode = {
+        inputNode: new GainNode(audioContext),
+        outputNode: new GainNode(audioContext),
+        biquadNode: new BiquadFilterNode(audioContext, { type: type }),
+        frequency: new Parameter(frequency, (value) => {
+            module.audioNode.biquadNode.frequency.value = value;
+        }),
+        q: new Parameter(q, (value) => {
+            module.audioNode.biquadNode.Q.value = value;
+        }),
+        gain: new Parameter(gain, (value) => {
+            module.audioNode.biquadNode.gain.value = value;
+        }),
+        connect(destination) {
+            if (destination.inputNode) this.outputNode.connect(destination.inputNode);
+            else this.outputNode.connect(destination);
+        },
+        disconnect() {
+            this.outputNode.disconnect();
+        },
+    };
 
     module.createSlider("frequency", frequency, 0.1, 20000, 1, "Hz", true, filters[type].frequency.info);
-    module.createSlider("Q", q, 1, 100, 0.1, "", false, filters[type].q.info);
+    module.createSlider("q", q, 1, 100, 0.1, "", false, filters[type].q.info);
     module.createSlider("gain", gain, -10, 10.0, 0.01, "", false, filters[type].gain.info);
+
+    module.audioNode.inputNode.connect(module.audioNode.biquadNode);
+    module.audioNode.biquadNode.connect(module.audioNode.outputNode);
 
     module.content.options.select.onchange = function () {
         // set tooltips according to selected filter
         module.content.controllers.frequency.info.label.tooltip.innerHTML = filters[this.value].frequency.info;
-        module.content.controllers.Q.info.label.tooltip.innerHTML = filters[this.value].q.info;
+        module.content.controllers.q.info.label.tooltip.innerHTML = filters[this.value].q.info;
         module.content.controllers.gain.info.label.tooltip.innerHTML = filters[this.value].gain.info;
 
         // display filter's info
@@ -38,11 +62,11 @@ export default function biquadFilter(event, initalQ, initalGain, initalType, ini
 
         // disabled slider if filter does not use it
         if (filters[this.value].q.enabled) {
-            module.footer.Q.classList.remove("disabled");
-            module.content.controllers.Q.slider.classList.remove("not_used");
+            module.footer.q.classList.remove("disabled");
+            module.content.controllers.q.slider.classList.remove("not_used");
         } else {
-            module.footer.Q.classList.add("disabled");
-            module.content.controllers.Q.slider.classList.add("not_used");
+            module.footer.q.classList.add("disabled");
+            module.content.controllers.q.slider.classList.add("not_used");
         }
         if (filters[this.value].gain.enabled) {
             module.footer.gain.classList.remove("disabled");
@@ -52,7 +76,7 @@ export default function biquadFilter(event, initalQ, initalGain, initalType, ini
             module.content.controllers.gain.slider.classList.add("not_used");
         }
 
-        module.audioNode.type = this.value;
+        module.audioNode.biquadNode.type = this.value;
     };
 
     // add inital cable when structure is fully build - getBoundingClientRect related
