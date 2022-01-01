@@ -296,11 +296,6 @@ export default class Cable {
         if (destination) {
             // action for cable connected to input
             if (cable.inputName === "input") {
-                // disconnect two connected modules for faster garbage collection
-                if (destination.audioNode.type !== "output") {
-                    source.audioNode && source.audioNode.disconnect(destination.audioNode);
-                }
-
                 // if destination is no longer active mark it correctly (needs to be done after cable is deleted from "cables")
                 if (destination.inputActivity === false) {
                     destination.isTransmitting = false;
