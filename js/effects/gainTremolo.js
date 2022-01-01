@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
 export default function gainTremolo(event, initalSpeed) {
@@ -11,9 +12,9 @@ export default function gainTremolo(event, initalSpeed) {
         inputNode: new GainNode(audioContext),
         outputNode: new GainNode(audioContext),
         oscillatorNode: new OscillatorNode(audioContext, { type: "sine" }),
-        get speed() {
-            return this.oscillatorNode.frequency;
-        },
+        speed: new Parameter(speed, (value) => {
+            module.audioNode.oscillatorNode.frequency.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);

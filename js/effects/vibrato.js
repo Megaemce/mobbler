@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
 export default function vibrato(event, initalWidth, initalSpeed, initalDelayTime) {
@@ -15,13 +16,13 @@ export default function vibrato(event, initalWidth, initalSpeed, initalDelayTime
         inputNode: new GainNode(audioContext),
         outputNode: new GainNode(audioContext),
         depthNode: new GainNode(audioContext, { gain: width }),
-        oscillatorNode: new OscillatorNode(audioContext, { type: "sine", frequency: speed }),
-        get speed() {
-            return this.oscillatorNode.frequency;
-        },
-        get width() {
-            return this.depthNode.gain;
-        },
+        oscillatorNode: audioContext.createOscillator(),
+        speed: new Parameter(speed, (value) => {
+            module.audioNode.oscillatorNode.frequency.value = value;
+        }),
+        width: new Parameter(width, (value) => {
+            module.audioNode.depthNode.gain.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);
@@ -34,12 +35,13 @@ export default function vibrato(event, initalWidth, initalSpeed, initalDelayTime
     module.createSlider("width", width, 0, 0.01, 0.001, "", false, widthInfo);
     module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
-    module.audioNode.oscillatorNode.connect(module.audioNode.depthNode);
-    module.audioNode.depthNode.connect(module.audioNode.delayNode.delayTime);
     module.audioNode.inputNode.connect(module.audioNode.delayNode);
     module.audioNode.delayNode.connect(module.audioNode.outputNode);
+    module.audioNode.depthNode.connect(module.audioNode.delayNode.delayTime);
+    module.audioNode.oscillatorNode.connect(module.audioNode.depthNode);
 
     module.audioNode.oscillatorNode.start(0);
+    module.audioNode.oscillatorNode.frequency.value = speed;
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();

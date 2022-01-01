@@ -41,15 +41,15 @@ export default function distortion(event, initalGain, initalDrive, initalPrecut,
         drive: new Parameter(drive, (value) => {
             module.audioNode.distortionNode.curve = clippingTypes["Soft clipping"](value);
         }),
-        get gain() {
-            return this.gainNode.gain;
-        },
-        get precut() {
-            return this.bandpassNode.frequency;
-        },
-        get postcut() {
-            return this.lowpassNode.frequency;
-        },
+        gain: new Parameter(gain, (value) => {
+            module.audioNode.gainNode.gain.value = value;
+        }),
+        precut: new Parameter(precut, (value) => {
+            module.audioNode.bandpassNode.frequency.value = value;
+        }),
+        postcut: new Parameter(postcut, (value) => {
+            module.audioNode.lowpassNode.frequency.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);

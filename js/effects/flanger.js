@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
 export default function flanger(event, initalDelay, initalDepth, initalSpeed, initalFeedback) {
@@ -20,18 +21,18 @@ export default function flanger(event, initalDelay, initalDepth, initalSpeed, in
         outputNode: new GainNode(audioContext),
         feedbackNode: new GainNode(audioContext),
         oscillatorNode: new OscillatorNode(audioContext, { type: "sine" }),
-        get speed() {
-            return this.oscillatorNode.frequency;
-        },
-        get delaytime() {
-            return this.delayNode.delayTime;
-        },
-        get feedback() {
-            return this.feedbackNode.gain;
-        },
-        get depth() {
-            return this.depthNode.gain;
-        },
+        speed: new Parameter(speed, (value) => {
+            module.audioNode.oscillatorNode.frequency.value = value;
+        }),
+        delayTime: new Parameter(delay, (value) => {
+            module.audioNode.delayNode.delayTime.value = value;
+        }),
+        feedback: new Parameter(feedback, (value) => {
+            module.audioNode.feedbackNode.gain.value = value;
+        }),
+        depth: new Parameter(depth, (value) => {
+            module.audioNode.depthNode.gain.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);
@@ -41,7 +42,7 @@ export default function flanger(event, initalDelay, initalDepth, initalSpeed, in
         },
     };
 
-    module.createSlider("delay time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
+    module.createSlider("delay Time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
     module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);

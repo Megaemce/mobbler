@@ -33,27 +33,27 @@ export default function equalizer(event, initialBandWidth) {
             module.audioNode.hz2000Node.Q.value = 1 / value;
             module.audioNode.hz4000Node.Q.value = 1 / value;
         }),
-        get _125Hz() {
-            return this.hz125Node.gain;
-        },
-        get _250Hz() {
-            return this.hz250Node.gain;
-        },
-        get _500Hz() {
-            return this.hz500Node.gain;
-        },
-        get _1000Hz() {
-            return this.hz1000Node.gain;
-        },
-        get _2000Hz() {
-            return this.hz2000Node.gain;
-        },
-        get _4000Hz() {
-            return this.hz4000Node.gain;
-        },
-        get _8000Hz() {
-            return this.hz8000Node.gain;
-        },
+        _125Hz: new Parameter(0, (value) => {
+            module.audioNode.hz125Node.gain.value = value;
+        }),
+        _250Hz: new Parameter(0, (value) => {
+            module.audioNode.hz250Node.gain.value = value;
+        }),
+        _500Hz: new Parameter(0, (value) => {
+            module.audioNode.hz500Node.gain.value = value;
+        }),
+        _1000Hz: new Parameter(0, (value) => {
+            module.audioNode.hz1000Node.gain.value = value;
+        }),
+        _2000Hz: new Parameter(0, (value) => {
+            module.audioNode.hz2000Node.gain.value = value;
+        }),
+        _4000Hz: new Parameter(0, (value) => {
+            module.audioNode.hz4000Node.gain.value = value;
+        }),
+        _8000Hz: new Parameter(0, (value) => {
+            module.audioNode.hz8000Node.gain.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);

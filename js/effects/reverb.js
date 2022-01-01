@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 import { openFileHandler } from "../helpers/loaders.js";
 
@@ -20,12 +21,12 @@ export default function reverb(event, initalDryness, initalWetness, initalBuffer
         convolerNode: new ConvolverNode(audioContext, {
             buffer: audioContext.nameIRBuffer[bufferName],
         }),
-        get dryness() {
-            return this.drynessNode.gain;
-        },
-        get wetness() {
-            return this.wetnessNode.gain;
-        },
+        dryness: new Parameter(dryness, (value) => {
+            module.audioNode.drynessNode.gain.value = value;
+        }),
+        wetness: new Parameter(wetness, (value) => {
+            module.audioNode.wetnessNode.gain.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);

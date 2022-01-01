@@ -39,9 +39,9 @@ export default function chorus(event, initalDelay, initalDepth, initalSpeed, ini
             module.audioNode.oscillatorRNode.frequency.value = value;
             module.audioNode.oscillatorLNode.frequency.value = value;
         }),
-        get feedback() {
-            return this.feedbackNode.gain;
-        },
+        feedback: new Parameter(feedback, (value) => {
+            module.audioNode.feedbackNode.gain.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);

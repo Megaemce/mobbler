@@ -1,4 +1,5 @@
 import Module from "../classes/Module.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
 export default function delayEffect(event, initalDelay, initalDryness, initalFeedback) {
@@ -17,15 +18,15 @@ export default function delayEffect(event, initalDelay, initalDryness, initalFee
         inputNode: new GainNode(audioContext),
         outputNode: new GainNode(audioContext),
         feedbackNode: new GainNode(audioContext), // duration of the delay
-        get dryness() {
-            return this.dryNode.gain;
-        },
-        get delaytime() {
-            return this.delayNode.delayTime;
-        },
-        get feedback() {
-            return this.feedbackNode.gain;
-        },
+        dryness: new Parameter(dryness, (value) => {
+            module.audioNode.dryNode.gain.value = value;
+        }),
+        delayTime: new Parameter(delay, (value) => {
+            module.audioNode.delayNode.delayTime.value = value;
+        }),
+        feedback: new Parameter(feedback, (value) => {
+            module.audioNode.feedbackNode.gain.value = value;
+        }),
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
             else this.outputNode.connect(destination);
@@ -36,7 +37,7 @@ export default function delayEffect(event, initalDelay, initalDryness, initalFee
     };
 
     module.createSlider("dryness", dryness, 0, 5, 0.1, "", false, drynessInfo);
-    module.createSlider("delay time", delay, 0, 1, 0.1, "sec", false, delayInfo);
+    module.createSlider("delay Time", delay, 0, 1, 0.1, "sec", false, delayInfo);
     module.createSlider("feedback", feedback, 0, 0.9, 0.1, "sec", false, feedbackInfo);
 
     module.audioNode.dryNode.connect(module.audioNode.outputNode);
