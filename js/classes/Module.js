@@ -501,8 +501,12 @@ export default class Module {
                     module.audioNode.connect(destinationModule.audioNode[parameterType]);
                 }
 
+                const sliderMin = parseFloat(slider.min);
+                const sliderMax = parseFloat(slider.max);
+                const scaledValue = slider.scaleLog ? logPositionToValue(slider.value, sliderMin, sliderMax) : slider.value;
+
                 // don't make unnesessary slider's animation if source module is not active
-                module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, slider.value);
+                module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, scaledValue);
             }
         }
     }
