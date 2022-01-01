@@ -11,6 +11,7 @@ export default function output(event) {
     module.content.controllers.appendChild(speakerImg);
 
     module.audioNode = audioContext.destination;
+    module.audioNode.type = "output"; // keep type as the name can get changed
 
     // only one output possible per project
     const outputButton = document.getElementById("output");

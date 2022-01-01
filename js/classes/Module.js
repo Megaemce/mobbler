@@ -418,7 +418,6 @@ export default class Module {
         - any other module and this connection moves slider from its current position into range [x-sliderMin/2,x+sliderMax/2]
        */
     connectToSlider(destinationModule, slider, parameterType, initalSliderValue) {
-        console.log(destinationModule.audioNode[parameterType].value);
         const module = this;
         const dataMin = -1; // floatTimeDomain min
         const dataMax = 1; // floatTimeDomain max
