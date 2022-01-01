@@ -25,34 +25,28 @@ export default function oscillator(event, initalType, initalDetune, initalFreque
         amplitude: new Parameter(amplitude, (value) => {
             module.audioNode.amplitudeNode.gain.value = value;
         }),
-        get type() {
-            return this.oscillatorNode.type;
-        },
-        get detune() {
-            return this.oscillatorNode.detune;
-        },
-        get frequency() {
-            return this.oscillatorNode.frequency;
-        },
+        type: new Parameter(type, (value) => {
+            module.audioNode.oscillatorNode.type = value;
+        }),
+        detune: new Parameter(detune, (value) => {
+            module.audioNode.oscillatorNode.detune.value = value;
+        }),
+        frequency: new Parameter(frequency, (value) => {
+            module.audioNode.oscillatorNode.frequency.value = value;
+        }),
         start(time) {
-            const type = String(module.content.options.select.value);
-            const detune = parseFloat(module.content.controllers.detune.slider.value);
-            const frequency = parseFloat(module.content.controllers.frequency.value.innerText); //.value is a pointer not returner
-
-            this.oscillatorNode.type = type;
-            this.oscillatorNode.detune.value = detune;
-            this.oscillatorNode.frequency.value = frequency;
-
-            // reconnect oscillator with another node
+            // rebuild connection
             this.oscillatorNode.connect(this.amplitudeNode);
-
-            this.oscillatorNode.start(time);
+            this.amplitudeNode.connect(this.outputNode);
+            try {
+                this.oscillatorNode.start();
+            } catch {
+                // oscillator already started
+            }
         },
         stop(time) {
             // don't leave oscillator running in the background
             this.oscillatorNode && this.oscillatorNode.disconnect();
-            // there is no easy way to know if oscillator is running thus simply stoping it might cause an warning
-            this.oscillatorNode = new OscillatorNode(audioContext);
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);

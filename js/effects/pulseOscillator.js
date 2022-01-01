@@ -33,42 +33,38 @@ export default function pulseOscillator(event, initalDetune, initalFrequency, in
         amplitude: new Parameter(amplitude, (value) => {
             module.audioNode.amplitudeNode.gain.value = value;
         }),
-        get duty() {
-            return this.offsetNode.offset;
-        },
-        get type() {
-            return this.oscillatorNode.type;
-        },
-        get detune() {
-            return this.oscillatorNode.detune;
-        },
-        get frequency() {
-            return this.oscillatorNode.frequency;
-        },
+        duty: new Parameter(duty, (value) => {
+            module.audioNode.offsetNode.offset.value = value;
+        }),
+        type: new Parameter(type, (value) => {
+            module.audioNode.oscillatorNode.type = value;
+        }),
+        detune: new Parameter(detune, (value) => {
+            module.audioNode.oscillatorNode.detune.value = value;
+        }),
+        frequency: new Parameter(frequency, (value) => {
+            module.audioNode.oscillatorNode.frequency.value = value;
+        }),
         start(time) {
-            const duty = parseFloat(module.content.controllers.duty.slider.value);
-            const detune = parseFloat(module.content.controllers.detune.slider.value);
-            const frequency = parseFloat(module.content.controllers.frequency.value.innerText); //.value is a pointer not returner
-
-            this.offsetNode.offset.value = duty;
-
-            this.oscillatorNode.detune.value = detune;
-            this.oscillatorNode.frequency.value = frequency;
-
-            // reconnect oscillator with another node
+            // rebuild the connection
             this.oscillatorNode.connect(this.squareShaper);
             this.offsetNode.connect(this.squareShaper);
 
-            this.oscillatorNode.start(time);
-            this.offsetNode.start(time);
+            try {
+                this.oscillatorNode.start();
+            } catch {
+                // oscillator already started
+            }
+            try {
+                this.offsetNode.start();
+            } catch {
+                // oscillator already started
+            }
         },
         stop(time) {
             // don't leave oscillator running in the background
             this.oscillatorNode && this.oscillatorNode.disconnect();
             this.offsetNode && this.offsetNode.disconnect();
-            // there is no easy way to know if oscillator is running thus simply stoping it might cause an warning
-            this.oscillatorNode = new OscillatorNode(audioContext);
-            this.offsetNode = new ConstantSourceNode(audioContext);
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);

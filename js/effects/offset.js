@@ -1,4 +1,5 @@
 import Player from "../classes/ModulePlayer.js";
+import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
 export default function offset(event, initalOffset) {
@@ -7,14 +8,12 @@ export default function offset(event, initalOffset) {
 
     const module = new Player("offset", undefined, undefined, false, false);
 
-    module.audioNode = new ConstantSourceNode(audioContext);
-
     module.audioNode = {
         outputNode: new GainNode(audioContext),
         offsetNode: new ConstantSourceNode(audioContext),
-        get offset() {
-            return this.offsetNode.offset;
-        },
+        offset: new Parameter(offset, (value) => {
+            module.audioNode.offsetNode.offset.value = value;
+        }),
         start(time) {
             const offset = parseFloat(module.content.controllers.offset.slider.value);
             this.offsetNode.offset.value = offset;
@@ -22,13 +21,15 @@ export default function offset(event, initalOffset) {
             // reconnect oscillator with output node
             this.offsetNode.connect(this.outputNode);
 
-            this.offsetNode.start(time);
+            try {
+                this.offsetNode.start(time);
+            } catch {
+                // oscillator already started
+            }
         },
         stop(time) {
             // don't leave offsetNode running in the background
             this.offsetNode && this.offsetNode.disconnect();
-            // same issue like in oscilloscope - there is no easy way to know if it's running
-            this.offsetNode = new ConstantSourceNode(audioContext);
         },
         connect(destination) {
             if (destination.inputNode) this.outputNode.connect(destination.inputNode);
@@ -40,6 +41,8 @@ export default function offset(event, initalOffset) {
     };
 
     module.createSlider("offset", offset, -2, 2, 0.1, "", false, offsetInfo);
+
+    module.audioNode.offsetNode.connect(module.audioNode.outputNode);
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
