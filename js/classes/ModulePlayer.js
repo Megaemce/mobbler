@@ -60,6 +60,7 @@ export default class Player extends Module {
             const playbackRate = parseFloat(module.content.controllers.playbackRate.slider.value);
             const bufferDuration = Math.floor(bufferName.duration * 1000) + 1;
 
+            module.audioNode = undefined;
             module.audioNode = new AudioBufferSourceNode(audioContext, {
                 loop: loop,
                 buffer: bufferName,
@@ -76,7 +77,6 @@ export default class Player extends Module {
 
         // start playing
         module.audioNode.start(0);
-
         // send sound to all connected modules/modules' parameters
         module.outcomingCables.forEach((cable) => {
             const cableDestination = modules[cable.destinationID];

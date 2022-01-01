@@ -10,6 +10,7 @@ export default class Module {
         this.id = `module-${++id}`;
         this.div = undefined; // keeping link to HTML sctructure
         this.name = name;
+        this.type = name; // keep oryginal type in case the name get changed
         this.zIndex = id;
         this.position = undefined; // module position
         this.hasInput = hasInput === undefined ? true : Boolean(hasInput);
@@ -209,11 +210,6 @@ export default class Module {
                         destination.connectToParameter(cableDestination, cable.inputName);
                     }
                 });
-
-                // execute function if there is any hooked
-                if (destination.onInputActivated) {
-                    destination.onInputActivated(source);
-                }
             }
             // simple make the cable deactive if it's source is also death
             if (status === "deactive" && source.isTransmitting === false) {
@@ -311,7 +307,7 @@ export default class Module {
             });
 
             // create new inital cable (just for animation purpose)
-            if (module.name !== "output" && module.constructor.name !== "Visualizer") {
+            if (module.type !== "output" && module.constructor.name !== "Visualizer") {
                 module.addInitalCable();
             }
 
@@ -382,6 +378,9 @@ export default class Module {
         // disconnect audioNode (if there is any active)
         module.audioNode && module.audioNode.disconnect();
 
+        // free this audioNode for garbage collector
+        module.audioNode = undefined;
+
         // remove object
         delete this;
     }
@@ -419,6 +418,7 @@ export default class Module {
         - any other module and this connection moves slider from its current position into range [x-sliderMin/2,x+sliderMax/2]
        */
     connectToSlider(destinationModule, slider, parameterType, initalSliderValue) {
+        console.log(destinationModule.audioNode[parameterType].value);
         const module = this;
         const dataMin = -1; // floatTimeDomain min
         const dataMax = 1; // floatTimeDomain max
@@ -483,6 +483,7 @@ export default class Module {
         // not connecting directly source to parameter but to the analyser and then to destination's parameter slider
         if (slider && module.audioNode) {
             if (!slider.audioNode) {
+                slider.audioNode = undefined; // seems to be freeing previous AnalyserNode for garbage collector
                 slider.audioNode = new AnalyserNode(audioContext);
                 slider.audioNode.fftSize = 32;
             }
