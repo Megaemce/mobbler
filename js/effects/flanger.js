@@ -45,7 +45,7 @@ export default function flanger(event, initalDelay, initalDepth, initalSpeed, in
     module.createSlider("delay Time", delay, 0, 0.01, 0.001, "sec", false, delayInfo);
     module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
     module.createSlider("feedback", feedback, 0, 1, 0.1, "sec", false, feedbackInfo);
-    module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
+    module.createSlider("speed", speed, 0, 5, 0.01, "Hz", false, speedInfo);
 
     module.audioNode.inputNode.connect(module.audioNode.outputNode);
     module.audioNode.inputNode.connect(module.audioNode.delayNode);
