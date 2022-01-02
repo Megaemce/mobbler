@@ -49,7 +49,7 @@ Further reading:
     <td valign="top">
      <ul>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#audio-sources">Audio source</a></li>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#offset">Constant offset</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#offset">Offset</a></li>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#oscillator">Oscillator</a></li>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#pulse-oscillator">Pulse oscillator</a></li>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#live-input">Live input</a></li>
@@ -75,8 +75,8 @@ Further reading:
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#delay">Delay</a></li>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#flanger">Flanger</a></li>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#reverb">Reverb</a></li>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#tremolo-gain">Tremolo (Gain)</a></li>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#tremolo-panner">Tremolo (Panner)</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#tremolo-gain">Gain Tremolo</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#tremolo-panner">Panner Tremolo</a></li>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#vibrato">Vibrato</a></li>
       <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#wahwah">WahWah</a></li>
      </ul>   
@@ -90,11 +90,11 @@ Further reading:
    </td>
     <td valign="top">
      <ul>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-tremolo-gain-effect">Recreating Tremolo (Gain)</a></li>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-reverb-effect">Recreating Reverb</a></li>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-delay-effect">Recreating Delay</a></li>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-flanger-effect">Recreating Flanger</a></li>
-      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-chorus-effect">Recreating Chorus</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-tremolo-gain-effect">Create Gain Tremolo</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-reverb-effect">Create Reverb</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-delay-effect">Create Delay</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-flanger-effect">Create Flanger</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-chorus-effect">Create Chorus</a></li>
      </ul>   
    </td>
   </tr>
