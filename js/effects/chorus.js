@@ -3,12 +3,12 @@ import Parameter from "../classes/Parameter.js";
 import { audioContext } from "../main.js";
 
 export default function chorus(event, initalDelay, initalDepth, initalSpeed, initalFeedback) {
-    const delay = parseFloat(initalDelay || 0.12);
-    const depth = parseFloat(initalDepth || 0.01);
+    const delay = parseFloat(initalDelay || 0.05);
+    const depth = parseFloat(initalDepth || 0.002);
     const speed = parseFloat(initalSpeed || 0.1);
     const feedback = parseFloat(initalFeedback || 0.6);
     const delayInfo = "Number of seconds from input signal to be storage and play back";
-    const depthInfo = "Length of the effect";
+    const depthInfo = "Depth of changes in delay time";
     const speedInfo = "Frequency of oscillator that makes change in delay time";
     const feedbackInfo = "The return of a portion of the output signal back into delay loop";
 
@@ -52,7 +52,7 @@ export default function chorus(event, initalDelay, initalDepth, initalSpeed, ini
     };
 
     module.createSlider("delay Time", delay, 0, 1, 0.01, "sec", false, delayInfo);
-    module.createSlider("depth", depth, 0, 1, 0.01, "", false, depthInfo);
+    module.createSlider("depth", depth, 0, 0.01, 0.001, "", false, depthInfo);
     module.createSlider("feedback", feedback, 0, 0.7, 0.01, "", false, feedbackInfo);
     module.createSlider("speed", speed, 0, 1, 0.01, "Hz", false, speedInfo);
 
@@ -70,6 +70,9 @@ export default function chorus(event, initalDelay, initalDepth, initalSpeed, ini
     module.audioNode.feedbackNode.connect(module.audioNode.delayRNode);
     module.audioNode.oscillatorRNode.connect(module.audioNode.depthLNode);
     module.audioNode.oscillatorLNode.connect(module.audioNode.depthRNode);
+
+    module.audioNode.oscillatorLNode.start();
+    module.audioNode.oscillatorRNode.start();
 
     // add inital cable when structure is fully build - getBoundingClientRect related
     module.addInitalCable();
