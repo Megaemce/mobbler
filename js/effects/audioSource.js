@@ -6,7 +6,7 @@ export default function audioSource(event, initalLoop, initalBufferName, initalP
     const soundNames = Object.keys(audioContext.nameSoundBuffer);
     const bufferName = initalBufferName === undefined ? soundNames[0] : initalBufferName;
     const looperValue = initalLoop === undefined ? false : Boolean(initalLoop);
-    const detune = parseFloat(initalDetune || 3);
+    const detune = parseFloat(initalDetune || 0);
     const playbackRate = parseFloat(initalPlaybackRate || 1);
     const detuneInfo = "Determine how much signal will be played out of tune";
     const playbackRateInfo = "Increase the playback rate squeeze the sound wave into a smaller time window, which increases its frequency";
