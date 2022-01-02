@@ -58,7 +58,7 @@ export default function biquadFilter(event, initalQ, initalGain, initalType, ini
         module.content.controllers.gain.info.label.tooltip.innerHTML = filters[this.value].gain.info;
 
         // display filter's info
-        displayAlertOnElement(filters[this.value].info, module.div, 5);
+        // displayAlertOnElement(filters[this.value].info, module.div, 5);
 
         // disabled slider if filter does not use it
         if (filters[this.value].q.enabled) {
