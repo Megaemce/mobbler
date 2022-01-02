@@ -1,10 +1,8 @@
 <p align="center">
-<a href="https://mobbler.js.org">
 
-<img src="/img/mobbler_animated.svg#gh-light-mode-only" width="300px" />
-<img src="/img/mobbler_animated_dark.svg#gh-dark-mode-only" width="300px" />
+![GitHub Light](/img/mobbler_animated.svg#gh-light-mode-only)
+![GitHub Dark](/img/mobbler_animated_dark.svg#gh-dark-mode-only)
 
-</a>
 </p>
 
 ## Introduction
