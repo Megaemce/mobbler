@@ -115,13 +115,8 @@ export default class Module {
 
         // when slider is moved (by user or by connected module)
         module.content.controllers[parameterType].slider.oninput = function () {
-            const slider = module.content.controllers[parameterType].slider;
-            const sliderDecimals = slider.step.split(".")[1] ? slider.step.split(".")[1].length : 0;
-
-            let sliderValue = scaleLog ? logPositionToValue(this.value, this.min, this.max) : this.value;
-
-            // cut decimals so they fit to the decimals of slider.step
-            sliderValue = parseFloat(sliderValue).toFixed(sliderDecimals);
+            // get the correct slider value with consideration of logaritmic scale
+            const sliderValue = module.sliderCorrectValue(parameterType);
 
             // set value on the audiNode parameter
             if (module.audioNode) module.audioNode[parameterType].value = sliderValue;
@@ -160,6 +155,17 @@ export default class Module {
             module.content.controllers[parameterType].info.label.span.setAttribute("contenteditable", false);
             module.content.controllers[parameterType].info.label.style.cursor = "help";
         };
+    }
+    /* calculate slider correct value with consideration of logaritmic scale */
+    sliderCorrectValue(parameterType) {
+        const slider = this.content.controllers[parameterType].slider;
+        const sliderDecimals = slider.step.split(".")[1] ? slider.step.split(".")[1].length : 0;
+
+        let sliderValue = slider.scaleLog ? logPositionToValue(slider.value, slider.min, slider.max) : slider.value;
+        // cut decimals so they fit to the decimals of slider.step
+        sliderValue = parseFloat(sliderValue).toFixed(sliderDecimals);
+
+        return sliderValue;
     }
     /* add "open file..." option to select div */
     addOpenFileTo(selectDiv) {
@@ -501,12 +507,11 @@ export default class Module {
                     module.audioNode.connect(destinationModule.audioNode[parameterType]);
                 }
 
-                const sliderMin = parseFloat(slider.min);
-                const sliderMax = parseFloat(slider.max);
-                const scaledValue = slider.scaleLog ? logPositionToValue(slider.value, sliderMin, sliderMax) : slider.value;
+                // get the correct slider value with consideration of logaritmic scale
+                const sliderValue = destinationModule.sliderCorrectValue(parameterType);
 
                 // don't make unnesessary slider's animation if source module is not active
-                module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, scaledValue);
+                module.isTransmitting && module.connectToSlider(destinationModule, slider, parameterType, sliderValue);
             }
         }
     }
