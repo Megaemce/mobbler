@@ -31,7 +31,7 @@ Introducing <a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" he
 </div>
 
 ## Motive
-<a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few [popular effects](https://github.com/Megaemce/mobbler/wiki/Effects) and [tutorials](https://github.com/Megaemce/mobbler/wiki/Tutorials) on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
+<a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program contains few [popular effects](https://github.com/Megaemce/mobbler/wiki/Effects) and [tutorials](https://github.com/Megaemce/mobbler/wiki/Tutorials) on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
 
 Implemented modules:
 <table>
@@ -61,8 +61,8 @@ Implemented modules:
       <li>Crossfade</li>
       <li>Delay</li>
       <li>Dynamic compresssor</li>
+      <li>Envelope</li>
       <li>Equalizer</li>
-      <li>Parameter envelope</li>
       <li>Gain</li>
       <li>Stereo panner</li>
      </ul>
@@ -76,8 +76,8 @@ Implemented modules:
       <li>Reverb</li>
       <li>Tremolo (Gain)</li>
       <li>Tremolo (Panner)</li>
-      <li>WahWah</li>
       <li>Vibrato</li>
+      <li>WahWah</li>
      </ul>   
    </td>
        <td>
