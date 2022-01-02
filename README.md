@@ -14,8 +14,7 @@ Tired of connecting modular synthesizers with actual PHYSICAL cables? <br>
 Have you always dreamed of creating those mesmerizing berlin-techno hits of the 70's?<br>
 <div align="center">
  <img src="https://i.imgur.com/uripicq.jpg" height="250px"/>
-
- <img src="https://user-images.githubusercontent.com/1651451/142727918-165abe31-0d78-4c62-9a68-370ad509c238.png" height="250px"/>
+ <img src="https://user-images.githubusercontent.com/1651451/147878175-7902a9ee-92ec-47f4-a4e9-f120ecdeb7dc.png" height="250px"/>
 </div>
 <br/>
 
