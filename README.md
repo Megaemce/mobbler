@@ -1,5 +1,10 @@
 <p align="center">
-<a href="https://mobbler.js.org"><img src="/img/mobbler_animated.svg" width="300px" /></a>
+<a href="https://mobbler.js.org">
+
+<img src="/img/mobbler_animated.svg#gh-light-mode-only" width="300px" />
+<img src="/img/mobbler_animated_dark.svg#gh-dark-mode-only" width="300px" />
+
+</a>
 </p>
 
 ## Introduction
