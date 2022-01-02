@@ -29,15 +29,56 @@ Introducing <a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" he
 ## Motive
 <a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program also contains few [popular effects](https://github.com/Megaemce/mobbler/wiki/Effects) and [tutorials](https://github.com/Megaemce/mobbler/wiki/Tutorials) on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
 
-Implemented effects:
-* Chorus
-* Distortion
-* Delay
-* Flanger
-* Reverb
-* Tremolo (Gain and Panner)
-* WahWah
-* Vibrato
+Implemented modules:
+<table>
+<thead>
+  <tr>
+    <th>Sound sources</th>
+    <th>Bascis</th>
+    <th>Effects</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>
+     <ul>
+      <li>Audio source</li>
+      <li>Constant offset</li>
+      <li>Oscillator</li>
+      <li>Pulse oscillator</li>
+      <li>Live input</li>
+     </ul>
+   </td>
+    <td>
+     <ul>
+      <li>Biquad filter</li>
+      <li>Convoler</li>
+      <li>Crossfade</li>
+      <li>Delay</li>
+      <li>Dynamic compresssor</li>
+      <li>Equalizer</li>
+      <li>Parameter envelope</li>
+      <li>Gain</li>
+      <li>Stereo panner</li>
+     </ul>
+   </td>
+    <td>
+     <ul>
+      <li>Chorus</li>
+      <li>Distortion</li>
+      <li>Delay</li>
+      <li>Flanger</li>
+      <li>Reverb</li>
+      <li>Tremolo (Gain)</li>
+      <li>Tremolo (Panner)</li>
+      <li>WahWah</li>
+      <li>Vibrato</li>
+     </ul>   
+   </td>
+  </tr>
+</tbody>
+</table>
+
 
 ## How to start
 Simply create Audio source module (from `Inputs` menu) and Output (from `Outputs` menu) and connect them with a Audio source cable. Hit the play button 
