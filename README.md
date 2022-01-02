@@ -33,9 +33,10 @@ Implemented modules:
 <table>
 <thead>
   <tr>
-    <th>Sound sources</th>
+    <th>Inputs</th>
     <th>Bascis</th>
     <th>Effects</th>
+    <th>Outputs</th>
   </tr>
 </thead>
 <tbody>
@@ -73,6 +74,13 @@ Implemented modules:
       <li>Tremolo (Panner)</li>
       <li>WahWah</li>
       <li>Vibrato</li>
+     </ul>   
+   </td>
+       <td>
+     <ul>
+      <li>Analyser</li>
+      <li>Output</li>
+      <li>Visualisation</li>
      </ul>   
    </td>
   </tr>
