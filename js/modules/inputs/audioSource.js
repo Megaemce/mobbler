@@ -1,6 +1,6 @@
-import Player from "../classes/ModulePlayer.js";
-import { audioContext } from "../main.js";
-import { openFileHandler } from "../helpers/loaders.js";
+import Player from "../../classes/ModulePlayer.js";
+import { audioContext } from "../../main.js";
+import { openFileHandler } from "../../helpers/loaders.js";
 
 export default function audioSource(event, initalLoop, initalBufferName, initalPlaybackRate, initalDetune) {
     const soundNames = Object.keys(audioContext.nameSoundBuffer);

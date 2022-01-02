@@ -1,5 +1,5 @@
-import Module from "../classes/Module.js";
-import { audioContext } from "../main.js";
+import Module from "../../classes/Module.js";
+import { audioContext } from "../../main.js";
 
 export default function stereoPanner(event, initialPan) {
     const pan = parseFloat(initialPan || 0);

@@ -1,5 +1,5 @@
-import Module from "../classes/Module.js";
-import { audioContext } from "../main.js";
+import Module from "../../classes/Module.js";
+import { audioContext } from "../../main.js";
 
 export default function gain(event, initalGain) {
     const gain = parseFloat(initalGain || 1);

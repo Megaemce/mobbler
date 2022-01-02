@@ -1,6 +1,6 @@
-import Player from "../classes/ModulePlayer.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext } from "../main.js";
+import Player from "../../classes/ModulePlayer.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext } from "../../main.js";
 
 export default function offset(event, initalOffset) {
     const offset = parseFloat(initalOffset || 0.5);

@@ -1,6 +1,6 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext } from "../main.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext } from "../../main.js";
 
 export default function vibrato(event, initalWidth, initalSpeed, initalDelayTime) {
     const width = parseFloat(initalWidth || 0.005);

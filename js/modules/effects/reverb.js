@@ -1,7 +1,7 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext } from "../main.js";
-import { openFileHandler } from "../helpers/loaders.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext } from "../../main.js";
+import { openFileHandler } from "../../helpers/loaders.js";
 
 export default function reverb(event, initalDryness, initalWetness, initalBufferName) {
     const irNames = Object.keys(audioContext.nameIRBuffer);

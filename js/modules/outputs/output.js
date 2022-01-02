@@ -1,6 +1,6 @@
-import Module from "../classes/Module.js";
-import { audioContext } from "../main.js";
-import { displayAlertOnElement, addModuleToMixer, buildMixer } from "../helpers/builders.js";
+import Module from "../../classes/Module.js";
+import { audioContext } from "../../main.js";
+import { displayAlertOnElement, addModuleToMixer, buildMixer } from "../../helpers/builders.js";
 
 export default function output(event) {
     const speakerImg = document.createElement("img");

@@ -1,6 +1,6 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext } from "../main.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext } from "../../main.js";
 
 export default function wahwah(event, initalQ, initalSpeed, initalDepth) {
     const q = parseFloat(initalQ || 2.5);

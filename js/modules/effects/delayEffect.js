@@ -1,6 +1,6 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext } from "../main.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext } from "../../main.js";
 
 export default function delayEffect(event, initalDelay, initalDryness, initalFeedback) {
     const delay = parseFloat(initalDelay || 0.1);

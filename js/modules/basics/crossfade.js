@@ -1,7 +1,7 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext, modules } from "../main.js";
-import { displayAlertOnElement } from "../helpers/builders.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext, modules } from "../../main.js";
+import { displayAlertOnElement } from "../../helpers/builders.js";
 
 export default function crossfade(event, initalRatio) {
     const ratio = parseFloat(initalRatio || 50);

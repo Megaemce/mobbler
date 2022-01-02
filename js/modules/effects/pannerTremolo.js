@@ -1,16 +1,17 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext } from "../main.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext } from "../../main.js";
 
-export default function gainTremolo(event, initalSpeed) {
+export default function pannerTremolo(event, initalSpeed) {
     const speed = parseFloat(initalSpeed || 15);
     const speedInfo = "Frequency of oscillator that makes trembling effect";
 
-    const module = new Module("gain tremolo", true, false, false, undefined, true);
+    const module = new Module("panner tremolo", true, false, false, undefined, true);
 
     module.audioNode = {
         inputNode: new GainNode(audioContext),
         outputNode: new GainNode(audioContext),
+        pannerNode: new StereoPannerNode(audioContext),
         oscillatorNode: new OscillatorNode(audioContext, { type: "sine" }),
         speed: new Parameter(speed, (value) => {
             module.audioNode.oscillatorNode.frequency.value = value;
@@ -26,8 +27,9 @@ export default function gainTremolo(event, initalSpeed) {
 
     module.createSlider("speed", speed, 0, 20, 0.1, "Hz", false, speedInfo);
 
-    module.audioNode.inputNode.connect(module.audioNode.outputNode);
-    module.audioNode.oscillatorNode.connect(module.audioNode.inputNode.gain);
+    module.audioNode.inputNode.connect(module.audioNode.pannerNode);
+    module.audioNode.pannerNode.connect(module.audioNode.outputNode);
+    module.audioNode.oscillatorNode.connect(module.audioNode.pannerNode.pan);
 
     module.audioNode.oscillatorNode.start(0);
 

@@ -1,7 +1,7 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { audioContext } from "../main.js";
-import { displayAlertOnElement } from "../helpers/builders.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { audioContext } from "../../main.js";
+import { displayAlertOnElement } from "../../helpers/builders.js";
 
 export default function biquadFilter(event, initalQ, initalGain, initalType, initalFrequency) {
     const q = parseFloat(initalQ || 1.0);

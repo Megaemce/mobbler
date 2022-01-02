@@ -1,6 +1,6 @@
-import Module from "../classes/Module.js";
-import { audioContext } from "../main.js";
-import { displayAlertOnElement } from "../helpers/builders.js";
+import Module from "../../classes/Module.js";
+import { audioContext } from "../../main.js";
+import { displayAlertOnElement } from "../../helpers/builders.js";
 
 function gotStream(stream) {
     this.audioNode = audioContext.createMediaStreamSource(stream);

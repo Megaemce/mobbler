@@ -1,6 +1,6 @@
-import Visualizer from "../classes/ModuleVisualizer.js";
-import Parameter from "../classes/Parameter.js";
-import { displayAlertOnElement } from "../helpers/builders.js";
+import Visualizer from "../../classes/ModuleVisualizer.js";
+import Parameter from "../../classes/Parameter.js";
+import { displayAlertOnElement } from "../../helpers/builders.js";
 
 export default function visualisation(event, initalType, initalCanvasWidth, initalCanvasHeight, initatFFTSize, initalZoom, initalColor, initalLineWidth, initalLineLength, initalSymmetries, initalLineFlatness) {
     const lineCreatorTypes = ["create lines from frequencies chart", "create lines from time domain chart"];

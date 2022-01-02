@@ -1,8 +1,8 @@
-import Module from "../classes/Module.js";
-import Parameter from "../classes/Parameter.js";
-import { displayAlertOnElement, buildEnvelope, changePathInSVG } from "../helpers/builders.js";
-import { scaleBetween, valueToLogPosition } from "../helpers/math.js";
-import { modules, cables } from "../main.js";
+import Module from "../../classes/Module.js";
+import Parameter from "../../classes/Parameter.js";
+import { displayAlertOnElement, buildEnvelope, changePathInSVG } from "../../helpers/builders.js";
+import { scaleBetween, valueToLogPosition } from "../../helpers/math.js";
+import { modules, cables } from "../../main.js";
 
 export default function enveloper(event, initalDelay, initalAttack, initalHold, initalDecay, initalSustain, initalRelease) {
     const hold = parseFloat(initalHold || 750);

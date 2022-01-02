@@ -1,6 +1,6 @@
-import Module from "../classes/Module.js";
-import { audioContext } from "../main.js";
-import { openFileHandler } from "../helpers/loaders.js";
+import Module from "../../classes/Module.js";
+import { audioContext } from "../../main.js";
+import { openFileHandler } from "../../helpers/loaders.js";
 
 export default function convolver(event, initalBufferName, initalNormalizer) {
     const irNames = Object.keys(audioContext.nameIRBuffer);
