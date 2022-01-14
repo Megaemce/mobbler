@@ -44,10 +44,12 @@ export function directionString(pointA, pointB) {
 
     return false;
 }
-
 /* scale value between [from_min,from_max] to [to_min,to_max] range */
 export function scaleBetween(value, from_min, from_max, to_min, to_max) {
     const calculation = ((value - from_min) * (to_max - to_min)) / (from_max - from_min) + to_min;
-
     return calculation;
+}
+/* scale dB to linear values */
+export function dBToLinear(db) {
+    return Math.pow(10.0, 0.05 * db);
 }

@@ -42,7 +42,8 @@ const impulseResponses = ["IR_cathedral.wav", "IR_church.wav", "IR_room.wav", "I
 // };
 
 // start audio with user interaction (chrome policy)
-document.onmousemove = () => {
+let playButton = document.getElementById("start-button");
+playButton.onclick = () => {
     try {
         audioContext = new AudioContext();
     } catch (e) {
@@ -52,7 +53,9 @@ document.onmousemove = () => {
     loadFilesIntoAudioContext(sounds, true);
     loadFilesIntoAudioContext(impulseResponses, false);
 
-    document.onmousemove = undefined;
+    document.getElementById("start_screen").classList.add("hidden");
+
+    playButton.onclick = undefined;
 };
 
 // document.getElementById("save").onmousedown = save;

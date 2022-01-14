@@ -6,9 +6,9 @@ export default function wahwah(event, initalQ, initalSpeed, initalDepth) {
     const q = parseFloat(initalQ || 2.5);
     const speed = parseFloat(initalSpeed || 8.5);
     const depth = parseFloat(initalDepth || 0.8);
-    const qInfo = "Controls the width of the band. The width becomes narrower as the Q value increases.";
-    const speedInfo = "Frequency of oscillator that makes trembling effect";
-    const depthInfo = "Depth of the wah wah effect";
+    const qInfo = "Controls the width of the band. The width becomes narrower as the Q value increases";
+    const speedInfo = "Frequency of oscillator that change bandpass inital frequency";
+    const depthInfo = "Depth of the bandpass change from oscillator";
 
     const module = new Module("wahwah", true, false, false, undefined, true);
 
