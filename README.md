@@ -31,66 +31,75 @@ Introducing <a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" he
 </div>
 
 ## Motive
-<a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows you to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. Program contains few [popular effects](https://github.com/Megaemce/mobbler/wiki/Effects) and [tutorials](https://github.com/Megaemce/mobbler/wiki/Tutorials) on how those could be created from basic modules. It can be used for music creation, education or just for fun. 
+<a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> is a complex extension of [web audio playground](https://github.com/cwilso/WebAudio). It allows user to explore most of [web audio API](https://www.w3.org/TR/webaudio/) options and play with them in easy to handle visual format. Moreover user can manipulate any module's parameters with other modules thus opening option for custom effects creation without any programming knowledge. It can be used for music creation, education or just for fun. 
 
-Implemented modules:
+Further reading:
 <table>
 <thead>
   <tr>
     <th>Inputs</th>
-    <th>Bascis</th>
+    <th>Basics</th>
     <th>Effects</th>
     <th>Outputs</th>
+    <th>Tutorials</th>
   </tr>
 </thead>
 <tbody>
   <tr>
-    <td>
+    <td valign="top">
      <ul>
-      <li>Audio source</li>
-      <li>Constant offset</li>
-      <li>Oscillator</li>
-      <li>Pulse oscillator</li>
-      <li>Live input</li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#audio-sources">Audio source</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#offset">Offset</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#oscillator">Oscillator</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#pulse-oscillator">Pulse oscillator</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Inputs#live-input">Live input</a></li>
      </ul>
    </td>
-    <td>
+    <td valign="top">
      <ul>
-      <li>Biquad filter</li>
-      <li>Convoler</li>
-      <li>Crossfade</li>
-      <li>Delay</li>
-      <li>Dynamic compresssor</li>
-      <li>Envelope</li>
-      <li>Equalizer</li>
-      <li>Gain</li>
-      <li>Stereo panner</li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#biquad-filter">Biquad filter</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#convoler">Convoler</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#crossfade">Crossfade</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#delay">Delay</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#dynamics-compressor">Dynamic compresssor</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#envelope">Envelope</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#equalizer">Equalizer</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#gain">Gain</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Basics#stereo-panner">Stereo panner</a></li>
      </ul>
    </td>
-    <td>
+    <td valign="top">
      <ul>
-      <li>Chorus</li>
-      <li>Distortion</li>
-      <li>Delay</li>
-      <li>Flanger</li>
-      <li>Reverb</li>
-      <li>Tremolo (Gain)</li>
-      <li>Tremolo (Panner)</li>
-      <li>Vibrato</li>
-      <li>WahWah</li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#chorus">Chorus</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#distortion">Distortion</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#delay">Delay</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#flanger">Flanger</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#reverb">Reverb</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#tremolo-gain">Gain Tremolo</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#tremolo-panner">Panner Tremolo</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#vibrato">Vibrato</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Effects#wahwah">WahWah</a></li>
      </ul>   
    </td>
-       <td>
+    <td valign="top">
      <ul>
-      <li>Analyser</li>
-      <li>Output</li>
-      <li>Visualisation</li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Outputs#analyser">Analyser</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Outputs#output">Output</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Outputs#visualisation">Visualisation</a></li>
+     </ul>   
+   </td>
+    <td valign="top">
+     <ul>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-tremolo-gain-effect">Create Gain Tremolo</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-reverb-effect">Create Reverb</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-delay-effect">Create Delay</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-flanger-effect">Create Flanger</a></li>
+      <li><a href="https://github.com/Megaemce/mobbler/wiki/Tutorials#recreating-chorus-effect">Create Chorus</a></li>
      </ul>   
    </td>
   </tr>
 </tbody>
 </table>
-
 
 ## How to start
 Simply create Audio source module (from `Inputs` menu) and Output (from `Outputs` menu) and connect them with a Audio source cable. Hit the play button 
