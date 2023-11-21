@@ -105,15 +105,14 @@ Further reading:
 Simply create Audio source module (from `Inputs` menu) and Output (from `Outputs` menu) and connect them with a Audio source cable. Hit the play button 
 
 <div align="center">
- 
-![Audio source to output connection](https://user-images.githubusercontent.com/1651451/144228280-6568e761-79db-43ba-b518-28597ff0b8c8.png)
+ <img src="https://github.com/Megaemce/mobbler/assets/1651451/05136993-9647-43e3-bfdf-71249e3d6a36.png" width="500"/>
  </div>
 
 For more specific modules details and tutorials please check **[mobbler's WIKI](https://github.com/Megaemce/mobbler/wiki)**
 
 ## Technology & limitation
 Made in vanilla JavaScript as my first big project to get thorough knowledge of this language.<br>
-Due to the mouse-related handlers solution doesn't work properly with touch (mobiles/tablets). <br>
+Due to lack of mouse-related handlers solution doesn't work properly with touch (mobiles/tablets). <br>
 It was developed for Chrome browser however seems to be working fine on Firefox and Egde too.
 
 
