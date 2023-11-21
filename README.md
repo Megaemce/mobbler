@@ -19,7 +19,7 @@ Have you always dreamed of creating those mesmerizing berlin-techno hits of the 
 <br/>
 
 **Say no more!** Turn those clumsy analog nightmares into modern world browser-based dreamsᵀᴹ.<br>
-Introducing <a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> - an revolutionary browser tool for analog-like music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing)ᵇᵉᵗᵃ.
+Introducing <a href="https://mobbler.js.org"><img src="/img/mobbler_word.svg" height="14px"/></a> - a revolutionary browser tool for analog-like music creation and realtime [visual performance](https://en.wikipedia.org/wiki/VJing).
 <div align="center">
 <img src="https://user-images.githubusercontent.com/1651451/142727254-c605e95b-abd8-4084-aa79-d2510d038e0b.png" height="300px" />
 </div>
